@@ -1,0 +1,97 @@
+name: V5 noindex staging deploy (isolated workers.dev)
+on:
+  workflow_dispatch:
+    inputs:
+      site:
+        description: 'Existing V5 site ID (never V4)'
+        required: true
+        type: string
+        default: ansan-promotion-plant
+permissions:
+  contents: read
+concurrency:
+  group: site-factory-v5-staging-${{ inputs.site }}
+  cancel-in-progress: false
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      SITE: ${{ inputs.site }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Exact staging scope and credentials
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$SITE" == 'ansan-promotion-plant' ]] || { echo 'Initial staging scope limited to Ansan site'; exit 1; }
+          [[ -n "$CLOUDFLARE_API_TOKEN" && -n "$CLOUDFLARE_ACCOUNT_ID" ]] || { echo 'Cloudflare repo secrets not configured'; exit 1; }
+      - name: Tests, nonindexable build, asset audit, and staging isolation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -q
+          npm test
+          python -m v5 build --site "$SITE" --mode preview
+          python -m v5 audit --site "$SITE"
+          python -m v5 prepare-staging --site "$SITE"
+      - name: Keep reviewed preview artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: v5-noindex-preview-${{ github.sha }}
+          path: |
+            dist/${{ inputs.site }}/
+            reports/${{ inputs.site }}/manifest.json
+            reports/${{ inputs.site }}/audit.json
+            deploy/${{ inputs.site }}/staging.wrangler.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Deploy ONLY dedicated V5 staging Worker
+        shell: bash
+        run: |
+          set -euo pipefail
+          npx --yes wrangler@4.148.0 deploy --config "deploy/$SITE/staging.wrangler.json"
+      - name: Resolve actual Cloudflare workers.dev address
+        id: origin
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json, os
+          from urllib.request import Request,urlopen
+          from v5.staging import staging_worker_name
+          site=os.environ['SITE']
+          account=os.environ['CLOUDFLARE_ACCOUNT_ID']
+          token=os.environ['CLOUDFLARE_API_TOKEN']
+          req=Request('https://api.cloudflare.com/client/v4/accounts/'+account+'/workers/subdomain',headers={'Authorization':'Bearer '+token,'Accept':'application/json'})
+          with urlopen(req,timeout=25) as response: data=json.load(response)
+          if not data.get('success') or not data.get('result',{}).get('subdomain'):
+              raise RuntimeError('Cloudflare workers.dev subdomain lookup failed')
+          subdomain=data['result']['subdomain']
+          origin=f'https://{staging_worker_name(site)}.{subdomain}.workers.dev'
+          with open(os.environ['GITHUB_OUTPUT'],'a',encoding='utf-8') as f:f.write('url='+origin+'\n')
+          PY
+      - name: Independently verify live 200 / 404 / X-Robots-Tag
+        shell: bash
+        env:
+          STAGING_URL: ${{ steps.origin.outputs.url }}
+        run: |
+          set -euo pipefail
+          python -m v5 staging-check --site "$SITE" --origin "$STAGING_URL"
+          echo "V5 NOINDEX STAGING VERIFIED: $STAGING_URL" >> "$GITHUB_STEP_SUMMARY"
+      - name: Keep live verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v5-staging-readback-${{ github.run_id }}
+          path: reports/${{ inputs.site }}/staging-readback.json
+          if-no-files-found: warn
+          retention-days: 30
