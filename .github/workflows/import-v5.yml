@@ -43,9 +43,8 @@ jobs:
                   assert not any(part in ('', '.git') for part in path.parts)
           print('Verified 60 approved V5 text files and safe paths')
           PY
-          tar --extract --xz --file=/tmp/v5-source.tar.xz --no-same-owner --no-same-permissions
+          tar --extract --xz --file=/tmp/v5-source.tar.xz --no-same-owner --no-same-permissions --exclude='.github/workflows/*'
           rm -f bootstrap/source.tar.xz.b64
-          rm -f .github/workflows/import-v5.yml
           rmdir bootstrap || true
       - name: Independently test imported code
         shell: bash
