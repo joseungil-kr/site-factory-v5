@@ -12,6 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 595e6f6597962ecdb9c23f059128fdf06cf666df
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -47,3 +50,14 @@ jobs:
           else:
               print('ALL ROUTES AND X-ROBOTS-TAG PASS')
           PY
+      - name: Full V5 staging HTTP/meta/canonical acceptance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m v5 staging-check --site ansan-promotion-plant --origin https://sfv5-ansan-promotion-plant-preview.joseungil.workers.dev
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v5-live-noindex-full-acceptance
+          path: reports/ansan-promotion-plant/staging-readback.json
+          if-no-files-found: error
+          retention-days: 30
