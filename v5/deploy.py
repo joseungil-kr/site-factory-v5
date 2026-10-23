@@ -48,7 +48,7 @@ def worker_config(site_id):
         raise ConfigError('Production preflight blocked: '+'; '.join(gate['blockers']))
     config={
         'name':site['workerName'],
-        'compatibility_date':'2026-10-24',
+        'compatibility_date':'2026-10-21',
         'main':'../../worker/index.js',
         'workers_dev':False,
         'preview_urls':False,
