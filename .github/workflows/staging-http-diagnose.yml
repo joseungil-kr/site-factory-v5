@@ -1,0 +1,49 @@
+name: Diagnose V5 deployed noindex routes (read only)
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/staging-http-diagnose.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Probe live V5 routes with and without browser navigation header
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from urllib.request import Request,urlopen
+          from urllib.error import HTTPError
+          from urllib.parse import quote
+          origin='https://sfv5-ansan-promotion-plant-preview.joseungil.workers.dev'
+          paths=['/','/index.html','/2.html','/3.html','/9.html','/10.html','/'+quote('견적계산기.html'),'/robots.txt','/assets/site.css','/404-auditor-sentinel.html']
+          failures=[]
+          for path in paths:
+              for nav in (False,True):
+                  headers={'User-Agent':'V5ReadbackDiagnostic/1.0'}
+                  if nav:headers['Sec-Fetch-Mode']='navigate'
+                  req=Request(origin+path,headers=headers)
+                  try:
+                      with urlopen(req,timeout=30) as res:
+                          status=res.status;head=res.headers;body=res.read(512).decode('utf-8','replace')
+                  except HTTPError as exc:
+                      status=exc.code;head=exc.headers;body=exc.read(512).decode('utf-8','replace')
+                  print(json.dumps({'path':path,'browserNav':nav,'http':status,'robots':head.get('X-Robots-Tag'),
+                       'contentType':head.get('Content-Type'),'location':head.get('Location'),
+                       'body':body[:130]},ensure_ascii=False))
+                  expected=404 if 'sentinel' in path else 200
+                  if status!=expected or ('noindex' not in (head.get('X-Robots-Tag') or '').lower()):
+                      failures.append((path,nav,status,head.get('X-Robots-Tag')))
+          if failures:
+              print('DIAGNOSTIC FINDINGS',json.dumps(failures,ensure_ascii=False))
+          else:
+              print('ALL ROUTES AND X-ROBOTS-TAG PASS')
+          PY
