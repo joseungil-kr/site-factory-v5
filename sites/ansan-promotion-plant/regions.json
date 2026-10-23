@@ -1,0 +1,9 @@
+{
+  "source": "site-factory-v4 data/regions/master.json, directly verified region codes 2026-10-24",
+  "regions": [
+    {"name":"경기도 안산시","code":"4127000000","level":"municipality"},
+    {"name":"경기도 안산시 상록구","code":"4127100000","level":"ward"},
+    {"name":"경기도 안산시 단원구","code":"4127300000","level":"ward"},
+    {"name":"경기도 안산시 단원구 고잔동","code":null,"level":"dong","verifiedBy":"V4 code old alias records"}
+  ]
+}

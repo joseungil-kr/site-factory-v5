@@ -1,0 +1,34 @@
+{
+  "id": "ansan-promotion-plant",
+  "brand": "꽃이랑",
+  "siteTitle": "안산시 승진화분",
+  "domain": null,
+  "workerName": null,
+  "locale": "ko-KR",
+  "phone": "1844-0644",
+  "keyword": "승진화분",
+  "region": "경기도 안산시",
+  "theme": "classic",
+  "imagePool": [
+    "plant-a.svg",
+    "plant-b.svg",
+    "plant-c.svg"
+  ],
+  "orderBaseUrl": "https://fwith.co.kr",
+  "publishEnabled": false,
+  "analytics": {
+    "enabled": false
+  },
+  "siteSearch": {
+    "enabled": false
+  },
+  "staticAssetSoftLimit": 18000,
+  "source": "V4 plant products reference; demonstration site only, no public claims without verification",
+  "imageLibrary": "promotion-plant",
+  "imageAssetsApproved": false,
+  "cookiePrivacyReviewed": false,
+  "indexNow": {
+    "enabled": false,
+    "key": null
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "auditedRepository": "joseungil-kr/site-factory-v4",
+  "auditedMain": "223b9348f32b700af98645d034943772d590aaba",
+  "auditedAt": "2026-10-24",
+  "status": "read-only consulted, no code imported as-is",
+  "references": [
+    {"path": "scripts/build_national_release.py", "sha": "2a81115972023ed3e873cca355fa33a9f48f30a1", "decision": "architecture reference only; V4 hardcoded page count and hubs excluded"},
+    {"path": "scripts/national_site_config.py", "sha": "956471ad5dca6eff11a374de6133615486b3d85d", "decision": "separate site configuration concept reused"},
+    {"path": "scripts/build_national_release_bundle.py", "sha": "d045d30989f0ea2d1c68b94a0617db35c25f64ca", "decision": "immutable manifest/rollback pattern referenced"},
+    {"path": "scripts/publish_national_release.py", "sha": "f21d9351049b1a4ec52c1b96fd0c6f9ca69b882d", "decision": "readback and IndexNow workflow pattern referenced"},
+    {"path": "scripts/check_provenance.py", "sha": "f7e546acce62975188201eefa9120b4f7d8fc7c0", "decision": "hash audit pattern referenced"}
+  ]
+}

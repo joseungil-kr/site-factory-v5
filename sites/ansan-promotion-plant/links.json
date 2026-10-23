@@ -1,0 +1,4 @@
+[
+  {"id":"estimate","label":"화분 예산 계산기","target":"견적계산기.html","placement":"footer","scope":"all","enabled":true},
+  {"id":"delivery","label":"배송 및 주문 안내","target":"배송안내.html","placement":"body","scope":"all","enabled":true}
+]

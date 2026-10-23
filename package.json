@@ -1,0 +1,1 @@
+{"name":"site-factory-v5-worker","private":true,"type":"module","scripts":{"test":"node --test worker/*.test.mjs"},"engines":{"node":">=22"}}
