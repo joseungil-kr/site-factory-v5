@@ -1,0 +1,68 @@
+name: Import verified V5 source tree
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'bootstrap/source.tar.xz.b64'
+      - '.github/workflows/import-v5.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: v5-one-time-source-import
+  cancel-in-progress: false
+jobs:
+  import:
+    if: github.repository == 'joseungil-kr/site-factory-v5'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify and unpack V5 archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s bootstrap/source.tar.xz.b64
+          base64 --decode bootstrap/source.tar.xz.b64 >/tmp/v5-source.tar.xz
+          echo 'da91a7ad40531390c46e5a88d460adb384e51ecf690ef7a2c60d0b4be07ea481  /tmp/v5-source.tar.xz' | sha256sum --check
+          python - <<'PY'
+          import tarfile
+          from pathlib import PurePosixPath
+          with tarfile.open('/tmp/v5-source.tar.xz', mode='r:xz') as tar:
+              members = tar.getmembers()
+              assert len(members) == 60, len(members)
+              for member in members:
+                  path = PurePosixPath(member.name)
+                  assert member.isfile() and not path.is_absolute() and '..' not in path.parts
+                  assert not any(part in ('', '.git') for part in path.parts)
+          print('Verified 60 approved V5 text files and safe paths')
+          PY
+          tar --extract --xz --file=/tmp/v5-source.tar.xz --no-same-owner --no-same-permissions
+          rm -f bootstrap/source.tar.xz.b64
+          rm -f .github/workflows/import-v5.yml
+          rmdir bootstrap || true
+      - name: Independently test imported code
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -q
+          npm test
+          python -m v5 build --site ansan-promotion-plant --mode preview
+          python -m v5 audit --site ansan-promotion-plant
+          python -m v5 prepare-staging --site ansan-promotion-plant
+      - name: Commit exact verified V5 source
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git diff --cached --quiet && { echo 'No source changes to import'; exit 1; }
+          git commit -m 'Import verified independent V5 source and tests'
+          git push origin HEAD:main
