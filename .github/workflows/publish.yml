@@ -1,0 +1,79 @@
+name: V5 guarded release (not ready without verified domain)
+on:
+  workflow_dispatch:
+    inputs:
+      site:
+        description: 'Exact existing site ID'
+        required: true
+        type: string
+      expected_sha:
+        description: 'Exact reviewed 40-character commit SHA'
+        required: true
+        type: string
+permissions:
+  contents: read
+concurrency:
+  group: site-factory-v5-production-${{ inputs.site }}
+  cancel-in-progress: false
+jobs:
+  publish:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    environment: production
+    env:
+      SITE: ${{ inputs.site }}
+      EXPECTED_SHA: ${{ inputs.expected_sha }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Source revision match
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$EXPECTED_SHA" == "$GITHUB_SHA" ]] || { echo 'Reviewed SHA mismatch'; exit 1; }
+      - name: Tests and build (no deploy yet)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m unittest discover -s tests -v
+          npm test
+          python -m v5 build --site "$SITE" --mode publish
+          python -m v5 audit --site "$SITE"
+          python -m v5 publish-check --site "$SITE"
+          python -m v5 prepare-worker --site "$SITE"
+      - name: Make release snapshot before deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: v5-reviewed-${{ github.sha }}
+          path: |
+            dist/${{ inputs.site }}/
+            reports/${{ inputs.site }}/manifest.json
+            reports/${{ inputs.site }}/audit.json
+            deploy/${{ inputs.site }}/wrangler.json
+          if-no-files-found: error
+          retention-days: 90
+      - name: Guarded deploy with prior-version Cloudflare rollback
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m v5 guarded-deploy --site "$SITE"
+      - name: Preserve post-release verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: v5-public-readback-${{ github.run_id }}
+          path: reports/${{ inputs.site }}/public-check.json
+          if-no-files-found: warn
+          retention-days: 90
+# NOTE: The rollback code has local mock tests but must be verified on a real
+# V5 Worker/version before production activation. First deployments are blocked
+# because they have no known previous good version.
