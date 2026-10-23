@@ -71,7 +71,7 @@ def staging_config(site_id: str):
         raise ConfigError('Preview staging blocked: '+'; '.join(gate['errors']))
     return {
         'name':gate['workerName'],
-        'compatibility_date':'2026-10-24',
+        'compatibility_date':'2026-10-21',
         'main':'../../worker/index.js',
         'workers_dev':True,
         'preview_urls':False,
