@@ -1,0 +1,39 @@
+name: V5 offline build and audit
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Worker route tests
+        run: npm test
+      - name: Preview only, never deploy
+        run: |
+          python -m v5 build --site ansan-promotion-plant --mode preview
+          python -m v5 audit --site ansan-promotion-plant
+          python -m v5 dashboard
+      - name: Record static preview
+        uses: actions/upload-artifact@v4
+        with:
+          name: v5-preview-${{ github.sha }}
+          path: |
+            dist/ansan-promotion-plant/
+            reports/ansan-promotion-plant/audit.json
+            reports/ansan-promotion-plant/manifest.json
+          if-no-files-found: error
+          retention-days: 7
