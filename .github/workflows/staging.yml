@@ -85,7 +85,18 @@ jobs:
           STAGING_URL: ${{ steps.origin.outputs.url }}
         run: |
           set -euo pipefail
-          python -m v5 staging-check --site "$SITE" --origin "$STAGING_URL"
+          for attempt in 1 2 3 4 5 6; do
+            if python -m v5 staging-check --site "$SITE" --origin "$STAGING_URL"; then
+              echo "Live staging passed on attempt $attempt"
+              break
+            fi
+            if [[ "$attempt" == "6" ]]; then
+              echo "Staging failed 6 bounded live HTTP verifications" >&2
+              exit 1
+            fi
+            echo "Waiting for initial Cloudflare global asset propagation" >&2
+            sleep 10
+          done
           echo "V5 NOINDEX STAGING VERIFIED: $STAGING_URL" >> "$GITHUB_STEP_SUMMARY"
       - name: Keep live verification report
         if: always()
