@@ -2,7 +2,7 @@
   "id": "seoul-gyeonggi-plants",
   "brand": "꽃이랑",
   "siteTitle": "서울·경기 축하화분·승진화분",
-  "domain": null,
+  "domain": "https://plants.nalmada.net",
   "workerName": null,
   "locale": "ko-KR",
   "phone": "1844-0644",
@@ -28,7 +28,7 @@
     "enabled": false
   },
   "staticAssetSoftLimit": 18000,
-  "source": "V4 2026-10-12 fixed current-dong names; independent noindex preview, no public performance guarantees",
+  "source": "V4 fixed 2026-10-12 dong names; user approved indexing at plants.nalmada.net; product inventory and delivery are seller references requiring review",
   "imageLibrary": "promotion-plant",
   "imageAssetsApproved": false,
   "cookiePrivacyReviewed": false,
@@ -62,5 +62,7 @@
     ],
     "startNumber": 2,
     "expectedDongCount": 1732
-  }
+  },
+  "publicIndexingApproved": true,
+  "naverSiteVerification": "7e7acc99a89fa45de0dd0c5c454568ccca2e495b"
 }

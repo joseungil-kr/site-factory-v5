@@ -59,3 +59,18 @@ test('staging applies HTTP noindex to homepage, numbered HTML and 404', async()=
     else assert.equal(resp.status,200);
   }
 });
+
+
+test('only plants.nalmada.net permits indexing; workers.dev stays noindex',async()=>{
+  const staging={...env,V5_STAGING:'1',V5_PUBLIC_HOST:'plants.nalmada.net'};
+  const publicPage=await adapter.fetch(new Request('https://plants.nalmada.net/'),staging);
+  assert.equal(publicPage.status,200);
+  assert.equal(publicPage.headers.get('X-Robots-Tag'),null);
+  const preview=await adapter.fetch(new Request('https://sfv5-seoul-gyeonggi-plants-preview.joseungil.workers.dev/'),staging);
+  assert.match(preview.headers.get('X-Robots-Tag'),/noindex/);
+  const public404=await adapter.fetch(new Request('https://plants.nalmada.net/404-test.html'),staging);
+  assert.equal(public404.status,404);
+  assert.match(public404.headers.get('X-Robots-Tag'),/noindex/);
+  const previewRobots=await adapter.fetch(new Request('https://sfv5-seoul-gyeonggi-plants-preview.joseungil.workers.dev/robots.txt'),staging);
+  assert.ok((await previewRobots.text()).includes('Disallow: /'));
+});

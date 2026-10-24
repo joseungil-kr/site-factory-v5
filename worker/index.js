@@ -45,12 +45,24 @@ export default {
     } else {
       response = await env.ASSETS.fetch(request);
     }
-    if (env.V5_STAGING === '1') {
+    // Only this user-approved hostname is indexable. Keep workers.dev blocked.
+    const indexedHost = env.V5_STAGING === '1' &&
+      env.V5_PUBLIC_HOST === 'plants.nalmada.net' && url.hostname.toLowerCase() === 'plants.nalmada.net';
+    if (env.V5_STAGING === '1' && !indexedHost) {
       const headers = new Headers(response.headers);
       headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');
       headers.set('Cache-Control', 'no-store');
       headers.set('X-Content-Type-Options', 'nosniff');
+      if (url.pathname === '/robots.txt') {
+        headers.set('Content-Type','text/plain; charset=utf-8');
+        return new Response('User-agent: *\nDisallow: /\n', {status:200,headers});
+      }
       return new Response(response.body, {status:response.status, statusText:response.statusText, headers});
+    }
+    if (indexedHost && response.status === 404) {
+      const headers=new Headers(response.headers);
+      headers.set('X-Robots-Tag','noindex, nofollow');
+      return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
     }
     return response;
   }

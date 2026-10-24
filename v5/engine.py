@@ -80,8 +80,11 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
     data=read_site(site_id);site=data['site']
     if site.get('status')=='draft' or not data['pages']:
         raise ConfigError('Draft site is not buildable until pages, products and images are approved')
-    if mode not in ('preview','publish'):
-        raise ConfigError('Mode must be preview or publish')
+    if mode not in ('preview','publish','public-indexing'):
+        raise ConfigError('Mode must be preview, public-indexing, or publish')
+    if mode=='public-indexing':
+        if site['id']!='seoul-gyeonggi-plants' or site['domain']!='https://plants.nalmada.net' or not site.get('publicIndexingApproved',False):
+            raise ConfigError('User-approved search indexing mode is limited to plants.nalmada.net')
     if mode=='publish':
         from .config import assert_publish_ready
         assert_publish_ready(site)
@@ -91,7 +94,7 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
             raise ConfigError('Production image pool has not been approved')
         if not site.get('cookiePrivacyReviewed',False):
             raise ConfigError('Privacy and click-measurement scope needs review before production')
-    rendering_site={**site,'publishEnabled':mode=='publish'}
+    rendering_site={**site,'publishEnabled':mode=='publish','publicIndexingApproved':mode=='public-indexing'}
     out=(output or target_dir(site_id)).resolve()
     report=(reports or report_dir(site_id)).resolve()
     if out==ROOT or (ROOT in out.parents and not out.is_relative_to(ROOT/'dist')):

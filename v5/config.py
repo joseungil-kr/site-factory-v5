@@ -66,6 +66,16 @@ def read_site(site_id: str):
         pages,regions=expand(site,pages,regions,ROOT)
     if site['id'] != site_id:
         raise ConfigError('Site id mismatch')
+    verification=site.get('naverSiteVerification')
+    if verification is not None and (not isinstance(verification,str) or not re.fullmatch(r'[0-9a-fA-F]{40}',verification)):
+        raise ConfigError('Invalid Naver site-verification token')
+    if site.get('publicIndexingApproved'):
+        if site_id!='seoul-gyeonggi-plants' or site.get('domain')!='https://plants.nalmada.net':
+            raise ConfigError('Indexed review requires the explicitly approved plants.nalmada.net hostname')
+        if site.get('publishEnabled'):
+            raise ConfigError('Public indexing review cannot claim production publishing approval')
+        if not verification:
+            raise ConfigError('Indexed review requires the approved verification token')
     if site['theme'] not in THEMES:
         raise ConfigError('Unknown theme')
     if site['domain']:

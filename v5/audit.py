@@ -5,7 +5,7 @@ from math import ceil
 import hashlib
 from html.parser import HTMLParser
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
+from urllib.parse import unquote, urlsplit, quote
 import json
 import re
 from .config import read_site
@@ -137,10 +137,34 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
             content_pairs.append((similarity(a,all_bodies[q['id']]),p['number'],q['number']))
     max_sim=max(content_pairs,default=(0,0,0))
     if max_sim[0]>=0.49:errors.append(f'Body similarity over 49%: {max_sim}')
-    if site['domain'] is None:
+    robots_text=(out/'robots.txt').read_text(encoding='utf-8')
+    indexable='Allow: /' in robots_text
+    if not indexable:
         if (out/'sitemap.xml').exists():errors.append('Preview must not have production sitemap')
-        if (out/'robots.txt').read_text(encoding='utf-8')!='User-agent: *\nDisallow: /\n':
+        if robots_text!='User-agent: *\nDisallow: /\n':
             errors.append('Robots preview must disallow indexing')
+        for f,scan in extracted.items():
+            if next((m.get('content') for m in scan.meta if m.get('name')=='robots'),None)!='noindex,nofollow':
+                errors.append('Preview page missing noindex: '+f)
+    else:
+        if not site['domain']:errors.append('Indexed build requires configured public domain')
+        elif f'Sitemap: {site["domain"]}/sitemap.xml' not in robots_text:
+            errors.append('Indexed robots.txt must reference verified domain sitemap')
+        if not (out/'sitemap.xml').exists():errors.append('Indexed build missing sitemap')
+        for f,scan in extracted.items():
+            actual_robots=next((m.get('content') for m in scan.meta if m.get('name')=='robots'),None)
+            if f in ('404.html','search.html'):
+                if actual_robots!='noindex,nofollow':errors.append('Error/search page must remain noindex: '+f)
+            elif actual_robots!='index,follow':errors.append('Indexed HTML missing index,follow: '+f)
+            if f not in ('404.html','search.html') and site['domain']:
+                uri='/' if f=='index.html' else '/'+quote(f)
+                if f'<link rel="canonical" href="{site["domain"]}{uri}">' not in (out/f).read_text(encoding='utf-8'):
+                    errors.append('Indexed page canonical mismatch: '+f)
+        if site.get('naverSiteVerification'):
+            text=(out/'index.html').read_text(encoding='utf-8')
+            if text.count(f'<meta name="naver-site-verification" content="{site["naverSiteVerification"]}">')!=1:
+                errors.append('Homepage Naver verification missing or duplicated')
+        warnings.append('Indexing permitted by user; indexed pages still require independent inventory, delivery and content quality review')
     if any(not p.get('verifiedLive') for p in data['products']):
         warnings.append('Product price/stock and order destinations are referenced V4 data, not independently rechecked live')
     if any(p.suffix=='.svg' for p in out.rglob('*')):

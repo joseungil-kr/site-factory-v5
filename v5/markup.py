@@ -84,7 +84,7 @@ def link_block(links, css_class):
 def head(site,title,description,path,share_image):
     canonical=''
     robots='<meta name="robots" content="noindex,nofollow">'
-    if site['domain'] and site['publishEnabled']:
+    if site['domain'] and (site['publishEnabled'] or site.get('publicIndexingApproved',False)):
         domain=site['domain'].rstrip('/')
         robots='<meta name="robots" content="index,follow">'
         canonical=f'<link rel="canonical" href="{h(domain+path)}">'
@@ -92,6 +92,7 @@ def head(site,title,description,path,share_image):
         '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
         f'<title>{h(title)} | {h(site["brand"])}</title>'
         f'<meta name="description" content="{h(description[:155])}">{robots}{canonical}'
+        +(f'<meta name="naver-site-verification" content="{h(site["naverSiteVerification"])}">' if path=='/' and site.get('naverSiteVerification') else '')
         '<link rel="stylesheet" href="/assets/site.css">'
         f'<link rel="stylesheet" href="/assets/theme-{h(site["theme"])}.css">'
         f'<meta property="og:title" content="{h(title)}">'
@@ -115,7 +116,7 @@ def header(site):
         '<nav class="primary-nav" aria-label="주요 메뉴">'+main_navigation(site)+'</nav>'
         f'<a data-track-event="phone" class="phone" href="tel:{tel}"><span aria-hidden="true">☎</span> {h(site["phone"])}</a>'
         '</div></header>'
-        +('<aside class="preview-banner" role="note"><strong>임시 시안 · 검색 제외</strong> 상품 사진·가격·재고 및 배송 조건은 최종 확인 전입니다. 판매처 참고사진과 실제 구성은 주문 화면에서 확인해 주세요.</aside>'
+        +('<aside class="preview-banner" role="note"><strong>'+('상품 정보 확인 안내' if site.get('publicIndexingApproved',False) else '임시 시안 · 검색 제외')+'</strong> 상품 사진·가격·재고 및 배송 조건은 최종 확인 전입니다. 판매처 참고사진과 실제 구성은 주문 화면에서 확인해 주세요.</aside>'
            if not site.get('publishEnabled',False) else ''))
 
 
@@ -314,14 +315,14 @@ def special_page(site,item,products,links):
 
 
 def error_page(site,links):
-    return (head({**site,'publishEnabled':False},'페이지를 찾을 수 없습니다','요청한 페이지가 존재하지 않습니다.','/404.html','/assets/images/'+site['imagePool'][0])
+    return (head({**site,'publishEnabled':False,'publicIndexingApproved':False},'페이지를 찾을 수 없습니다','요청한 페이지가 존재하지 않습니다.','/404.html','/assets/images/'+site['imagePool'][0])
         +header(site)+'<main id="main" class="container utility-page"><h1>페이지를 찾을 수 없습니다</h1>'
         '<p>주소가 잘못되었거나 삭제된 페이지입니다.</p><p><a class="button btn-outline" href="/">첫 페이지로 돌아가기</a></p></main>'
         +footer(site,links))
 
 
 def search_page(site,links):
-    return (head({**site,'publishEnabled':False},'사이트 글 검색','이 사이트 안의 글을 제목과 소개로 검색합니다.','/search.html','/assets/images/'+site['imagePool'][0])
+    return (head({**site,'publishEnabled':False,'publicIndexingApproved':False},'사이트 글 검색','이 사이트 안의 글을 제목과 소개로 검색합니다.','/search.html','/assets/images/'+site['imagePool'][0])
         +header(site)+'<main id="main" class="container utility-page"><h1>사이트 글 검색</h1>'
         '<p>찾으려는 지역이나 주제를 입력하세요.</p>'
         '<form id="site-search-form"><label for="site-query">검색어</label>'
