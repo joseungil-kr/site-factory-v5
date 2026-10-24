@@ -1,0 +1,54 @@
+[
+  {
+    "sku": "D144",
+    "name": "금전수 탁상용",
+    "referencePrice": 53000,
+    "referenceDate": "2026-10-22",
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D144",
+    "verifiedLive": true,
+    "lastLiveCheckedOn": "2026-10-24",
+    "lastLiveEvidence": "https://fwith.co.kr/shop/item.php?it_id=D144 | product title D144, 53000 KRW, purchase button observed",
+    "imageUrl": "https://fwith.co.kr/data/item/flower379/D144/thumb-1_270x270.jpg",
+    "imageSource": "V4 flower-a catalogue imageUrl as of 2026-10-23; not independently image-tested in staging"
+  },
+  {
+    "sku": "D149",
+    "name": "녹보수 소형",
+    "referencePrice": 65000,
+    "referenceDate": "2026-10-22",
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D149",
+    "verifiedLive": false,
+    "imageUrl": "https://fwith.co.kr/data/item/flower379/D149/thumb-1_270x270.jpg",
+    "imageSource": "V4 flower-a catalogue imageUrl as of 2026-10-23; not independently image-tested in staging"
+  },
+  {
+    "sku": "D158",
+    "name": "스투키 탁상용",
+    "referencePrice": 50000,
+    "referenceDate": "2026-10-22",
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D158",
+    "verifiedLive": false,
+    "imageUrl": "https://fwith.co.kr/data/item/flower379/D158/thumb-1_270x270.jpg",
+    "imageSource": "V4 flower-a catalogue imageUrl as of 2026-10-23; not independently image-tested in staging"
+  },
+  {
+    "sku": "D143",
+    "name": "몬스테라 소형",
+    "referencePrice": 62000,
+    "referenceDate": "2026-10-22",
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D143",
+    "verifiedLive": false,
+    "imageUrl": "https://fwith.co.kr/data/item/flower379/D143/thumb-1_270x270.jpg",
+    "imageSource": "V4 flower-a catalogue imageUrl as of 2026-10-23; not independently image-tested in staging"
+  },
+  {
+    "sku": "D151",
+    "name": "크루시아 소형",
+    "referencePrice": 65000,
+    "referenceDate": "2026-10-22",
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D151",
+    "verifiedLive": false,
+    "imageUrl": "https://fwith.co.kr/data/item/flower379/D151/thumb-1_270x270.jpg",
+    "imageSource": "V4 flower-a catalogue imageUrl as of 2026-10-23; not independently image-tested in staging"
+  }
+]

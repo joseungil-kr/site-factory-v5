@@ -61,6 +61,9 @@ def read_site(site_id: str):
     links = read_json(root/'links.json')
     special = read_json(root/'special-pages.json')
     regions = read_json(root/'regions.json')
+    if site.get('regionalScale',{}).get('enabled',False):
+        from .region_pages import expand
+        pages,regions=expand(site,pages,regions,ROOT)
     if site['id'] != site_id:
         raise ConfigError('Site id mismatch')
     if site['theme'] not in THEMES:
@@ -127,7 +130,8 @@ def read_site(site_id: str):
             raise ConfigError(f'Missing shared asset: {name}')
     unique_by(special,'path','special page')
     unique_by(links,'id','link id')
-    filenames={"index.html" if n==1 else f"{n}.html" for n in numbers}
+    from .markup import filename as page_filename
+    filenames={page_filename(n) for n in numbers}
     for s in special:
         safe_filename(s['path'])
         if s['path'] in filenames or s['path']=='404.html':
@@ -135,7 +139,7 @@ def read_site(site_id: str):
         if s['type'] not in {'calculator','content'}:
             raise ConfigError('Unknown special page module')
     specials={s['path'] for s in special if s.get('enabled',True)}
-    targets={'/'}|{'/'+('index.html' if n==1 else f'{n}.html') for n in numbers}|{'/'+s for s in specials}
+    targets={'/'}|{'/'+page_filename(n) for n in numbers}|{'/'+s for s in specials}
     for item in site.get('navigation',[]):
         if not isinstance(item,dict) or not item.get('label') or item.get('href') not in targets:
             raise ConfigError('Site navigation must link to a real generated page')

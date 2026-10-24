@@ -1,0 +1,66 @@
+{
+  "id": "seoul-gyeonggi-plants",
+  "brand": "꽃이랑",
+  "siteTitle": "서울·경기 축하화분·승진화분",
+  "domain": null,
+  "workerName": null,
+  "locale": "ko-KR",
+  "phone": "1844-0644",
+  "keyword": "축하화분·승진화분",
+  "region": "서울·경기",
+  "theme": "classic",
+  "imagePool": [
+    "hero-florist.webp",
+    "atelier-florist.webp",
+    "moment-blooms.webp",
+    "moment-leaves.webp",
+    "moment-flowers.webp",
+    "plant-a.svg",
+    "plant-b.svg",
+    "plant-c.svg"
+  ],
+  "orderBaseUrl": "https://fwith.co.kr",
+  "publishEnabled": false,
+  "analytics": {
+    "enabled": false
+  },
+  "siteSearch": {
+    "enabled": false
+  },
+  "staticAssetSoftLimit": 18000,
+  "source": "V4 2026-10-12 fixed current-dong names; independent noindex preview, no public performance guarantees",
+  "imageLibrary": "promotion-plant",
+  "imageAssetsApproved": false,
+  "cookiePrivacyReviewed": false,
+  "indexNow": {
+    "enabled": false,
+    "key": null
+  },
+  "navigation": [
+    {
+      "label": "홈",
+      "href": "/"
+    },
+    {
+      "label": "안내 문서",
+      "href": "/2.html"
+    },
+    {
+      "label": "배송안내",
+      "href": "/배송안내.html"
+    },
+    {
+      "label": "견적계산기",
+      "href": "/견적계산기.html"
+    }
+  ],
+  "regionalScale": {
+    "enabled": true,
+    "topics": [
+      "축하화분",
+      "승진화분"
+    ],
+    "startNumber": 2,
+    "expectedDongCount": 1732
+  }
+}

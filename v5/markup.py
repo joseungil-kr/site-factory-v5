@@ -31,7 +31,7 @@ def h(value):
 
 
 def filename(number):
-    return 'index.html' if number == 1 else f'{number}.html'
+    return 'index.html' if number==1 else ('page-404.html' if number==404 else f'{number}.html')
 
 
 def url_path(number):
@@ -250,7 +250,7 @@ def detail(site,page,pages,products,links):
         '<main id="main" class="container document-page">'
         '<nav class="breadcrumbs" aria-label="현재 위치"><a href="/">홈</a><span aria-hidden="true">›</span><span>안내 문서</span></nav>'
         '<header class="doc-hero"><div class="doc-hero-copy">'
-        f'<span class="section-tag">{h(page["region"])} · {h(site["keyword"])}</span>'
+        f'<span class="section-tag">{h(page["region"])} · {h(page.get("searchKeyword",site["keyword"]))}</span>'
         f'<h1>{h(page["title"])}</h1><p class="lead">{h(page["intro"])}</p>'
         '</div><div class="doc-hero-art">'
         +illustration(site,(page['number']-1)%2,'hero-image','축하 식물의 범용 일러스트')+'</div></header>'

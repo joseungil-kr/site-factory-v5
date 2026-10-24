@@ -1,0 +1,4 @@
+[
+  {"path":"견적계산기.html","title":"승진화분 예산 계산기","type":"calculator","description":"선택 수량과 참고가격으로 예산을 가늠하는 계산기입니다. 최종 금액은 판매처에서 확인해 주세요.","enabled":true},
+  {"path":"배송안내.html","title":"화분 배송·주문 안내","type":"content","description":"배송 가능 여부와 희망 일정은 주문 전 판매처에 확인해 주세요. 정확한 받는 곳 주소와 연락처를 준비하면 상담이 수월합니다.","enabled":true}
+]

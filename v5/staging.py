@@ -107,6 +107,9 @@ def staging_check(site_id:str,origin:str):
         raise ConfigError('Staging hostname does not match the isolated Worker')
     origin=origin.rstrip('/')
     paths=['/','/2.html','/10.html','/'+quote('견적계산기.html'),'/404-auditor-sentinel.html']
+    if len(read_site(site_id)['pages'])>300:
+        from .markup import filename
+        paths+=['/'+filename(404),'/'+filename(max(p['number'] for p in read_site(site_id)['pages']))]
     checks=[]
     for path in paths:
         req=Request(origin+path,headers={'User-Agent':'SiteFactoryV5-Staging-Audit/0.4'})

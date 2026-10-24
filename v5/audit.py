@@ -1,6 +1,8 @@
 """Strict local preflight: asset links, SEO metadata, safe preview and text differences."""
 from __future__ import annotations
 from collections import Counter
+from math import ceil
+import hashlib
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
@@ -104,15 +106,35 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
                 errors.append(f'Missing pagination link {file} => {n}')
         if p['number'] not in numbers:errors.append(f'Current page omitted in pagination: {file}')
         if len(numbers)>7:errors.append(f'Pagination longer than 7: {file}')
-        if site['keyword'] not in p['title']:warnings.append(f'Unexpected keyword in title: {file}')
+        if p.get('searchKeyword',site['keyword']) not in p['title']:warnings.append(f'Unexpected keyword in title: {file}')
         if len(p['intro'])+sum(len(s['paragraph']) for s in p['sections'])<250:
             warnings.append(f'Thin sample content: {file}')
+    # Whole-population exact duplicate guard; pinned stratified 1% similarity
+    # gate for large projects, explicitly NOT a complete semantic review.
+    full_pages=data['pages']
+    all_bodies={p['id']:' '.join([p['intro']]+[x['paragraph'] for x in p['sections']]) for p in full_pages}
+    counts=Counter(hashlib.sha256(v.encode('utf-8')).hexdigest() for v in all_bodies.values())
+    if max(counts.values(),default=0)>1:
+        errors.append('Exact repeated regional article body detected')
+    similarity_mode='complete'
+    if len(full_pages)>300:
+        by_topic={}
+        for p in full_pages:
+            by_topic.setdefault(p.get('searchKeyword',site['keyword']),[]).append(p)
+        selected=[]
+        for topic,rows in sorted(by_topic.items()):
+            n=max(1,ceil(len(rows)*0.01))
+            selected.extend(sorted(rows,key=lambda x:hashlib.sha256(('v5-dong-similarity-v1:'+x['id']).encode()).digest())[:n])
+        selected=sorted(selected,key=lambda x:x['number'])
+        similarity_mode='fixed-stratified-1pct'
+        warnings.append('Similarity calculated on pinned 1% stratified sample, not complete pairs; independent semantic review required before indexable publication')
+    else:
+        selected=full_pages
     content_pairs=[]
-    for i,p in enumerate(data['pages']):
-        a=' '.join([p['intro']]+[x['paragraph'] for x in p['sections']])
-        for q in data['pages'][i+1:]:
-            b=' '.join([q['intro']]+[x['paragraph'] for x in q['sections']])
-            content_pairs.append((similarity(a,b),p['number'],q['number']))
+    for i,p in enumerate(selected):
+        a=all_bodies[p['id']]
+        for q in selected[i+1:]:
+            content_pairs.append((similarity(a,all_bodies[q['id']]),p['number'],q['number']))
     max_sim=max(content_pairs,default=(0,0,0))
     if max_sim[0]>=0.49:errors.append(f'Body similarity over 49%: {max_sim}')
     if site['domain'] is None:
@@ -127,6 +149,7 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
     if len(files)>site.get('staticAssetSoftLimit',18000):errors.append('Static assets exceed safety budget')
     result={'site':site_id,'checkedHtmlFiles':len(html_pages),'checkedAssetFiles':len(files),
             'verifiedInternalReferences':sum(len(x.refs) for x in extracted.values()),
+            'similarityMode':similarity_mode,'similaritySampleSize':len(selected),'similarityPopulation':len(full_pages),
             'similarityPairs':len(content_pairs),'maxBodyChar5gramJaccard':round(max_sim[0],5),
             'maxSimilarPair':[max_sim[1],max_sim[2]],'errors':errors,'warnings':warnings}
     if write_report:
