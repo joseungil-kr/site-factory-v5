@@ -76,13 +76,17 @@ def clean(page,row,region_index,topic_index):
     location=("서울 "+parent.removeprefix("서울특별시 ") if parent.startswith("서울특별시 ") else "경기 "+parent.removeprefix("경기도 "))+" "+dong
     page["title"]=f"{location} {topic} | {page['topic']}"
     page["intro"]=f"{parent} {dong}의 {topic}은 새로운 시작과 기쁜 소식을 함께하는 초록빛 선물입니다. 잎의 생기와 따뜻한 축하 메시지가 어우러져 기억에 남을 순간을 만듭니다."
+    from hashlib import sha256
+    def select(pool,category,index):
+        digest=sha256((parent+'|'+dong+'|'+topic+'|'+str(index)+'|'+category).encode('utf-8')).digest()
+        return pool[int.from_bytes(digest[:8],'big')%len(pool)]
     primary=(SCENES,SPACES,PLANTS,MESSAGES,LIFE)
     secondary=(MESSAGES,PLANTS,SCENES,LIFE,PLANTS)
     sections=[]
     for index,heading in enumerate(HEADINGS):
-        a=primary[index][(n*(index+3)+index*7)%len(primary[index])]
-        b=secondary[index][(n*(index+5)+index*11+topic_index)%len(secondary[index])]
-        c=LIFE[(n*(index+7)+index*13)%len(LIFE)]
+        a=select(primary[index],'main',index)
+        b=select(secondary[index],'detail',index)
+        c=select(LIFE,'scene',index)
         sections.append({"heading":heading,"paragraph":f"{dong}에서 {topic}을 떠올리는 순간에는 특별한 마음이 함께합니다. "+a+" "+b+" "+c})
     page["sections"]=sections
     page["faq"]=[
