@@ -88,11 +88,12 @@ def head(site,title,description,path,share_image):
         domain=site['domain'].rstrip('/')
         robots='<meta name="robots" content="index,follow">'
         canonical=f'<link rel="canonical" href="{h(domain+path)}">'
+    verification=(f'<meta name="naver-site-verification" content="{h(site["naverSiteVerification"])}">' if path=='/' and site.get('naverSiteVerification') else '')
     return ('<!doctype html>\n<html lang="ko"><head>'
         '<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">'
         f'<title>{h(title)} | {h(site["brand"])}</title>'
         f'<meta name="description" content="{h(description[:155])}">{robots}{canonical}'
-        +(f'<meta name="naver-site-verification" content="{h(site["naverSiteVerification"])}">' if path=='/' and site.get('naverSiteVerification') else '')
+        f'{verification}'
         '<link rel="stylesheet" href="/assets/site.css">'
         f'<link rel="stylesheet" href="/assets/theme-{h(site["theme"])}.css">'
         f'<meta property="og:title" content="{h(title)}">'
