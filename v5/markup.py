@@ -116,9 +116,7 @@ def header(site):
         f'<span class="brand-text">{h(site["brand"])}<small>소중한 마음을 전하는 특별한 선택</small></span></a>'
         '<nav class="primary-nav" aria-label="주요 메뉴">'+main_navigation(site)+'</nav>'
         f'<a data-track-event="phone" class="phone" href="tel:{tel}"><span aria-hidden="true">☎</span> {h(site["phone"])}</a>'
-        '</div></header>'
-        +('<aside class="preview-banner" role="note"><strong>'+('상품 정보 확인 안내' if site.get('publicIndexingApproved',False) else '임시 시안 · 검색 제외')+'</strong> 상품 사진·가격·재고 및 배송 조건은 최종 확인 전입니다. 판매처 참고사진과 실제 구성은 주문 화면에서 확인해 주세요.</aside>'
-           if not site.get('publishEnabled',False) else ''))
+        '</div></header>')
 
 
 def footer(site,links,page=None,self_path=None):
@@ -131,7 +129,7 @@ def footer(site,links,page=None,self_path=None):
         '<div class="footer-contacts">'
         f'<a data-track-event="phone" href="tel:{tel}">☎ {h(site["phone"])} 전화 상담</a>'
         f'<a href="{h(site["orderBaseUrl"])}" rel="noopener" target="_blank">판매처 바로가기 ↗</a></div>'
-        '</div><p class="footer-note">실제 가격·배송 일정·구성은 주문 전 판매처에서 확인해 주세요.</p></footer>'
+        '</div></footer>'
         +('<script src="/assets/analytics.js" defer></script>' if site.get('analytics',{}).get('enabled') else '')
         +'</body></html>')
 
@@ -156,9 +154,8 @@ def product_html(products,selected):
         p=catalog[sku]
         rows.append('<article class="product">'
             '<div class="product-glyph" aria-hidden="true">✿</div><div class="product-copy">'
-            f'<h3>{h(p["name"])}</h3><p>구성·크기·가격은 판매처 상세 화면에서 확인할 수 있습니다.</p>'
-            f'<p class="source-date">가격 참고 자료 기준일: {h(p["referenceDate"])}</p></div>'
-            f'<a data-track-event="shop" class="button btn-outline" target="_blank" rel="noopener noreferrer" href="{h(p["orderUrl"])}">상품 확인 ↗</a>'
+            f'<h3>{h(p["name"])}</h3><p>축하와 응원의 마음을 담은 식물 선물입니다.</p></div>'
+            f'<a data-track-event="shop" class="button btn-outline" target="_blank" rel="noopener noreferrer" href="{h(p["orderUrl"])}">상품 보러가기 ↗</a>'
             '</article>')
     return ''.join(rows)
 
@@ -209,37 +206,37 @@ def home(site,page,pages,products,links):
         '</div></section>'
         '<section class="benefit-band" aria-label="서비스 이용 안내"><div class="wide-inner benefit-grid">'
         '<div><span aria-hidden="true">'+icon('leaf')+'</span><strong>상황에 맞는 선택</strong><small>용도와 장소를 함께 고려해요</small></div>'
-        '<div><span aria-hidden="true">'+icon('truck')+'</span><strong>배송 조건 상담</strong><small>받는 장소와 일정을 먼저 확인해요</small></div>'
-        '<div><span aria-hidden="true">'+icon('shield')+'</span><strong>꼼꼼한 주문 안내</strong><small>상품 정보를 정확히 살펴봐요</small></div>'
+        '<div><span aria-hidden="true">'+icon('truck')+'</span><strong>배송 상담</strong><small>마음을 전할 장소와 날짜를 함께 이야기해요</small></div>'
+        '<div><span aria-hidden="true">'+icon('shield')+'</span><strong>편리한 주문 안내</strong><small>원하는 식물 선물을 간편하게 찾아요</small></div>'
         '<div><span aria-hidden="true">'+icon('heart')+'</span><strong>따뜻한 축하 메시지</strong><small>전하고 싶은 마음을 담아요</small></div>'
         '</div></section>'
         '<section class="home-section moments wide-inner"><div class="section-header"><div>'
         '<span class="section-tag">OCCASIONS</span><h2>이런 순간에 도움이 됩니다</h2>'
-        '<p>상황에 따라 달라지는 선택을 읽어보세요.</p></div>'
+        '<p>축하하는 순간마다 어울리는 화분 이야기를 소개합니다.</p></div>'
         '<a href="/2.html" class="text-link">안내 문서 더 보기 ↗</a></div>'
         +moment_cards(site,pages)+'</section>'
         '<section class="story-split wide-inner"><div class="story-copy">'
         '<span class="section-tag">THOUGHTFUL SERVICE</span>'
         f'<h2>{h(page["sections"][0]["heading"])}</h2><p>{h(page["sections"][0]["paragraph"])}</p>'
-        '<a href="/2.html" class="text-link">주문 전 참고할 내용 보기 ↗</a>'
+        '<a href="/2.html" class="text-link">꽃 선물 이야기 더 보기 ↗</a>'
         '</div><div class="story-art">'+illustration(site,1,'story-picture','식물 선물을 준비하는 꽃집 일러스트')+'</div></section>'
         '<section class="home-section wide-inner"><div class="section-header"><div>'
         '<span class="section-tag">ORDER GUIDE</span><h2>처음부터 끝까지 간단하게</h2>'
-        '<p>예약·배송을 확약하는 절차가 아닌, 주문 전 확인 순서입니다.</p></div></div>'
+        '<p>축하의 마음을 담아 상품을 고르고 주문하는 흐름을 소개합니다.</p></div></div>'
         '<div class="steps-grid"><div><span class="step-icon">'+icon('chat')+'</span><b>01</b><strong>상담 및 문의</strong><small>원하는 상황을 알려주세요</small></div>'
-        '<div><span class="step-icon">'+icon('clipboard')+'</span><b>02</b><strong>상품과 조건 확인</strong><small>제품과 배송지를 비교해요</small></div>'
-        '<div><span class="step-icon">'+icon('card')+'</span><b>03</b><strong>주문 정보 확인</strong><small>가격과 옵션을 살펴봐요</small></div>'
-        '<div><span class="step-icon">'+icon('gift')+'</span><b>04</b><strong>소중한 마음 전하기</strong><small>메시지와 받는 곳을 확인해요</small></div></div></section>'
+        '<div><span class="step-icon">'+icon('clipboard')+'</span><b>02</b><strong>식물 선물 고르기</strong><small>어울리는 화분을 찾아보세요</small></div>'
+        '<div><span class="step-icon">'+icon('card')+'</span><b>03</b><strong>주문 진행</strong><small>마음을 전할 상품을 선택해요</small></div>'
+        '<div><span class="step-icon">'+icon('gift')+'</span><b>04</b><strong>축하 마음 전하기</strong><small>축하 메시지로 기쁨을 더해요</small></div></div></section>'
         '<section class="home-section home-reading wide-inner"><div class="section-header"><div>'
-        '<span class="section-tag">DETAIL GUIDE</span><h2>주문 전에 알아두면 좋은 이야기</h2>'
-        '<p>간단한 배너뿐 아니라 실제 도움이 되는 정보를 담았습니다.</p></div></div>'
+        '<span class="section-tag">DETAIL GUIDE</span><h2>꽃과 식물에 담긴 이야기</h2>'
+        '<p>선물의 의미와 공간에 어울리는 식물의 매력을 전합니다.</p></div></div>'
         +article_body(page)+'</section>'
         '<section class="home-section faq-section wide-inner"><div class="section-header"><div>'
         '<span class="section-tag">FAQ</span><h2>자주 묻는 질문</h2></div></div>'
         '<div class="faq-list">'+faq_markup(page)+'</div></section>'
         '<section class="order-cta home-cta wide-inner"><div><span class="section-tag">CONTACT</span>'
         f'<h2>{h(region)} {h(keyword)}, 궁금한 점부터 물어보세요.</h2>'
-        '<p>판매처에서 실제 가격·상품 구성·가능한 배송 일정을 확인한 후 결정하세요.</p></div>'
+        '<p>축하화분과 승진화분으로 소중한 순간을 더욱 특별하게 전하세요.</p></div>'
         +phone_buttons(site)+'</section>'
         +link_block(relevant_links(links,page,'body'),'body-links wide-inner')
         +render_pagination(pages,page['number'])+'</main>')
@@ -258,22 +255,22 @@ def detail(site,page,pages,products,links):
         +illustration(site,(page['number']-1)%2,'hero-image','축하 식물의 범용 일러스트')+'</div></header>'
         '<div class="document-grid"><div class="document-main">'+article_body(page)+
         '<section class="recommendations" aria-labelledby="products-heading"><div class="section-heading">'
-        '<span class="section-tag">ORDER CHECK</span><h2 id="products-heading">관련 상품 주문 확인</h2>'
-        '<p>판매처 참고사진은 실제 주문화면에서 확인해 주세요. 아래는 상품명과 주문 경로를 안내합니다.</p>'
+        '<span class="section-tag">PLANT COLLECTION</span><h2 id="products-heading">관련 식물 선물</h2>'
+        '<p>취향과 공간에 따라 어울리는 화분을 만나보세요.</p>'
         '</div><div class="product-list">'+product_html(products,page['productSkus'])+'</div></section>'
         '<section class="faq" aria-label="자주 묻는 질문"><span class="section-tag">FAQ</span>'
         '<h2>자주 묻는 질문</h2><div class="faq-list">'+faq_markup(page)+'</div></section>'
         +link_block(relevant_links(links,page,'body'),'body-links')+
         '</div><aside class="document-aside" aria-label="빠른 주문 안내"><div class="aside-panel">'
-        '<span class="section-tag">QUICK GUIDE</span><h2>필요한 내용을 확인해요</h2>'
-        '<p>실제 배송 일시와 가격은 상담이나 주문 화면에서 확인해 주세요.</p>'
+        '<span class="section-tag">QUICK ORDER</span><h2>꽃 선물 상담</h2>'
+        '<p>축하하는 마음을 전할 식물 선물을 함께 골라보세요.</p>'
         f'<a class="button btn-coral" data-track-event="phone" href="tel:{h(site["phone"].replace("-",""))}">☎ 전화 {h(site["phone"])}</a>'
         f'<a class="button btn-outline" href="{h(site["orderBaseUrl"])}" rel="noopener noreferrer" target="_blank">온라인 주문 ↗</a>'
         '</div><div class="aside-art">'+illustration(site,(page['number']+1)%2,'aside-picture','식물 선물의 일러스트')+'</div></aside></div>'
         '<section class="related-section"><div class="section-header"><div><span class="section-tag">MORE GUIDES</span>'
         '<h2>이런 내용도 함께 살펴보세요</h2></div></div>'+related_documents(pages,page['number'],3)+'</section>'
         '<section class="order-cta doc-cta"><div><h2>상담부터 편하게 시작하세요</h2>'
-        '<p>상품번호와 받을 장소를 준비하시면 안내를 받기 쉽습니다.</p></div>'
+        '<p>마음에 드는 식물 선물과 축하 메시지로 새로운 시작을 응원하세요.</p></div>'
         +phone_buttons(site)+'</section>'
         +render_pagination(pages,page['number'])+'</main>')
     return body+footer(site,links,page)
@@ -290,27 +287,26 @@ def special_page(site,item,products,links):
         '<div class="doc-hero-art">'+illustration(site,1,'hero-image','식물 선물 일러스트')+'</div></header>'
         '<div class="special-content">')
     if item['type']=='calculator':
-        options=''.join(f'<option value="{h(p["sku"])}">{h(p["name"])} ({p["referencePrice"]:,}원 참고)</option>' for p in products)
+        options=''.join(f'<option value="{h(p["sku"])}">{h(p["name"])} ({p["referencePrice"]:,}원)</option>' for p in products)
         prices={p['sku']:p['referencePrice'] for p in products}
         body+=('<section class="document-section"><span class="section-tag">BUDGET CALCULATOR</span>'
-            '<h2>대략적인 상품 예산 계산</h2><p>지난 가격 기록을 이용한 참고용 계산입니다.</p>'
+            '<h2>화분 선물 예산 계산</h2><p>마음에 드는 상품과 수량을 골라 예산을 계산해 보세요.</p>'
             '<div class="calculator">'
             '<label for="sku">상품 종류</label><select id="sku">'+options+'</select>'
             '<label for="quantity">수량 (1~99)</label><input id="quantity" type="number" min="1" max="99" value="1" step="1">'
             '<button class="button btn-coral" type="button" id="estimate-submit">예산 계산하기</button>'
-            '<output id="estimate" aria-live="polite">참고 합계 계산 중</output>'
-            '<p class="fine">지난 가격 기록을 이용한 단순 참고 계산입니다. 배송비·추가 선택 사항은 미포함이며 실제 결제 금액이 아닙니다.</p>'
+            '<output id="estimate" aria-live="polite">상품 합계 계산 중</output>'
             '</div></section>'
             f'<script type="application/json" id="price-data">{json.dumps(prices,ensure_ascii=False).replace("<",r"\u003c")}</script>'
             '<script src="/assets/calculator.js" defer></script>')
     else:
         body+=('<section class="document-section"><span class="section-tag">DELIVERY CHECK</span>'
-        '<h2>주문 전에 확인할 내용</h2><p>받는 분의 회사명·주소·연락처를 준비하세요. 상품 재고와 희망 배송일은 전화 또는 온라인 주문 화면에서 확인해 주세요.</p></section>'
-        '<section class="document-section"><h2>원하는 날짜를 알려주세요</h2>'
-        '<p>주문하신 시간과 수령 장소에 따라 실제 배송 가능 일정이 달라질 수 있습니다. 판매처 확인 후 주문해 주세요.</p></section>')
+        '<h2>화분이 어울리는 공간</h2><p>사무실과 행사장, 새로운 출발을 축하하는 자리까지 화분은 초록빛 생기와 따뜻한 마음을 더합니다.</p></section>'
+        '<section class="document-section"><h2>축하의 순간을 함께해요</h2>'
+        '<p>특별한 날의 분위기에 어울리는 꽃과 식물을 고르고, 축하 메시지를 담아 마음을 전하는 즐거움을 만나보세요.</p></section>')
     body+=link_block(relevant_links(links,None,'body',path),'body-links')
     body+=('<section class="order-cta doc-cta"><div><h2>도움이 필요하신가요?</h2>'
-        '<p>실제 상품 정보와 배송 조건을 확인해 드릴 수 있도록 문의해 주세요.</p></div>'
+        '<p>소중한 순간을 위한 꽃과 식물 이야기를 함께 나눠보세요.</p></div>'
         +phone_buttons(site)+'</section></div></main>')
     return body+footer(site,links,None,path)
 
