@@ -1,12 +1,16 @@
-"""HTML, navigation, special page modules and shared UI rendering."""
+"""Portable, semantic V5 templates. Marketing index and long-form numbered documents.
+
+Only labels and HTML contain a region, product, shop URL or phone number;
+illustrative image assets are intentionally language-neutral and reusable.
+"""
 from __future__ import annotations
 import html
 import json
 from urllib.parse import quote
 
 
-def h(text):
-    return html.escape(str(text),quote=True)
+def h(value):
+    return html.escape(str(value), quote=True)
 
 
 def filename(number):
@@ -28,17 +32,17 @@ def pagination(pages, current_number, width=7):
 
 
 def render_pagination(pages, number):
-    all_links=[]
+    items=[]
     for n in pagination(pages,number):
         if n==number:
-            all_links.append(f'<span aria-current="page" class="active">{n}</span>')
+            items.append(f'<span aria-current="page" class="active">{n}</span>')
         else:
-            all_links.append(f'<a href="{h(url_path(n))}" aria-label="{n}번 페이지">{n}</a>')
-    return '<nav class="pagination" aria-label="다른 글 페이지">'+''.join(all_links)+'</nav>'
+            items.append(f'<a href="{h(url_path(n))}" aria-label="{n}번 페이지">{n}</a>')
+    return '<nav class="pagination" aria-label="다른 글 페이지">'+''.join(items)+'</nav>'
 
 
 def relevant_links(links, page, placement, self_path=None):
-    out=[]
+    selected=[]
     for link in links:
         if not link.get('enabled',True) or link['placement'] not in (placement,'both'):
             continue
@@ -49,8 +53,8 @@ def relevant_links(links, page, placement, self_path=None):
             continue
         if scope=='selected' and (page is None or page.get('id') not in link.get('pageIds',[])):
             continue
-        out.append(link)
-    return out
+        selected.append(link)
+    return selected
 
 
 def link_block(links, css_class):
@@ -61,10 +65,10 @@ def link_block(links, css_class):
 
 
 def head(site,title,description,path,share_image):
-    canonical = ''
-    robots = '<meta name="robots" content="noindex,nofollow">'
+    canonical=''
+    robots='<meta name="robots" content="noindex,nofollow">'
     if site['domain'] and site['publishEnabled']:
-        domain = site['domain'].rstrip('/')
+        domain=site['domain'].rstrip('/')
         robots='<meta name="robots" content="index,follow">'
         canonical=f'<link rel="canonical" href="{h(domain+path)}">'
     return ('<!doctype html>\n<html lang="ko"><head>'
@@ -79,103 +83,222 @@ def head(site,title,description,path,share_image):
         '</head>')
 
 
+def main_navigation(site):
+    rows=site.get('navigation', [{'label':'홈','href':'/'}])
+    return ''.join(f'<a href="{h(item["href"])}">{h(item["label"])}</a>' for item in rows)
+
+
 def header(site):
+    tel=h(site['phone'].replace('-',''))
     return ('<body><a class="skip-link" href="#main">본문 바로가기</a>'
-        '<header class="site-header">'
-        f'<a class="brand" href="/">{h(site["brand"])}</a>'
-        f'<a data-track-event="phone" class="phone" href="tel:{h(site["phone"].replace("-",""))}">☎ {h(site["phone"])}</a>'
-        '</header>'
-        + ('<aside class="preview-banner" role="note"><strong>임시 시안 · 검색 제외</strong> 상품 이미지·가격·재고와 배송 조건은 최종 확인 전입니다. 화면과 동선을 검토해 주세요.</aside>'
+        '<header class="site-header"><div class="header-inner">'
+        f'<a class="brand" href="/" aria-label="{h(site["brand"])} 홈">'
+        '<span class="brand-mark" aria-hidden="true">✿</span>'
+        f'<span class="brand-text">{h(site["brand"])}<small>소중한 마음을 전하는 특별한 선택</small></span></a>'
+        '<nav class="primary-nav" aria-label="주요 메뉴">'+main_navigation(site)+'</nav>'
+        f'<a data-track-event="phone" class="phone" href="tel:{tel}"><span aria-hidden="true">☎</span> {h(site["phone"])}</a>'
+        '</div></header>'
+        +('<aside class="preview-banner" role="note"><strong>임시 시안 · 검색 제외</strong> 상품 사진·가격·재고 및 배송 조건은 최종 확인 전입니다. 판매처 참고사진과 실제 구성은 주문 화면에서 확인해 주세요.</aside>'
            if not site.get('publishEnabled',False) else ''))
 
 
 def footer(site,links,page=None,self_path=None):
-    return ('<footer class="site-footer">'
-        '<p>승진 축하 화분 · 배송과 상품 조건은 판매처에서 확인해 주세요.</p>'
+    tel=h(site['phone'].replace('-',''))
+    return ('<footer class="site-footer"><div class="footer-inner">'
+        '<div class="footer-brand"><span aria-hidden="true" class="footer-leaf">✿</span>'
+        f'<strong>{h(site["brand"])}</strong><p>축하와 응원의 마음을 전하는 안내 서비스</p></div>'
+        '<nav class="footer-main-nav" aria-label="사이트 안내">'+main_navigation(site)+'</nav>'
         f'{link_block(relevant_links(links,page,"footer",self_path),"footer-nav")}'
-        f'<p>전화 상담 <a data-track-event="phone" href="tel:{h(site["phone"].replace("-",""))}">{h(site["phone"])}</a> · '
-        f'<a href="{h(site["orderBaseUrl"])}" rel="noopener" target="_blank">판매처 바로가기</a></p>'
-        '</footer>'+('<script src="/assets/analytics.js" defer></script>' if site.get('analytics',{}).get('enabled') else '')+'</body></html>')
+        '<div class="footer-contacts">'
+        f'<a data-track-event="phone" href="tel:{tel}">☎ {h(site["phone"])} 전화 상담</a>'
+        f'<a href="{h(site["orderBaseUrl"])}" rel="noopener" target="_blank">판매처 바로가기 ↗</a></div>'
+        '</div><p class="footer-note">실제 가격·배송 일정·구성은 주문 전 판매처에서 확인해 주세요.</p></footer>'
+        +('<script src="/assets/analytics.js" defer></script>' if site.get('analytics',{}).get('enabled') else '')
+        +'</body></html>')
 
 
-def product_html(products, selected):
+def illustration(site,index,css_class,alt):
+    image=site['imagePool'][index%len(site['imagePool'])]
+    return f'<img class="{h(css_class)}" src="/assets/images/{h(image)}" alt="{h(alt)}" loading="lazy" width="1000" height="620">'
+
+
+def phone_buttons(site,shop=True,context=''):
+    tel=h(site['phone'].replace('-',''))
+    content=f'<a class="button btn-coral" data-track-event="phone" href="tel:{tel}">☎ 전화 상담 {h(site["phone"])} <span aria-hidden="true">→</span></a>'
+    if shop:
+        content+=f'<a class="button btn-outline" href="{h(site["orderBaseUrl"])}" rel="noopener noreferrer" target="_blank">온라인 주문 확인 <span aria-hidden="true">↗</span></a>'
+    return f'<div class="button-row {h(context)}">{content}</div>'
+
+
+def product_html(products,selected):
     catalog={p['sku']:p for p in products}
-    blocks=[]
+    rows=[]
     for sku in selected:
         p=catalog[sku]
-        blocks.append('<article class="product">'
-            + (f'<img class="product-photo" src="{h(p["imageUrl"])}" alt="{h(p["name"])} 판매처 참고사진" width="270" height="270" loading="lazy">' if p.get('imageUrl') else '')
-            + f'<h3>{h(p["name"])}</h3>'
-            '<p>이미지·상품 구성·최종 가격은 판매처에서 확인해 주세요.</p>'
-            f'<p class="source-date">가격 참고 자료 기준일: {h(p["referenceDate"])}</p>'
-            f'<a data-track-event="shop" class="button secondary" target="_blank" rel="noopener noreferrer" href="{h(p["orderUrl"])}">{h(p["name"])} 온라인 주문 확인</a>'
+        rows.append('<article class="product">'
+            '<div class="product-glyph" aria-hidden="true">✿</div><div class="product-copy">'
+            f'<h3>{h(p["name"])}</h3><p>구성·크기·가격은 판매처 상세 화면에서 확인할 수 있습니다.</p>'
+            f'<p class="source-date">가격 참고 자료 기준일: {h(p["referenceDate"])}</p></div>'
+            f'<a data-track-event="shop" class="button btn-outline" target="_blank" rel="noopener noreferrer" href="{h(p["orderUrl"])}">상품 확인 ↗</a>'
             '</article>')
-    return ''.join(blocks)
+    return ''.join(rows)
+
+
+def related_documents(pages,current=None,limit=4):
+    chosen=[x for x in pages if x['number']!=current][:limit]
+    return '<div class="related-grid">'+''.join(
+        '<a class="related-card" href="'+h(url_path(p['number']))+'">'
+        '<span class="related-icon" aria-hidden="true">✿</span>'
+        '<strong>'+h(p['topic'])+'</strong><small>'+h(p['region'])+'</small>'
+        '<span class="related-arrow" aria-hidden="true">↗</span></a>' for p in chosen)+'</div>'
+
+
+def faq_markup(page):
+    return ''.join(f'<details><summary>{h(q["q"])}</summary><p>{h(q["a"])}</p></details>' for q in page.get('faq',[]))
+
+
+def article_body(page):
+    return ('<article class="article-content" data-content-id="'+h(page['id'])+'">'+''.join(
+        f'<section class="document-section" id="section-{i}"><span class="section-index">{i:02d}</span>'
+        f'<h2>{h(s["heading"])}</h2><p>{h(s["paragraph"])}</p></section>'
+        for i,s in enumerate(page['sections'],1))+'</article>')
+
+
+def home(site,page,pages,products,links):
+    """Free-form marketing index with the exact saved document content retained."""
+    share='/assets/images/'+site['imagePool'][0]
+    title=page['title'];region=site['region'];keyword=site['keyword']
+    body=(head(site,title,page['intro'],'/',share)+header(site)+
+        '<main id="main" class="home-page">'
+        '<section class="home-hero"><div class="hero-inner"><div class="hero-copy">'
+        f'<span class="section-tag">SPECIAL MOMENTS · {h(region)}</span>'
+        '<h1>소중한 마음을 전하는<br><em>'+h(keyword)+'</em></h1>'
+        '<p class="hero-description">'+h(page['intro'])+'</p>'
+        +phone_buttons(site,context='hero-actions')+'</div>'
+        '<div class="hero-art">'+illustration(site,0,'hero-plant','축하의 마음을 담은 식물 선물 일러스트')+'</div>'
+        '</div></section>'
+        '<section class="benefit-band" aria-label="서비스 이용 안내"><div class="wide-inner benefit-grid">'
+        '<div><span aria-hidden="true">✿</span><strong>상황에 맞는 선택</strong><small>용도와 장소를 먼저 생각해요</small></div>'
+        '<div><span aria-hidden="true">☏</span><strong>전화로 문의</strong><small>원하는 날짜와 조건을 확인해요</small></div>'
+        '<div><span aria-hidden="true">▤</span><strong>간단한 주문 안내</strong><small>필요한 정보를 정리해 드려요</small></div>'
+        '<div><span aria-hidden="true">♡</span><strong>축하 문구 안내</strong><small>마음을 담아 전해 보세요</small></div>'
+        '</div></section>'
+        '<section class="home-section moments wide-inner"><div class="section-header"><div>'
+        '<span class="section-tag">OCCASIONS</span><h2>이런 순간에 도움이 됩니다</h2>'
+        '<p>상황에 따라 달라지는 선택을 읽어보세요.</p></div>'
+        '<a href="/2.html" class="text-link">안내 문서 더 보기 ↗</a></div>'
+        +related_documents(pages,1,4)+'</section>'
+        '<section class="story-split wide-inner"><div class="story-copy">'
+        '<span class="section-tag">THOUGHTFUL SERVICE</span>'
+        f'<h2>{h(page["sections"][0]["heading"])}</h2><p>{h(page["sections"][0]["paragraph"])}</p>'
+        '<a href="/2.html" class="text-link">주문 전 참고할 내용 보기 ↗</a>'
+        '</div><div class="story-art">'+illustration(site,1,'story-picture','식물 선물을 준비하는 꽃집 일러스트')+'</div></section>'
+        '<section class="home-section wide-inner"><div class="section-header"><div>'
+        '<span class="section-tag">ORDER GUIDE</span><h2>처음부터 끝까지 간단하게</h2>'
+        '<p>예약·배송을 확약하는 절차가 아닌, 주문 전 확인 순서입니다.</p></div></div>'
+        '<div class="steps-grid"><div><b>01</b><strong>상품 살펴보기</strong><small>크기와 놓을 장소 확인</small></div>'
+        '<div><b>02</b><strong>배송 조건 상담</strong><small>주소·희망일 확인</small></div>'
+        '<div><b>03</b><strong>온라인 주문 확인</strong><small>상품별 상세 정보 확인</small></div>'
+        '<div><b>04</b><strong>축하 마음 전하기</strong><small>문구와 받는 사람 확인</small></div></div></section>'
+        '<section class="home-section home-reading wide-inner"><div class="section-header"><div>'
+        '<span class="section-tag">DETAIL GUIDE</span><h2>주문 전에 알아두면 좋은 이야기</h2>'
+        '<p>간단한 배너뿐 아니라 실제 도움이 되는 정보를 담았습니다.</p></div></div>'
+        +article_body(page)+'</section>'
+        '<section class="home-section faq-section wide-inner"><div class="section-header"><div>'
+        '<span class="section-tag">FAQ</span><h2>자주 묻는 질문</h2></div></div>'
+        '<div class="faq-list">'+faq_markup(page)+'</div></section>'
+        '<section class="order-cta home-cta wide-inner"><div><span class="section-tag">CONTACT</span>'
+        f'<h2>{h(region)} {h(keyword)}, 궁금한 점부터 물어보세요.</h2>'
+        '<p>판매처에서 실제 가격·상품 구성·가능한 배송 일정을 확인한 후 결정하세요.</p></div>'
+        +phone_buttons(site)+'</section>'
+        +link_block(relevant_links(links,page,'body'),'body-links wide-inner')
+        +render_pagination(pages,page['number'])+'</main>')
+    return body+footer(site,links,page)
 
 
 def detail(site,page,pages,products,links):
-    image=site['imagePool'][(page['number']-1)%len(site['imagePool'])]
-    share=f'/assets/images/{image}'
-    path=url_path(page['number'])
-    body=(head(site,page['title'],page['intro'],path,share)+header(site)+
-        '<main id="main" class="container">'
-        f'<p class="eyebrow">{h(page["region"])} · {h(site["keyword"])}</p>'
-        f'<h1>{h(page["title"])}</h1>'
-        f'<img class="hero-image" src="{h(share)}" alt="{h(site['keyword'])} 공용 이미지 예시" width="800" height="400">'
-        f'<p class="lead">{h(page["intro"])}</p>'
-        '<article class="article-content" data-content-id="'+h(page['id'])+'">')
-    for section in page['sections']:
-        body+=f'<section><h2>{h(section["heading"])}</h2><p>{h(section["paragraph"])}</p></section>'
-    body+='</article>'
-    body+=('<section class="recommendations"><h2>상품 정보 확인</h2>'
-        '<p>제품과 가격은 변경될 수 있습니다. 구매 전 판매처의 최신 정보를 확인하세요.</p>'
-        f'{product_html(products,page["productSkus"])}</section>')
-    body+=('<section class="faq"><h2>자주 묻는 질문</h2>'+''.join(
-        f'<details><summary>{h(q["q"])}</summary><p>{h(q["a"])}</p></details>' for q in page.get('faq',[]))+'</section>')
-    body+=link_block(relevant_links(links,page,'body'),'body-links')
-    body+=f'<section class="order-cta"><h2>상담으로 확인하기</h2><a data-track-event="phone" class="button" href="tel:{h(site["phone"].replace("-",""))}">☎ {h(site["phone"])} 전화 문의</a></section>'
-    body+=render_pagination(pages,page['number'])
-    body+='</main>'
+    share='/assets/images/'+site['imagePool'][(page['number']-1)%len(site['imagePool'])]
+    body=(head(site,page['title'],page['intro'],url_path(page['number']),share)+header(site)+
+        '<main id="main" class="container document-page">'
+        '<nav class="breadcrumbs" aria-label="현재 위치"><a href="/">홈</a><span aria-hidden="true">›</span><span>안내 문서</span></nav>'
+        '<header class="doc-hero"><div class="doc-hero-copy">'
+        f'<span class="section-tag">{h(page["region"])} · {h(site["keyword"])}</span>'
+        f'<h1>{h(page["title"])}</h1><p class="lead">{h(page["intro"])}</p>'
+        '</div><div class="doc-hero-art">'
+        +illustration(site,page['number']-1,'hero-image','축하 식물의 범용 일러스트')+'</div></header>'
+        '<div class="document-grid"><div class="document-main">'+article_body(page)+
+        '<section class="recommendations" aria-labelledby="products-heading"><div class="section-heading">'
+        '<span class="section-tag">ORDER CHECK</span><h2 id="products-heading">관련 상품 주문 확인</h2>'
+        '<p>판매처 참고사진은 실제 주문화면에서 확인해 주세요. 아래는 상품명과 주문 경로를 안내합니다.</p>'
+        '</div><div class="product-list">'+product_html(products,page['productSkus'])+'</div></section>'
+        '<section class="faq" aria-label="자주 묻는 질문"><span class="section-tag">FAQ</span>'
+        '<h2>자주 묻는 질문</h2><div class="faq-list">'+faq_markup(page)+'</div></section>'
+        +link_block(relevant_links(links,page,'body'),'body-links')+
+        '</div><aside class="document-aside" aria-label="빠른 주문 안내"><div class="aside-panel">'
+        '<span class="section-tag">QUICK GUIDE</span><h2>필요한 내용을 확인해요</h2>'
+        '<p>실제 배송 일시와 가격은 상담이나 주문 화면에서 확인해 주세요.</p>'
+        f'<a class="button btn-coral" data-track-event="phone" href="tel:{h(site["phone"].replace("-",""))}">☎ 전화 {h(site["phone"])}</a>'
+        f'<a class="button btn-outline" href="{h(site["orderBaseUrl"])}" rel="noopener noreferrer" target="_blank">온라인 주문 ↗</a>'
+        '</div><div class="aside-art">'+illustration(site,page['number'],'aside-picture','식물 선물의 일러스트')+'</div></aside></div>'
+        '<section class="related-section"><div class="section-header"><div><span class="section-tag">MORE GUIDES</span>'
+        '<h2>이런 내용도 함께 살펴보세요</h2></div></div>'+related_documents(pages,page['number'],3)+'</section>'
+        '<section class="order-cta doc-cta"><div><h2>상담부터 편하게 시작하세요</h2>'
+        '<p>상품번호와 받을 장소를 준비하시면 안내를 받기 쉽습니다.</p></div>'
+        +phone_buttons(site)+'</section>'
+        +render_pagination(pages,page['number'])+'</main>')
     return body+footer(site,links,page)
 
 
 def special_page(site,item,products,links):
     path=item['path']
     body=(head(site,item['title'],item['description'],'/'+quote(path),'/assets/images/'+site['imagePool'][0])+header(site)
-         +'<main id="main" class="container">'
-         f'<h1>{h(item["title"])}</h1><p class="lead">{h(item["description"])}</p>')
+        +'<main id="main" class="container document-page special-page">'
+        '<nav class="breadcrumbs" aria-label="현재 위치"><a href="/">홈</a><span aria-hidden="true">›</span><span>이용 안내</span></nav>'
+        '<header class="doc-hero"><div class="doc-hero-copy">'
+        '<span class="section-tag">SERVICE GUIDE</span>'
+        f'<h1>{h(item["title"])}</h1><p class="lead">{h(item["description"])}</p></div>'
+        '<div class="doc-hero-art">'+illustration(site,2,'hero-image','식물 선물 일러스트')+'</div></header>'
+        '<div class="special-content">')
     if item['type']=='calculator':
         options=''.join(f'<option value="{h(p["sku"])}">{h(p["name"])} ({p["referencePrice"]:,}원 참고)</option>' for p in products)
         prices={p['sku']:p['referencePrice'] for p in products}
-        body+=('<div class="calculator">'
-            '<label for="sku">화분 종류</label><select id="sku">'+options+'</select>'
+        body+=('<section class="document-section"><span class="section-tag">BUDGET CALCULATOR</span>'
+            '<h2>대략적인 상품 예산 계산</h2><p>지난 가격 기록을 이용한 참고용 계산입니다.</p>'
+            '<div class="calculator">'
+            '<label for="sku">상품 종류</label><select id="sku">'+options+'</select>'
             '<label for="quantity">수량 (1~99)</label><input id="quantity" type="number" min="1" max="99" value="1" step="1">'
-            '<button type="button" id="estimate-submit">예산 계산</button><output id="estimate" aria-live="polite">참고 합계 계산 중</output>'
+            '<button class="button btn-coral" type="button" id="estimate-submit">예산 계산하기</button>'
+            '<output id="estimate" aria-live="polite">참고 합계 계산 중</output>'
             '<p class="fine">지난 가격 기록을 이용한 단순 참고 계산입니다. 배송비·추가 선택 사항은 미포함이며 실제 결제 금액이 아닙니다.</p>'
-            '</div>'
-            f'<script type="application/json" id="price-data">{json.dumps(prices,ensure_ascii=False).replace('<',r'\u003c')}</script>'
+            '</div></section>'
+            f'<script type="application/json" id="price-data">{json.dumps(prices,ensure_ascii=False).replace("<",r"\u003c")}</script>'
             '<script src="/assets/calculator.js" defer></script>')
     else:
-        body+='<section><h2>주문 전에 확인할 내용</h2><p>받는 분의 회사명·주소·연락처를 준비하세요. 상품 재고와 희망 배송일은 전화 또는 온라인 주문 화면에서 확인해 주세요.</p></section>'
+        body+=('<section class="document-section"><span class="section-tag">DELIVERY CHECK</span>'
+        '<h2>주문 전에 확인할 내용</h2><p>받는 분의 회사명·주소·연락처를 준비하세요. 상품 재고와 희망 배송일은 전화 또는 온라인 주문 화면에서 확인해 주세요.</p></section>'
+        '<section class="document-section"><h2>원하는 날짜를 알려주세요</h2>'
+        '<p>주문하신 시간과 수령 장소에 따라 실제 배송 가능 일정이 달라질 수 있습니다. 판매처 확인 후 주문해 주세요.</p></section>')
     body+=link_block(relevant_links(links,None,'body',path),'body-links')
-    body+='</main>'
+    body+=('<section class="order-cta doc-cta"><div><h2>도움이 필요하신가요?</h2>'
+        '<p>실제 상품 정보와 배송 조건을 확인해 드릴 수 있도록 문의해 주세요.</p></div>'
+        +phone_buttons(site)+'</section></div></main>')
     return body+footer(site,links,None,path)
 
 
 def error_page(site,links):
     return (head({**site,'publishEnabled':False},'페이지를 찾을 수 없습니다','요청한 페이지가 존재하지 않습니다.','/404.html','/assets/images/'+site['imagePool'][0])
-        +header(site)+'<main id="main" class="container"><h1>페이지를 찾을 수 없습니다</h1>'
-        '<p>주소가 잘못되었거나 삭제된 페이지입니다.</p><p><a href="/">첫 페이지로 돌아가기</a></p></main>'
+        +header(site)+'<main id="main" class="container utility-page"><h1>페이지를 찾을 수 없습니다</h1>'
+        '<p>주소가 잘못되었거나 삭제된 페이지입니다.</p><p><a class="button btn-outline" href="/">첫 페이지로 돌아가기</a></p></main>'
         +footer(site,links))
 
 
 def search_page(site,links):
     return (head({**site,'publishEnabled':False},'사이트 글 검색','이 사이트 안의 글을 제목과 소개로 검색합니다.','/search.html','/assets/images/'+site['imagePool'][0])
-        +header(site)
-        +'<main id="main" class="container"><h1>사이트 글 검색</h1><p>찾으려는 지역이나 주제를 입력하세요.</p>'
-         '<form id="site-search-form"><label for="site-query">검색어</label> '
-         '<input id="site-query" name="query" maxlength="80" required> '
-         '<button type="submit">검색</button></form>'
-         '<ol id="search-results" aria-live="polite"></ol>'
-         '<script src="/assets/search.js" defer></script></main>'
+        +header(site)+'<main id="main" class="container utility-page"><h1>사이트 글 검색</h1>'
+        '<p>찾으려는 지역이나 주제를 입력하세요.</p>'
+        '<form id="site-search-form"><label for="site-query">검색어</label>'
+        '<input id="site-query" name="query" maxlength="80" required>'
+        '<button class="button btn-coral" type="submit">검색</button></form>'
+        '<ol id="search-results" aria-live="polite"></ol>'
+        '<script src="/assets/search.js" defer></script></main>'
         +footer(site,links))

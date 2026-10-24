@@ -110,7 +110,7 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
         (tmp/'assets/images').mkdir(parents=True,exist_ok=True)
         _copy_static(rendering_site,tmp)
         for page in data['pages']:
-            _write_file(tmp,markup.filename(page['number']),markup.detail(rendering_site,page,data['pages'],data['products'],data['links']))
+            _write_file(tmp,markup.filename(page['number']), (markup.home if page['number']==1 else markup.detail)(rendering_site,page,data['pages'],data['products'],data['links']))
         if site.get('siteSearch',{}).get('enabled',False):
             shutil.copyfile(ROOT/'templates/search.js',tmp/'assets/search.js')
             _write_file(tmp,'search.html',markup.search_page(rendering_site,data['links']))

@@ -135,6 +135,10 @@ def read_site(site_id: str):
         if s['type'] not in {'calculator','content'}:
             raise ConfigError('Unknown special page module')
     specials={s['path'] for s in special if s.get('enabled',True)}
+    targets={'/'}|{'/'+('index.html' if n==1 else f'{n}.html') for n in numbers}|{'/'+s for s in specials}
+    for item in site.get('navigation',[]):
+        if not isinstance(item,dict) or not item.get('label') or item.get('href') not in targets:
+            raise ConfigError('Site navigation must link to a real generated page')
     for link in links:
         if link['placement'] not in {'body','footer','both'} or link['scope'] not in {'all','region','selected'}:
             raise ConfigError('Bad global-link placement or scope')

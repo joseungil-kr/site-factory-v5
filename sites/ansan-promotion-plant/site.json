@@ -30,5 +30,23 @@
   "indexNow": {
     "enabled": false,
     "key": null
-  }
+  },
+  "navigation": [
+    {
+      "label": "홈",
+      "href": "/"
+    },
+    {
+      "label": "안내 문서",
+      "href": "/2.html"
+    },
+    {
+      "label": "배송안내",
+      "href": "/배송안내.html"
+    },
+    {
+      "label": "견적계산기",
+      "href": "/견적계산기.html"
+    }
+  ]
 }
