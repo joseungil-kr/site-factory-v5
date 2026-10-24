@@ -76,12 +76,12 @@ class StageCRestore(unittest.TestCase):
         build('ansan-promotion-plant')
         old=(ROOT/'dist/ansan-promotion-plant/index.html').read_bytes()
         snapshot=archive('ansan-promotion-plant')
-        self.assertEqual(snapshot['files'],22)
+        self.assertEqual(snapshot['files'],27)
         target=ROOT/'dist/ansan-promotion-plant/index.html'
         target.write_text('LOCAL CORRUPTED TEST OUTPUT',encoding='utf-8')
         res=restore_local('ansan-promotion-plant',snapshot['revision'])
         self.assertEqual(target.read_bytes(),old)
-        self.assertEqual(res['files'],22)
+        self.assertEqual(res['files'],27)
         self.assertEqual(sha(target.read_bytes()),sha(old))
 
 class StageCArchiveIdentity(unittest.TestCase):

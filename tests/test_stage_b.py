@@ -36,7 +36,7 @@ class StageB(unittest.TestCase):
             result=build('ansan-promotion-plant',output=out,reports=reports)
             self.assertEqual(result['manifest']['pageCount'],10)
             self.assertEqual(result['manifest']['specialPageCount'],2)
-            self.assertEqual(result['manifest']['assetFileCount'],22)
+            self.assertEqual(result['manifest']['assetFileCount'],27)
             self.assertTrue((out/'견적계산기.html').exists())
             self.assertIn('noindex,nofollow',(out/'index.html').read_text(encoding='utf-8'))
             self.assertNotIn('rel="canonical"',(out/'index.html').read_text(encoding='utf-8'))

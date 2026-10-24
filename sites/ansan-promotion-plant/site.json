@@ -10,6 +10,11 @@
   "region": "경기도 안산시",
   "theme": "classic",
   "imagePool": [
+    "hero-florist.webp",
+    "atelier-florist.webp",
+    "moment-blooms.webp",
+    "moment-leaves.webp",
+    "moment-flowers.webp",
     "plant-a.svg",
     "plant-b.svg",
     "plant-c.svg"
