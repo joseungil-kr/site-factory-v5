@@ -12,7 +12,7 @@
       output.textContent = '수량 1~99를 선택해 주세요.';
       return;
     }
-    output.textContent = `참고 상품 합계: ${(count * amount).toLocaleString('ko-KR')}원`;
+    output.textContent = `상품 합계: ${(count * amount).toLocaleString('ko-KR')}원`;
   }
   const submit = document.getElementById('estimate-submit');
   if (submit) submit.addEventListener('click', () => { calculate(); window.v5TrackCalculator?.(); });
