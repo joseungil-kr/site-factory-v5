@@ -1,0 +1,62 @@
+name: V5 Customer Copy QA
+on:
+  push:
+    branches: [feature/remove-caution-copy-20261024]
+    paths:
+      - '.github/workflows/customer-copy-qa.yml'
+      - 'v5/**'
+      - 'sites/**'
+      - 'templates/**'
+      - 'tests/**'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit tests and Worker tests
+        run: |
+          python -m unittest discover -s tests -v
+          npm test
+      - name: Build and audit existing Seoul Gyeonggi public routes
+        run: |
+          python -m v5 build --site seoul-gyeonggi-plants --mode public-indexing
+          python -m v5 audit --site seoul-gyeonggi-plants
+      - name: Verify generated files preserve routes and customer copy policy
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from v5.config import read_site
+          from v5 import markup
+          root=Path('dist/seoul-gyeonggi-plants')
+          pages=read_site('seoul-gyeonggi-plants')['pages']
+          assert len(pages)==3465
+          assert len(list(root.glob('*.html')))==3468
+          assert (root/'page-404.html').is_file() and (root/'3465.html').is_file()
+          assert (root/'sitemap.xml').is_file()
+          checks=('index.html','2.html','3465.html','견적계산기.html','배송안내.html')
+          blocked=('상품 정보 확인 안내','판매처 참고사진','실제 가격·배송 일정·구성','지난 가격 기록',
+                   '실제 결제 금액이 아닙니다','확인해 주세요','확인하세요','주의해야',
+                   '보장되는 것은 아닙니다','확약하는 문구는 아닙니다')
+          for p in checks:
+              content=(root/p).read_text(encoding='utf-8')
+              for phrase in blocked: assert phrase not in content,(p,phrase)
+              assert '<meta name="robots" content="index,follow">' in content,p
+          assert 'naver-site-verification' in (root/'index.html').read_text(encoding='utf-8')
+          assert '<meta name="robots" content="noindex,nofollow">' in (root/'404.html').read_text(encoding='utf-8')
+          print('Customer-copy review OK for 3464 regional pages and public templates.')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v5-customer-copy-audit
+          path: reports/seoul-gyeonggi-plants/audit.json
+          retention-days: 10
