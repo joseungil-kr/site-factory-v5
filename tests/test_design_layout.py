@@ -24,7 +24,7 @@ class DesignLayoutTests(unittest.TestCase):
     def test_document_layout_does_not_invent_menu_pages(self):
         html=(self.out/'2.html').read_text(encoding='utf-8')
         self.assertIn('class="document-grid"',html)
-        self.assertIn('<h2 id="products-heading">관련 상품 주문 확인</h2>',html)
+        self.assertIn('<h2 id="products-heading">관련 식물 선물</h2>',html)
         self.assertNotIn('href="/상품안내.html"',html)
         self.assertNotIn('href="/후기.html"',html)
         self.assertEqual(len(re.findall('class="active"',html)),1)
