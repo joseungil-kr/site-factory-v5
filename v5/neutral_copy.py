@@ -75,7 +75,7 @@ def clean(page,row,region_index,topic_index):
     page["topic"]=SUFFIX[topic][(region_index+3*topic_index)%7]
     location=("서울 "+parent.removeprefix("서울특별시 ") if parent.startswith("서울특별시 ") else "경기 "+parent.removeprefix("경기도 "))+" "+dong
     page["title"]=f"{location} {topic} | {page['topic']}"
-    page["intro"]=f"{parent} {dong}의 {topic}은 새로운 시작과 기쁜 소식을 함께하는 초록빛 선물입니다. 잎의 생기와 따뜻한 축하 메시지가 어우러져 기억에 남을 순간을 만듭니다."
+    page["intro"]=f"{parent} {dong}의 {topic}에는 "+SCENES[(region_index*3+topic_index)%len(SCENES)]
     from hashlib import sha256
     def select(pool,category,index):
         digest=sha256((parent+'|'+dong+'|'+topic+'|'+str(index)+'|'+category).encode('utf-8')).digest()
@@ -87,7 +87,7 @@ def clean(page,row,region_index,topic_index):
         a=select(primary[index],'main',index)
         b=select(secondary[index],'detail',index)
         c=select(LIFE,'scene',index)
-        sections.append({"heading":heading,"paragraph":f"{dong}에서 {topic}을 떠올리는 순간에는 특별한 마음이 함께합니다. "+a+" "+b+" "+c})
+        sections.append({"heading":heading,"paragraph":a+" "+b+" "+c})
     page["sections"]=sections
     page["faq"]=[
       {"q":f"{dong} {topic}은 어떤 때 어울리나요?","a":f"{dong}의 {topic}은 승진과 개업, 새로운 출발처럼 기쁜 소식을 축하하는 마음을 전하는 식물 선물입니다."},
