@@ -50,8 +50,9 @@ class StagingTests(unittest.TestCase):
 
     def test_reference_images_render_but_are_not_a_publish_approval(self):
         first=(ROOT/'dist'/SITE/'index.html').read_text(encoding='utf-8')
-        self.assertIn('임시 시안',first)
-        self.assertIn('판매처 참고사진',first)
+        self.assertNotIn('preview-banner',first)
+        self.assertNotIn('상품 정보 확인 안내',first)
+        self.assertNotIn('판매처 참고사진',first)
         self.assertIn('noindex,nofollow',first)
         self.assertNotIn('rel="canonical"',first)
 
