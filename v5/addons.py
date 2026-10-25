@@ -107,7 +107,13 @@ def enhance_html(html, site, page_number):
         return html
     if '</main>' not in html:
         raise AddOnError('No main section to attach add-on features')
-    html=html.replace('</main>',''.join(blocks)+'</main>',1)
+    # Keep V5's numeric pagination at the very bottom of numbered documents.
+    fragment=''.join(blocks)
+    pager='<nav class="pagination"'
+    if pager in html:
+        html=html.replace(pager,fragment+pager,1)
+    else:
+        html=html.replace('</main>',fragment+'</main>',1)
     if '</head>' not in html:
         raise AddOnError('No head section to attach add-on stylesheet')
     html=html.replace('</head>','<link rel="stylesheet" href="/assets/addons.css"></head>',1)
