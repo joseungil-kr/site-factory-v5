@@ -3,7 +3,7 @@
   "businessModel": "service-lead",
   "brand": "당일스카이",
   "siteTitle": "서울·경기 스카이차 작업 비용",
-  "domain": null,
+  "domain": "https://daysky.nalmada.net",
   "requestedDomain": "https://daysky.nalmada.net",
   "workerName": null,
   "phone": "010-5322-1952",
@@ -24,13 +24,13 @@
   ],
   "imageLibrary": "daysky",
   "imagePool": [
-    "skycar-building.svg",
-    "skycar-crew.svg",
-    "skycar-worksite.svg"
+    "skycar-hero.webp",
+    "skycar-facade.webp",
+    "skycar-truck.webp"
   ],
   "publishEnabled": false,
-  "publicIndexingApproved": false,
-  "imageAssetsApproved": false,
+  "publicIndexingApproved": true,
+  "imageAssetsApproved": true,
   "cookiePrivacyReviewed": false,
   "analytics": {
     "enabled": false
@@ -43,7 +43,7 @@
     "key": null
   },
   "staticAssetSoftLimit": 18000,
-  "source": "Owner-provided services and price policy; preview only; field photo assets pending",
+  "source": "Owner-approved business info and owner-hosted worksite photos (cropped without older brand overlay); see docs/DAYSKY_PHOTO_PROVENANCE.json",
   "navigation": [
     {
       "label": "홈",
@@ -61,5 +61,6 @@
       "label": "단원구",
       "href": "/4.html"
     }
-  ]
+  ],
+  "publicIndexingScope": "daysky-ansan-29-20261025"
 }
