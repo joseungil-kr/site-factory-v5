@@ -5,3 +5,15 @@
 .article-layout .rate-section{min-width:0}
 .article-layout .table-scroll{width:100%;max-width:100%;overflow-x:auto}
 @media(max-width:900px){.article-layout{grid-template-columns:minmax(0,1fr)}}
+
+/* Daysky's real Korean worksite photography; mobile CTA stays visible. */
+.hero-visual{padding:0;background:#e9f0ef;overflow:hidden;border-radius:26px}
+.hero-art{aspect-ratio:1.65;object-fit:cover;object-position:center center;border-radius:0}
+.equip-art{object-fit:cover;object-position:center}
+.document-art{min-height:260px;object-position:center}
+.trust-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:27px 0 0}
+.trust-grid>div{background:#eff5f3;border:1px solid #dae6e2;border-radius:16px;padding:20px}
+.trust-grid strong{display:block;color:var(--navy);font-size:17px}
+.trust-grid p{color:var(--slate);font-size:13px;margin:4px 0 0}
+@media(max-width:900px){.trust-grid{grid-template-columns:1fr}}
+@media(max-width:590px){.hero-visual{order:0;padding:0;border-radius:18px}.hero-art{border-radius:18px;aspect-ratio:1.7}}

@@ -86,11 +86,17 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
         raise ConfigError('Draft site is not buildable until pages, products and images are approved')
     if mode not in ('preview','publish','public-indexing'):
         raise ConfigError('Mode must be preview, public-indexing, or publish')
-    if site.get('businessModel') == 'service-lead' and mode != 'preview':
-        raise ConfigError('Phone-lead service mode is preview-only until separate publication approval')
+    if site.get('businessModel') == 'service-lead' and mode not in ('preview','public-indexing'):
+        raise ConfigError('Service sites support preview and explicitly approved indexing only')
     if mode=='public-indexing':
-        if site['id']!='seoul-gyeonggi-plants' or site['domain']!='https://plants.nalmada.net' or not site.get('publicIndexingApproved',False):
-            raise ConfigError('User-approved search indexing mode is limited to plants.nalmada.net')
+        plants=(site['id']=='seoul-gyeonggi-plants' and site['domain']=='https://plants.nalmada.net'
+                and site.get('publicIndexingApproved',False))
+        daysky=(site['id']=='daysky' and site['domain']=='https://daysky.nalmada.net'
+                and site.get('publicIndexingApproved',False)
+                and site.get('publicIndexingScope')=='daysky-ansan-29-20261025'
+                and len(data['pages'])==29)
+        if not (plants or daysky):
+            raise ConfigError('Indexed release is limited to the explicitly approved plants or Daysky hostname')
     if mode=='publish':
         from .config import assert_publish_ready
         assert_publish_ready(site)

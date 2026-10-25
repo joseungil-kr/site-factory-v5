@@ -1,0 +1,35 @@
+[
+  {
+    "file": "skycar-hero.webp",
+    "original": "https://skycar1day.com/images/yjsky_02.jpg",
+    "source_sha256": "96d39b89a3c41f1175cd8adadb054c73c619baf873ccdc1d2784007bef98ecf6",
+    "cropTopFraction": 0.4,
+    "size": [
+      1200,
+      531
+    ],
+    "output_sha256": "b8ca62cc58c46e6d192b74f5e3c7b3390ae3662b319152728b39f6bbee535729"
+  },
+  {
+    "file": "skycar-facade.webp",
+    "original": "https://skycar1day.com/images/yjsky_01.jpg",
+    "source_sha256": "02cbe6dc46bcc19bb1dda60016392268342ee7fc62df22ae04cad7fdbdc98445",
+    "cropTopFraction": 0.28,
+    "size": [
+      1200,
+      1152
+    ],
+    "output_sha256": "6671cd2a0067d42b36cdf379ea163f964db2afae9c28fc050856e03c7d53c0d0"
+  },
+  {
+    "file": "skycar-truck.webp",
+    "original": "https://skycar1day.com/images/yjsky_02.jpg",
+    "source_sha256": "96d39b89a3c41f1175cd8adadb054c73c619baf873ccdc1d2784007bef98ecf6",
+    "cropTopFraction": 0.42,
+    "size": [
+      884,
+      514
+    ],
+    "output_sha256": "1d1a9cbd4989a0699a5f47d921640942210672ae447467b79fe57dbaf8b651fd"
+  }
+]

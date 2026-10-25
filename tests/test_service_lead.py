@@ -31,7 +31,10 @@ class ServiceMode(unittest.TestCase):
         self.assertEqual(d['site']['brand'],'당일스카이')
         self.assertEqual(d['site']['phone'],'010-5322-1952')
         self.assertFalse(d['site']['publishEnabled'])
-        self.assertEqual(d['site']['domain'],None)
+        self.assertEqual(d['site']['domain'],'https://daysky.nalmada.net')
+        self.assertTrue(d['site']['publicIndexingApproved'])
+        self.assertEqual(d['site']['publicIndexingScope'],'daysky-ansan-29-20261025')
+        self.assertTrue(all(x.endswith('.webp') for x in d['site']['imagePool']))
         self.assertEqual(d['site']['requestedDomain'],'https://daysky.nalmada.net')
         self.assertEqual(list(map(lambda x:x['number'],d['pages'])),list(range(1,30)))
         self.assertEqual(d['services'][0]['name'],'1톤 스카이차')
@@ -73,6 +76,51 @@ class ServiceMode(unittest.TestCase):
 
     def test_service_cannot_publish_without_explicit_gate(self):
         with self.assertRaises(ConfigError): build('daysky',mode='publish')
+
+    def test_approved_public_indexed_daysky_release_and_safe_preview(self):
+        from xml.etree import ElementTree as ET
+        with tempfile.TemporaryDirectory() as directory:
+            out=Path(directory)/'indexed'
+            report=Path(directory)/'reports'
+            result=build('daysky',mode='public-indexing',output=out,reports=report)
+            self.assertEqual(result['manifest']['pageCount'],29)
+            self.assertEqual(result['audit']['errors'],[])
+            self.assertEqual(len(list(out.glob('*.html'))),30)
+            self.assertEqual(len(list((out/'assets/images').glob('*.webp'))),3)
+            for n in range(1,30):
+                path=markup.filename(n)
+                html=(out/path).read_text(encoding='utf-8')
+                url='https://daysky.nalmada.net'+markup.url_path(n)
+                self.assertIn('<meta name="robots" content="index,follow">',html)
+                self.assertIn('<link rel="canonical" href="'+url+'">',html)
+                self.assertIn('010-5322-1952',html)
+                self.assertNotIn('영진',html)
+                self.assertNotIn('1844-0644',html)
+            not_found=(out/'404.html').read_text(encoding='utf-8')
+            self.assertIn('noindex,nofollow',not_found)
+            self.assertNotIn('rel="canonical"',not_found)
+            self.assertIn('Allow: /',(out/'robots.txt').read_text(encoding='utf-8'))
+            sitemap=ET.parse(out/'sitemap.xml')
+            urls=[x.text for x in sitemap.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+            self.assertEqual(len(urls),29)
+            self.assertEqual(urls[0],'https://daysky.nalmada.net/')
+            self.assertEqual(urls[-1],'https://daysky.nalmada.net/29.html')
+            self.assertEqual(len(set(urls)),29)
+        with tempfile.TemporaryDirectory() as directory:
+            out=Path(directory)/'preview'
+            build('daysky',mode='preview',output=out,reports=Path(directory)/'reports')
+            self.assertNotIn('canonical',(out/'index.html').read_text(encoding='utf-8'))
+            self.assertIn('noindex,nofollow',(out/'index.html').read_text(encoding='utf-8'))
+            self.assertNotIn('sitemap.xml',(out/'robots.txt').read_text(encoding='utf-8'))
+
+    def test_wrong_host_is_rejected_for_indexing(self):
+        mutated=copy.deepcopy(self.data)
+        mutated['site']['domain']='https://other.nalmada.net'
+        with tempfile.TemporaryDirectory() as directory:
+            with patch('v5.engine.read_site',return_value=mutated):
+                with self.assertRaises(ConfigError):
+                    build('daysky',mode='public-indexing',
+                          output=Path(directory)/'out',reports=Path(directory)/'reports')
 
     def test_addon_schema_rejects_unsafe_prices(self):
         good={'pricingTable':{'enabled':True,'title':'별도 서비스 가격표',
