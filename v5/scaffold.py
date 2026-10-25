@@ -31,6 +31,8 @@ def scaffold(site_id,brand,keyword,region,phone,*,apply=False,sites_dir=None):
         'special-pages.json':[],
         'regions.json':{'source':'unverified draft','regions':[{'name':region,'code':None,'level':'unverified'}]}
     }
+    from .site_plan import initial_spec
+    data['site-spec.json']=initial_spec(site_id,brand,keyword,region,phone)
     if apply:
         target.mkdir(parents=True,exist_ok=False)
         try:
