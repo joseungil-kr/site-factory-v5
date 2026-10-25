@@ -81,6 +81,8 @@ def analyze_change(before:dict|None,after:dict)->dict:
 def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='preview',preserve_previous:bool=True):
     import tempfile
     from .audit import audit
+    from .site_plan import require_site_plan
+    require_site_plan(site_id)
     data=read_site(site_id);site=data['site']
     if site.get('status')=='draft' or not data['pages']:
         raise ConfigError('Draft site is not buildable until pages, products and images are approved')
