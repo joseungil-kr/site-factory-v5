@@ -1,0 +1,12 @@
+.v5-addon{margin:44px auto;max-width:1180px;border-radius:18px;border:1px solid #dae6e4;background:#fff;padding:28px 26px;color:#173b45;box-shadow:0 8px 24px #112b3b08}
+.v5-addon h2{font-size:clamp(21px,3vw,30px);line-height:1.3;margin:0 0 12px;color:#173b45}
+.v5-addon p{color:#597079;line-height:1.7;margin:0 0 15px}
+.v5-price-scroll{width:100%;overflow-x:auto}
+.v5-addon table{border-collapse:collapse;width:100%;min-width:480px;font-size:15px;text-align:left}
+.v5-addon th,.v5-addon td{padding:14px 16px;border-bottom:1px solid #e4eded}
+.v5-addon thead th{background:#eaf3f1;white-space:nowrap;color:#14535c}
+.v5-addon tbody td{font-weight:750;color:#d55d3d}
+.v5-addon .v5-price-note{font-size:13px;margin:14px 0 0}
+.v5-phone-cta{display:flex;align-items:center;justify-content:space-between;gap:20px;background:#eaf5f2}
+.v5-phone-cta a{background:#eb7049;color:#fff;text-decoration:none;padding:15px 22px;border-radius:60px;font-size:16px;font-weight:800;white-space:nowrap}
+@media(max-width:680px){.v5-addon{padding:22px 15px;margin:24px auto}.v5-phone-cta{flex-direction:column;align-items:stretch}.v5-phone-cta a{text-align:center;white-space:normal}}

@@ -1,0 +1,65 @@
+{
+  "id": "daysky",
+  "businessModel": "service-lead",
+  "brand": "당일스카이",
+  "siteTitle": "서울·경기 스카이차 작업 비용",
+  "domain": null,
+  "requestedDomain": "https://daysky.nalmada.net",
+  "workerName": null,
+  "phone": "010-5322-1952",
+  "locale": "ko-KR",
+  "keyword": "스카이차",
+  "region": "서울·경기",
+  "serviceLabel": "스카이차",
+  "theme": "classic",
+  "status": "preview",
+  "serviceHours": "24시간 365일 전화 상담",
+  "workTypes": [
+    "외벽 점검·보수",
+    "간판 설치·교체",
+    "유리·창호 시공 보조",
+    "외벽 페인트·도장",
+    "시설물 설치·관리",
+    "통신·전기설비 접근 보조"
+  ],
+  "imageLibrary": "daysky",
+  "imagePool": [
+    "skycar-building.svg",
+    "skycar-crew.svg",
+    "skycar-worksite.svg"
+  ],
+  "publishEnabled": false,
+  "publicIndexingApproved": false,
+  "imageAssetsApproved": false,
+  "cookiePrivacyReviewed": false,
+  "analytics": {
+    "enabled": false
+  },
+  "siteSearch": {
+    "enabled": false
+  },
+  "indexNow": {
+    "enabled": false,
+    "key": null
+  },
+  "staticAssetSoftLimit": 18000,
+  "source": "Owner-provided services and price policy; preview only; field photo assets pending",
+  "navigation": [
+    {
+      "label": "홈",
+      "href": "/"
+    },
+    {
+      "label": "안산시 비용",
+      "href": "/2.html"
+    },
+    {
+      "label": "상록구",
+      "href": "/3.html"
+    },
+    {
+      "label": "단원구",
+      "href": "/4.html"
+    }
+  ]
+}
