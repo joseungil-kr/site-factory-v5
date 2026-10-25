@@ -46,8 +46,10 @@ export default {
       response = await env.ASSETS.fetch(request);
     }
     // Only this user-approved hostname is indexable. Keep workers.dev blocked.
+    const approvedHosts = new Set(['plants.nalmada.net','daysky.nalmada.net']);
     const indexedHost = env.V5_STAGING === '1' &&
-      env.V5_PUBLIC_HOST === 'plants.nalmada.net' && url.hostname.toLowerCase() === 'plants.nalmada.net';
+      approvedHosts.has(env.V5_PUBLIC_HOST) &&
+      url.hostname.toLowerCase() === env.V5_PUBLIC_HOST;
     if (env.V5_STAGING === '1' && !indexedHost) {
       const headers = new Headers(response.headers);
       headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');

@@ -13,14 +13,24 @@ def _tel(site):
 
 
 def _head(site,title,description,path,error=False):
-    # The service model cannot be indexed or published without an explicit future gate.
+    """Use exact-domain canonical only for explicitly authorized indexable releases."""
+    indexable=(not error and site.get('publicIndexingApproved',False)
+               and site.get('id')=='daysky'
+               and site.get('domain')=='https://daysky.nalmada.net')
+    robots='index,follow' if indexable else 'noindex,nofollow'
+    canonical=('<link rel="canonical" href="'+h(site['domain'].rstrip('/')+path)+'">'
+               if indexable else '')
+    title_text=h(title)+' | '+h(site['brand'])
+    summary=h(description[:155])
     return ('<!doctype html>\n<html lang="ko"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width, initial-scale=1">'
-            f'<title>{h(title)} | {h(site["brand"])}</title>'
-            f'<meta name="description" content="{h(description[:155])}">'
-            '<meta name="robots" content="noindex,nofollow">'
-            '<link rel="stylesheet" href="/assets/service.css"></head>')
-
+            '<title>'+title_text+'</title>'
+            '<meta name="description" content="'+summary+'">'
+            '<meta name="robots" content="'+robots+'">'+canonical
+            +'<meta property="og:type" content="website">'
+            +'<meta property="og:title" content="'+title_text+'">'
+            +'<meta property="og:description" content="'+summary+'">'
+            +'<link rel="stylesheet" href="/assets/service.css"></head>')
 
 def _image(site,i,css,alt):
     name=site['imagePool'][i%len(site['imagePool'])]

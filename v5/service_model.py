@@ -13,8 +13,12 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
         if not isinstance(site.get(field),str) or not site[field].strip():fail('missing '+field)
     if not re.fullmatch(r'0\d{1,2}-\d{3,4}-\d{4}|1\d{3}-\d{4}',site['phone']):fail('invalid phone number')
     if site.get('theme') not in {'classic','modern','minimal'}:fail('invalid theme')
-    if site.get('publishEnabled') is not False or site.get('publicIndexingApproved'):
-        fail('service production/indexable release gate not yet approved')
+    if site.get('publishEnabled') is not False:
+        fail('service product-checkout production mode is not supported')
+    if site.get('publicIndexingApproved'):
+        if (site_id != 'daysky' or site.get('domain') != 'https://daysky.nalmada.net'
+                or site.get('publicIndexingScope') != 'daysky-ansan-29-20261025'):
+            fail('Service index approval is limited to the explicitly authorized Daysky 29-page hostname')
     if any(site.get(field,{}).get('enabled') for field in ('analytics','indexNow','siteSearch')):
         fail('analytics, IndexNow and search are disabled on first service preview')
     if site.get('domain'):
@@ -72,6 +76,9 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
     allowed={'/'}|{'/'+filename(x['number']) for x in pages}
     for nav in site.get('navigation',[]):
         if nav.get('href') not in allowed or not nav.get('label'):fail('navigation refers to nonexistent page')
+    if site_id=='daysky' and site.get('publicIndexingApproved'):
+        if len(ordered)!=29 or site.get('indexNow',{}).get('enabled'):
+            fail('Daysky launch approval covers exactly 29 pages with IndexNow disabled')
     if site_id=='daysky':
         public=json.dumps({'site':site,'pages':pages,'services':services,'rates':rates},ensure_ascii=False)
         if any(x in public for x in ('영진','1844-0644','fwith')):fail('foreign customer branding detected')

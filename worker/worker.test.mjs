@@ -74,3 +74,14 @@ test('only plants.nalmada.net permits indexing; workers.dev stays noindex',async
   const previewRobots=await adapter.fetch(new Request('https://sfv5-seoul-gyeonggi-plants-preview.joseungil.workers.dev/robots.txt'),staging);
   assert.ok((await previewRobots.text()).includes('Disallow: /'));
 });
+
+test('only explicitly approved Daysky hostname is indexable, and preview stays blocked',async()=>{
+  const staging={...env,V5_STAGING:'1',V5_PUBLIC_HOST:'daysky.nalmada.net'};
+  const launched=await adapter.fetch(new Request('https://daysky.nalmada.net/'),staging);
+  assert.equal(launched.status,200);
+  assert.equal(launched.headers.get('X-Robots-Tag'),null);
+  const preview=await adapter.fetch(new Request('https://sfv5-daysky-preview.joseungil.workers.dev/'),staging);
+  assert.match(preview.headers.get('X-Robots-Tag'),/noindex/);
+  const previewRobots=await adapter.fetch(new Request('https://sfv5-daysky-preview.joseungil.workers.dev/robots.txt'),staging);
+  assert.match(await previewRobots.text(),/Disallow: \//);
+});
