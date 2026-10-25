@@ -107,7 +107,7 @@ class ServiceMode(unittest.TestCase):
         self.assertNotIn('구매 전 상담',first)
         second=markup.detail(site,product_data['pages'][1],product_data['pages'],product_data['products'],product_data['links'])
         second=addons.enhance_html(second,site,2)
-        self.assertIn('상품 확인',second)
+        self.assertIn('data-track-event="shop"',second)
         self.assertIn('구매 전 상담',second)
         self.assertIn('20,000원',second)
         self.assertIn('tel:18440644',second)
