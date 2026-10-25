@@ -1,0 +1,24 @@
+{
+  "currency": "KRW",
+  "vatIncluded": false,
+  "plans": [
+    {
+      "serviceId": "sky-1t",
+      "hour": 300000,
+      "halfDay": 400000,
+      "fullDay": 600000
+    },
+    {
+      "serviceId": "sky-35t",
+      "hour": 300000,
+      "halfDay": 400000,
+      "fullDay": 600000
+    },
+    {
+      "serviceId": "sky-5t",
+      "hour": 400000,
+      "halfDay": 500000,
+      "fullDay": 700000
+    }
+  ]
+}

@@ -168,7 +168,10 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
     if any(not p.get('verifiedLive') for p in data['products']):
         warnings.append('Product price/stock and order destinations are referenced V4 data, not independently rechecked live')
     if any(p.suffix=='.svg' for p in out.rglob('*')):
-        warnings.append('Illustrative shared SVG art is placeholder; replace with approved actual product images before production')
+        if site.get('businessModel') == 'service-lead':
+            warnings.append('Service SVG illustrations are conceptual placeholders, not verified real worksite photographs')
+        else:
+            warnings.append('Illustrative shared SVG art is placeholder; replace with approved actual product images before production')
     files=[f for f in out.rglob('*') if f.is_file()]
     if len(files)>site.get('staticAssetSoftLimit',18000):errors.append('Static assets exceed safety budget')
     result={'site':site_id,'checkedHtmlFiles':len(html_pages),'checkedAssetFiles':len(files),

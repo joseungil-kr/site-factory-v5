@@ -56,6 +56,9 @@ def read_site(site_id: str):
     if root.parent != SITES.resolve() or not root.is_dir():
         raise ConfigError(f"Unknown site: {site_id}")
     site = read_json(root/'site.json')
+    if site.get('businessModel') == 'service-lead':
+        from .service_model import read_service_site
+        return read_service_site(site_id,site,root)
     pages = read_json(root/'pages.json')
     products = read_json(root/'products.json')
     links = read_json(root/'links.json')
@@ -169,6 +172,8 @@ def read_site(site_id: str):
     for p in pages:
         if p['region'] not in region_names:
             raise ConfigError(f"Unverified region: {p['region']}")
+    from .addons import validate as validate_addons
+    validate_addons(site.get('addOns'),pages)
     return dict(site=site,pages=sorted(pages,key=lambda p:p['number']),products=products,
                 links=links,special=special,regions=regions,root=root)
 

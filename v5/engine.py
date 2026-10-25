@@ -37,6 +37,10 @@ def _write_file(out:Path,name:str,text:str):
 
 
 def _copy_static(site:dict,out:Path):
+    if site.get('businessModel') == 'service-lead':
+        shutil.copyfile(ROOT/'templates/service.css',out/'assets/service.css')
+    if any(x.get('enabled') for x in (site.get('addOns') or {}).values()):
+        shutil.copyfile(ROOT/'templates/addons.css',out/'assets/addons.css')
     shutil.copyfile(ROOT/'templates/themes/base.css',out/'assets/site.css')
     for theme in ('classic','modern','minimal'):
         shutil.copyfile(ROOT/f'templates/themes/{theme}.css',out/f'assets/theme-{theme}.css')
@@ -54,7 +58,7 @@ def _manifest(data:dict,out:Path,mode:str)->dict:
       'sourceDigest':stable_hash({k:v for k,v in data.items() if k!='root'}),
       'pageCount':len(pages),'specialPageCount':len([s for s in data['special'] if s.get('enabled',True)]),
       'assetFileCount':len(all_files),
-      'contentHashes':{str(p['number']):stable_hash({'intro':p['intro'],'sections':p['sections'],'faq':p.get('faq',[]),'title':p['title'],'region':p['region'],'productSkus':p['productSkus']}) for p in pages},
+      'contentHashes':{str(p['number']):stable_hash({'intro':p['intro'],'sections':p['sections'],'faq':p.get('faq',[]),'title':p['title'],'region':p['region'],'productSkus':p.get('productSkus',p.get('serviceIds',[]))}) for p in pages},
       'pages':[{'id':p['id'],'number':p['number'],'filename':markup.filename(p['number']),'urlPath':markup.url_path(p['number'])} for p in pages],
       'files':{str(p.relative_to(out).as_posix()):sha(p.read_bytes()) for p in all_files}}
     record['releaseHash']=stable_hash({'sourceDigest':record['sourceDigest'],'files':record['files']})
@@ -82,6 +86,8 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
         raise ConfigError('Draft site is not buildable until pages, products and images are approved')
     if mode not in ('preview','publish','public-indexing'):
         raise ConfigError('Mode must be preview, public-indexing, or publish')
+    if site.get('businessModel') == 'service-lead' and mode != 'preview':
+        raise ConfigError('Phone-lead service mode is preview-only until separate publication approval')
     if mode=='public-indexing':
         if site['id']!='seoul-gyeonggi-plants' or site['domain']!='https://plants.nalmada.net' or not site.get('publicIndexingApproved',False):
             raise ConfigError('User-approved search indexing mode is limited to plants.nalmada.net')
@@ -113,7 +119,15 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
         (tmp/'assets/images').mkdir(parents=True,exist_ok=True)
         _copy_static(rendering_site,tmp)
         for page in data['pages']:
-            _write_file(tmp,markup.filename(page['number']), (markup.home if page['number']==1 else markup.detail)(rendering_site,page,data['pages'],data['products'],data['links']))
+            if site.get('businessModel') == 'service-lead':
+                from . import service_markup
+                renderer=service_markup.home if page['number']==1 else service_markup.detail
+                rendered=renderer(rendering_site,page,data['pages'],data['services'],data['rates'])
+            else:
+                rendered=(markup.home if page['number']==1 else markup.detail)(rendering_site,page,data['pages'],data['products'],data['links'])
+            from .addons import enhance_html
+            rendered=enhance_html(rendered,rendering_site,page['number'])
+            _write_file(tmp,markup.filename(page['number']),rendered)
         if site.get('siteSearch',{}).get('enabled',False):
             shutil.copyfile(ROOT/'templates/search.js',tmp/'assets/search.js')
             _write_file(tmp,'search.html',markup.search_page(rendering_site,data['links']))
@@ -122,7 +136,11 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
         for item in data['special']:
             if item.get('enabled',True):
                 _write_file(tmp,item['path'],markup.special_page(rendering_site,item,data['products'],data['links']))
-        _write_file(tmp,'404.html',markup.error_page(rendering_site,data['links']))
+        if site.get('businessModel') == 'service-lead':
+            from . import service_markup
+            _write_file(tmp,'404.html',service_markup.error_page(rendering_site))
+        else:
+            _write_file(tmp,'404.html',markup.error_page(rendering_site,data['links']))
         if mode=='preview':
             _write_file(tmp,'robots.txt','User-agent: *\nDisallow: /\n')
         else:
