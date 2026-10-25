@@ -14,6 +14,8 @@ def main(argv=None):
         cmd.add_argument('--site',required=True)
         if name=='build':cmd.add_argument('--mode',choices=['preview','public-indexing','publish'],default='preview')
     cmds.add_parser('dashboard')
+    planning=cmds.add_parser('plan-check')
+    planning.add_argument('--site',required=True)
     metrics=cmds.add_parser('analytics-report')
     metrics.add_argument('--site',required=True)
     metrics.add_argument('--days',type=int,default=7)
@@ -63,7 +65,12 @@ def main(argv=None):
     rollback.add_argument('--revision',required=True)
     args=parser.parse_args(argv)
     try:
-        if args.command=='build':
+        if args.command=='plan-check':
+            from .site_plan import check_site
+            result=check_site(args.site)
+            print(json.dumps(result,ensure_ascii=False,indent=2))
+            if not result['ready']:return 3
+        elif args.command=='build':
             from .engine import build
             data=build(args.site,mode=args.mode)
             print(json.dumps({'status':'ok','site':args.site,'pages':data['manifest']['pageCount'],'files':data['manifest']['assetFileCount'],'indexable':args.mode in ('publish','public-indexing'),'output':data['output']},ensure_ascii=False,indent=2))
