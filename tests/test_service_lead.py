@@ -104,7 +104,7 @@ class ServiceMode(unittest.TestCase):
             urls=[x.text for x in sitemap.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
             self.assertEqual(len(urls),1736)
             self.assertEqual(urls[0],'https://daysky.nalmada.net/')
-            self.assertEqual(urls[-1],'https://daysky.nalmada.net/29.html')
+            self.assertEqual(urls[-1],'https://daysky.nalmada.net/1736.html')
             self.assertEqual(len(set(urls)),1736)
         with tempfile.TemporaryDirectory() as directory:
             out=Path(directory)/'preview'
