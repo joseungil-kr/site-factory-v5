@@ -17,7 +17,7 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
         fail('service product-checkout production mode is not supported')
     if site.get('publicIndexingApproved'):
         if (site_id != 'daysky' or site.get('domain') != 'https://daysky.nalmada.net'
-                or site.get('publicIndexingScope') != 'daysky-ansan-29-20261025'):
+                or site.get('publicIndexingScope') not in ('daysky-ansan-29-20261025','daysky-seoul-gyeonggi-1736-20261025')):
             fail('Service index approval is limited to the explicitly authorized Daysky 29-page hostname')
     if any(site.get(field,{}).get('enabled') for field in ('analytics','indexNow','siteSearch')):
         fail('analytics, IndexNow and search are disabled on first service preview')
@@ -42,6 +42,12 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
     if rates.get('currency')!='KRW' or rates.get('vatIncluded') is not False:fail('only VAT-exclusive KRW prices supported')
     if not isinstance(regions,dict) or not isinstance(regions.get('regions'),list):fail('missing region ledger')
     if links or special:fail('service v1 has no webshop special pages or product links')
+    if site_id=='daysky' and site.get('publicIndexingScope')=='daysky-seoul-gyeonggi-1736-20261025':
+        from .skycar_pool import candidates
+        original, generated, _ = candidates()
+        if pages != original:fail('original 29 pages drifted from the generator baseline')
+        pages = pages + generated
+        regions['regions'] += [{'name':p['region'],'kind':'administrative-dong'} for p in generated]
     unique_by(pages,'number','page number');unique_by(pages,'id','page id')
     ordered=sorted(pages,key=lambda x:x['number'])
     if [p['number'] for p in ordered]!=list(range(1,len(ordered)+1)):
@@ -77,8 +83,11 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
     for nav in site.get('navigation',[]):
         if nav.get('href') not in allowed or not nav.get('label'):fail('navigation refers to nonexistent page')
     if site_id=='daysky' and site.get('publicIndexingApproved'):
-        if len(ordered)!=29 or site.get('indexNow',{}).get('enabled'):
-            fail('Daysky launch approval covers exactly 29 pages with IndexNow disabled')
+        target = 1736 if site.get('publicIndexingScope')=='daysky-seoul-gyeonggi-1736-20261025' else 29
+        if len(ordered)!=target:
+            fail('Daysky page count differs from its explicit indexing scope')
+        if target==29 and site.get('indexNow',{}).get('enabled'):
+            fail('Original 29-page scope disables IndexNow')
     if site_id=='daysky':
         public=json.dumps({'site':site,'pages':pages,'services':services,'rates':rates},ensure_ascii=False)
         if any(x in public for x in ('영진','1844-0644','fwith')):fail('foreign customer branding detected')
