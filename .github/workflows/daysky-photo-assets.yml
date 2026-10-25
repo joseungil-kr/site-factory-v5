@@ -1,0 +1,69 @@
+name: Prepare Daysky reusable worksite photography
+on:
+  push:
+    branches: [feature/daysky-public-launch-20261025]
+    paths:
+      - '.github/workflows/daysky-photo-assets.yml'
+permissions:
+  contents: write
+concurrency:
+  group: daysky-photo-assets-once
+  cancel-in-progress: false
+jobs:
+  photo-assets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Crop operator-provided worksite photos and remove text-overlay region
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'pillow==11.3.0'
+          python - <<'PY'
+          import hashlib, io, json
+          from pathlib import Path
+          from urllib.request import Request,urlopen
+          from PIL import Image
+          root=Path('assets/library/daysky')
+          root.mkdir(parents=True,exist_ok=True)
+          sources=[
+            ('https://skycar1day.com/images/yjsky_02.jpg', 'skycar-hero.webp', .40),
+            ('https://skycar1day.com/images/yjsky_01.jpg', 'skycar-facade.webp', .28),
+            ('https://skycar1day.com/images/yjsky_02.jpg', 'skycar-truck.webp', .42),
+          ]
+          provenance=[]
+          for url,filename,crop_pct in sources:
+            req=Request(url,headers={'User-Agent':'Daysky-Approved-Site-Assets/1'})
+            with urlopen(req,timeout=35) as response:
+              raw=response.read(7_000_000)
+            assert 10000<len(raw)<7000000,filename
+            im=Image.open(io.BytesIO(raw)).convert('RGB')
+            w,h=im.size
+            assert w>=600 and h>=500,(filename,w,h)
+            im=im.crop((0,int(h*crop_pct),w,h))
+            assert im.height>=180
+            if filename=='skycar-truck.webp':
+              # Secondary landscape composition, without title-overlay pixels.
+              wide=min(im.width,round(im.height*1.72))
+              left=max(0,(im.width-wide)//2)
+              im=im.crop((left,0,left+wide,im.height))
+            if im.width>1400:im.thumbnail((1400,1400))
+            im.save(root/filename,format='WEBP',quality=86,method=6)
+            provenance.append({'file':filename,'original':url,'source_sha256':hashlib.sha256(raw).hexdigest(),
+                               'cropTopFraction':crop_pct,'size':list(im.size),
+                               'output_sha256':hashlib.sha256((root/filename).read_bytes()).hexdigest()})
+          Path('docs/DAYSKY_PHOTO_PROVENANCE.json').write_text(json.dumps(provenance,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('DAYS KY owner photo crops ready:', [(i['file'],i['size']) for i in provenance])
+          PY
+      - name: Commit only new Daysky image assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add assets/library/daysky/skycar-hero.webp assets/library/daysky/skycar-facade.webp assets/library/daysky/skycar-truck.webp docs/DAYSKY_PHOTO_PROVENANCE.json
+          git diff --cached --quiet && exit 0
+          git -c user.name='site-factory-v5-actions' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'Add cropped Daysky owner worksite photos without prior brand overlay'
+          git push origin HEAD:feature/daysky-public-launch-20261025
