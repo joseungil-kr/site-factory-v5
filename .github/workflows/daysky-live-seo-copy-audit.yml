@@ -1,0 +1,180 @@
+name: Daysky live SEO metadata and copy-pool read-only audit
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/daysky-live-seo-copy-audit.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check 29 live HTML meta tags, OG image, sitemap and pool reuse
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,re,collections,concurrent.futures,time
+          from urllib.request import urlopen,Request
+          from urllib.error import HTTPError,URLError
+          from pathlib import Path
+          from html.parser import HTMLParser
+          from xml.etree import ElementTree as ET
+
+          ROOT='https://daysky.nalmada.net'
+          PREVIEW='https://sfv5-daysky-preview.joseungil.workers.dev'
+          OUTPUT=Path('reports/daysky/live-seo-copy-audit.json')
+          OUTPUT.parent.mkdir(parents=True,exist_ok=True)
+
+          class Scan(HTMLParser):
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.meta=[];self.links=[];self.images=[];self.html_lang=None
+                  self.h1=0;self.ldjson=0;self.in_title=False;self.title=''
+              def handle_starttag(self, tag, attrs):
+                  d=dict(attrs)
+                  if tag=='html':self.html_lang=d.get('lang')
+                  if tag=='meta':self.meta.append(d)
+                  if tag=='link':self.links.append(d)
+                  if tag=='img':self.images.append(d)
+                  if tag=='h1':self.h1+=1
+                  if tag=='title':self.in_title=True
+                  if tag=='script' and d.get('type')=='application/ld+json':self.ldjson+=1
+              def handle_endtag(self,tag):
+                  if tag=='title':self.in_title=False
+              def handle_data(self,value):
+                  if self.in_title:self.title+=value
+              def property(self,key):
+                  return [x.get('content','') for x in self.meta if x.get('property')==key]
+              def name(self,key):
+                  return [x.get('content','') for x in self.meta if x.get('name')==key]
+              def rel(self,key):
+                  return [x.get('href','') for x in self.links if key in x.get('rel','').split()]
+
+          def get(path,origin=ROOT):
+              last=None
+              for attempt in range(3):
+                  try:
+                      request=Request(origin+path,headers={'User-Agent':'Daysky-SEO-ReadOnly-Audit/1'})
+                      with urlopen(request,timeout=25) as response:
+                          return response.status,response.headers,response.read(1600000)
+                  except HTTPError as e:
+                      return e.code,e.headers,e.read(200000)
+                  except (URLError,TimeoutError,OSError) as e:
+                      last=e
+                      if attempt<2:time.sleep(1+attempt)
+              raise RuntimeError(str(last))
+
+          def inspect(n):
+              path='/' if n==1 else '/'+str(n)+'.html'
+              status,headers,raw=get(path)
+              if status!=200:raise AssertionError((path,'HTTP',status))
+              s=Scan();s.feed(raw.decode('utf-8','replace'))
+              canonical=s.rel('canonical')
+              description=s.name('description')
+              ogimage=s.property('og:image')
+              ogtitle=s.property('og:title')
+              ogdescription=s.property('og:description')
+              robots=s.name('robots')
+              expected=ROOT+path
+              # Mandatory production SEO core checks.
+              assert len(canonical)==1 and canonical[0]==expected,(path,'canonical',canonical)
+              assert len(description)==1 and description[0],(path,'description')
+              assert len(ogimage)==1 and ogimage[0].startswith(ROOT+'/assets/images/'),(path,'OG image')
+              assert len(ogtitle)==1 and ogtitle[0]==s.title,(path,'OG title')
+              assert len(ogdescription)==1 and ogdescription[0]==description[0],(path,'OG description')
+              assert len(robots)==1 and robots[0]=='index,follow',(path,'robots',robots)
+              assert 'noindex' not in headers.get('X-Robots-Tag','').lower(),(path,'HTTP noindex')
+              assert s.html_lang=='ko' and s.h1==1 and s.title,(path,'lang/H1/title')
+              return {'path':path,'title':s.title,'titleLength':len(s.title),
+                      'description':description[0],'descriptionLength':len(description[0]),
+                      'descriptionEndsPunctuation':bool(re.search(r'[.!?…]$',description[0])),
+                      'canonical':canonical[0],
+                      'ogImage':ogimage[0],'ogType':s.property('og:type'),
+                      'ogTitle':ogtitle[0], 'ogDescription':ogdescription[0],
+                      'ogUrl':s.property('og:url'), 'ogSiteName':s.property('og:site_name'),
+                      'twitterCard':s.name('twitter:card'),'twitterImage':s.name('twitter:image'),
+                      'favicon':[x.get('href') for x in s.links if 'icon' in x.get('rel','').split()],
+                      'ldjsonCount':s.ldjson,'imageAltMissing':sum(not x.get('alt') for x in s.images),
+                      'htmlLang':s.html_lang,'h1Count':s.h1}
+
+          with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
+              inspected=list(executor.map(inspect,range(1,30)))
+          assert len(inspected)==29
+          assert len({r['title'] for r in inspected})==29,'Duplicate SEO title'
+          assert len({r['description'] for r in inspected})==29,'Duplicate SEO description'
+          photos={}
+          for image in sorted({r['ogImage'] for r in inspected}):
+              path=image.removeprefix(ROOT)
+              status,headers,content=get(path)
+              assert status==200 and content[:4]==b'RIFF' and content[8:12]==b'WEBP'
+              photos[image]={'http':status,'contentType':headers.get('Content-Type'),
+                             'bytes':len(content)}
+          status,_,raw=get('/sitemap.xml')
+          assert status==200
+          urls=[n.text for n in ET.fromstring(raw).findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+          assert len(urls)==29 and len(set(urls))==29
+          status,_,robots=get('/robots.txt')
+          assert status==200 and b'Allow: /' in robots and b'Disallow: /' not in robots
+          status,headers,_=get('/',PREVIEW)
+          assert status==200 and 'noindex' in headers.get('X-Robots-Tag','').lower()
+
+          pages=json.loads(Path('sites/daysky/pages.json').read_text(encoding='utf-8'))
+          ledger=json.loads(Path('data/regions/seoul_gyeonggi_current_dong.json').read_text(encoding='utf-8'))
+          all_sentences=[]
+          for page in pages:
+              for section in page['sections']:
+                  all_sentences.extend(x for x in re.split(r'(?<=[.!?])\s+',section['paragraph']) if x.strip())
+          freq=collections.Counter(all_sentences)
+          sources={r['name'] for r in json.loads(Path('sites/daysky/regions.json').read_text(encoding='utf-8'))['regions']}
+          already=sum((parent+' '+dong) in sources for parent,dong in ledger['rows'])
+          samples=collections.Counter(p['topic'] for p in pages)
+          report={
+              'origin':ROOT,'verifiedPages':len(inspected),
+              'html':{
+                  'metaDescription':sum(bool(r['description']) for r in inspected),
+                  'uniqueMetaDescription':len({r['description'] for r in inspected}),
+                  'descriptionEndsPunctuation':sum(r['descriptionEndsPunctuation'] for r in inspected),
+                  'ogTitle':sum(bool(r['ogTitle']) for r in inspected),
+                  'ogDescription':sum(bool(r['ogDescription']) for r in inspected),
+                  'ogImage':sum(bool(r['ogImage']) for r in inspected),
+                  'ogUrl':sum(bool(r['ogUrl']) for r in inspected),
+                  'ogSiteName':sum(bool(r['ogSiteName']) for r in inspected),
+                  'twitterCard':sum(bool(r['twitterCard']) for r in inspected),
+                  'favicon':sum(bool(r['favicon']) for r in inspected),
+                  'ldjson':sum(r['ldjsonCount']>0 for r in inspected),
+                  'canonical':sum(bool(r['canonical']) for r in inspected),
+                  'h1':sum(r['h1Count']==1 for r in inspected),
+                  'missingImgAlt':sum(r['imageAltMissing'] for r in inspected),
+              },
+              'ogPhotoUrls':photos,'sitemapUrls':len(urls),'previewNoindex':True,
+              'copyPool':{
+                  'pages':len(pages),'topics':dict(samples),
+                  'sentenceOccurrences':len(all_sentences),'distinctSentences':len(freq),
+                  'repeatedOccurrences':sum(count-1 for count in freq.values()),
+                  'faqAnswersDistinct':len({x['a'] for p in pages for x in p.get('faq',[])}),
+                  'regionDongInventory':len(ledger['rows']),'regionsAlreadyUsed':already,
+                  'newDongPagesRequired':len(ledger['rows'])-already,
+                  'sourceAsOf':ledger['asOf']
+              },
+              'pages':inspected
+          }
+          OUTPUT.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('DAYSKY_LIVE_SEO_AUDIT_OK='+json.dumps({
+              'livePages':len(inspected),'html':report['html'],
+              'ogPhotos':photos,'sitemapUrls':len(urls),'previewNoindex':True,
+              'copyPool':report['copyPool']},ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: daysky-live-seo-copy-audit
+          path: reports/daysky/live-seo-copy-audit.json
+          if-no-files-found: warn
+          retention-days: 21
