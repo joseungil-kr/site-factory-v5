@@ -103,7 +103,7 @@ def _page(parent: str, dong: str, number: int, index: int, pool, *, variant: int
     coordination = choose(shared["coordination"], "coordination", 2)
     lead = choose(topic["lead"], "lead")[0]
 
-    intro = (f"{display}에서 {label}을 위해 스카이차를 알아보신다면 현장 이용 계획부터 "
+    intro = (f"{display}에서 {label} 관련 스카이차를 알아보신다면 현장 이용 계획부터 "
              f"구체적으로 살펴보는 것이 좋습니다. {lead} {region_context[0]} "
              "당일스카이는 1톤·3.5톤·5톤 장비의 이용 시간과 작업 비용을 전화로 상담합니다.")
 
