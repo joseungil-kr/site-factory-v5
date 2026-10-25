@@ -93,8 +93,8 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
                 and site.get('publicIndexingApproved',False))
         daysky=(site['id']=='daysky' and site['domain']=='https://daysky.nalmada.net'
                 and site.get('publicIndexingApproved',False)
-                and site.get('publicIndexingScope')=='daysky-ansan-29-20261025'
-                and len(data['pages'])==29)
+                and ((site.get('publicIndexingScope')=='daysky-ansan-29-20261025' and len(data['pages'])==29)
+                  or (site.get('publicIndexingScope')=='daysky-seoul-gyeonggi-1736-20261025' and len(data['pages'])==1736)))
         if not (plants or daysky):
             raise ConfigError('Indexed release is limited to the explicitly approved plants or Daysky hostname')
     if mode=='publish':

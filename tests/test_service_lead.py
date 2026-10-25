@@ -25,7 +25,7 @@ class ServiceMode(unittest.TestCase):
 
     def test_daysky_inventory_is_independent(self):
         d=self.data
-        self.assertEqual(len(d['pages']),29)
+        self.assertEqual(len(d['pages']),1736)
         self.assertEqual(len(d['services']),3)
         self.assertEqual(d['products'],[])
         self.assertEqual(d['site']['brand'],'당일스카이')
@@ -33,10 +33,10 @@ class ServiceMode(unittest.TestCase):
         self.assertFalse(d['site']['publishEnabled'])
         self.assertEqual(d['site']['domain'],'https://daysky.nalmada.net')
         self.assertTrue(d['site']['publicIndexingApproved'])
-        self.assertEqual(d['site']['publicIndexingScope'],'daysky-ansan-29-20261025')
+        self.assertEqual(d['site']['publicIndexingScope'],'daysky-seoul-gyeonggi-1736-20261025')
         self.assertTrue(all(x.endswith('.webp') for x in d['site']['imagePool']))
         self.assertEqual(d['site']['requestedDomain'],'https://daysky.nalmada.net')
-        self.assertEqual(list(map(lambda x:x['number'],d['pages'])),list(range(1,30)))
+        self.assertEqual(list(map(lambda x:x['number'],d['pages'])),list(range(1,1737)))
         self.assertEqual(d['services'][0]['name'],'1톤 스카이차')
         self.assertEqual({r['serviceId'] for r in d['rates']['plans']},{'sky-1t','sky-35t','sky-5t'})
         self.assertEqual([(x['hour'],x['halfDay'],x['fullDay']) for x in d['rates']['plans']],
@@ -46,14 +46,14 @@ class ServiceMode(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             out=Path(d)/'out';reports=Path(d)/'reports'
             result=build('daysky',mode='preview',output=out,reports=reports)
-            self.assertEqual(result['manifest']['pageCount'],29)
+            self.assertEqual(result['manifest']['pageCount'],1736)
             self.assertEqual(result['manifest']['specialPageCount'],0)
             self.assertEqual(result['audit']['errors'],[])
             self.assertLess(result['audit']['maxBodyChar5gramJaccard'],0.49)
-            self.assertEqual(len(list(out.glob('*.html'))),30)
+            self.assertEqual(len(list(out.glob('*.html'))),1737)
             self.assertFalse((out/'sitemap.xml').exists())
             self.assertIn('Disallow: /',(out/'robots.txt').read_text())
-            for number in range(1,30):
+            for number in (1,2,29,30,1736):
                 p=out/markup.filename(number)
                 html=p.read_text()
                 self.assertIn('noindex,nofollow',html)
@@ -83,11 +83,11 @@ class ServiceMode(unittest.TestCase):
             out=Path(directory)/'indexed'
             report=Path(directory)/'reports'
             result=build('daysky',mode='public-indexing',output=out,reports=report)
-            self.assertEqual(result['manifest']['pageCount'],29)
+            self.assertEqual(result['manifest']['pageCount'],1736)
             self.assertEqual(result['audit']['errors'],[])
-            self.assertEqual(len(list(out.glob('*.html'))),30)
+            self.assertEqual(len(list(out.glob('*.html'))),1737)
             self.assertEqual(len(list((out/'assets/images').glob('*.webp'))),3)
-            for n in range(1,30):
+            for n in (1,2,29,30,1736):
                 path=markup.filename(n)
                 html=(out/path).read_text(encoding='utf-8')
                 url='https://daysky.nalmada.net'+markup.url_path(n)
@@ -102,10 +102,10 @@ class ServiceMode(unittest.TestCase):
             self.assertIn('Allow: /',(out/'robots.txt').read_text(encoding='utf-8'))
             sitemap=ET.parse(out/'sitemap.xml')
             urls=[x.text for x in sitemap.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
-            self.assertEqual(len(urls),29)
+            self.assertEqual(len(urls),1736)
             self.assertEqual(urls[0],'https://daysky.nalmada.net/')
-            self.assertEqual(urls[-1],'https://daysky.nalmada.net/29.html')
-            self.assertEqual(len(set(urls)),29)
+            self.assertEqual(urls[-1],'https://daysky.nalmada.net/1736.html')
+            self.assertEqual(len(set(urls)),1736)
         with tempfile.TemporaryDirectory() as directory:
             out=Path(directory)/'preview'
             build('daysky',mode='preview',output=out,reports=Path(directory)/'reports')
@@ -130,7 +130,7 @@ class ServiceMode(unittest.TestCase):
         addons.validate(good,self.data['pages'])
         bad=copy.deepcopy(good);bad['pricingTable']['rows'][0]['prices'][0]=-2
         with self.assertRaises(addons.AddOnError):addons.validate(bad,self.data['pages'])
-        bad=copy.deepcopy(good);bad['pricingTable']['pageNumbers']=[300]
+        bad=copy.deepcopy(good);bad['pricingTable']['pageNumbers']=[1737]
         with self.assertRaises(addons.AddOnError):addons.validate(bad,self.data['pages'])
 
     def test_existing_flower_shop_can_add_phone_and_pricing_on_selected_pages(self):

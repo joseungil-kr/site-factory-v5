@@ -1,0 +1,49 @@
+name: Daysky 1736-page build validation
+on:
+  pull_request:
+    paths:
+      - 'v5/service_model.py'
+      - 'v5/engine.py'
+      - 'v5/skycar_pool.py'
+      - 'sites/daysky/**'
+      - 'data/pools/daysky_*.json'
+      - '.github/workflows/daysky-1736-build.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-daysky:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build 1736 indexed HTML pages and sitemap
+        run: python -m v5 build --site daysky --mode public-indexing
+      - name: Audit generated HTML
+        run: python -m v5 audit --site daysky
+      - name: Confirm protected original pages and required output
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('dist/daysky')
+          data=json.loads(Path('reports/daysky/manifest.json').read_text())
+          assert data['pageCount']==1736, data['pageCount']
+          assert all((root/f'{n}.html').is_file() for n in (2,29,30,1736))
+          assert (root/'index.html').is_file()
+          sitemap=(root/'sitemap.xml').read_text()
+          assert '/1736.html' in sitemap
+          assert 'daysky.nalmada.net' in sitemap
+          print('1736-page build, legacy numbered pages and sitemap: PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: daysky-1736-publishable-build
+          path: |
+            dist/daysky/
+            reports/daysky/
+          retention-days: 7
+          if-no-files-found: error
