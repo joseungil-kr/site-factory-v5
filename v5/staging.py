@@ -95,6 +95,29 @@ def write_staging_config(site_id:str):
     return str(path)
 
 
+def staging_sample_routes(data: dict) -> dict[str, int]:
+    """Probe the actual numbered and special URLs of this V5 site.
+
+    Phone-lead sites do not have a webshop calculator; sample the final
+    numbered page and a genuinely missing URL instead.
+    """
+    from .markup import filename
+    numbers={p['number'] for p in data['pages']}
+    checks={'/':200}
+    for n in (2,10,404,max(numbers)):
+        if n in numbers and n != 1:
+            checks['/'+filename(n)]=200
+    for p in data.get('special',[]):
+        if p.get('enabled',True):
+            checks['/'+quote(p['path'])]=200
+    missing=max(numbers)+1
+    if missing == 404:
+        missing += 1
+    checks[f'/{missing}.html']=404
+    checks['/404-auditor-sentinel.html']=404
+    return checks
+
+
 def staging_check(site_id:str,origin:str):
     """Check a real HTTPS *.workers.dev URL; do not treat local simulations as public."""
     parts=urlsplit(origin)
@@ -106,10 +129,8 @@ def staging_check(site_id:str,origin:str):
     if parts.hostname.split('.',1)[0]!=expected_name:
         raise ConfigError('Staging hostname does not match the isolated Worker')
     origin=origin.rstrip('/')
-    paths=['/','/2.html','/10.html','/'+quote('견적계산기.html'),'/404-auditor-sentinel.html']
-    if len(read_site(site_id)['pages'])>300:
-        from .markup import filename
-        paths+=['/'+filename(404),'/'+filename(max(p['number'] for p in read_site(site_id)['pages']))]
+    expectations=staging_sample_routes(read_site(site_id))
+    paths=list(expectations)
     checks=[]
     for path in paths:
         req=Request(origin+path,headers={'User-Agent':'SiteFactoryV5-Staging-Audit/0.4'})
@@ -118,7 +139,7 @@ def staging_check(site_id:str,origin:str):
                 status=res.status;headers=res.headers;body=res.read(400_000).decode('utf-8',errors='replace')
         except HTTPError as exc:
             status=exc.code;headers=exc.headers;body=exc.read(100_000).decode('utf-8',errors='replace')
-        expected=404 if path.endswith('sentinel.html') else 200
+        expected=expectations[path]
         errs=[]
         if status!=expected:errs.append(f'HTTP {status} expected {expected}')
         if 'noindex' not in headers.get('X-Robots-Tag','').lower():errs.append('Missing live X-Robots-Tag noindex')
