@@ -50,16 +50,16 @@
       "href": "/"
     },
     {
-      "label": "안산시 비용",
-      "href": "/2.html"
+      "label": "장비·요금",
+      "href": "/#rates"
     },
     {
-      "label": "상록구",
-      "href": "/3.html"
+      "label": "작업 분야",
+      "href": "/#works"
     },
     {
-      "label": "단원구",
-      "href": "/4.html"
+      "label": "서울·경기 지역",
+      "href": "/#regions"
     }
   ],
   "publicIndexingScope": "daysky-seoul-gyeonggi-1736-20261025",
