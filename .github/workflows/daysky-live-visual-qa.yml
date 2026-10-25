@@ -1,0 +1,85 @@
+name: Daysky public desktop-mobile read-only visual QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/daysky-live-visual-qa.yml'
+permissions:
+  contents: read
+jobs:
+  visual-readback:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install headless Chromium
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install --disable-pip-version-check 'playwright==1.56.0'
+          python -m playwright install --with-deps chromium
+      - name: Verify public Pages 1, 19 and 29 on desktop and mobile
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          root=Path('reports/daysky/public-visual')
+          root.mkdir(parents=True,exist_ok=True)
+          origin='https://daysky.nalmada.net'
+          findings=[]
+          with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True)
+              for name,width,height,is_mobile in (
+                  ('desktop',1440,900,False),('mobile',390,844,True)):
+                  context=browser.new_context(viewport={'width':width,'height':height},
+                                              is_mobile=is_mobile,has_touch=is_mobile)
+                  page=context.new_page()
+                  for path in ('/','/19.html','/29.html'):
+                      response=page.goto(origin+path,wait_until='networkidle',timeout=60000)
+                      assert response and response.status==200,(name,path,'HTTP')
+                      page.locator('img').first.wait_for(state='visible')
+                      metrics=page.evaluate("""() => ({
+                        scrollWidth:document.documentElement.scrollWidth,
+                        clientWidth:document.documentElement.clientWidth,
+                        brokenImages:[...document.images].filter(x=>!x.complete || x.naturalWidth===0).length,
+                        hasPhone:[...document.querySelectorAll('a[href^="tel:"]')].some(a=>a.href.includes('01053221952')),
+                        hasRate:document.body.textContent.includes('700,000원'),
+                        hasBrand:document.body.textContent.includes('당일스카이'),
+                        oldBrand:document.body.textContent.includes('영진'),
+                        robots:document.querySelector('meta[name="robots"]')?.content,
+                        canonical:document.querySelector('link[rel="canonical"]')?.href,
+                        navLinks:[...document.querySelectorAll('.pagination a')].length
+                      })""")
+                      assert metrics['scrollWidth'] <= metrics['clientWidth']+2, (name,path,'overflow',metrics)
+                      assert metrics['brokenImages']==0,(name,path,'broken images',metrics)
+                      assert metrics['hasPhone'] and metrics['hasRate'] and metrics['hasBrand'] and not metrics['oldBrand']
+                      assert metrics['robots']=='index,follow'
+                      assert metrics['canonical']==origin+path
+                      assert 5<=metrics['navLinks']<=6,('numeric pager',metrics)
+                      if is_mobile:
+                          visible=page.locator('.mobile-dial').is_visible()
+                          assert visible,(name,path,'mobile fixed call button missing')
+                      path_name=('home' if path=='/' else path.strip('/').replace('.html',''))
+                      shot=root/(name+'-'+path_name+'.png')
+                      page.screenshot(path=str(shot),full_page=True,animations='disabled')
+                      findings.append({'device':name,'path':path,**metrics,'screenshot':str(shot)})
+                      print(name,path,'HTTP=200 images=ok mobileOverflow=0')
+                  context.close()
+              browser.close()
+          (root/'results.json').write_text(json.dumps(findings,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('DAYS KY LIVE VISUAL QA PASSED='+json.dumps({'screenshots':len(findings),
+                 'mobileAndDesktop':True,'brokenImages':0,'horizontalOverflow':0},ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: daysky-public-visual-and-mobile-readback
+          path: reports/daysky/public-visual
+          if-no-files-found: warn
+          retention-days: 14
