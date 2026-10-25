@@ -80,6 +80,8 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
             fail('incomplete FAQ')
     from .markup import filename
     allowed={'/'}|{'/'+filename(x['number']) for x in pages}
+    if site_id=='daysky':
+        allowed.update({'/#rates','/#works','/#regions'})
     for nav in site.get('navigation',[]):
         if nav.get('href') not in allowed or not nav.get('label'):fail('navigation refers to nonexistent page')
     if site_id=='daysky' and site.get('publicIndexingApproved'):
