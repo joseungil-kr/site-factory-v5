@@ -1,0 +1,47 @@
+name: Flower national independent site QA
+on:
+  pull_request:
+    paths:
+      - 'scripts/build_flower_national.py'
+      - '.github/workflows/flower-national-qa.yml'
+  push:
+    branches: [feature/flower-nalmada-net-national-20261026]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile source and build noindex preview
+        run: |
+          python -m py_compile scripts/build_flower_national.py
+          python scripts/build_flower_national.py
+      - name: Validate routes and noindex preview
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          import subprocess
+          root=Path('dist/flower-national')
+          paths=['index.html','funeral.html','celebration.html','basket.html','plants.html','delivery.html']
+          assert all((root/p).is_file() for p in paths)
+          assert 'noindex,nofollow' in (root/'index.html').read_text()
+          assert not (root/'sitemap.xml').exists()
+          subprocess.run(['python','scripts/build_flower_national.py','--public','--output','dist/flower-national-public'],check=True)
+          p=Path('dist/flower-national-public')
+          xml=ET.parse(p/'sitemap.xml')
+          assert len(xml.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc'))==6
+          assert '<link rel="canonical" href="https://flower.nalmada.net/">' in (p/'index.html').read_text()
+          assert 'index,follow' in (p/'funeral.html').read_text()
+          print('FLOWER SITE CONTENT QA PASS')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: flower-nalmada-national-preview
+          path: dist/flower-national/
+          if-no-files-found: error
