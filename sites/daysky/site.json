@@ -62,5 +62,19 @@
       "href": "/4.html"
     }
   ],
-  "publicIndexingScope": "daysky-ansan-29-20261025"
+  "publicIndexingScope": "daysky-ansan-29-20261025",
+  "trustFacts": [
+    {
+      "title": "15년 무사고 안전 운행",
+      "text": "운영자가 확인한 운행 경험을 바탕으로 현장 상담을 진행합니다."
+    },
+    {
+      "title": "안전인증 장비",
+      "text": "장비 제원과 작업 환경을 확인해 현장에 맞는 장비를 안내합니다."
+    },
+    {
+      "title": "24시간 365일 상담",
+      "text": "야간에도 전화 상담이 가능하며 실제 출동 시간은 별도 확인합니다."
+    }
+  ]
 }

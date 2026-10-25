@@ -20,8 +20,11 @@ def _head(site,title,description,path,error=False):
     robots='index,follow' if indexable else 'noindex,nofollow'
     canonical=('<link rel="canonical" href="'+h(site['domain'].rstrip('/')+path)+'">'
                if indexable else '')
-    title_text=h(title)+' | '+h(site['brand'])
+    title_text=h(title if site['brand'] in title else title+' | '+site['brand'])
     summary=h(description[:155])
+    ogimage=('<meta property="og:image" content="'
+             +h(site['domain']+'/assets/images/'+site['imagePool'][0])+'">'
+             if indexable else '')
     return ('<!doctype html>\n<html lang="ko"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width, initial-scale=1">'
             '<title>'+title_text+'</title>'
@@ -29,12 +32,14 @@ def _head(site,title,description,path,error=False):
             '<meta name="robots" content="'+robots+'">'+canonical
             +'<meta property="og:type" content="website">'
             +'<meta property="og:title" content="'+title_text+'">'
-            +'<meta property="og:description" content="'+summary+'">'
+            +'<meta property="og:description" content="'+summary+'">'+ogimage
             +'<link rel="stylesheet" href="/assets/service.css"></head>')
 
 def _image(site,i,css,alt):
     name=site['imagePool'][i%len(site['imagePool'])]
-    return f'<img src="/assets/images/{h(name)}" class="{h(css)}" alt="{h(alt)}" loading="{"eager" if i==0 else "lazy"}">'
+    description=('스카이차 차량을 이용한 실제 건물 외부 작업 사진'
+                 if site.get('id')=='daysky' and name.endswith('.webp') else alt)
+    return f'<img src="/assets/images/{h(name)}" class="{h(css)}" alt="{h(description)}" loading="{"eager" if i==0 else "lazy"}">'
 
 
 def _phone(site,label='전화 견적 문의'):
@@ -111,6 +116,12 @@ def home(site,page,pages,services,rates):
            '<p>다양한 작업 유형과 이용 가능 범위를 확인해 보세요.</p></div>'
            '<div><span class="accent-number">03</span><h2>전화로 간편 문의</h2>'
            '<p>현장 주소와 작업 내용을 알려주시면 비용을 안내합니다.</p></div></section>')
+    facts=site.get('trustFacts') or []
+    if facts:
+        body+='<section class="trust-grid" aria-label="안전 운행 및 상담 안내">'
+        for fact in facts:
+            body+='<div><strong>'+h(fact['title'])+'</strong><p>'+h(fact['text'])+'</p></div>'
+        body+='</section>'
     body+='<section id="equipment" class="block-section"><span class="eyebrow">SERVICE OPTIONS</span><h2>서비스 항목 안내</h2><div class="equip-grid">'
     for i,s in enumerate(services):
         body+='<div class="equip-card">'+_image(site,i+1,'equip-art','서비스 안내용 공용 일러스트')+'<h3>'+h(s['name'])+'</h3><p>'+h(s['description'])+'</p></div>'
