@@ -1,0 +1,57 @@
+name: Daysky copy pool 1pct randomized similarity QA
+on:
+  push:
+    branches: [feature/daysky-skycar-copy-pool-20261025]
+    paths:
+      - '.github/workflows/daysky-pool-random-qa.yml'
+      - 'data/pools/daysky_work_pool.json'
+      - 'data/pools/daysky_shared_pool.json'
+      - 'v5/skycar_pool.py'
+      - 'tests/test_skycar_pool.py'
+      - 'scripts/audit_daysky_copy_pool.py'
+permissions:
+  contents: read
+jobs:
+  random-pool-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: 1% seeded random sample against all 1736 old and new documents
+        shell: bash
+        run: |
+          set -euo pipefail
+          for seed in 20261025 20261026 20261027; do
+            python scripts/audit_daysky_copy_pool.py \
+              --seed "$seed" \
+              --report "reports/daysky/pool-random-1pct-$seed.json"
+          done
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          records=[]
+          for p in sorted(Path('reports/daysky').glob('pool-random-1pct-*.json')):
+              r=json.loads(p.read_text(encoding='utf-8'))
+              assert r['passesSample'] and r['exactDuplicateBodiesInPopulation']==0
+              assert r['newUnpublishedCandidates']==1707 and r['evaluatedTotalDocuments']==1736
+              records.append({
+                'seed':r['seed'],
+                'sampleSize':r['sampleSize'],
+                'pairsCompared':r['pairsCompared'],
+                'maximumJaccard':r['worstSampleToPopulationScore'],
+                'closestPair':max(r['samples'],key=lambda x:x['maximumSimilarity']),
+                'failures':len(r['failingSamples'])})
+          print('DAYS KY 1PCT MULTI-SEED QA='+json.dumps(records,ensure_ascii=False))
+          assert len(records)==3
+          assert max(x['maximumJaccard'] for x in records)<0.49
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: daysky-copy-pool-sampled-similarity-evidence
+          path: reports/daysky/pool-random-1pct-*.json
+          if-no-files-found: warn
+          retention-days: 30
