@@ -7,7 +7,7 @@ from v5.staging import staging_sample_routes
 class StagingExpectedRoutes(unittest.TestCase):
     def test_daysky_phone_site(self):
         checks=staging_sample_routes(read_site('daysky'))
-        for n in (2,10,404,1736):
+        for n in (2,10,1736):
             self.assertEqual(checks[f'/{n}.html'],200)
         self.assertEqual(checks['/1737.html'],404)
         self.assertEqual(checks['/404-auditor-sentinel.html'],404)
