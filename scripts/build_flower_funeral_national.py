@@ -32,8 +32,9 @@ def load():
             raise ValueError("Unverified hall: no name/address/source/date/region")
         if not str(record["sourceUrl"]).startswith("https://"):
             raise ValueError("Hall source must be a verifiable HTTPS URL")
-        if record["name"] in seen:raise ValueError("Duplicate hall")
-        seen.add(record["name"])
+        identity=record.get("id") or (record["name"],record["address"])
+        if identity in seen:raise ValueError("Duplicate hall identifier")
+        seen.add(identity)
     if not all(len(v)>=3 for v in groups.values()):raise ValueError("Pool buckets too narrow")
     return records,groups
 
