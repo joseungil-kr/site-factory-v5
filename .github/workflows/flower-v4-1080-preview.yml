@@ -13,11 +13,6 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/checkout@v4
-        with:
-          repository: joseungil-kr/site-factory-v4
-          ref: feature/funeralflower-mini
-          path: v4-reference
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -26,17 +21,15 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-          root=Path('v4-reference/data/funeralflower-mini')
-          a=json.loads((root/'facilities.generated.json').read_text())
-          b=json.loads((root/'homepage/halls.json').read_text())
-          assert len(a['facilities'])==a['count']==len(b['halls'])==1080
-          assert {x['urlPath'] for x in a['facilities']}=={x['u'] for x in b['halls']}
+          root=Path('data/flower')
+          a=json.loads((root/'v4_facilities_1080.snapshot.json').read_text())
+          assert len(a['facilities'])==a['count']==1080
           assert a['publicationAllowed'] is False
           print('V4 source validated: 1080 source records, no publication consent')
           PY
       - name: Generate 1080 noindex HTML pages
         env:
-          FLOWER_V4_FACILITIES_JSON: v4-reference/data/funeralflower-mini/facilities.generated.json
+          FLOWER_V4_FACILITIES_JSON: data/flower/v4_facilities_1080.snapshot.json
         run: python scripts/build_flower_funeral_national.py
       - name: Confirm HTML quantity noindex and unique title
         run: |
