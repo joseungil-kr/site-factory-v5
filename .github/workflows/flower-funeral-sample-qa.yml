@@ -1,0 +1,37 @@
+name: Flower funeral sample HTML QA
+on:
+  pull_request:
+    paths:
+      - 'data/pools/flower_funeral_sample_pool.json'
+      - 'scripts/build_flower_funeral_sample.py'
+      - '.github/workflows/flower-funeral-sample-qa.yml'
+permissions:
+  contents: read
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate deterministic sample
+        run: python scripts/build_flower_funeral_sample.py
+      - name: Verify noindex and all content
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('design-previews/flower-nalmada/ansan-funeral-sample.html')
+          s=p.read_text()
+          assert '안산제일장례식장 근조화환 주문 가격안내' in s
+          assert 'noindex,nofollow' in s
+          assert '59,000원' in s and '임시 예시' in s
+          assert '1844-0644' in s
+          assert s.count('class="section"')>=7
+          print('FLOWER FUNERAL SAMPLE QA PASS',len(s))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: flower-funeral-ansan-preview
+          path: design-previews/flower-nalmada/ansan-funeral-sample.html
+          if-no-files-found: error
