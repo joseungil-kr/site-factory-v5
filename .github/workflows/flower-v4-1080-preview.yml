@@ -45,6 +45,24 @@ jobs:
           test ! -d dist/flower-funeral-national-preview
       - name: Generate 1080 noindex HTML only after similarity gate
         run: python scripts/build_flower_funeral_national.py
+      - name: Package branded homepage, 1080-hall search, and 404
+        run: python scripts/prepare_flower_funeral_preview.py
+      - name: Verify brand, preview navigation and crawler exclusion
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          out=Path('dist/flower-funeral-national-preview')
+          index=(out/'index.html').read_text(encoding='utf-8')
+          missing=(out/'404.html').read_text(encoding='utf-8')
+          halls=json.loads((out/'halls.json').read_text(encoding='utf-8'))
+          assert '날마다꽃' in index and 'noindex,nofollow' in index
+          assert '장례식장 찾아보기' in index and 'tel:18440644' in index
+          assert 'noindex,nofollow' in missing and len(halls)==1080
+          assert len({h['u'] for h in halls})==1080
+          assert all((out/h['u'].lstrip('/')).is_file() for h in halls)
+          print('FLOWER BRANDED PREVIEW HOME AND 1080 SEARCH LINKS VERIFIED')
+          PY
       - name: Independently read generated HTML and audit report
         run: |
           python - <<'PY'
