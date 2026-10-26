@@ -1,0 +1,66 @@
+name: Flower V4 1080 funeral halls preview build
+on:
+  pull_request:
+    paths:
+      - 'scripts/build_flower_funeral_national.py'
+      - 'data/pools/flower_funeral_sample_pool.json'
+      - '.github/workflows/flower-v4-1080-preview.yml'
+permissions:
+  contents: read
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          repository: joseungil-kr/site-factory-v4
+          ref: feature/funeralflower-mini
+          path: v4-reference
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate source inventory and cross-index
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('v4-reference/data/funeralflower-mini')
+          a=json.loads((root/'facilities.generated.json').read_text())
+          b=json.loads((root/'homepage/halls.json').read_text())
+          assert len(a['facilities'])==a['count']==len(b['halls'])==1080
+          assert {x['urlPath'] for x in a['facilities']}=={x['u'] for x in b['halls']}
+          assert a['publicationAllowed'] is False
+          print('V4 source validated: 1080 source records, no publication consent')
+          PY
+      - name: Generate 1080 noindex HTML pages
+        env:
+          FLOWER_V4_FACILITIES_JSON: v4-reference/data/funeralflower-mini/facilities.generated.json
+        run: python scripts/build_flower_funeral_national.py
+      - name: Confirm HTML quantity noindex and unique title
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          out=Path('dist/flower-funeral-national-preview')
+          manifest=json.loads((out/'manifest.json').read_text())
+          files=list(out.glob('fh-*.html'))
+          assert len(files)==manifest['numberOfHalls']==1080
+          titles=[]
+          for p in files:
+              t=p.read_text()
+              assert '<meta name="robots" content="noindex,nofollow">' in t
+              assert '근조화환 주문 가격안내' in t and '날마다꽃' in t
+              assert '가격을 게시하지 않습니다' in t
+              titles.append(t.split('<title>')[1].split('</title>')[0])
+          assert len(set(titles))==1080
+          assert not (out/'sitemap.xml').exists()
+          print('1080 preview HTML build succeeded')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: flower-1080-funeral-noindex-preview
+          path: dist/flower-funeral-national-preview/
+          retention-days: 7
+          if-no-files-found: error
