@@ -140,7 +140,7 @@ def create_content(facility, assignment, curated, supplement, eligible):
         fields[field]=field_values
     supplemental={}
     for field in SUPPORT_FIELDS:
-        selected=_stable_options(list(range(len(supplement[field]))),facility_id+"|support|"+field,2)
+        selected=_stable_options(list(range(len(supplement[field]))),facility_id+"|support|"+field,1)
         supplemental[field]=[supplement[field][x] for x in selected]
     title=HALL_TITLE.format(hall=facility["facilityName"])
     # The first five items preserve the V4 editorial assignment. Extra scenario
@@ -176,6 +176,51 @@ def _similarity(a,b):
 def _normalize(text,facility):
     text=text.replace(facility["sourceAddress"],"{ADDRESS}")
     return text.replace(facility["facilityName"],"{HALL}").replace(facility["regionName"],"{REGION}")
+
+
+def _full_pairwise(gramsets,facilities,view):
+    """Exact all-pairs Jaccard using integer bitsets; no MinHash approximation."""
+    vocabulary={}
+    masks=[]
+    counts=[]
+    for grams in gramsets:
+        mask=0
+        for gram in grams:
+            if gram not in vocabulary:
+                vocabulary[gram]=len(vocabulary)
+            mask |= (1 << vocabulary[gram])
+        masks.append(mask)
+        counts.append(len(grams))
+    maximum=0.0
+    worst=None
+    failing=0
+    first_failures=[]
+    compared=0
+    for i in range(len(masks)-1):
+        left=masks[i]
+        left_count=counts[i]
+        for j in range(i+1,len(masks)):
+            overlap=(left & masks[j]).bit_count()
+            denom=left_count+counts[j]-overlap
+            score=overlap/denom if denom else 1.0
+            compared+=1
+            if score>maximum:
+                maximum=score
+                worst={"firstId":facilities[i]["id"],
+                       "secondId":facilities[j]["id"],
+                       "view":view,"jaccard":round(score,6)}
+            if score>=THRESHOLD:
+                failing+=1
+                if len(first_failures)<10:
+                    first_failures.append({"firstId":facilities[i]["id"],
+                                           "secondId":facilities[j]["id"],
+                                           "view":view,"jaccard":round(score,6)})
+    return {"view":view,"comparisons":compared,
+            "maximumJaccard":round(maximum,6),
+            "worstPair":worst,
+            "pairsAtOrAboveThreshold":failing,
+            "failureExamples":first_failures,
+            "vocabularySize":len(vocabulary)}
 
 def create_population(facilities,assignments,curated,groups,eligible):
     return [create_content(f,a,curated,groups,eligible) for f,a in zip(facilities,assignments)]
@@ -214,10 +259,16 @@ def audit(facilities,contents):
                         "pairsCompared":len(selected)*1079*2,
                         "maxScore":round(max(x["maximumJaccard"] for x in per_seed),6),
                         "results":per_seed})
+    full_actual=_full_pairwise(original,facilities,"actual")
+    full_normalized=_full_pairwise(normalized,facilities,"normalized")
+    full_pairwise=[full_actual,full_normalized]
+    full_maximum=max(x["maximumJaccard"] for x in full_pairwise)
+    full_failed=sum(x["pairsAtOrAboveThreshold"] for x in full_pairwise)
+    overall=max(overall,full_maximum)
     hall_titles=[(f["facilityName"],f["regionName"]) for f in facilities]
     duplicate_title_region=sum(v-1 for v in Counter(hall_titles).values() if v>1)
-    passes=(not failures and not duplicate_bodies and not duplicate_title_region
-            and min_len>=2300 and max_len<=3800)
+    passes=(not failures and not full_failed and not duplicate_bodies and not duplicate_title_region
+            and min_len>=2500 and max_len<=3200)
     return {
         "mode":"POOL_FIRST_PRE_PUBLICATION_QA",
         "source":"V4 professional 600 curated copy units + 48 supplementary draft units",
@@ -232,6 +283,9 @@ def audit(facilities,contents):
         "sampleCountPerSeed":ceil(1080*.01),
         "comparisons":sum(s["pairsCompared"] for s in samples),
         "maximumSimilarity":round(overall,6),
+        "fullPairwise":full_pairwise,
+        "fullPairComparisons":sum(x["comparisons"] for x in full_pairwise),
+        "fullPairFailures":full_failed,
         "failures":failures,
         "exactDuplicateBodies":duplicate_bodies,
         "duplicateFacilityRegionTitles":duplicate_title_region,
@@ -239,7 +293,7 @@ def audit(facilities,contents):
                            "median":sorted(lengths)[len(lengths)//2]},
         "samples":samples,
         "passes":passes,
-        "limits":["This is a 1% stratified-by-run random sample checked against all 1080 documents, NOT full all-pairs V5 proof.",
+        "limits":["Random 1% samples and exact full 1080-by-1080 pairwise audit both run; all comparisons exclude self.",
                   "Original V4 source facilities have unverified current address/operation status.",
                   "Similarity measures surface overlap only, not semantic originality, helpfulness or SEO quality.",
                   "The content pool is a draft. Final human design review and commercial verification are not complete.",
