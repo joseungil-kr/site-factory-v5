@@ -1,0 +1,48 @@
+name: Flower nationwide funeral registry preview QA
+on:
+  pull_request:
+    paths:
+      - 'scripts/build_flower_funeral_national.py'
+      - 'data/flower/funeral_halls_verified.json'
+      - 'data/pools/flower_funeral_sample_pool.json'
+      - '.github/workflows/flower-national-funeral-preview.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Compile and generate verified halls only
+        run: |
+          python -m py_compile scripts/build_flower_funeral_national.py
+          python scripts/build_flower_funeral_national.py
+      - name: Inspect output and enforce noindex
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path('dist/flower-funeral-national-preview')
+          manifest=json.loads((r/'manifest.json').read_text())
+          source=json.loads(Path('data/flower/funeral_halls_verified.json').read_text())
+          assert manifest['numberOfHalls']==len(source)
+          html_files=list(r.glob('hall-*.html'))
+          assert len(html_files)==len(source)
+          for p in html_files:
+              s=p.read_text()
+              assert '<meta name="robots" content="noindex,nofollow">' in s
+              assert '날마다꽃' in s and '근조화환 주문 가격안내' in s
+              assert '상담 확인' in s
+          assert 'Disallow: /' in (r/'robots.txt').read_text()
+          assert not (r/'sitemap.xml').exists()
+          print('Verified-only, noindex HTML previews:',len(html_files))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nalmada-flower-funeral-verified-preview
+          path: dist/flower-funeral-national-preview/
+          if-no-files-found: error
