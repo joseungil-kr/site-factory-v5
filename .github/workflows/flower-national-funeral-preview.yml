@@ -3,6 +3,10 @@ on:
   pull_request:
     paths:
       - 'scripts/build_flower_funeral_national.py'
+      - 'scripts/flower_design.py'
+      - 'templates/flower-nalmada/site.css'
+      - 'assets/library/flower-nalmada/**'
+      - 'data/flower/nalmada_funeral_product_reference.json'
       - 'data/flower/v4_facilities_1080.snapshot.json'
       - 'data/flower/v4_facility_assignments_1080.snapshot.json'
       - 'data/flower/v4_assignment_policy.snapshot.json'
@@ -47,7 +51,9 @@ jobs:
               s=p.read_text()
               assert '<meta name="robots" content="noindex,nofollow">' in s
               assert '날마다꽃' in s and '근조화환 주문 가격안내' in s
-              assert '상담 확인' in s
+              assert '2026-10-22' in s and '59,000원' in s
+              assert 'class="product-card"' in s
+              assert '/assets/css/site.css' in s
           assert 'Disallow: /' in (r/'robots.txt').read_text()
           assert not (r/'sitemap.xml').exists()
           print('V4 1080 noindex preview and full-pair similarity QA passed:',len(html_files),report['maximumSimilarity'])
