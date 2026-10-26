@@ -1,121 +1,128 @@
-"""Add a useful nationwide funeral-hall directory to the approved QA-only HTML bundle.
+"""Design B florist homepage and 1080-hall local search (noindex review only).
 
-Run only AFTER scripts/build_flower_funeral_national.py has passed its full-pair
-0.49 gate and created all 1080 noindex pages. No custom-domain attachment or indexing.
+Product and flower photos are copied from the owner's V4 media files.
+No venue buildings or inaccurate per-hall venue images are fabricated.
 """
 from __future__ import annotations
 
 from html import escape
 import json
 from pathlib import Path
+from flower_design import head,header,footer,photo,price_cards,reference_note,contact_band
 
-ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "dist" / "flower-funeral-national-preview"
-REPORT = ROOT / "reports" / "flower-funeral" / "pool-1080-1pct-audit.json"
-SOURCE = ROOT / "data" / "flower" / "v4_facilities_1080.snapshot.json"
+ROOT=Path(__file__).resolve().parents[1]
+OUT=ROOT/"dist/flower-funeral-national-preview"
+REPORT=ROOT/"reports/flower-funeral/pool-1080-1pct-audit.json"
+SOURCE=ROOT/"data/flower/v4_facilities_1080.snapshot.json"
 
-STYLE = """
-:root{color-scheme:light}*{box-sizing:border-box}
-body{margin:0;background:#fbfaf6;color:#234b3b;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;line-height:1.8}
-a{color:inherit;text-decoration:none}.container{max-width:1160px;padding:0 22px;margin:auto}
-header{background:#fff;border-bottom:1px solid #e1eae3}.header-inner{display:flex;align-items:center;flex-wrap:wrap;gap:22px;justify-content:space-between;padding:17px 0}
-.logo{font-size:25px;color:#17634b;font-weight:900}.logo span{color:#d64d7a}.nav{display:flex;gap:20px;flex-wrap:wrap;font-size:14px}
-.btn{background:#17654d;color:#fff;font-weight:700;display:inline-block;padding:12px 20px;border-radius:10px}
-.hero{background:linear-gradient(115deg,#eaf5eb 0%,#fff2ee 100%);padding:62px 0}
-.hero-inner{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);align-items:center;gap:35px}
-.kicker{font-size:12px;font-weight:800;color:#5b9478;letter-spacing:.12em}.hero h1{font-size:clamp(32px,4.5vw,55px);line-height:1.27;margin:16px 0}
-.hero p{max-width:640px;font-size:17px;color:#526d5d}.flower-mark{border-radius:24px;border:1px solid #e2ebe1;background:#fffdfc;min-height:300px;display:grid;place-content:center;text-align:center;padding:24px}
-.flower-mark .symbol{font-size:90px;color:#c56987;line-height:1.1}.flower-mark p{font-size:13px;color:#76867b}
-.section{padding:45px 0}.section h2{font-size:25px;line-height:1.4}.sub{color:#627667}
-.filters{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin:24px 0}
-input,select{background:#fff;border:1px solid #b9d1c1;border-radius:9px;padding:13px;font:inherit;width:100%}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px}
-.card{display:block;border:1px solid #e0e8e2;border-radius:14px;padding:19px;background:white;min-height:120px}
-.card strong{display:block;color:#205741}.card small{color:#658171;display:block}.card:hover{border-color:#82a78c}
-.warning{background:#fff7f3;border-left:3px solid #ce8b83;padding:12px 18px;color:#794c45;margin:20px 0;font-size:13px}
-footer{background:#1c4536;color:#f0f6ef;padding:27px 0;font-size:14px}
-@media(max-width:720px){.nav{font-size:12px;gap:10px}.hero-inner,.filters{grid-template-columns:1fr}.flower-mark{min-height:120px}.flower-mark .symbol{font-size:42px}.hero{padding:38px 0}.section{padding:32px 0}}
+SEARCH_JS=r"""
+(()=>{const input=document.getElementById("query"),province=document.getElementById("province"),
+results=document.getElementById("results"),count=document.getElementById("count");
+if(!input||!province||!results||!count)return;
+let all=[];const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function show(){const q=input.value.trim().toLowerCase(),region=province.value;
+const matches=all.filter(h=>(h.n+" "+h.r).toLowerCase().includes(q)&&(!region||h.r.startsWith(region)));
+count.textContent=matches.length.toLocaleString("ko-KR")+"개 시설 검색됨 · 앞의 36개 표시";
+results.innerHTML=matches.slice(0,36).map(h=>'<a class="hall-card" href="'+esc(h.u)+'"><strong>'+esc(h.n)+'</strong><small>'+esc(h.r)+'</small><span>근조화환 주문 안내 보기</span></a>').join("")||"<p>검색된 장례식장이 없습니다.</p>";}
+fetch("/halls.json").then(r=>{if(!r.ok)throw Error(r.status);return r.json()}).then(data=>{
+if(!Array.isArray(data)||data.length!==1080)throw Error("Incomplete hall registry");
+all=data;[...new Set(data.map(h=>h.r.split(" ")[0]).filter(Boolean))].sort().forEach(x=>{
+const opt=document.createElement("option");opt.value=x;opt.textContent=x;province.append(opt)});
+show()}).catch(()=>{count.textContent="장례식장 목록을 불러오지 못했습니다. 새로고침 후 다시 시도해 주세요."});
+input.addEventListener("input",show);province.addEventListener("change",show);
+})();
 """
 
 def package():
-    manifest = json.loads((OUT / "manifest.json").read_text(encoding="utf-8"))
-    report = json.loads(REPORT.read_text(encoding="utf-8"))
-    source = json.loads(SOURCE.read_text(encoding="utf-8"))
-    assert report["passes"] and report["maximumSimilarity"] < .49
-    assert report["fullPairFailures"] == 0 and report["fullPairComparisons"] == 1165320
+    manifest=json.loads((OUT/"manifest.json").read_text(encoding="utf-8"))
+    report=json.loads(REPORT.read_text(encoding="utf-8"))
+    source=json.loads(SOURCE.read_text(encoding="utf-8"))
+    assert report["passes"] and report["fullPairFailures"]==0 and report["fullPairComparisons"]==1165320
+    assert report["maximumSimilarity"]<0.49
     assert source["publicationAllowed"] is False
-    records = source["facilities"]
-    pages = manifest["pages"]
-    assert manifest["mode"] == "noindex-preview" and manifest["qaPasses"] and len(pages) == len(records) == 1080
-    assert {r["id"] for r in records} == {p["id"] for p in pages}
+    facilities=source["facilities"]
+    pages=manifest["pages"]
+    assert manifest["mode"]=="noindex-preview" and manifest["qaPasses"] and len(pages)==len(facilities)==1080
+    assert {f["id"] for f in facilities}=={p["id"] for p in pages}
     for p in pages:
-        file = OUT / p["filename"]
-        assert file.is_file() and file.name.startswith("fh-")
-        markup = file.read_text(encoding="utf-8")
-        assert '<meta name="robots" content="noindex,nofollow">' in markup
-        assert '날마다꽃' in markup
+        markup=(OUT/p["filename"]).read_text(encoding="utf-8")
+        assert '<meta name="robots" content="noindex,nofollow">' in markup and "날마다꽃" in markup
+        assert 'src="/assets/images/B203.jpg"' in markup
+        assert 'class="article-card"' in markup and 'class="product-card"' in markup
+    for local in ("assets/css/site.css","assets/images/B201.jpg","assets/images/B203.jpg",
+                  "assets/images/B205.jpg","assets/images/A160.jpg","assets/images/D143.jpg"):
+        assert (OUT/local).is_file(),local
+    directory=[{"n":p["facility"],"r":p["region"],"u":"/"+p["filename"]} for p in pages]
+    (OUT/"halls.json").write_text(json.dumps(directory,ensure_ascii=False,separators=(",",":")),encoding="utf-8")
+    samples="".join('<a class="hall-card" href="'+escape(h["u"],quote=True)+'"><strong>'+escape(h["n"])+
+        '</strong><small>'+escape(h["r"])+'</small><span>근조화환 주문 안내 보기</span></a>'
+        for h in directory[:12])
+    hero=('<section class="hero"><div class="wrap hero-inner"><div><span class="eyebrow">'
+          'NALMADA FLOWER · NATIONWIDE FLOWER DELIVERY</span>'
+          '<h1>전국 어디든, 마음을 전하는 <em>꽃배달</em></h1>'
+          '<p class="lead">근조화환을 중심으로 꽃바구니와 화분까지, '
+          '날마다꽃이 상품 안내와 주문 상담을 도와드립니다. '
+          '전국 장례식장 1,080곳의 근조화환 주문 참고 정보를 찾아보세요.</p>'
+          '<div class="hero-actions"><a class="btn" href="#directory">장례식장 찾기</a>'
+          '<a class="btn btn-outline" href="tel:18440644">☎ 1844-0644 상담</a></div>'
+          '<div class="badges"><span>근조화환 종류별 비교</span><span>리본 문구 안내</span>'
+          '<span>전화 주문 상담</span></div></div>'
+          '<div class="hero-visual">'+photo("A160.jpg","날마다꽃 꽃바구니 공통 상품 사진","eager")+
+          '<span class="photo-label">보유 상품 사진 · 실제 상품 구성은 달라질 수 있습니다</span></div>'
+          '</div></section>')
+    categories=('<section id="categories" class="wrap section">'
+        '<div class="section-title"><div><h2>꽃배달 상품별 안내</h2>'
+        '<p>전국 장례식장 검색과 함께 선물 용도에 맞춰 상담하세요.</p></div></div>'
+        '<div class="cat-grid">'
+        '<a class="cat-card" href="#products">'+photo("B201.jpg","근조 3단 화환 대표 상품")+
+        '<div class="cat-desc"><strong>근조화환</strong><p>장례식장 주문·가격안내</p></div></a>'
+        '<div class="cat-card"><div class="cat-icon" aria-hidden="true">✿</div>'
+        '<div class="cat-desc"><strong>축하화환</strong><p>상품 정보 준비 중 · 전화 문의</p></div></div>'
+        '<div class="cat-card">'+photo("A160.jpg","꽃바구니 상품 사진")+
+        '<div class="cat-desc"><strong>꽃바구니</strong><p>기념일·감사 꽃선물 상담</p></div></div>'
+        '<div class="cat-card">'+photo("D143.jpg","관엽식물 상품 사진")+
+        '<div class="cat-desc"><strong>관엽식물·화분</strong><p>승진·개업 선물 상담</p></div></div>'
+        '</div></section>')
+    products_html=('<section class="wrap section" id="products">'
+        '<div class="section-title"><div><h2>근조화환 종류별 상품</h2>'
+        '<p>기존 판매처의 상품 사진과 기준일이 표시된 참고 가격입니다.</p></div></div>'
+        +price_cards()+reference_note()+'</section>')
+    directory_html=('<section class="wrap section" id="directory"><div class="search-panel">'
+        '<span class="eyebrow">FUNERAL HALL DIRECTORY</span>'
+        '<h2>전국 장례식장 찾아보기</h2>'
+        '<p>원장에 기록된 전국 1,080곳입니다. 최신 주소·운영상태는 별도 확인이 필요합니다.</p>'
+        '<div class="filters"><label>장례식장명 또는 지역'
+        '<input type="search" id="query" placeholder="예: 안산, 서울, 장례식장명" autocomplete="off"></label>'
+        '<label>광역 지역 선택<select id="province"><option value="">전국 전체</option></select></label></div>'
+        '<p id="count" aria-live="polite">장례식장 목록을 불러오는 중입니다.</p>'
+        '<div id="results" class="hall-grid">'+samples+'</div></div>'
+        '<div class="notice" style="margin-top:15px">시설명·주소·운영상태를 별도로 확인하지 않은 검수용 원장입니다. '
+        '이 페이지는 검색엔진에 제출하지 않습니다.</div></section>')
+    guide=('<section class="wrap section" id="ordering">'
+        '<div class="section-title"><div><h2>근조화환 주문 준비</h2>'
+        '<p>꽃의 종류뿐 아니라 실제 전달 조건을 먼저 확인하는 것이 중요합니다.</p></div></div>'
+        '<div class="service-grid">'
+        '<div><h3>01. 시설과 빈소</h3><p>장례식장 주소, 빈소, 상주명과 발인 예정일을 확인해 주세요.</p></div>'
+        '<div><h3>02. 화환과 리본</h3><p>근조화환 종류, 예산, 리본 문구와 보내는 사람 이름을 정리하세요.</p></div>'
+        '<div><h3>03. 제작·배송 상담</h3><p>해당 지역의 실제 제작과 도착 가능 시간을 상담으로 확인해 주세요.</p></div>'
+        '</div></section>')
+    index=(head("전국 꽃배달·근조화환 주문 가격안내 | 날마다꽃",
+                "전국 장례식장 1,080곳 근조화환 주문 안내. 날마다꽃 꽃바구니와 관엽화분 상품 상담.")+
+           header()+'<main id="main">'+hero+categories+products_html+directory_html+guide+contact_band()+
+           '</main><script src="/assets/js/hall-search.js" defer></script>'+footer())
+    (OUT/"index.html").write_text(index,encoding="utf-8")
+    js=OUT/"assets/js/hall-search.js"
+    js.parent.mkdir(parents=True,exist_ok=True)
+    js.write_text(SEARCH_JS,encoding="utf-8")
+    missing=(head("페이지를 찾을 수 없습니다 | 날마다꽃","요청한 페이지를 찾을 수 없습니다.")+
+             header()+'<main id="main" class="wrap section"><h1>페이지를 찾을 수 없습니다</h1>'
+             '<p>전국 장례식장 목록에서 필요한 시설을 다시 검색해 주세요.</p>'
+             '<a class="btn" href="/">날마다꽃 홈으로</a></main>'+footer())
+    (OUT/"404.html").write_text(missing,encoding="utf-8")
+    assert "Disallow: /" in (OUT/"robots.txt").read_text(encoding="utf-8")
+    assert not (OUT/"sitemap.xml").exists()
+    assert len(list(OUT.glob("fh-*.html")))==1080
+    print(json.dumps({"pageCount":1080,"homepage":True,"directoryCount":len(directory),
+                      "sharedImages":5,"design":"B + D","indexable":False},ensure_ascii=False))
 
-    directory = [{"n": p["facility"], "r": p["region"], "u": "/" + p["filename"]}
-                 for p in pages]
-    (OUT / "halls.json").write_text(json.dumps(directory, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-
-    sample_cards = "".join(
-        '<a class="card" href="' + escape(p["u"], quote=True) + '"><strong>' + escape(p["n"]) +
-        '</strong><small>' + escape(p["r"]) + '</small><span>주문 안내 보기</span></a>'
-        for p in directory[:12]
-    )
-    index = """<!doctype html><html lang="ko"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="robots" content="noindex,nofollow">
-<title>전국 장례식장 근조화환 주문·가격안내 | 날마다꽃</title>
-<meta name="description" content="전국 장례식장 1,080곳의 근조화환 주문 안내 미리보기. 시설 정보와 상품 가격은 검증 진행 중입니다.">
-<style>""" + STYLE + """</style></head><body>
-<header><div class="container header-inner"><a class="logo" href="/">✿ 날마다<span>꽃</span></a>
-<nav class="nav" aria-label="메뉴"><a href="#directory">장례식장 찾기</a><a href="#ordering">주문 준비</a><a href="#about">서비스 안내</a></nav>
-<a class="btn" href="tel:18440644">☎ 1844-0644</a></div></header>
-<main><section class="hero"><div class="container hero-inner"><div>
-<div class="kicker">NALMADA FLOWER · CONDOLENCE SERVICE</div>
-<h1>마음을 담은 근조화환,<br>날마다꽃이 안내합니다.</h1>
-<p>전국 장례식장 이름이나 지역을 검색하고, 근조화환 종류·리본 문구·주문 준비에 관한 안내를 확인하세요.</p>
-<a class="btn" href="#directory">장례식장 검색하기</a></div>
-<div class="flower-mark" aria-label="꽃 장식 일러스트"><div class="symbol" aria-hidden="true">✿</div>
-<p>공통 근조화환 이미지 사용 예정<br>장례식장 건물 사진은 사용하지 않습니다</p></div></div></section>
-<section id="directory" class="section container"><div class="kicker">FUNERAL HALL DIRECTORY</div>
-<h2>전국 장례식장 찾아보기</h2><p class="sub">V4 장례식장 원장 기준 1,080개 시설. 실제 주소·운영 상태는 별도 확인이 필요합니다.</p>
-<div class="filters"><label>장례식장명 또는 지역<input id="query" placeholder="예: 안산, 서울, 장례식장명" autocomplete="off"></label>
-<label>지역 구분<select id="province"><option value="">전국 전체</option></select></label></div>
-<p id="count" aria-live="polite">장례식장 목록을 불러오는 중입니다.</p>
-<div id="results" class="cards">""" + sample_cards + """</div>
-<div class="warning">검수용 사이트입니다. 현재 시설 주소·운영 상태와 근조화환 가격은 확인 중이며, 배송 가능 여부를 보장하지 않습니다.</div></section>
-<section class="section container" id="ordering"><div class="kicker">ORDER GUIDE</div><h2>근조화환 주문 전에 확인하세요</h2>
-<p>장례식장명, 빈소와 상주명, 발인 일정, 받는 분 정보, 리본에 적을 문구와 보내는 사람의 이름을 준비하면 상담이 수월합니다.</p>
-<p>기본형·고급형·특대형 금액과 제작 조건, 배송비는 개별 확인 후 안내합니다.</p>
-<a class="btn" href="tel:18440644">전화 주문 문의 1844-0644</a></section>
-<section class="section container" id="about"><h2>날마다꽃 안내</h2><p>근조화환을 중심으로 실제 시설 정보와 상품 가격 확인 절차를 준비하고 있습니다. 현재 페이지는 디자인 및 문서 검수용입니다.</p></section>
-</main><footer><div class="container">날마다꽃 · 전국 장례식장 근조화환 안내 · 검수용 noindex · 전화 1844-0644</div></footer>
-<script>
-(()=>{const query=document.getElementById("query"),province=document.getElementById("province"),
-results=document.getElementById("results"),count=document.getElementById("count");
-let all=[];const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function display(){const q=query.value.trim().toLowerCase(),p=province.value;
-const found=all.filter(x=>(x.n+" "+x.r).toLowerCase().includes(q)&&(!p||x.r.startsWith(p)));
-count.textContent=found.length.toLocaleString("ko-KR")+"개 시설 검색됨 · 앞의 36개 표시";
-results.innerHTML=found.slice(0,36).map(x=>'<a class="card" href="'+esc(x.u)+'"><strong>'+esc(x.n)+'</strong><small>'+esc(x.r)+'</small><span>주문 안내 보기</span></a>').join("")||'<p>검색 결과가 없습니다.</p>';}
-fetch("/halls.json").then(r=>{if(!r.ok)throw Error(r.status);return r.json()}).then(data=>{
-all=data;const provinces=[...new Set(all.map(x=>x.r.split(" ")[0]).filter(Boolean))].sort();
-provinces.forEach(x=>{const o=document.createElement("option");o.value=x;o.textContent=x;province.append(o)});
-display()}).catch(()=>{count.textContent="목록을 불러오지 못했습니다. 다시 접속해 주세요."});
-query.addEventListener("input",display);province.addEventListener("change",display);
-})();
-</script></body></html>"""
-    (OUT / "index.html").write_text(index, encoding="utf-8")
-    error = """<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><meta name="viewport" content="width=device-width,initial-scale=1"><title>페이지를 찾을 수 없습니다 | 날마다꽃</title><style>""" + STYLE + """</style></head><body><main class="container section"><h1>페이지를 찾을 수 없습니다</h1><a class="btn" href="/">날마다꽃 홈으로</a></main></body></html>"""
-    (OUT / "404.html").write_text(error, encoding="utf-8")
-    assert "Disallow: /" in (OUT / "robots.txt").read_text(encoding="utf-8")
-    assert not (OUT / "sitemap.xml").exists()
-    assert len(list(OUT.glob("fh-*.html"))) == 1080
-    print(json.dumps({"package":"flower-1080-preview","halls":len(pages),"homepage":True,
-                      "searchIndex":True,"notFoundPage":True,"mode":"noindex"},ensure_ascii=False))
-
-if __name__ == "__main__":
-    package()
+if __name__=="__main__":package()
