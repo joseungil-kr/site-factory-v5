@@ -8,7 +8,7 @@ from .config import ConfigError, ROOT, validate_site_id
 
 REQUIRED = ("domain","brand","businessModel","serviceScope","pageTypes",
             "targetPageCount","titlePattern","urlPattern","keywordGroups",
-            "copyPoolPlan","similarityAudit","conversion","images","publishPolicy")
+            "copyPoolPlan","similarityAudit","conversion","images","designReview","publishPolicy")
 
 def initial_spec(site_id,brand,keyword,region,phone):
     return {
@@ -22,6 +22,8 @@ def initial_spec(site_id,brand,keyword,region,phone):
         "similarityAudit":{"metric":"char-5gram-jaccard","thresholdExclusive":0.49,"sampleFraction":0.01,"seed":20261026},
         "conversion":{"phone":phone,"orderUrl":None,"mode":None},
         "images":{"source":None,"approved":False},
+        "designReview":{"heroPage":None,"heroImage":None,"previewRef":None,
+                        "approved":False,"approvedDesignRef":None},
         "publishPolicy":{"mode":None,"indexNow":None}
     }
 
@@ -52,6 +54,15 @@ def validate_plan(data, site_id=None):
         if not isinstance(data.get(key),str) or len(data[key].strip())<3:errors.append("invalid "+key)
     for key in ("keywordGroups","copyPoolPlan","conversion","images","publishPolicy"):
         if not isinstance(data.get(key),dict) or not data[key]:errors.append("invalid "+key)
+    design=data.get("designReview")
+    if not isinstance(design,dict):
+        errors.append("designReview missing")
+    else:
+        for field in ("heroPage","heroImage","previewRef","approvedDesignRef"):
+            if not isinstance(design.get(field),str) or not design[field].strip():
+                errors.append("designReview missing "+field)
+        if design.get("approved") is not True:
+            errors.append("design not approved")
     audit=data.get("similarityAudit")
     if not isinstance(audit,dict) or audit.get("metric") not in ("char-5gram-jaccard","char-3gram-cosine"):
         errors.append("invalid similarity metric")

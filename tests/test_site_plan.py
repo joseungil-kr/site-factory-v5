@@ -15,8 +15,21 @@ class SiteCreationPlanningGate(unittest.TestCase):
                     copyPoolPlan={"industry":"flower","source":"new","sentenceTarget":600},
                     conversion={"mode":"phone","phone":"1844-0644"},
                     images={"source":"owner","approved":True},
-                    publishPolicy={"mode":"review","indexNow":False},approved=True)
+                    publishPolicy={"mode":"review","indexNow":False},
+                    designReview={"heroPage":"design/hero.html","heroImage":"design/hero.webp",
+                                  "previewRef":"https://preview.example.org/hero",
+                                  "approvedDesignRef":"design/review-approved-v1", "approved":True},approved=True)
         self.assertTrue(validate_plan(spec,"new-flower")["ready"])
+    def test_design_approval_cannot_be_skipped(self):
+        spec=initial_spec("new-flower","꽃이랑","꽃배달","전국","1844-0644")
+        self.assertFalse(spec["designReview"]["approved"])
+        spec["approved"]=True
+        result=validate_plan(spec,"new-flower")
+        self.assertIn("design not approved",result["errors"])
+        spec["designReview"]["approved"]=True
+        result=validate_plan(spec,"new-flower")
+        self.assertIn("designReview missing heroImage",result["errors"])
+
     def test_legacy_site_unaffected(self):
         self.assertTrue(check_site("daysky")["legacy"])
 
