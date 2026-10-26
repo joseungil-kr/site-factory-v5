@@ -53,3 +53,18 @@
 3. 상품별 실제 판매가격·배송 범위/비용, 이미지 사용권한 검증 필요.
 4. 날마다꽃의 최종 디자인 승인 미완료. 사이트는 계속 `noindex` 상태로 보존.
 
+
+
+## 검수용 Cloudflare Worker 배포 (2026-10-27 KST)
+
+- 최종 검수용 소스 커밋: `7b588d4ea596cf70e5d8adcdab7c967c33a6ad84`
+- 기존 V4 저장소에 독립 배포 워크플로 등록: [PR #455](https://github.com/joseungil-kr/fwith-site-factory/pull/455)
+- 검증/배포 기록: [Actions run #40363527688](https://github.com/joseungil-kr/fwith-site-factory/actions/runs/40363527688)
+- Cloudflare Worker: `sfv5-nalmada-flower-preview`, 활성 버전 `f2c2baec-a9ff-45b3-a3c5-e4efda8cac9e`
+- Workers URL: https://sfv5-nalmada-flower-preview.joseungil.workers.dev/
+- 생성 파일: 장례식장 본문 1080개 + `index.html` 검색 홈 + `halls.json` + `404.html`
+- 전수 Jaccard 검사 최대 29.6346%, 기준 49% 미만. 원본/정규화 비교 총 1,165,320쌍, 실패 0쌍.
+- 미리보기는 `noindex,nofollow`, HTTP Worker `X-Robots-Tag: noindex, nofollow, noarchive`, `robots.txt: Disallow: /`, 사이트맵/IndexNow 없음.
+- Cloudflare API에서 `flower.nalmada.net` 기존 Custom Domain binding 없음 확인. 운영 DNS, Custom Domain은 **추가/변경하지 않음**.
+- 배포 성공 후 GitHub runner에서 Workers URL 외부 HTTP 확인 시 **403**. 이 상태는 계정의 Cloudflare 활성 버전 확인과 구분하며 일반 방문자 접속은 추가 검증 필요.
+- 본 페이지 자료는 여전히 `publicationAllowed=false`, `readyForPublication=false` 및 최종 디자인 미승인. `flower.nalmada.net` 운영 공개·색인은 승인 전에 실행하지 않는다.
