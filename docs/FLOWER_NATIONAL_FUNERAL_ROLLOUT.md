@@ -29,3 +29,27 @@
 - **49% 유사도 검사는 SEO 순위나 독창성/전문성의 보장이 아니다.**
 - 최종 디자인 승인 전 flower.nalmada.net 운영 배포, 공개 색인, IndexNow 제출 금지.
 - V4 운영 도메인/배포 연결과 V5 다른 사이트는 변경하지 않는다.
+
+## 실측 QA 결과 (2026-10-27 KST, CI readback)
+
+근거: [GitHub Actions run #40361533995](https://github.com/joseungil-kr/site-factory-v5/actions/runs/40361533995) — `Flower 1080 funeral content-first similarity QA and preview build`.
+
+- 복합 문구 POOL: V4 전문 문구 **600개 단위** + 추가 문장 **48개 단위**, 기존 1080 시설별 원문 배정표 사용
+- 본문 길이: 최소 **2,555자**, 최대 **2,937자**, 중앙값 **2,751자**
+- 장례식장 1080곳 각각 텍스트/HTML 미리보기 생성 성공
+- 문자 5-그램 Jaccard **실제 본문 582,660쌍 전수검사**: 최대 **28.7784%**, 49% 이상 **0쌍**
+- 시설명·지역명·주소 정규화한 본문 **582,660쌍 전수검사**: 최대 **29.6346%**, 49% 이상 **0쌍**
+- 전수 합계 **1,165,320회**, 3개 난수 시드의 1% 표본 검사 **71,214회**
+- 본문 완전 동일 중복 **0건**, 지역 구분 제목 **1,080개 모두 고유**
+- 기존 레거시 미리보기 CI의 `numberOfHalls` 필드 가정은 `pageCount`로 수정. [수정 후 독립 검사](https://github.com/joseungil-kr/site-factory-v5/actions/runs/40361534013) 성공
+- 제공 산출물: GitHub Actions artifact `flower-1080-funeral-reviewed-noindex-artifacts` (유효기간 14일)
+
+**판정**: 이 지표에서 49% 미만을 충족하여 검수용 HTML 생성 완료. **운영 배포 허용 판정은 아님.**
+
+### 배포 전 별도 보류 사유
+
+1. 원본 V4 시설 데이터의 `publicationAllowed=false`; 시설 주소·현행 운영상태 미검증.
+2. 기존 전문 문구 원본의 `readyForPublication=false`; 일부 표현의 맥락과 사실성에 대한 사람의 검수 필요.
+3. 상품별 실제 판매가격·배송 범위/비용, 이미지 사용권한 검증 필요.
+4. 날마다꽃의 최종 디자인 승인 미완료. 사이트는 계속 `noindex` 상태로 보존.
+
