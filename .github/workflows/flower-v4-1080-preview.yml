@@ -3,6 +3,11 @@ on:
   pull_request:
     paths:
       - 'scripts/build_flower_funeral_national.py'
+      - 'scripts/prepare_flower_funeral_preview.py'
+      - 'scripts/flower_design.py'
+      - 'templates/flower-nalmada/site.css'
+      - 'assets/library/flower-nalmada/**'
+      - 'data/flower/nalmada_funeral_product_reference.json'
       - 'data/pools/flower_funeral_professional_600.v4.json'
       - 'data/pools/flower_funeral_sample_pool.json'
       - 'data/flower/v4_facilities_1080.snapshot.json'
@@ -88,11 +93,18 @@ jobs:
             s=p.read_text()
             assert '<meta name="robots" content="noindex,nofollow">' in s
             assert '근조화환 주문 가격안내' in s and '날마다꽃' in s
-            assert '상담 확인' in s and '전화 상담' in s
+            assert '59,000원' in s and '79,000원' in s and '109,000원' in s
+            assert '2026-10-22' in s and '전화 상담' in s
+            assert '/assets/images/B203.jpg' in s and '/assets/css/site.css' in s
+            assert 'class="article-card"' in s and 'class="product-card"' in s
             assert '<link rel="canonical"' not in s
             titles.add(s.split('<title>')[1].split('</title>')[0])
           assert len(titles)==1080, ('Unique page titles',len(titles))
           assert not (out/'sitemap.xml').exists()
+          assert (out/'index.html').exists() and (out/'404.html').exists()
+          assert '날마다꽃' in (out/'index.html').read_text()
+          for asset in ('assets/css/site.css','assets/images/B201.jpg','assets/images/B203.jpg','assets/images/B205.jpg','assets/images/A160.jpg','assets/images/D143.jpg','assets/js/hall-search.js'):
+            assert (out/asset).is_file(),asset
           assert 'Disallow: /' in (out/'robots.txt').read_text()
           print('FLOWER_1080_CONTENT_QA_PASSED',json.dumps({
             'pages':len(files),'titles':len(titles),
