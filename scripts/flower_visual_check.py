@@ -63,6 +63,8 @@ def main():
                 found=page.locator("#results .hall-card").count()
                 assert found>0,("search failed",tag)
                 page.locator("#query").fill("")
+                page.evaluate("window.scrollTo(0,0)")
+                page.wait_for_timeout(120)
                 page.screenshot(path=str(SHOTS/f"{tag}-home.png"),full_page=True)
                 report.append({"page":"home","viewport":tag,"searchMatched":found,**data})
                 page.goto(origin+"/"+sample,wait_until="networkidle",timeout=60000)
@@ -72,6 +74,8 @@ def main():
                 assert page.locator("#prices .product-card").count()==3
                 assert page.locator(".aside .btn").count()==1
                 assert "시설 주소와 현재 운영" in page.content() or "운영 여부" in page.content()
+                page.evaluate("window.scrollTo(0,0)")
+                page.wait_for_timeout(120)
                 page.screenshot(path=str(SHOTS/f"{tag}-hall.png"),full_page=True)
                 report.append({"page":"hall","viewport":tag,**data})
                 page.close()
