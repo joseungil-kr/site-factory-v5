@@ -1,14 +1,18 @@
-name: Flower V4 1080 funeral halls preview build
+name: Flower 1080 funeral content-first similarity QA and preview build
 on:
   pull_request:
     paths:
       - 'scripts/build_flower_funeral_national.py'
+      - 'data/pools/flower_funeral_professional_600.v4.json'
       - 'data/pools/flower_funeral_sample_pool.json'
+      - 'data/flower/v4_facilities_1080.snapshot.json'
+      - 'data/flower/v4_facility_assignments_1080.snapshot.json'
+      - 'data/flower/v4_assignment_policy.snapshot.json'
       - '.github/workflows/flower-v4-1080-preview.yml'
 permissions:
   contents: read
 jobs:
-  build:
+  pool-first:
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -16,45 +20,69 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Validate source inventory and cross-index
+      - name: Verify pinned V4 pool, assignments and locations
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           root=Path('data/flower')
-          a=json.loads((root/'v4_facilities_1080.snapshot.json').read_text())
-          assert len(a['facilities'])==a['count']==1080
-          assert a['publicationAllowed'] is False
-          print('V4 source validated: 1080 source records, no publication consent')
+          facilities=json.loads((root/'v4_facilities_1080.snapshot.json').read_text())
+          assigned=json.loads((root/'v4_facility_assignments_1080.snapshot.json').read_text())
+          policy=json.loads((root/'v4_assignment_policy.snapshot.json').read_text())
+          pool=json.loads(Path('data/pools/flower_funeral_professional_600.v4.json').read_text())
+          assert len(facilities['facilities'])==facilities['count']==1080
+          assert facilities['publicationAllowed'] is False
+          assert len(assigned['assignments'])==1080
+          assert len({x['facilityId'] for x in assigned['assignments']})==1080
+          assert pool['totalUnits']==600 and pool['readyForPublication'] is False
+          assert len(policy['excludedTopics'])==8
+          print('SOURCE_LOCK_OK: 1080 facilities, 1080 assignments, 600 independently authored V4 copy units')
           PY
-      - name: Generate 1080 noindex HTML pages
-        env:
-          FLOWER_V4_FACILITIES_JSON: data/flower/v4_facilities_1080.snapshot.json
+      - name: Quality gate FIRST - compare randomized 1pct of documents against all 1080
+        run: |
+          python -m py_compile scripts/build_flower_funeral_national.py
+          python scripts/build_flower_funeral_national.py --audit-only
+          test ! -d dist/flower-funeral-national-preview
+      - name: Generate 1080 noindex HTML only after similarity gate
         run: python scripts/build_flower_funeral_national.py
-      - name: Confirm HTML quantity noindex and unique title
+      - name: Independently read generated HTML and audit report
         run: |
           python - <<'PY'
           import json
           from pathlib import Path
           out=Path('dist/flower-funeral-national-preview')
+          files=sorted(out.glob('fh-*.html'))
+          report=json.loads(Path('reports/flower-funeral/pool-1080-1pct-audit.json').read_text())
           manifest=json.loads((out/'manifest.json').read_text())
-          files=list(out.glob('fh-*.html'))
-          assert len(files)==manifest['numberOfHalls']==1080
-          titles=[]
+          assert report['passes'] and report['maximumSimilarity']<0.49
+          assert report['sampleCountPerSeed']==11 and report['seedCount']==3
+          assert report['comparisons']==3*11*1079*2
+          assert not report['failures'] and report['exactDuplicateBodies']==0
+          assert len(files)==manifest['pageCount']==1080
+          assert manifest['qaPasses']
+          titles=set()
           for p in files:
-              t=p.read_text()
-              assert '<meta name="robots" content="noindex,nofollow">' in t
-              assert '근조화환 주문 가격안내' in t and '날마다꽃' in t
-              assert '가격을 게시하지 않습니다' in t
-              titles.append(t.split('<title>')[1].split('</title>')[0])
-          assert len(set(titles))<=1080
-          print("Distinct titles:",len(set(titles)),"of 1080; repeated source hall names require disambiguation before indexing")
+            s=p.read_text()
+            assert '<meta name="robots" content="noindex,nofollow">' in s
+            assert '근조화환 주문 가격안내' in s and '날마다꽃' in s
+            assert '상담 확인' in s and '전화 상담' in s
+            assert '<link rel="canonical"' not in s
+            titles.add(s.split('<title>')[1].split('</title>')[0])
+          assert len(titles)==1080, ('Unique page titles',len(titles))
           assert not (out/'sitemap.xml').exists()
-          print('1080 preview HTML build succeeded')
+          assert 'Disallow: /' in (out/'robots.txt').read_text()
+          print('FLOWER_1080_CONTENT_QA_PASSED',json.dumps({
+            'pages':len(files),'titles':len(titles),
+            'maxSimilarityPercent':100*report['maximumSimilarity'],
+            'compared':report['comparisons'],
+            'lengths':report['characterLength']},ensure_ascii=False))
           PY
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: flower-1080-funeral-noindex-preview
-          path: dist/flower-funeral-national-preview/
-          retention-days: 7
-          if-no-files-found: error
+          name: flower-1080-funeral-reviewed-noindex-artifacts
+          path: |
+            reports/flower-funeral/pool-1080-1pct-audit.json
+            dist/flower-funeral-national-preview/
+          retention-days: 14
+          if-no-files-found: warn
