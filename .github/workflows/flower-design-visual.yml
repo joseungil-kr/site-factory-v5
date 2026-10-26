@@ -1,0 +1,41 @@
+name: Nalmada Flower real desktop and mobile visual QA
+on:
+  pull_request:
+    paths:
+      - 'scripts/build_flower_funeral_national.py'
+      - 'scripts/prepare_flower_funeral_preview.py'
+      - 'scripts/flower_design.py'
+      - 'scripts/flower_visual_check.py'
+      - 'templates/flower-nalmada/site.css'
+      - 'assets/library/flower-nalmada/**'
+      - 'data/flower/nalmada_funeral_product_reference.json'
+      - '.github/workflows/flower-design-visual.yml'
+permissions:
+  contents: read
+jobs:
+  visual:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Audit 1080 pages then build B / D layouts
+        run: |
+          python scripts/build_flower_funeral_national.py
+          python scripts/prepare_flower_funeral_preview.py
+      - name: Set up headless Chromium
+        run: |
+          python -m pip install --disable-pip-version-check playwright==1.55.0
+          python -m playwright install --with-deps chromium
+      - name: Screenshot real 1440 and 390px pages, test images and overflow
+        run: python scripts/flower_visual_check.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nalmada-flower-desktop-mobile-design-screenshots
+          path: |
+            reports/flower-funeral/visual/
+          retention-days: 14
+          if-no-files-found: warn
