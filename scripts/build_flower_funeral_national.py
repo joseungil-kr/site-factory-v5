@@ -140,7 +140,7 @@ def create_content(facility, assignment, curated, supplement, eligible):
         fields[field]=field_values
     supplemental={}
     for field in SUPPORT_FIELDS:
-        selected=_stable_options(list(range(len(supplement[field]))),facility_id+"|support|"+field,1)
+        selected=_stable_options(list(range(len(supplement[field]))),facility_id+"|support|"+field,2 if field=="order" else 1)
         supplemental[field]=[supplement[field][x] for x in selected]
     title=HALL_TITLE.format(hall=facility["facilityName"])
     # The first five items preserve the V4 editorial assignment. Extra scenario
