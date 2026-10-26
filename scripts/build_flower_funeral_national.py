@@ -16,6 +16,7 @@ from pathlib import Path
 from random import Random
 import re
 import shutil
+from flower_design import head, header, photo, price_cards, reference_note, footer, contact_band, prepare_assets
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data"
@@ -34,33 +35,6 @@ SUPPORT_FIELDS = ("intro", "facility", "product", "ribbon", "delivery", "etiquet
 HALL_TITLE = "{hall} 근조화환 주문 가격안내"
 PHONE = "1844-0644"
 
-STYLE = """
-*{box-sizing:border-box}
-body{font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif;margin:0;color:#193d32;background:#fcfaf7;line-height:1.85}
-a{color:inherit}.wrap{max-width:1050px;margin:auto;padding:0 20px}
-.site-header{background:#fff;border-bottom:1px solid #dde8e1}
-.header-line{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:70px;flex-wrap:wrap}
-.brand{font-size:24px;color:#116047;font-weight:800}.brand span{color:#d6507e}
-.cta{display:inline-block;background:#16674f;color:white;font-weight:bold;text-decoration:none;padding:10px 17px;border-radius:9px}
-.hero{background:linear-gradient(120deg,#eaf5ed,#fff3ee);padding:38px 0}
-.hero-inner{display:grid;grid-template-columns:1fr 220px;gap:26px;align-items:center}
-.eyebrow{font-size:12px;color:#476e60;letter-spacing:.05em}
-h1{font-size:clamp(27px,4vw,41px);line-height:1.35;margin:8px 0 12px;word-break:keep-all}
-.muted{color:#576f63}
-.hero-product{border-radius:16px;padding:28px;background:white;border:1px solid #dfebe4;text-align:center}
-.hero-product .emblem{font-size:56px;color:#d2687c;line-height:1.2}
-.notice{color:#995567;font-size:13px}
-.content-grid{display:grid;grid-template-columns:minmax(0,1fr) 246px;gap:30px;padding-top:25px}
-.article section{border-bottom:1px solid #e5ebe6;padding:18px 0}
-.article h2{font-size:22px;line-height:1.5}
-.article p{margin:12px 0;color:#3f564b}
-table{border-collapse:collapse;width:100%;background:white}
-th,td{border-bottom:1px solid #dce7de;padding:11px;text-align:left}th{background:#e6f0e8}
-.aside{align-self:start;position:sticky;top:15px;padding:19px;background:#edf6ed;border-radius:15px}
-.faq details{background:white;padding:13px 17px;border:1px solid #e1e8e2;border-radius:9px;margin:10px 0}
-footer{background:#173c32;padding:25px 0;margin-top:40px;color:#f5f8f6}
-@media(max-width:700px){.hero-inner,.content-grid{grid-template-columns:1fr}.hero-product{padding:12px}.hero-product .emblem{font-size:32px}.aside{position:static}h1{font-size:29px}}
-"""
 
 def _read(path: Path):
     return json.loads(path.read_text(encoding="utf-8"))
@@ -304,51 +278,63 @@ def _paragraphs(items):
     return "".join("<p>"+escape(item)+"</p>" for item in items)
 
 def render(facility,c):
+    """B green-premium hero + D long-form document for all 1080 halls.
+
+    No invented facility photos, maps, stock or guaranteed delivery claims.
+    Only shared, owner-sourced product photos are repeated across hall pages.
+    """
     name=escape(facility["facilityName"])
     region=escape(facility["regionName"])
     address=escape(facility["sourceAddress"])
     title=escape(c["title"])
-    sections="".join("<section><h2>"+escape(heading)+"</h2>"+
-                     _paragraphs(parts)+"</section>" for heading,parts in c["sections"])
-    price_section=('''<section id="prices"><h2>근조화환 종류별 가격 안내</h2>
-    <p>확정된 상품별 판매가격 자료가 없어 가격은 상담 확인으로 표시합니다.</p>
-    <table><thead><tr><th>근조화환 종류</th><th>현재 가격</th></tr></thead><tbody>
-    <tr><td>기본형</td><td>상담 확인</td></tr>
-    <tr><td>고급형</td><td>상담 확인</td></tr>
-    <tr><td>특대형</td><td>상담 확인</td></tr></tbody></table></section>''')
-    faq="<section class='faq'><h2>자주 묻는 질문</h2>"+"".join(
-        "<details><summary>"+escape(q)+"</summary><p>"+escape(a)+"</p></details>"
-        for q,a in c["faq"])+"</section>"
-    # Duplicate names across different provinces must have unique page titles.
-    meta_title=title+" | "+region+" | 날마다꽃"
-    return ('''<!doctype html><html lang="ko"><head><meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="robots" content="noindex,nofollow">
-    <title>'''+meta_title+'''</title>
-    <meta name="description" content="'''+escape(c["lead"],quote=True)[:155]+'''">
-    <style>'''+STYLE+'''</style></head><body>
-    <header class="site-header"><div class="wrap header-line"><div class="brand">✿ 날마다<span>꽃</span></div>
-    <a class="cta" href="tel:18440644">☎ 1844-0644</a></div></header>
-    <div class="hero"><div class="wrap hero-inner"><div>
-    <div class="eyebrow">전국 근조화환 · 장례식장별 주문 참고 안내</div><h1>'''+title+'''</h1>
-    <p>원장 기준 지역: '''+region+'''</p><p>원장 기재 주소: '''+address+'''</p>
-    <p class="notice">시설 주소와 현재 운영상태는 별도 검증이 필요합니다.</p>
-    <p>'''+escape(c["lead"])+'''</p><a class="cta" href="#prices">근조화환 종류별 가격 확인</a></div>
-    <div class="hero-product"><div class="emblem" aria-hidden="true">✿</div>
-    <strong>근조화환 공통 이미지 영역</strong><p class="muted">장례식장 건물 이미지 미사용 · 상품 실사진 권리 확인 후 교체</p>
-    </div></div></div>
-    <main class="wrap content-grid"><article class="article">'''+sections+price_section+faq+'''</article>
-    <aside class="aside"><strong>날마다꽃 전화 상담</strong>
-    <p>장례식장명·빈소·상주명·리본 문구를 준비해 주세요.</p>
-    <a class="cta" href="tel:18440644">1844-0644 전화 상담</a></aside></main>
-    <footer><div class="wrap">날마다꽃 · 검수용 noindex 미리보기 / 가격·운영정보 검증 전</div></footer>
-    </body></html>''')
+    paragraphs=[]
+    for heading, parts in c["sections"]:
+        paragraphs.append('<section class="text-section"><h2>'+escape(heading)+'</h2>'+
+                          _paragraphs(parts)+'</section>')
+    # Real catalogue reference price cards, but no unverified current price.
+    price_section=('<section id="prices" class="price-box">'
+                   '<div class="eyebrow">CONDOLENCE WREATHS · PRODUCT GUIDE</div>'
+                   '<h2>근조화환 종류별 가격 안내</h2>'
+                   '<p>기본형·고급형·특대형 상품 구성과 참고 가격을 비교해 보세요.</p>'
+                   +price_cards()+reference_note()+'</section>')
+    paragraphs.insert(2,price_section)
+    faq=('<section class="faq" id="faq"><h2>자주 묻는 질문</h2>'+
+         "".join('<details><summary>'+escape(q)+'</summary><p>'+escape(a)+'</p></details>'
+                 for q,a in c["faq"])+'</section>')
+    hero=('<div class="wrap breadcrumb"><a href="/">홈</a><span>›</span>장례식장별 근조화환'
+          '<span>›</span>'+region+'</div>'
+          '<section class="hero detail-hero"><div class="wrap hero-inner"><div>'
+          '<span class="eyebrow">FUNERAL FLOWER DELIVERY · '+region+'</span>'
+          '<h1>'+title+'</h1><p class="lead">'+escape(c["lead"])+'</p>'
+          '<div class="fact-row"><span>📍 '+region+'</span>'
+          '<span>☎ 전화 주문 상담</span><span>🌿 근조화환 종류별 비교</span></div>'
+          '<div class="hero-actions"><a class="btn" href="#prices">화환 종류·가격 보기</a>'
+          '<a class="btn btn-outline" href="tel:18440644">☎ 1844-0644</a></div>'
+          '<p class="reference">원장 기재 주소(현행 정보 미검증): '+address+'</p>'
+          '</div><div class="hero-visual">'+photo("B203.jpg","근조 고급 3단 화환 공통 상품 사진","eager")+
+          '<span class="photo-label">장례식장 건물 사진이 아닌 공통 근조화환 상품 사진</span>'
+          '</div></div></section>')
+    sidebar=('<aside class="aside"><div class="side-card tint"><h3>근조화환 전화 상담</h3>'
+             '<p>장례식장명·빈소·상주명·희망일·리본 문구를 준비해 주세요.</p>'
+             '<a class="btn" href="tel:18440644">☎ 1844-0644 전화하기</a></div>'
+             '<div class="side-card"><h3>페이지 바로가기</h3>'
+             '<p><a href="#prices">근조화환 종류와 참고 가격</a></p>'
+             '<p><a href="#faq">자주 묻는 질문</a></p>'
+             '<p><a href="/">전국 장례식장 찾기</a></p></div>'
+             '<div class="notice">주소와 장례식장 운영 여부는 외부 검증 전입니다. '
+             '원장 기재 정보가 실제와 다를 수 있으므로 주문 전 확인해 주세요.</div></aside>')
+    return (head(c["title"]+" | "+facility["regionName"]+" | 날마다꽃",c["lead"])+
+            header()+'<main id="main">'+hero+
+            '<div class="wrap layout"><article class="article-card">'+
+            "".join(paragraphs)+faq+'</article>'+sidebar+'</div>'+
+            contact_band()+'</main>'+footer())
 
 def build(facilities,contents,qa):
     if not qa["passes"]:
         raise ValueError("Refuse HTML generation until similarity quality gate passes")
     if OUT.exists():shutil.rmtree(OUT)
     OUT.mkdir(parents=True,exist_ok=True)
+    prepare_assets(OUT)
     files=[]
     for f,c in zip(facilities,contents):
         filename=f["id"]+".html"
