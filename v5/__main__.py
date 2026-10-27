@@ -12,7 +12,7 @@ def main(argv=None):
     for name in ('build','audit'):
         cmd=cmds.add_parser(name)
         cmd.add_argument('--site',required=True)
-        if name=='build':cmd.add_argument('--mode',choices=['preview','public-indexing','publish'],default='preview')
+        if name=='build':cmd.add_argument('--mode',choices=['preview','home-indexing','public-indexing','publish'],default='preview')
     cmds.add_parser('dashboard')
     planning=cmds.add_parser('plan-check')
     planning.add_argument('--site',required=True)
