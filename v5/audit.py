@@ -98,6 +98,12 @@ def audit(site_id, *,output:Path|None=None,write_report=True,release_mode:str|No
     for p in data['pages']:
         file=markup.filename(p['number'])
         html=(out/file).read_text(encoding='utf-8')
+        # Approved home-only release intentionally omits navigation to 1732
+        # unverified landing pages while leaving the files and IDs untouched.
+        if release_mode=='home-indexing' and p['number']==1:
+            if 'id="regions"' in html or 'href="/2.html"' in html:
+                errors.append('Home-only homepage exposes unverified region index')
+            continue
         numbers=markup.pagination(data['pages'],p['number'])
         for n in numbers:
             if n==p['number']:
