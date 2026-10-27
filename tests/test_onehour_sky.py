@@ -27,9 +27,10 @@ class OneHourSky(unittest.TestCase):
 
     def test_pinned_national_ledger_and_pool(self):
         self.assertEqual(len(_rows()), 284)
-        shared, topics = _pool()
+        shared, topics, deep = _pool()
         self.assertEqual(sum(map(len, shared.values())), 72)
         self.assertEqual(len(topics), 8)
+        self.assertEqual(sum(map(len, deep.values())), 56)
 
     def test_regional_pages_are_real_v5_page_models(self):
         pages = self.data["pages"]
