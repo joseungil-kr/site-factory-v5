@@ -10,6 +10,7 @@ import argparse
 from collections import Counter
 from hashlib import sha256
 from html import escape
+from html.parser import HTMLParser
 import json
 from math import ceil
 from pathlib import Path
@@ -33,6 +34,26 @@ THRESHOLD = 0.49
 CORE_FIELDS = ("opening", "body", "orderGuide", "faq", "closing")
 SUPPORT_FIELDS = ("intro", "facility", "product", "ribbon", "delivery", "etiquette", "order")
 HALL_TITLE = "{hall} 근조화환 주문 가격안내"
+GROUP_LABELS = {
+    "L": "장례식장명·주소와 빈소",
+    "T": "발인·접수·배송 일정",
+    "B": "기업·단체 명의와 경조사",
+    "C": "생화·제작·상품 품질",
+    "D": "배송 동선과 현장 반입",
+    "R": "리본과 조문 표현",
+    "S": "주문 사진·확인과 고객지원",
+    "O": "상품가격·결제·취소",
+}
+BODY_HEADINGS = {
+    "L": "장례식장명·주소와 빈소를 확인하는 방법",
+    "T": "발인 일정과 화환 도착 시간을 살피는 방법",
+    "B": "회사와 단체 명의의 근조화환을 준비하는 방법",
+    "C": "생화 구성과 근조화환 품질을 비교하는 방법",
+    "D": "배송 동선과 현장 반입 조건을 확인하는 방법",
+    "R": "리본 문구와 조문 표현을 정리하는 방법",
+    "S": "주문 사진과 배송 확인·고객지원을 살펴보는 방법",
+    "O": "상품 가격과 결제·취소 조건을 확인하는 방법",
+}
 PHONE = "1844-0644"
 
 
@@ -76,14 +97,20 @@ def load_sources():
     eligible = sorted(set(range(120))-excluded)
     if len(eligible)!=112:
         raise ValueError("Unexpected eligible V4 topic count")
+    group_eligible = {key: sorted(set(indices)-excluded)
+                      for key,indices in topic_groups.items()}
+    if set(group_eligible) != set(GROUP_LABELS):
+        raise ValueError("V4 topic groups do not match approved editorial headings")
+    if any(len(indices) < 4 for indices in group_eligible.values()):
+        raise ValueError("Not enough eligible topics in a group; do not mix categories")
     for a in assignments:
-        permitted = topic_groups.get(a["group"])
+        permitted = group_eligible.get(a["group"])
         if not permitted:
             raise ValueError("Missing group: "+a["group"])
         for field in CORE_FIELDS:
-            if a[field] not in permitted or a[field] in excluded:
+            if a[field] not in permitted:
                 raise ValueError("Wrong-group or excluded topic in V4 assignment")
-    return facilities,assignments,professional,groups,eligible
+    return facilities,assignments,professional,groups,group_eligible
 
 def _stable_options(options, key, count):
     if len(options) < count:
@@ -100,10 +127,17 @@ def _fill(text, facility):
 def create_content(facility, assignment, curated, supplement, eligible):
     facility_id=facility["id"]
     fields={}
+    selected_indices={}
+    permitted=eligible[assignment["group"]]
     for field in CORE_FIELDS:
         assigned=assignment[field]
-        extras=_stable_options([x for x in eligible if x!=assigned],facility_id+"|professional|"+field,3)
+        if assigned not in permitted:
+            raise ValueError("Original topic is not in its permitted group")
+        extras=_stable_options([x for x in permitted if x!=assigned],facility_id+"|professional|"+field,3)
         indices=[assigned]+extras
+        if len(set(indices))!=4 or any(i not in permitted for i in indices):
+            raise ValueError("Mixed-group or excluded topic selected")
+        selected_indices[field]=indices
         field_values=[]
         for i in indices:
             entry=curated[field][i]
@@ -122,22 +156,18 @@ def create_content(facility, assignment, curated, supplement, eligible):
     lead=(f'{facility["regionName"]}의 {facility["facilityName"]}으로 근조화환을 '
           '준비하신다면 빈소와 상주명, 장례 일정부터 확인해 주세요. '
           '근조화환 종류와 리본 문구, 주문 전에 확인할 내용을 안내합니다.')
+    group=assignment["group"]
     sections=[
-        ("부고를 받고 근조화환을 준비할 때",fields["opening"]+supplemental["intro"]),
-        ("장례식장 위치와 빈소를 확인하는 순서",fields["body"]+supplemental["facility"]),
-        ("근조화환 종류와 제작 품질을 비교할 때",supplemental["product"]),
-        ("리본 문구와 조문 예절",supplemental["ribbon"]+supplemental["etiquette"]),
-        ("주문 전 제작·배송 조건 확인",fields["orderGuide"]+supplemental["delivery"]),
-        ("전화 주문과 추가 확인 사항",fields["closing"]+supplemental["order"])
+        ("근조화환 주문을 준비하는 상황", fields["opening"]+supplemental["intro"]),
+        (BODY_HEADINGS[group], fields["body"]),
+        ("장례식장 명칭·빈소 정보 확인", supplemental["facility"]),
+        ("근조화환 상품·리본과 조문 예절", supplemental["product"]+supplemental["ribbon"]+supplemental["etiquette"]),
+        (GROUP_LABELS[group]+" — 주문 전 점검", fields["orderGuide"]),
+        ("제작·배송 일정 확인", supplemental["delivery"]),
+        (GROUP_LABELS[group]+" — 상담과 주문 마무리", fields["closing"]+supplemental["order"]),
     ]
-    faq=fields["faq"]
-    price_text=("근조화환 기본형 고급형 특대형 종류별 가격은 실제 상품과 배송지 조건에 "
-                "따라 달라질 수 있습니다. 현재 확정된 가격표가 없으므로 각 유형의 금액은 상담 확인으로 표시합니다.")
-    content_text=" ".join([title,facility["regionName"],lead,price_text]+
-                          [heading+" "+" ".join(parts) for heading,parts in sections]+
-                          [q+" "+a for q,a in faq])
-    return {"title":title,"lead":lead,"sections":sections,"faq":faq,
-            "priceText":price_text,"text":content_text}
+    return {"title":title,"lead":lead,"sections":sections,"faq":fields["faq"],
+            "group":group,"selectedIndices":selected_indices}
 
 def _fingerprint(text):
     t=re.sub(r"\s+","",text).lower()
