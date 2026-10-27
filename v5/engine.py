@@ -97,8 +97,15 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
                 and site.get('publicIndexingApproved',False)
                 and ((site.get('publicIndexingScope')=='daysky-ansan-29-20261025' and len(data['pages'])==29)
                   or (site.get('publicIndexingScope')=='daysky-seoul-gyeonggi-1736-20261025' and len(data['pages'])==1736)))
-        if not (plants or daysky):
-            raise ConfigError('Indexed release is limited to the explicitly approved plants or Daysky hostname')
+        quicksky=(site['id']=='quicksky' and site['domain']=='https://quicksky.nalmada.com'
+                  and site.get('publicIndexingScope')=='quicksky-seoul-gyeonggi-1733-20261027'
+                  and site.get('publicIndexingApproved',False)
+                  and site.get('imageAssetsApproved') is True
+                  and site.get('contentQualityApproved') is True
+                  and site.get('domainOwnershipVerified') is True
+                  and len(data['pages'])==1733)
+        if not (plants or daysky or quicksky):
+            raise ConfigError('Indexed release requires an exact approved hostname and quality/ownership gates')
     if mode=='publish':
         from .config import assert_publish_ready
         assert_publish_ready(site)
