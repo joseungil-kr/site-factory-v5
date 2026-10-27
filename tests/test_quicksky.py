@@ -157,6 +157,32 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
         self.assertIn('name="robots" content="noindex,nofollow"',actual)
         self.assertNotIn('rel="canonical"',actual)
 
+    def test_image_owner_permission_exact_source_scope_and_local_hashes(self):
+        import hashlib
+        record=json.loads((ROOT/"docs/QUICKSKY_PHOTO_PERMISSION_20261027.json").read_text())
+        provenance=json.loads((ROOT/"docs/DAYSKY_PHOTO_PROVENANCE.json").read_text())
+        site=self.data["site"]
+        self.assertEqual(record["ownerStatementOriginal"],"직접 받은 사진이다. 사용권 허락받음")
+        self.assertEqual({s["sourceUrl"] for s in record["sources"]},{
+            "https://skycar1day.com/images/yjsky_01.jpg",
+            "https://skycar1day.com/images/yjsky_02.jpg"})
+        self.assertEqual(len(record["sources"]),2)
+        flattened={d["file"]:{"original":s["sourceUrl"],
+              "sha":d["outputSHA256"],"crop":d["cropTopFraction"]}
+              for s in record["sources"] for d in s["derived"]}
+        self.assertEqual(set(flattened),set(site["imagePool"]))
+        self.assertEqual(set(flattened),{p["file"] for p in provenance})
+        for p in provenance:
+            name=p["file"];q=flattened[name]
+            self.assertEqual(q["original"],p["original"])
+            self.assertEqual(q["sha"],p["output_sha256"])
+            self.assertEqual(q["crop"],p["cropTopFraction"])
+            actual=(ROOT/"assets/library/daysky"/name).read_bytes()
+            self.assertEqual(hashlib.sha256(actual).hexdigest(),q["sha"])
+        self.assertTrue(site["imageAssetsApproved"])
+        self.assertFalse(site["publicIndexingApproved"])
+        self.assertFalse(site.get("contentQualityApproved",False))
+
     def test_one_percent_sample_against_every_page(self):
         report=audit_one_percent(self.pages)
         self.assertEqual(report["population"],TARGET_COUNT)
