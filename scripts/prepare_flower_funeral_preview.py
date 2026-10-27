@@ -123,10 +123,31 @@ def package(*,public=False):
              '<p>전국 장례식장 목록에서 필요한 시설을 다시 검색해 주세요.</p>'
              '<a class="btn" href="/">날마다꽃 홈으로</a></main>'+footer())
     (OUT/"404.html").write_text(missing,encoding="utf-8")
-    assert "Disallow: /" in (OUT/"robots.txt").read_text(encoding="utf-8")
-    assert not (OUT/"sitemap.xml").exists()
+    robots=(OUT/"robots.txt").read_text(encoding="utf-8")
+    if public:
+        assert "Allow: /" in robots and "Sitemap:" in robots
+        from xml.etree.ElementTree import Element,SubElement,ElementTree
+        root=Element("urlset",{"xmlns":"http://www.sitemaps.org/schemas/sitemap/0.9"})
+        paths=["/"]+[x["u"] for x in directory]
+        for path in paths:
+            SubElement(SubElement(root,"url"),"loc").text="https://flower.nalmada.net"+path
+        sitemap=OUT/"sitemap.xml"
+        ElementTree(root).write(sitemap,encoding="utf-8",xml_declaration=True)
+        public_key=json.loads((ROOT/"data/flower/indexnow_public_key_20261027.json").read_text(encoding="utf-8"))
+        assert public_key["host"]=="flower.nalmada.net"
+        assert public_key["keyLocation"]=="https://flower.nalmada.net/"+public_key["key"]+".txt"
+        assert len(public_key["key"])==32
+        (OUT/(public_key["key"]+".txt")).write_text(public_key["key"],encoding="utf-8")
+        assert len(paths)==1081
+    else:
+        assert "Disallow: /" in robots
+        assert not (OUT/"sitemap.xml").exists()
     assert len(list(OUT.glob("fh-*.html")))==1080
     print(json.dumps({"pageCount":1080,"homepage":True,"directoryCount":len(directory),
-                      "sharedImages":5,"design":"B + D","indexable":False},ensure_ascii=False))
+                      "sharedImages":5,"design":"B + D","indexable":public},ensure_ascii=False))
 
-if __name__=="__main__":package()
+if __name__=="__main__":
+    parser=argparse.ArgumentParser()
+    parser.add_argument("--public",action="store_true")
+    args=parser.parse_args()
+    package(public=args.public)
