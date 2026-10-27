@@ -44,7 +44,7 @@ jobs:
           assert (out/'index.html').exists() and (out/'285.html').exists()
           assert not (out/'286.html').exists()
           assert not (out/'sitemap.xml').exists()
-          assert (out/'robots.txt').read_text()=='User-agent: *\\nDisallow: /\\n'
+          assert (out/'robots.txt').read_text().splitlines()==['User-agent: *','Disallow: /']
           assert all('content="noindex,nofollow"' in p.read_text() for p in files)
           assert not any('rel="canonical"' in p.read_text() for p in files)
           assert '반나절 요금 기준' in (out/'2.html').read_text()
