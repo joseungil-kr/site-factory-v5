@@ -45,7 +45,7 @@ def inventory():
             raise RuntimeError("Expected existing host mapping missing: "+hostname)
     return aid,inventory
 
-def preflight(output):
+def preflight(output, *, existing_home_public=False):
     aid,domains=inventory()
     deployments=get("/accounts/"+aid+"/workers/scripts/"+WORKER+"/deployments")
     rows=deployments.get("deployments",[])
@@ -56,18 +56,23 @@ def preflight(output):
     previous=versions[0]["version_id"]
     subdomain=get("/accounts/"+aid+"/workers/subdomain")["subdomain"]
     if not re.fullmatch(r"[a-z0-9-]+",subdomain):raise RuntimeError("Unexpected workers.dev suffix")
-    # Refuse duplicate launch if homepage is already indexable. Only roll forward from audited noindex.
-    req=urllib.request.Request("https://"+HOST+"/",headers={"User-Agent":"Quicksky-Bound-Home-Preflight/1"})
-    with urllib.request.urlopen(req,timeout=30,context=ssl.create_default_context()) as response:
-        html=response.read(200000).decode("utf-8","replace")
-        if response.status!=200 or "noindex" not in response.headers.get("X-Robots-Tag","").lower():
-            raise RuntimeError("Quicksky is not currently verified noindex; manual reconcile required")
-        if '<meta name="robots" content="noindex,nofollow">' not in html:
-            raise RuntimeError("Quicksky previous homepage is not noindex")
-        if '비용 상담 안내 보기' not in html:
-            raise RuntimeError("Old verified Quicksky homepage is not the expected prior release")
+    if existing_home_public:
+        from scripts.verify_quicksky_home_release import verify
+        verify()  # Reconcile the existing one-home release before adding a public key.
+    else:
+        # Refuse duplicate launch if homepage is already indexable. Only roll forward from audited noindex.
+        req=urllib.request.Request("https://"+HOST+"/",headers={"User-Agent":"Quicksky-Bound-Home-Preflight/1"})
+        with urllib.request.urlopen(req,timeout=30,context=ssl.create_default_context()) as response:
+            html=response.read(200000).decode("utf-8","replace")
+            if response.status!=200 or "noindex" not in response.headers.get("X-Robots-Tag","").lower():
+                raise RuntimeError("Quicksky is not currently verified noindex; manual reconcile required")
+            if '<meta name="robots" content="noindex,nofollow">' not in html:
+                raise RuntimeError("Quicksky previous homepage is not noindex")
+            if '비용 상담 안내 보기' not in html:
+                raise RuntimeError("Old verified Quicksky homepage is not the expected prior release")
     record={"previousVersion":previous,"bindingsBefore":domains,
-        "site":HOST,"worker":WORKER,"previousNoindexVerified":True}
+        "site":HOST,"worker":WORKER,"previousNoindexVerified":not existing_home_public,
+        "previousHomeOnlyPublicVerified":existing_home_public}
     output.write_text(json.dumps(record,indent=2)+"\n",encoding="utf-8")
     print("QUICKSKY_EXISTING_WORKER_PREFLIGHT_PASS",len(domains))
     if os.environ.get("GITHUB_OUTPUT"):
@@ -88,8 +93,9 @@ def after(before_path,output):
 if __name__=="__main__":
     p=argparse.ArgumentParser()
     p.add_argument("action",choices=("before","after"))
+    p.add_argument("--existing-home-public", action="store_true")
     p.add_argument("--before",type=Path,default=Path("quicksky-home-before.json"))
     p.add_argument("--out",type=Path,required=True)
     args=p.parse_args()
-    if args.action=="before":preflight(args.out)
+    if args.action=="before":preflight(args.out, existing_home_public=args.existing_home_public)
     else:after(args.before,args.out)
