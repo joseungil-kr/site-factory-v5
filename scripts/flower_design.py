@@ -60,9 +60,11 @@ def head(title,description,*,public=False,path="/"):
     else:
         robots='noindex,nofollow'
         canonical=''
+    naver = ('<meta name="naver-site-verification" content="4294f019f90dbaab16b91e588be60fca64a40ca8">'
+             if public and path == '/' else '')
     return ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<meta name="robots" content="'+robots+'">'+canonical
+            '<meta name="robots" content="'+robots+'">'+canonical+naver
             +'<title>'+escape(title)+'</title>'
             '<meta name="description" content="'+escape(description[:155],quote=True)+'">'
             '<link rel="stylesheet" href="/assets/css/site.css"></head><body>'
