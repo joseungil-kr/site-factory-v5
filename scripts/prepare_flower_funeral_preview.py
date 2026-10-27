@@ -61,14 +61,14 @@ def package():
           'NALMADA FLOWER · NATIONWIDE FLOWER DELIVERY</span>'
           '<h1>전국 어디든, 마음을 전하는 <em>꽃배달</em></h1>'
           '<p class="lead">근조화환을 중심으로 꽃바구니와 화분까지, '
-          '날마다꽃이 상품 안내와 주문 상담을 도와드립니다. '
-          '전국 장례식장 1,080곳의 근조화환 주문 참고 정보를 찾아보세요.</p>'
+          '날마다꽃이 꽃 선물 선택과 주문 상담을 도와드립니다. '
+          '전국 장례식장 근조화환 주문 정보를 찾아보세요.</p>'
           '<div class="hero-actions"><a class="btn" href="#directory">장례식장 찾기</a>'
           '<a class="btn btn-outline" href="tel:18440644">☎ 1844-0644 상담</a></div>'
           '<div class="badges"><span>근조화환 종류별 비교</span><span>리본 문구 안내</span>'
           '<span>전화 주문 상담</span></div></div>'
-          '<div class="hero-visual">'+photo("A160.jpg","날마다꽃 꽃바구니 공통 상품 사진","eager")+
-          '<span class="photo-label">보유 상품 사진 · 실제 상품 구성은 달라질 수 있습니다</span></div>'
+          '<div class="hero-visual">'+photo("A160.jpg","날마다꽃 꽃바구니 상품","eager")+
+          '</div>'
           '</div></section>')
     categories=('<section id="categories" class="wrap section">'
         '<div class="section-title"><div><h2>꽃배달 상품별 안내</h2>'
@@ -77,7 +77,7 @@ def package():
         '<a class="cat-card" href="#products">'+photo("B201.jpg","근조 3단 화환 대표 상품")+
         '<div class="cat-desc"><strong>근조화환</strong><p>장례식장 주문·가격안내</p></div></a>'
         '<div class="cat-card"><div class="cat-icon" aria-hidden="true">✿</div>'
-        '<div class="cat-desc"><strong>축하화환</strong><p>상품 정보 준비 중 · 전화 문의</p></div></div>'
+        '<div class="cat-desc"><strong>축하화환</strong><p>개업·결혼식·기념행사</p></div></div>'
         '<div class="cat-card">'+photo("A160.jpg","꽃바구니 상품 사진")+
         '<div class="cat-desc"><strong>꽃바구니</strong><p>기념일·감사 꽃선물 상담</p></div></div>'
         '<div class="cat-card">'+photo("D143.jpg","관엽식물 상품 사진")+
@@ -85,19 +85,18 @@ def package():
         '</div></section>')
     products_html=('<section class="wrap section" id="products">'
         '<div class="section-title"><div><h2>근조화환 종류별 상품</h2>'
-        '<p>기존 판매처의 상품 사진과 기준일이 표시된 참고 가격입니다.</p></div></div>'
+        '<p>근조화환의 종류와 상품별 가격을 확인하세요.</p></div></div>'
         +price_cards()+reference_note()+'</section>')
     directory_html=('<section class="wrap section" id="directory"><div class="search-panel">'
         '<span class="eyebrow">FUNERAL HALL DIRECTORY</span>'
         '<h2>전국 장례식장 찾아보기</h2>'
-        '<p>원장에 기록된 전국 1,080곳입니다. 최신 주소·운영상태는 별도 확인이 필요합니다.</p>'
+        '<p>장례식장명 또는 지역을 검색하여 필요한 안내를 찾아보세요.</p>'
         '<div class="filters"><label>장례식장명 또는 지역'
         '<input type="search" id="query" placeholder="예: 안산, 서울, 장례식장명" autocomplete="off"></label>'
         '<label>광역 지역 선택<select id="province"><option value="">전국 전체</option></select></label></div>'
         '<p id="count" aria-live="polite">장례식장 목록을 불러오는 중입니다.</p>'
         '<div id="results" class="hall-grid">'+samples+'</div></div>'
-        '<div class="notice" style="margin-top:15px">시설명·주소·운영상태를 별도로 확인하지 않은 검수용 원장입니다. '
-        '이 페이지는 검색엔진에 제출하지 않습니다.</div></section>')
+        '</section>')
     guide=('<section class="wrap section" id="ordering">'
         '<div class="section-title"><div><h2>근조화환 주문 준비</h2>'
         '<p>꽃의 종류뿐 아니라 실제 전달 조건을 먼저 확인하는 것이 중요합니다.</p></div></div>'
