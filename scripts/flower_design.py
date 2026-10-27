@@ -51,11 +51,19 @@ def prepare_assets(output:Path):
         if not source.is_file() or source.stat().st_size<8000:raise ValueError("Missing verified photo asset "+name)
         shutil.copyfile(source,target/name)
 
-def head(title,description):
+def head(title,description,*,public=False,path="/"):
+    if public:
+        if not path.startswith("/") or "?" in path or "#" in path or "//" in path:
+            raise ValueError("Invalid production canonical path")
+        robots='index,follow'
+        canonical='<link rel="canonical" href="https://flower.nalmada.net'+escape(path,quote=True)+'">'
+    else:
+        robots='noindex,nofollow'
+        canonical=''
     return ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<meta name="robots" content="noindex,nofollow">'
-            '<title>'+escape(title)+'</title>'
+            '<meta name="robots" content="'+robots+'">'+canonical
+            +'<title>'+escape(title)+'</title>'
             '<meta name="description" content="'+escape(description[:155],quote=True)+'">'
             '<link rel="stylesheet" href="/assets/css/site.css"></head><body>'
             '<a class="skip" href="#main">본문 바로가기</a>')
