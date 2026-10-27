@@ -35,17 +35,19 @@ class QuickskyHomeOnlyTests(unittest.TestCase):
         )
         return permitted
 
-    def test_real_source_stays_noindex_and_both_index_release_modes_blocked(self):
-        self.assertFalse(self.site.get("homeIndexingApproved",False))
-        self.assertFalse(self.site.get("homeBusinessFactsVerified",False))
-        self.assertFalse(self.site.get("homeContentQualityApproved",False))
+    def test_real_source_home_only_evidence_and_preview_noindex(self):
+        self.assertTrue(self.site.get("homeIndexingApproved"))
+        self.assertTrue(self.site.get("homeBusinessFactsVerified"))
+        self.assertTrue(self.site.get("homeContentQualityApproved"))
         self.assertFalse(self.site["publicIndexingApproved"])
         self.assertFalse(self.site["publishEnabled"])
-        actual=_head(self.site,"빠른스카이 스카이차","미리보기","/")
+        from v5.quicksky_home_evidence import validate_home_evidence
+        proof=validate_home_evidence(self.site,self.actual["pages"],self.actual["rates"])
+        self.assertEqual(proof["indexablePaths"],["/"])
+        # Preview renderer gets approval disabled by V5 build preview mode.
+        actual=_head({**self.site,"homeIndexingApproved":False},"빠른스카이 스카이차","미리보기","/")
         self.assertIn('name="robots" content="noindex,nofollow"',actual)
         self.assertNotIn('rel="canonical"',actual)
-        with self.assertRaises(ConfigError):
-            build("quicksky",mode="home-indexing")
         with self.assertRaises(ConfigError):
             build("quicksky",mode="public-indexing")
 
@@ -114,6 +116,13 @@ class QuickskyHomeOnlyTests(unittest.TestCase):
                 else:
                     self.assertNotIn('rel="canonical"',html,p.name)
             self.assertEqual(result["audit"]["errors"],[])
+            home_html=(dist/"index.html").read_text()
+            self.assertNotIn('id="regions"',home_html)
+            self.assertNotIn('href="/2.html"',home_html)
+            self.assertIn("실제 배차 가능 지역과 장비 종류",home_html)
+            # The 1732 noindex source files still exist despite not being linked from public home.
+            self.assertTrue((dist/"2.html").exists())
+            self.assertTrue((dist/"1733.html").exists())
             # A wrong sitemap must fail independent direct audit as well.
             (dist/"sitemap.xml").write_text(
                 (dist/"sitemap.xml").read_text().replace(
