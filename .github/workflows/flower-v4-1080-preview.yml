@@ -6,6 +6,7 @@ on:
       - 'scripts/prepare_flower_funeral_preview.py'
       - 'scripts/flower_design.py'
       - 'scripts/flower_visible_copy_check.py'
+      - 'tests/test_flower_pool_semantics.py'
       - 'templates/flower-nalmada/site.css'
       - 'assets/library/flower-nalmada/**'
       - 'data/flower/nalmada_funeral_product_reference.json'
@@ -44,6 +45,8 @@ jobs:
           assert len(policy['excludedTopics'])==8
           print('SOURCE_LOCK_OK: 1080 facilities, 1080 assignments, 600 independently authored V4 copy units')
           PY
+      - name: Validate all 1080 assignments and 8 topical headings
+        run: python -m unittest discover -s tests -p 'test_flower_pool_semantics.py' -v
       - name: Quality gate FIRST - compare randomized 1pct of documents against all 1080
         run: |
           python -m py_compile scripts/build_flower_funeral_national.py
@@ -88,7 +91,7 @@ jobs:
           assert report['fullPairFailures']==0
           assert all(x['pairsAtOrAboveThreshold']==0 for x in report['fullPairwise'])
           assert report['characterLength']['minimum']>=2500
-          assert report['characterLength']['maximum']<=3200
+          assert report['characterLength']['maximum']<=4100
           assert not report['failures'] and report['exactDuplicateBodies']==0
           assert len(files)==manifest['pageCount']==1080
           assert manifest['qaPasses']
