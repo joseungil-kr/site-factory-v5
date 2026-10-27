@@ -89,7 +89,7 @@ def main():
                 assert page.locator(".article-card .text-section").count()==6
                 assert page.locator("#prices .product-card").count()==3
                 assert page.locator(".aside .btn").count()==1
-                assert "시설 주소와 현재 운영" in page.content() or "운영 여부" in page.content()
+                assert "원장 기재 주소" not in page.content() and "외부 검증 전" not in page.content()
                 page.evaluate("window.scrollTo(0,0)")
                 page.wait_for_timeout(120)
                 page.screenshot(path=str(SHOTS/f"{tag}-hall.png"),full_page=True)
