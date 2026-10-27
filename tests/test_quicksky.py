@@ -56,7 +56,11 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
             self.assertNotIn("작업 요금표 보기",text)
             self.assertNotIn("기본 요금</h2>",text)
             self.assertNotIn("300,000원",text)
-        self.assertIn("비용 상담 안내",front)
+        self.assertIn("비용 상담 안내 보기",front)
+        self.assertIn("스카이차 비용 상담 안내</h2>",front)
+        self.assertIn("스카이차 비용 상담 안내</h2>",page)
+        self.assertNotIn("<table",front)
+        self.assertNotIn("<table",page)
 
     def test_owner_approved_plan_for_preview(self):
         result=check_site("quicksky")
@@ -97,6 +101,56 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
         self.assertIn('name="robots" content="noindex,nofollow"',denied)
         with self.assertRaises(ConfigError):
             submission("quicksky","0"*32,submit=False)
+
+    def test_all_twelve_topics_natural_intro_and_region_ledger(self):
+        from v5.quicksky_pages import TOPICS
+        seen={}
+        for p in self.pages[1:]:
+            seen.setdefault(p["poolTopicId"],p)
+            self.assertIn(p["topic"]+" 관련 작업을 계획한다면",p["intro"],p["id"])
+            self.assertNotIn(p["topic"]+"을 계획한다면",p["intro"],p["id"])
+        self.assertEqual(set(seen),set(TOPICS))
+        spec=json.loads((ROOT/"sites/quicksky/site-spec.json").read_text())
+        self.assertIn("지역명 원장",spec["serviceScope"]["granularity"])
+        self.assertEqual(spec["targetPageCount"],1733)
+        self.assertEqual([p["number"] for p in self.pages],list(range(1,1734)))
+
+    def test_daysky_existing_rates_unchanged_by_quicksky_consult_ui(self):
+        daysky=read_site("daysky")
+        site=daysky["site"]
+        page=daysky["pages"][0]
+        rendered=home(site,page,daysky["pages"],daysky["services"],daysky["rates"])
+        self.assertIn("작업 요금표 보기",rendered)
+        self.assertIn("스카이차 기본 요금",rendered)
+        self.assertIn("<table",rendered)
+        self.assertIn("300,000원",rendered)
+        self.assertNotIn("비용 상담 안내 보기",rendered)
+
+    def test_independent_release_rights_quality_and_ownership_gates(self):
+        from copy import deepcopy
+        from v5.service_model import read_service_site
+        from v5.config import ConfigError
+        from v5.engine import build
+        target=ROOT/"sites/quicksky"
+        candidate=deepcopy(self.data["site"])
+        candidate.update(publicIndexingApproved=True,
+                         publicIndexingScope="quicksky-seoul-gyeonggi-1733-20261027",
+                         imageAssetsApproved=True,
+                         contentQualityApproved=True,
+                         domainOwnershipVerified=True)
+        for gate in ("imageAssetsApproved","contentQualityApproved","domainOwnershipVerified"):
+            without=deepcopy(candidate)
+            without[gate]=False
+            with self.subTest(gate=gate):
+                with self.assertRaises(ConfigError):
+                    read_service_site("quicksky",without,target)
+        self.assertIs(read_service_site("quicksky",candidate,target)["site"]["publishEnabled"],False)
+        with self.assertRaises(ConfigError):
+            build("quicksky",mode="public-indexing")
+        from v5.service_markup import _head
+        actual=_head(self.data["site"],"빠른스카이 스카이차","정보","/2.html")
+        self.assertIn('name="robots" content="noindex,nofollow"',actual)
+        self.assertNotIn('rel="canonical"',actual)
 
     def test_one_percent_sample_against_every_page(self):
         report=audit_one_percent(self.pages)
