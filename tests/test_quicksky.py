@@ -46,10 +46,11 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
             self.assertNotIn("공사 중",html)
             self.assertNotIn("보유 상품 사진",html)
 
-    def test_planning_gate_not_bypassed(self):
+    def test_owner_approved_plan_for_preview(self):
         result=check_site("quicksky")
-        self.assertFalse(result["ready"])
-        self.assertIn("plan not approved",result["errors"])
+        self.assertTrue(result["ready"],result)
+        self.assertTrue(result["approved"])
+        self.assertFalse(self.data["site"]["publicIndexingApproved"])
 
     def test_one_percent_sample_against_every_page(self):
         report=audit_one_percent(self.pages)
