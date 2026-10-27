@@ -147,8 +147,12 @@ def create_content(facility, assignment, curated, supplement, eligible, variatio
                 field_values.append(_fill(entry,facility))
         fields[field]=field_values
     supplemental={}
+    support_selected={}
     for field in SUPPORT_FIELDS:
-        selected=_stable_options(list(range(len(supplement[field]))),facility_id+"|support|"+field,2 if field=="order" else 1)
+        selected=_stable_options(list(range(len(supplement[field]))),
+                                 facility_id+"|support|"+field+"|variant="+str(variation),
+                                 2 if field=="order" else 1)
+        support_selected[field]=selected
         supplemental[field]=[supplement[field][x] for x in selected]
     title=HALL_TITLE.format(hall=facility["facilityName"])
     # The first five items preserve the V4 editorial assignment. Extra scenario
@@ -167,7 +171,8 @@ def create_content(facility, assignment, curated, supplement, eligible, variatio
         (GROUP_LABELS[group]+" — 상담과 주문 마무리", fields["closing"]+supplemental["order"]),
     ]
     return {"title":title,"lead":lead,"sections":sections,"faq":fields["faq"],
-            "group":group,"selectedIndices":selected_indices}
+            "group":group,"selectedIndices":selected_indices,
+            "supportSelectedIndices":support_selected}
 
 def _fingerprint(text):
     t=re.sub(r"\s+","",text).lower()
@@ -242,9 +247,10 @@ def create_population(facilities,assignments,curated,groups,eligible):
         best=None
         best_vector=None
         best_key=None
-        for variant in range(24):
+        for variant in range(64):
             candidate=create_content(facility,assignment,curated,groups,eligible,variation=variant)
-            vector=tuple(set(candidate["selectedIndices"][field]) for field in CORE_FIELDS)
+            vector=tuple([set(candidate["selectedIndices"][field]) for field in CORE_FIELDS] +
+                         [set(candidate["supportSelectedIndices"][field]) for field in SUPPORT_FIELDS])
             overlaps=[sum(len(a & b) for a,b in zip(vector,other)) for other in prior]
             if overlaps:
                 score=(max(overlaps),sum(1 for k in overlaps if k>=12),
@@ -255,7 +261,7 @@ def create_population(facilities,assignments,curated,groups,eligible):
                 best_key=score
                 best=candidate
                 best_vector=vector
-            if best_key[0]<=8:
+            if best_key[0]<=9:
                 break
         best["variation"]=best_key[-1]
         best["maxPreviousTopicOverlap"]=best_key[0]
