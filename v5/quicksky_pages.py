@@ -219,7 +219,7 @@ def make_page(parent,dong,index):
       {"heading":"사진을 준비해 상담하는 방법",
        "paragraph":" ".join([call[2],call[3],access[4],equip[4],safe[4],time[4],call[4],prepare[4],operation[4]])}
     ]
-    intro=(f"{display}에서 {topic}을 계획한다면 현장 접근 방법과 작업대가 닿아야 할 지점을 먼저 확인하는 것이 좋습니다. "
+    intro=(f"{display}에서 {topic} 관련 작업을 계획한다면 현장 접근 방법과 작업대가 닿아야 할 지점을 먼저 확인하는 것이 좋습니다. "
            f"{lead} 빠른스카이는 1톤·3.5톤·5톤 스카이차 이용 시 확인할 항목을 안내하고 전화로 현장 조건을 상담합니다.")
     return {
       "id":"quicksky-dong-"+sha256(name.encode()).hexdigest()[:16],
