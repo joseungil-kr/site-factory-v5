@@ -59,5 +59,37 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
         self.assertEqual(report["exactDuplicates"],0)
         self.assertTrue(report["passes"],report)
 
+    def test_cross_brand_sample_vs_existing_daysky_articles(self):
+        """Check independent page text against all 1736 other-brand documents."""
+        from math import ceil
+        from random import Random
+        from v5.skycar_pool import candidates as daysky_candidates, body as daysky_body
+        from v5.quicksky_pages import grams, text_body, THRESHOLD
+        original, generated, _=daysky_candidates()
+        daysky=original+generated
+        self.assertEqual(len(daysky),1736)
+        other_fingerprints=[grams(daysky_body(p)) for p in daysky]
+        provinces={
+            "seoul":[p for p in self.pages[1:] if p["region"].startswith("서울특별시 ")],
+            "gyeonggi":[p for p in self.pages[1:] if p["region"].startswith("경기도 ")]
+        }
+        random=Random(20261027)
+        sample=[]
+        for label,pages in provinces.items():
+            sample += random.sample(pages,max(1,ceil(len(pages)*0.01)))
+        worst=(0.0,"","")
+        for p in sample:
+            ours=grams(text_body(p))
+            for j,other in enumerate(other_fingerprints):
+                score=len(ours & other)/len(ours | other) if (ours | other) else 1.0
+                if score>worst[0]:
+                    worst=(score,p["region"],daysky[j]["region"])
+        print("QUICKSKY_CROSS_BRAND_AUDIT",{
+            "quickskySamples":len(sample),"dayskyPopulation":len(daysky),
+            "thresholdExclusive":THRESHOLD,"maximumSimilarity":round(worst[0],6),
+            "closestRegions":list(worst[1:])
+        })
+        self.assertLess(worst[0],THRESHOLD,worst)
+
 if __name__=="__main__":
     unittest.main()
