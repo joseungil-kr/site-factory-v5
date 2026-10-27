@@ -154,7 +154,7 @@ def detail(site,page,pages,services,rates):
     body+=f'<h1>{h(page["title"])}</h1><p class="lead">{h(page["intro"])}</p><p class="service-hours">● {h(site.get("serviceHours","전화 상담"))}</p></div>'
     body+=_image(site,page['number']%len(site['imagePool']),'document-art','서비스 현장 안내용 공용 일러스트')+'</header>'
     body+='<div class="article-layout"><div>'+_sections(page)
-    body+='<section class="block-section rate-section"><h2>'+h(page['region'])+' '+h(site['serviceLabel'])+(' 비용 상담' if site.get('pricingPolicy')=='consult-only' else ' 기본 요금')+'</h2>'+_prices(site,rates,services,page['serviceIds'])+'</section>'
+    body+='<section class="block-section rate-section"><h2>'+h(page['region'])+' '+h(site['serviceLabel'])+(' 비용 상담 안내' if site.get('pricingPolicy')=='consult-only' else ' 기본 요금')+'</h2>'+_prices(site,rates,services,page['serviceIds'])+'</section>'
     body+=_faq(page.get('faq',[]))+'</div><aside class="side-contact"><strong>현장 상담 안내</strong><p>현장 위치, 요청 범위와 희망 이용 시간을 알려주세요.</p>'+_phone(site,'전화하기')+'</aside></div>'
     body+=_call_section(site)+render_pagination(pages,page['number'])+'</main>'+_footer(site)
     return body
