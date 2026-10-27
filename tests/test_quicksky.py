@@ -46,6 +46,18 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
             self.assertNotIn("공사 중",html)
             self.assertNotIn("보유 상품 사진",html)
 
+    def test_consult_only_page_does_not_promise_rate_table(self):
+        from v5.service_markup import home,detail
+        site=self.data["site"]
+        front=home(site,self.pages[0],self.pages,self.data["services"],self.data["rates"])
+        page=detail(site,self.pages[1],self.pages,self.data["services"],self.data["rates"])
+        for text in (front,page):
+            self.assertIn("비용 상담",text)
+            self.assertNotIn("작업 요금표 보기",text)
+            self.assertNotIn("기본 요금</h2>",text)
+            self.assertNotIn("300,000원",text)
+        self.assertIn("비용 상담 안내",front)
+
     def test_owner_approved_plan_for_preview(self):
         result=check_site("quicksky")
         self.assertTrue(result["ready"],result)
