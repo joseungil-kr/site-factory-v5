@@ -93,7 +93,7 @@ class FuneralHallContentGroups(unittest.TestCase):
         self.assertIn("자주 묻는 질문",text)
         self.assertNotIn("현재 확정된 가격표가 없으므로",text)
         self.assertNotIn("2026-10-22",text)
-        self.assertIn("2026.10.22",text)
+        self.assertIn("2026.10.27",text)
 
 
 if __name__=="__main__":
