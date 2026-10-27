@@ -24,6 +24,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Check 1080 group assignments and final rendered text
+        run: python -m unittest discover -s tests -p 'test_flower_pool_semantics.py' -v
       - name: Compile and generate V4-sourced 1080 preview pages after full corpus audit
         run: |
           python -m py_compile scripts/build_flower_funeral_national.py
