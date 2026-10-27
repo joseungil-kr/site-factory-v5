@@ -37,7 +37,23 @@ def inspect(page,name):
         ok=image.evaluate("(img)=>img.complete && img.naturalWidth>0")
         assert ok,{"page":name,"imageIndex":i,"src":image.get_attribute("src")}
     assert count>=3,(name,count)
-    return {"title":title,"imagesLoaded":count,"scrollWidth":width,"viewport":viewport}
+    # Product/category/hero imagery must fill the real browser frame, not letterbox.
+    frame_count=0
+    for selector in (".hero-visual img", ".product-card img", ".cat-card img"):
+        for img in page.locator(selector).all():
+            rect=img.evaluate("""img=>{
+                const frame=img.closest('.hero-visual, .product-photo, .cat-card');
+                const box=img.getBoundingClientRect();
+                const outer=frame.getBoundingClientRect();
+                return {fit:getComputedStyle(img).objectFit,
+                        imageWidth:box.width,frameWidth:outer.width};
+            }""")
+            assert rect["fit"]=="cover",{"page":name,"selector":selector,"actual":rect}
+            assert rect["imageWidth"]>=rect["frameWidth"]-2,{"page":name,"selector":selector,"actual":rect}
+            frame_count+=1
+    assert frame_count>=3,{"page":name,"frames":frame_count}
+    return {"title":title,"imagesLoaded":count,"fullBleedFrames":frame_count,
+            "scrollWidth":width,"viewport":viewport}
 
 def main():
     manifest=json.loads((DIST/"manifest.json").read_text(encoding="utf-8"))
