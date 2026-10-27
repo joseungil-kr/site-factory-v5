@@ -229,15 +229,53 @@ def _full_pairwise(gramsets,facilities,view):
 def create_population(facilities,assignments,curated,groups,eligible):
     return [create_content(f,a,curated,groups,eligible) for f,a in zip(facilities,assignments)]
 
+class _RenderedMainText(HTMLParser):
+    """Extract exactly the visible <main> text in the final HTML template.
+
+    Includes hero H1, pricing cards, FAQ, side order actions and all paragraphs.
+    Excludes head metadata, header/footer navigation and non-visible JS/CSS.
+    """
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.inside_main=0
+        self.ignore=0
+        self.parts=[]
+
+    def handle_starttag(self,tag,attrs):
+        if tag=="main":
+            self.inside_main+=1
+        if tag in ("style","script","template","noscript"):
+            self.ignore+=1
+
+    def handle_endtag(self,tag):
+        if tag=="main" and self.inside_main:
+            self.inside_main-=1
+        if tag in ("style","script","template","noscript") and self.ignore:
+            self.ignore-=1
+
+    def handle_data(self,data):
+        if self.inside_main and not self.ignore and data.strip():
+            self.parts.append(data.strip())
+
+
+def _rendered_main_text(facility,content):
+    parser=_RenderedMainText()
+    parser.feed(render(facility,content))
+    if not parser.parts:
+        raise ValueError("Empty final HTML main text")
+    return " ".join(parser.parts)
+
+
 def audit(facilities,contents):
     if len(contents)!=1080:
         raise ValueError("Incomplete corpus: stop before creating HTML")
-    lengths=[len(x["text"]) for x in contents]
+    rendered_texts=[_rendered_main_text(f,c) for f,c in zip(facilities,contents)]
+    lengths=[len(t) for t in rendered_texts]
     min_len=min(lengths);max_len=max(lengths)
-    raw_hashes=[sha256(c["text"].encode("utf-8")).hexdigest() for c in contents]
+    raw_hashes=[sha256(t.encode("utf-8")).hexdigest() for t in rendered_texts]
     duplicate_bodies=sum(n-1 for n in Counter(raw_hashes).values() if n>1)
-    original=[_fingerprint(c["text"]) for c in contents]
-    normalized=[_fingerprint(_normalize(c["text"],f)) for c,f in zip(contents,facilities)]
+    original=[_fingerprint(t) for t in rendered_texts]
+    normalized=[_fingerprint(_normalize(t,f)) for t,f in zip(rendered_texts,facilities)]
     samples=[]
     failures=[]
     overall=0.0
@@ -272,15 +310,16 @@ def audit(facilities,contents):
     hall_titles=[(f["facilityName"],f["regionName"]) for f in facilities]
     duplicate_title_region=sum(v-1 for v in Counter(hall_titles).values() if v>1)
     passes=(not failures and not full_failed and not duplicate_bodies and not duplicate_title_region
-            and min_len>=2500 and max_len<=3200)
+            and min_len>=2500 and max_len<=4100)
     return {
-        "mode":"POOL_FIRST_PRE_PUBLICATION_QA",
-        "source":"V4 professional 600 curated copy units + 48 supplementary draft units",
+        "mode":"POOL_FIRST_FINAL_HTML_TEXT_QA",
+        "renderedBodyScope":"Visible text nodes from the exact final <main> HTML, including merchandise cards, CTA, sidebar and FAQ; excluding head/header/footer, hidden JS/CSS",
+        "source":"V4 professional 600 draft units with group-restricted assignments + 48 supplementary units",
         "facilityCount":1080,
         "sourcePublicationAllowed":False,
         "uniqueFacilityIds":len({f["id"] for f in facilities}),
         "sourceDigests":source_digests(),
-        "metric":"whitespace-free lowercase character 5-gram Jaccard of rendered content text",
+        "metric":"whitespace-free lowercase character 5-gram Jaccard of parsed visible <main> text in final rendered HTML",
         "comparedViews":["actual rendered data","normalized hall/region/address"],
         "thresholdExclusive":THRESHOLD,
         "seedCount":len(SEEDS),
