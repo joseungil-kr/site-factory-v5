@@ -101,6 +101,8 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
                 and site.get('homeContentQualityApproved') is True
                 and len(data['pages'])==1733):
             raise ConfigError('Home-only release requires scoped business evidence and isolated content approval')
+        from .quicksky_home_evidence import validate_home_evidence
+        validate_home_evidence(site,data['pages'],data['rates'])
     if mode=='public-indexing':
         plants=(site['id']=='seoul-gyeonggi-plants' and site['domain']=='https://plants.nalmada.net'
                 and site.get('publicIndexingApproved',False))
