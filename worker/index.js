@@ -43,6 +43,28 @@ export default {
       approvedHosts.has(env.V5_PUBLIC_HOST) &&
       url.hostname.toLowerCase() === env.V5_PUBLIC_HOST;
 
+    // Keep production crawler policy and IndexNow proof independent of static
+    // asset edge routing, which has differed from verified uploaded files.
+    if (indexedHost && url.hostname.toLowerCase()==='flower.nalmada.net') {
+      if (url.pathname==='/robots.txt' &&
+          (request.method==='GET' || request.method==='HEAD')) {
+        const robots='User-agent: *\nAllow: /\nSitemap: https://flower.nalmada.net/sitemap.xml\n';
+        return new Response(request.method==='HEAD'?null:robots,{
+          status:200,headers:{'Content-Type':'text/plain; charset=utf-8',
+                             'Cache-Control':'public, max-age=300'}
+        });
+      }
+      const publicKey=env.FLOWER_INDEXNOW_KEY;
+      if (typeof publicKey==='string' && /^[0-9a-f]{32}$/.test(publicKey) &&
+          url.pathname==='/'+publicKey+'.txt' &&
+          (request.method==='GET' || request.method==='HEAD')) {
+        return new Response(request.method==='HEAD'?null:publicKey,{
+          status:200,headers:{'Content-Type':'text/plain; charset=utf-8',
+                             'Cache-Control':'public, max-age=300'}
+        });
+      }
+    }
+
     // Cloudflare Asset binding has returned 404 for the uploaded sitemap.xml on
     // this specific Worker. Derive the same validated 1081 URLs from the deployed
     // 1080-hall search index instead of silently publishing a broken sitemap.
