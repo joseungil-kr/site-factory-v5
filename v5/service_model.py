@@ -15,6 +15,18 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
     if site.get('theme') not in {'classic','modern','minimal'}:fail('invalid theme')
     if site.get('publishEnabled') is not False:
         fail('service product-checkout production mode is not supported')
+    if site.get('homeIndexingApproved'):
+        home_allowed=(site_id=='quicksky'
+            and site.get('domain')=='https://quicksky.nalmada.net'
+            and site.get('homeIndexingScope')=='quicksky-home-1-20261027'
+            and site.get('publicIndexingApproved') is False
+            and site.get('imageAssetsApproved') is True
+            and site.get('domainOwnershipVerified') is True
+            and site.get('homeBusinessFactsVerified') is True
+            and site.get('homeContentQualityApproved') is True)
+        if not home_allowed:fail('Home-only index approval lacks exact approved business/content evidence')
+    if site.get('publicIndexingApproved') and site.get('homeIndexingApproved'):
+        fail('Bulk index and home-only index approvals are mutually exclusive')
     if site.get('publicIndexingApproved'):
         daysky=(site_id=='daysky' and site.get('domain')=='https://daysky.nalmada.net'
                 and site.get('publicIndexingScope') in ('daysky-ansan-29-20261025','daysky-seoul-gyeonggi-1736-20261025'))
