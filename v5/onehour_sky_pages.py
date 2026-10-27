@@ -13,9 +13,12 @@ import re
 
 ROOT = Path(__file__).resolve().parents[1]
 REGIONS = ROOT / "data/regions/onehour_national_city_districts.json"
+DONG_REGIONS = ROOT / "data/regions/onehour_national_dong_names.json"
 POOL = ROOT / "data/pools/onehour_sky_copy_pool.json"
 EXPECTED_REGIONS = 284
-EXPECTED_PAGES = 285
+EXPECTED_DONGS = 5151
+EXPECTED_PAGES = 5436
+PINNED_DONG_BLOB = "55af05ea121c126c5f0a7819a9cdcfa8391adedf"
 EXPECTED_SOURCE_SHA = "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd"
 BRAND = "한시간스카이"
 
@@ -44,6 +47,29 @@ def _rows():
     return items
 
 
+def _dong_rows(master):
+    """V4's pinned current names; excludes rural eup/myeon and historic aliases."""
+    src=_load(DONG_REGIONS)
+    if (src.get("sourceBlobSHA")!=PINNED_DONG_BLOB
+            or src.get("sourceCount")!=EXPECTED_DONGS
+            or src.get("sourceSnapshot")!="2026-10-12"):
+        raise ValueError("V4 pinned dong provenance changed")
+    rows=src.get("rows", [])
+    known={x["name"]: x for x in master}
+    if len(rows)!=EXPECTED_DONGS or len({tuple(x) for x in rows})!=EXPECTED_DONGS:
+        raise ValueError("Wrong current dong population")
+    converted=[]
+    for parent,dong in rows:
+        if parent not in known or not dong.endswith(("동","가","로")) or not dong.strip():
+            raise ValueError("Unverified parent or invalid dong")
+        full=parent+" "+dong
+        converted.append({"name":full,"code":"dong-"+sha256(full.encode()).hexdigest()[:20],
+                          "parent":known[parent]["code"],"level":"dong"})
+    if len(set(x["name"] for x in converted))!=EXPECTED_DONGS:
+        raise ValueError("Duplicate national local name")
+    return converted
+
+
 def _pool():
     doc = _load(POOL)
     if doc.get("site") != "onehour-sky" or doc.get("version") != 1:
@@ -62,7 +88,12 @@ def _pool():
     if (len(phrases) != 152 or len(set(phrases)) != len(phrases)
             or any(len(s) < 26 or s[-1] not in ".!?" for s in phrases)):
         raise ValueError("Insufficient or duplicate customer copy")
-    return shared, topics, deep
+    matrix=doc.get("variationMatrix",{}).get("groups",{})
+    if set(matrix)!={"timing","setup","work","fee","safety","handoff"}:
+        raise ValueError("Incomplete 600-variant pool matrix")
+    if any(len(group.get("stems",[]))!=10 or len(group.get("tails",[]))!=10 for group in matrix.values()):
+        raise ValueError("Each pool matrix group requires 10x10 independently authored inputs")
+    return shared, topics, deep, matrix
 
 
 def _choose(values, key, n):
@@ -73,7 +104,7 @@ def _choose(values, key, n):
     return [values[i] for i in positions[:n]]
 
 
-def make_page(record, index, shared, topics, deep):
+def make_page(record, index, shared, topics, deep, matrix):
     full = record["name"]
     code = record["code"]
     salt = "onehour-v1|" + code + "|" + full
@@ -91,6 +122,12 @@ def make_page(record, index, shared, topics, deep):
     safety = take("safety", 3)
     consult = take("consultation", 3)
     cta = take("cta", 2)
+    def variants(group,n=2):
+        record=matrix[group]
+        # Different independently hashed permutations for each sentence slot.
+        stems=_choose(record["stems"],salt+"|"+group+"|stem",n)
+        tails=_choose(record["tails"],salt+"|"+group+"|tail",n)
+        return [a+" "+b for a,b in zip(stems,tails)]
     topic_label = topic["label"]
     prep_more = _choose(deep["dispatchPreparation"], salt + "|deep-dispatch", 2)
     setup_more = _choose(deep["setupWorkflow"], salt + "|deep-setup", 2)
@@ -98,19 +135,19 @@ def make_page(record, index, shared, topics, deep):
     cost_more = _choose(deep["costAgreement"], salt + "|deep-cost", 2)
     sections = [
         {"heading": full + " " + topic_label + " 1시간 작업을 준비할 때",
-         "paragraph": " ".join([topic["scene"]] + short + [consult[0]])},
+         "paragraph": " ".join([topic["scene"]] + short + [consult[0]] + variants("work"))},
         {"heading": full + " 신속 배차와 예상 도착 시간",
-         "paragraph": " ".join(dispatch + arrival + [cta[0]])},
+         "paragraph": " ".join(dispatch + arrival + [cta[0]] + variants("timing"))},
         {"heading": "1시간 작업도 반나절 기준으로 협의하는 이유",
-         "paragraph": " ".join(half + rates[:2])},
+         "paragraph": " ".join(half + rates[:2] + variants("fee"))},
         {"heading": full + " 차량 진입과 작업대 안전 확인",
-         "paragraph": " ".join([topic["risk"]] + access + safety)},
+         "paragraph": " ".join([topic["risk"]] + access + safety + variants("safety"))},
         {"heading": full + " 스카이차 상담 시 필요한 정보",
-         "paragraph": " ".join([topic["request"]] + consult[1:] + rates[2:] + cta[1:])},
+         "paragraph": " ".join([topic["request"]] + consult[1:] + rates[2:] + cta[1:] + variants("handoff"))},
         {"heading": full + " 빠른 출동을 준비하는 점검 순서",
-         "paragraph": " ".join(prep_more + setup_more)},
+         "paragraph": " ".join(prep_more + setup_more + variants("setup"))},
         {"heading": "짧은 현장 작업의 안전과 최종 견적 확인",
-         "paragraph": " ".join(safety_more + cost_more)},
+         "paragraph": " ".join(safety_more + cost_more + variants("fee",1) + variants("safety",1))},
     ]
     intro = (
         f"{full}에서 {topic_label}을 위한 스카이차 1시간 작업이나 반일작업을 알아보신다면 "
@@ -127,6 +164,9 @@ def make_page(record, index, shared, topics, deep):
         "searchKeyword": "스카이차",
         "topic": topic_label,
         "poolTopicId": topic_id,
+        "regionCode": code,
+        "parentRegionCode": record.get("parent"),
+        "regionLevel": record.get("level"),
         "title": f"{full} 스카이차 1시간 작업, 반일작업 전문 '{BRAND}'",
         "intro": intro,
         "sections": sections,
@@ -145,9 +185,11 @@ def expand(pages, regions):
         raise ValueError("Onehour homepage is the fixed build seed")
     if len(regions.get("regions", [])) != 1 or regions["regions"][0].get("name") != "전국":
         raise ValueError("Onehour root region record changed")
-    rows = _rows()
-    shared, topics, deep = _pool()
-    regional = [make_page(row, i, shared, topics, deep) for i, row in enumerate(rows)]
+    master = _rows()
+    dongs = _dong_rows(master)
+    rows = master + dongs
+    shared, topics, deep, matrix = _pool()
+    regional = [make_page(row, i, shared, topics, deep, matrix) for i, row in enumerate(rows)]
     result = pages + regional
     if len(result) != EXPECTED_PAGES or result[-1]["number"] != EXPECTED_PAGES:
         raise ValueError("Onehour generation count mismatch")
