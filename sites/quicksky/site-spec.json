@@ -1,7 +1,7 @@
 {
   "version": 1,
   "siteId": "quicksky",
-  "approved": false,
+  "approved": true,
   "domain": "https://quicksky.nalmada.com",
   "brand": "빠른스카이",
   "businessModel": "service-lead",
@@ -49,12 +49,12 @@
   },
   "conversion": {
     "phone": "010-5322-1952",
-    "phoneProvenance": "기존 daysky 사용자 제공 번호; 새 브랜드 동일 번호인지 재확인 필요",
+    "phoneProvenance": "2026-10-27 사용자 승인: 빠른스카이 상담번호 010-5322-1952",
     "orderUrl": null,
     "mode": "전화상담"
   },
   "images": {
-    "source": "기존 daysky 실사 이미지(새 브랜드 재사용 허가 확인 전)",
+    "source": "2026-10-25 당일스카이 출처 원장에 있는 사용자 보유 실제 작업 사진, 빠른스카이 최종 공개 재사용 승인 확인 전",
     "approved": false,
     "display": "cover; no letterboxing"
   },
@@ -65,9 +65,9 @@
     "dnsChangesApproved": false
   },
   "planningNotes": [
-    "최종 범위·전화번호·사진 재사용·요금 확인 후 승인 처리",
-    "방문자 HTML에 임시/검수 안내문 금지",
-    "신규 Cloudflare Worker 별도 생성, 기존 daysky 손대지 않음",
-    "DNS·인증 변경은 별도 승인 필요"
+    "2026-10-27 사용자 승인: 서비스 지역 서울·경기, 1733페이지, 상담번호 010-5322-1952",
+    "검색색인·DNS·비밀정보/Cloudflare 인증·기존 운영 Worker 변경은 승인 범위 외",
+    "방문자 HTML에 임시·검수 문구 출력 금지",
+    "자료 출처/권리/요금은 빌드 QA에 기록하고 공개 전 확인"
   ]
 }
