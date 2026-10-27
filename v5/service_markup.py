@@ -107,6 +107,22 @@ def _call_section(site):
             _phone(site)+'</section>')
 
 
+def _onehour_region_links(page,pages):
+    """V4 official region hierarchy for scalable 5,436-page discovery."""
+    if page["number"]==1:
+        children=[p for p in pages[1:] if p.get("regionLevel")=="province"]
+    else:
+        children=[p for p in pages[1:] if p.get("parentRegionCode")==page.get("regionCode")]
+    parent=next((p for p in pages[1:] if p.get("regionCode")==page.get("parentRegionCode")),None)
+    links='<nav class="region-links" aria-label="지역별 스카이차 안내"><h2>하위 지역별 스카이차 안내</h2><div>'
+    if parent:
+        links+=f'<a href="{url_path(parent["number"])}">상위 지역: {h(parent["region"])} ↗</a>'
+    elif page["number"]!=1:
+        links+='<a href="/">전국 안내 ↗</a>'
+    links+=''.join(f'<a href="{url_path(p["number"])}">{h(p["region"])} ↗</a>' for p in children)
+    return links+'</div></nav>'
+
+
 def home(site,page,pages,services,rates):
     body=_head(site,page['title'],page['intro'],'/')+_header(site)
     if site.get('id')=='onehour-sky':
@@ -145,7 +161,8 @@ def home(site,page,pages,services,rates):
     body+='<section class="block-section doc-overview"><span class="eyebrow">FIELD GUIDE</span><h2>서비스 이용 안내</h2>'+_sections(page)+'</section>'
     body+=_faq(page.get('faq',[]))+_call_section(site)
     body+='<nav id="regions" class="region-links" aria-label="지역별 서비스 문서"><h2>지역별 ' + h(site['serviceLabel']) + ' 안내</h2><div>'
-    for p in pages[1:]:body+=f'<a href="{url_path(p["number"])}">{h(p["region"])} ↗</a>'
+    for p in (p for p in pages[1:] if p.get("regionLevel")=="province") if site.get('id')=='onehour-sky' else pages[1:]:
+        body+=f'<a href="{url_path(p["number"])}">{h(p["region"])} ↗</a>'
     body+='</div></nav>'+render_pagination(pages,1)+'</main>'+_footer(site)
     return body
 
@@ -159,7 +176,10 @@ def detail(site,page,pages,services,rates):
     body+='<div class="article-layout"><div>'+_sections(page)
     body+='<section class="block-section rate-section"><h2>'+h(page['region'])+' '+h(site['serviceLabel'])+(' 반나절 기준요금 상담' if site.get('id')=='onehour-sky' else ' 기본 요금')+'</h2>'+_prices(site,rates,services,page['serviceIds'])+'</section>'
     body+=_faq(page.get('faq',[]))+'</div><aside class="side-contact"><strong>현장 상담 안내</strong><p>현장 위치, 요청 범위와 희망 이용 시간을 알려주세요.</p>'+_phone(site,'전화하기')+'</aside></div>'
-    body+=_call_section(site)+render_pagination(pages,page['number'])+'</main>'+_footer(site)
+    body+=_call_section(site)
+    if site.get('id')=='onehour-sky':
+        body+=_onehour_region_links(page,pages)
+    body+=render_pagination(pages,page['number'])+'</main>'+_footer(site)
     return body
 
 
