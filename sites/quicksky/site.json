@@ -44,7 +44,7 @@
     "key": null
   },
   "staticAssetSoftLimit": 18000,
-  "source": "2026-10-27 user-approved 1733-page Quicksky preview and telephone; owner-hosted Daysky asset provenance tracked separately. Public indexing and DNS remain gated.",
+  "source": "Owner-approved Quicksky 1733-page consultation preview and phone; exact .net custom-domain binding and noindex HTTP verified. Image use scope in docs/QUICKSKY_PHOTO_PERMISSION_20261027.json. Region content quality not yet approved for bulk indexing.",
   "navigation": [
     {
       "label": "홈",
@@ -53,5 +53,7 @@
   ],
   "imageApprovalEvidence": "docs/QUICKSKY_IMAGE_VISUAL_QA_20261027.md",
   "imageApprovedSourceScope": "docs/QUICKSKY_PHOTO_PERMISSION_20261027.json",
-  "imageUsePolicy": "Only two specified owner-authorized JPG originals and three fixed WebP derivatives; images are generic skycar worksite illustrations, not a verified 1t/3.5t/5t fleet or Quicksky job."
+  "imageUsePolicy": "Only two specified owner-authorized JPG originals and three fixed WebP derivatives; images are generic skycar worksite illustrations, not a verified 1t/3.5t/5t fleet or Quicksky job.",
+  "domainOwnershipVerified": true,
+  "domainOwnershipEvidence": "docs/QUICKSKY_LIVE_CONTENT_AUDIT_20261027.md; user-authorized Cloudflare UI custom-domain binding 2026-10-27T11:15:00Z; independent HTTP Actions 40495177458"
 }
