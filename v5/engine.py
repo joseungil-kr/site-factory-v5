@@ -86,10 +86,21 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
     data=read_site(site_id);site=data['site']
     if site.get('status')=='draft' or not data['pages']:
         raise ConfigError('Draft site is not buildable until pages, products and images are approved')
-    if mode not in ('preview','publish','public-indexing'):
-        raise ConfigError('Mode must be preview, public-indexing, or publish')
-    if site.get('businessModel') == 'service-lead' and mode not in ('preview','public-indexing'):
-        raise ConfigError('Service sites support preview and explicitly approved indexing only')
+    if mode not in ('preview','publish','public-indexing','home-indexing'):
+        raise ConfigError('Unsupported build mode')
+    if site.get('businessModel') == 'service-lead' and mode not in ('preview','public-indexing','home-indexing'):
+        raise ConfigError('Service sites support preview or explicitly approved indexing only')
+    if mode=='home-indexing':
+        if not (site_id=='quicksky' and site.get('domain')=='https://quicksky.nalmada.net'
+                and site.get('homeIndexingScope')=='quicksky-home-1-20261027'
+                and site.get('homeIndexingApproved') is True
+                and site.get('publicIndexingApproved') is False
+                and site.get('imageAssetsApproved') is True
+                and site.get('domainOwnershipVerified') is True
+                and site.get('homeBusinessFactsVerified') is True
+                and site.get('homeContentQualityApproved') is True
+                and len(data['pages'])==1733):
+            raise ConfigError('Home-only release requires scoped business evidence and isolated content approval')
     if mode=='public-indexing':
         plants=(site['id']=='seoul-gyeonggi-plants' and site['domain']=='https://plants.nalmada.net'
                 and site.get('publicIndexingApproved',False))
@@ -115,7 +126,8 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
             raise ConfigError('Production image pool has not been approved')
         if not site.get('cookiePrivacyReviewed',False):
             raise ConfigError('Privacy and click-measurement scope needs review before production')
-    rendering_site={**site,'publishEnabled':mode=='publish','publicIndexingApproved':mode=='public-indexing'}
+    rendering_site={**site,'publishEnabled':mode=='publish','publicIndexingApproved':mode=='public-indexing',
+                    'homeIndexingApproved':mode=='home-indexing'}
     out=(output or target_dir(site_id)).resolve()
     report=(reports or report_dir(site_id)).resolve()
     if out==ROOT or (ROOT in out.parents and not out.is_relative_to(ROOT/'dist')):
@@ -160,13 +172,16 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
             _write_file(tmp,'robots.txt','User-agent: *\nDisallow: /\n')
         else:
             _write_file(tmp,'robots.txt','User-agent: *\nAllow: /\nSitemap: '+site['domain'].rstrip('/')+'/sitemap.xml\n')
-            all_pagepaths=[markup.url_path(p['number']) for p in data['pages']]
-            all_pagepaths+=['/'+quote(s['path']) for s in data['special'] if s.get('enabled',True)]
+            all_pagepaths=(['/'] if mode=='home-indexing' else [markup.url_path(p['number']) for p in data['pages']])
+            if mode!='home-indexing':
+                all_pagepaths+=['/'+quote(s['path']) for s in data['special'] if s.get('enabled',True)]
             sitemap=('<?xml version="1.0" encoding="UTF-8"?>\n'
               '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
               +''.join('<url><loc>'+markup.h(site['domain'].rstrip('/')+p)+'</loc></url>' for p in all_pagepaths)
               +'</urlset>')
             _write_file(tmp,'sitemap.xml',sitemap)
+            if mode=='home-indexing' and site.get('indexNow',{}).get('enabled',False):
+                raise ConfigError('Home-only IndexNow requires separate key verification; no auto-submission')
             if site.get('indexNow',{}).get('enabled',False):
                 key=site['indexNow']['key']
                 _write_file(tmp,key+'.txt',key+'\n')
