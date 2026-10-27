@@ -124,7 +124,7 @@ def _fill(text, facility):
         raise ValueError("Unresolved source placeholder")
     return result
 
-def create_content(facility, assignment, curated, supplement, eligible):
+def create_content(facility, assignment, curated, supplement, eligible, variation=0):
     facility_id=facility["id"]
     fields={}
     selected_indices={}
@@ -133,7 +133,7 @@ def create_content(facility, assignment, curated, supplement, eligible):
         assigned=assignment[field]
         if assigned not in permitted:
             raise ValueError("Original topic is not in its permitted group")
-        extras=_stable_options([x for x in permitted if x!=assigned],facility_id+"|professional|"+field,3)
+        extras=_stable_options([x for x in permitted if x!=assigned],facility_id+"|professional|"+field+"|variant="+str(variation),3)
         indices=[assigned]+extras
         if len(set(indices))!=4 or any(i not in permitted for i in indices):
             raise ValueError("Mixed-group or excluded topic selected")
@@ -227,7 +227,41 @@ def _full_pairwise(gramsets,facilities,view):
             "vocabularySize":len(vocabulary)}
 
 def create_population(facilities,assignments,curated,groups,eligible):
-    return [create_content(f,a,curated,groups,eligible) for f,a in zip(facilities,assignments)]
+    """Select diverse scenarios *within* each permitted V4 editorial topic group.
+
+    Fixed original topic for every field. All extras remain in the same group.
+    Candidate search minimizes topic-index collisions with preceding documents
+    in that group, without adding filler or cross-category text to lower scores.
+    The final HTML pairwise similarity audit remains independently mandatory.
+    """
+    histories={group:[] for group in GROUP_LABELS}
+    output=[]
+    for facility,assignment in zip(facilities,assignments):
+        group=assignment["group"]
+        prior=histories[group]
+        best=None
+        best_vector=None
+        best_key=None
+        for variant in range(24):
+            candidate=create_content(facility,assignment,curated,groups,eligible,variation=variant)
+            vector=tuple(set(candidate["selectedIndices"][field]) for field in CORE_FIELDS)
+            overlaps=[sum(len(a & b) for a,b in zip(vector,other)) for other in prior]
+            if overlaps:
+                score=(max(overlaps),sum(1 for k in overlaps if k>=12),
+                       sum(k*k*k for k in overlaps),variant)
+            else:
+                score=(0,0,0,variant)
+            if best_key is None or score<best_key:
+                best_key=score
+                best=candidate
+                best_vector=vector
+            if best_key[0]<=8:
+                break
+        best["variation"]=best_key[-1]
+        best["maxPreviousTopicOverlap"]=best_key[0]
+        histories[group].append(best_vector)
+        output.append(best)
+    return output
 
 class _RenderedMainText(HTMLParser):
     """Extract exactly the visible <main> text in the final HTML template.
