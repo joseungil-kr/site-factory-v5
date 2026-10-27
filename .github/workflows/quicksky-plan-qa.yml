@@ -22,11 +22,14 @@ jobs:
           python-version: '3.12'
       - name: Validate site configuration and regional generator (no production build)
         run: python -m unittest discover -s tests -p 'test_quicksky.py' -v
-      - name: Confirm site creation approval gate remains closed
+      - name: Confirm approved plan but public-indexing gate remains closed
         run: |
           python - <<'PY'
           from v5.site_plan import check_site
           result=check_site('quicksky')
-          assert not result['ready'] and 'plan not approved' in result['errors'],result
-          print('Quicksky creation awaiting plan approval; no deploy or indexing')
+          assert result['ready'] and result['approved'],result
+          from v5.config import read_site
+          site=read_site('quicksky')['site']
+          assert not site['publicIndexingApproved'] and not site['publishEnabled']
+          print('Quicksky approved for preview generation only; no public indexing or DNS changes')
           PY
