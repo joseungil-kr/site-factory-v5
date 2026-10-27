@@ -52,6 +52,40 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
         self.assertTrue(result["approved"])
         self.assertFalse(self.data["site"]["publicIndexingApproved"])
 
+    def test_indexing_requires_domain_image_rights_and_quality(self):
+        from copy import deepcopy
+        from v5.config import ConfigError
+        from v5.service_model import read_service_site
+        from v5.service_markup import _head
+        from v5.indexnow import submission
+        root=ROOT/"sites"/"quicksky"
+        plan=deepcopy(self.data["site"])
+        plan["publicIndexingApproved"]=True
+        plan["publicIndexingScope"]="quicksky-seoul-gyeonggi-1733-20261027"
+        with self.assertRaises(ConfigError):
+            read_service_site("quicksky",plan,root)
+        preview=_head(self.data["site"],"빠른스카이 스카이차","설명","/2.html")
+        self.assertIn('name="robots" content="noindex,nofollow"',preview)
+        self.assertNotIn('rel="canonical"',preview)
+        candidate=deepcopy(plan)
+        candidate["domain"]="https://quicksky.nalmada.net"
+        candidate["imageAssetsApproved"]=True
+        candidate["contentQualityApproved"]=True
+        candidate["domainOwnershipVerified"]=True
+        with self.assertRaises(ConfigError):
+            read_service_site("quicksky",candidate,root)
+        # Simulated all-positive flags demonstrate exact-host gating only;
+        # actual published site keeps these flags FALSE until external proof.
+        candidate["domain"]="https://quicksky.nalmada.com"
+        idx=_head(candidate,"빠른스카이 스카이차","설명","/2.html")
+        self.assertIn('name="robots" content="index,follow"',idx)
+        self.assertIn('href="https://quicksky.nalmada.com/2.html"',idx)
+        candidate["domain"]="https://quicksky.nalmada.net"
+        denied=_head(candidate,"빠른스카이 스카이차","설명","/2.html")
+        self.assertIn('name="robots" content="noindex,nofollow"',denied)
+        with self.assertRaises(ConfigError):
+            submission("quicksky","0"*32,submit=False)
+
     def test_one_percent_sample_against_every_page(self):
         report=audit_one_percent(self.pages)
         self.assertEqual(report["population"],TARGET_COUNT)
