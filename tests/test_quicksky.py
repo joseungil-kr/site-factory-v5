@@ -138,6 +138,7 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
         from v5.engine import build
         target=ROOT/"sites/quicksky"
         candidate=deepcopy(self.data["site"])
+        candidate["homeIndexingApproved"]=False  # bulk-mode negative control is independent of approved home-only mode
         candidate.update(publicIndexingApproved=True,
                          publicIndexingScope="quicksky-seoul-gyeonggi-1733-20261027",
                          imageAssetsApproved=True,
