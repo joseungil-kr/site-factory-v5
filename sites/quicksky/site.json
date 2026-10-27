@@ -28,7 +28,7 @@
     "skycar-facade.webp",
     "skycar-truck.webp"
   ],
-  "imageAssetsApproved": false,
+  "imageAssetsApproved": true,
   "publishEnabled": false,
   "publicIndexingApproved": false,
   "cookiePrivacyReviewed": false,
@@ -50,5 +50,8 @@
       "label": "홈",
       "href": "/"
     }
-  ]
+  ],
+  "imageApprovalEvidence": "docs/QUICKSKY_IMAGE_VISUAL_QA_20261027.md",
+  "imageApprovedSourceScope": "docs/QUICKSKY_PHOTO_PERMISSION_20261027.json",
+  "imageUsePolicy": "Only two specified owner-authorized JPG originals and three fixed WebP derivatives; images are generic skycar worksite illustrations, not a verified 1t/3.5t/5t fleet or Quicksky job."
 }
