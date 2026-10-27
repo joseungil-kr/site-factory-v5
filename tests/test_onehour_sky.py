@@ -4,7 +4,7 @@ import unittest
 from html import escape
 from pathlib import Path
 from v5.config import ROOT, read_site
-from v5.onehour_sky_pages import _rows, _pool, EXPECTED_PAGES
+from v5.onehour_sky_pages import _rows, _dong_rows, _pool, EXPECTED_PAGES
 from v5.site_plan import check_site
 from v5.service_markup import home, detail
 from v5.markup import filename
@@ -27,7 +27,9 @@ class OneHourSky(unittest.TestCase):
 
     def test_pinned_national_ledger_and_pool(self):
         self.assertEqual(len(_rows()), 284)
-        shared, topics, deep = _pool()
+        shared, topics, deep, matrix = _pool()
+        self.assertEqual(len(_dong_rows(_rows())),5151)
+        self.assertEqual(sum(len(g['stems'])*len(g['tails']) for g in matrix.values()),600)
         self.assertEqual(sum(map(len, shared.values())), 72)
         self.assertEqual(len(topics), 8)
         self.assertEqual(sum(map(len, deep.values())), 56)
@@ -35,7 +37,7 @@ class OneHourSky(unittest.TestCase):
     def test_regional_pages_are_real_v5_page_models(self):
         pages = self.data["pages"]
         self.assertEqual(len(pages), EXPECTED_PAGES)
-        self.assertEqual([p["number"] for p in pages], list(range(1, 286)))
+        self.assertEqual([p["number"] for p in pages], list(range(1, 5437)))
         self.assertEqual(len({p["id"] for p in pages}), EXPECTED_PAGES)
         self.assertEqual(len({p["region"] for p in pages}), EXPECTED_PAGES)
         for p in pages:
@@ -58,7 +60,12 @@ class OneHourSky(unittest.TestCase):
             self.assertNotIn("30만원", content)
             self.assertNotIn("400,000원", content)
             self.assertNotIn("부가세 별도", content)
-        self.assertIn('href="/285.html"', home_html)
+        self.assertIn('href="/2.html"', home_html)
+        self.assertNotIn('href="/5436.html"', home_html)
+        subarea=next(p for p in pages if p.get('regionLevel')=='dong')
+        from v5.service_markup import _onehour_region_links
+        parent=next(p for p in pages if p.get('regionCode')==subarea['parentRegionCode'])
+        self.assertIn(f'href="/{subarea["number"]}.html"', _onehour_region_links(parent,pages))
 
     def test_existing_daysky_numeric_rate_renderer_still_available(self):
         from v5.service_markup import _prices
