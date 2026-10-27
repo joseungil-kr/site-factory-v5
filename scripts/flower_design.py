@@ -11,18 +11,33 @@ import shutil
 
 ROOT=Path(__file__).resolve().parents[1]
 CATALOG=ROOT/"data/flower/nalmada_funeral_product_reference.json"
+RELEASE=ROOT/"data/flower/nalmada_release_authorization_20261027.json"
 CSS=ROOT/"templates/flower-nalmada/site.css"
 IMAGE_SOURCE=ROOT/"assets/library/flower-nalmada"
 IMAGE_NAMES=("B201.jpg","B203.jpg","B205.jpg","A160.jpg","D143.jpg")
 
 def products():
-    record=json.loads(CATALOG.read_text(encoding="utf-8"))
-    assert record["commercialPublicationApproved"] is False
-    assert record["priceFreshness"] == "snapshot_only_revalidate_before_public_release"
-    assert [x["id"] for x in record["products"]] == ["B201","B203","B205"]
-    for p in record["products"]:
+    original=json.loads(CATALOG.read_text(encoding="utf-8"))
+    evidence=json.loads(RELEASE.read_text(encoding="utf-8"))
+    assert original["commercialPublicationApproved"] is False
+    assert original["priceFreshness"] == "snapshot_only_revalidate_before_public_release"
+    assert evidence["authorizationDate"] == "2026-10-27"
+    assert evidence["images"]["originalSHA256MustMatch"] is True
+    assert evidence["products"]["verifiedAtUTC"].startswith("2026-10-27T11:20")
+    approved={p["id"]:p for p in evidence["products"]["records"]}
+    assert set(approved)=={"B201","B203","B205"}
+    record=dict(original)
+    record["products"]=[]
+    for p in original["products"]:
+        assert p["id"] in approved
         assert p["localImage"]=="/assets/images/"+p["id"]+".jpg"
         assert p["orderUrl"]=="https://fwith.co.kr/shop/item.php?it_id="+p["id"]
+        item=approved[p["id"]]
+        assert p["orderUrl"]==item["uri"] and p["referencePrice"]==item["priceKRW"]
+        row=dict(p)
+        row["referencePrice"]=item["priceKRW"]
+        row["priceVerifiedOn"]="2026-10-27"
+        record["products"].append(row)
     return record
 
 def prepare_assets(output:Path):
@@ -62,7 +77,7 @@ def price_cards(class_name="products"):
     for p in source["products"]:
         cards.append('<div class="product-card"><div class="product-photo">'+photo(p["id"]+".jpg",p["name"]+" 상품 이미지")+'</div>'
                      '<div class="info"><h3>'+escape(p["name"])+'</h3>'
-                     '<span class="product-price-label reference">2026.10.22 판매처 등록 가격</span>'
+                     '<span class="product-price-label reference">2026.10.27 판매처 확인 가격</span>'
                      '<div class="product-price">'+format(p["referencePrice"],",")+'원</div>'
                      '<a class="more" href="'+escape(p["orderUrl"],quote=True)+'" target="_blank" rel="noopener noreferrer">'
                      '판매처 상품정보 보기 ↗</a></div></div>')
