@@ -41,11 +41,13 @@ def _head(site,title,description,path,error=False):
     ogimage=('<meta property="og:image" content="'
              +h(site['domain']+'/assets/images/'+site['imagePool'][0])+'">'
              if indexable else '')
+    naver = ('<meta name="naver-site-verification" content="8d0599110182e1196f9a95e23c1957df88b6fd37">'
+             if home_only and not error else '')
     return ('<!doctype html>\n<html lang="ko"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width, initial-scale=1">'
             '<title>'+title_text+'</title>'
             '<meta name="description" content="'+summary+'">'
-            '<meta name="robots" content="'+robots+'">'+canonical
+            '<meta name="robots" content="'+robots+'">'+canonical+naver
             +'<meta property="og:type" content="website">'
             +'<meta property="og:title" content="'+title_text+'">'
             +'<meta property="og:description" content="'+summary+'">'+ogimage
