@@ -47,6 +47,8 @@ def verify():
                 raise RuntimeError("Home public canonical or robots header wrong")
         elif 'rel="canonical"' in text:
             raise RuntimeError("Preview or region incorrectly canonicalized")
+        if robots=="noindex" and 'noindex' not in headers.get("X-Robots-Tag","").lower():
+            raise RuntimeError("Regional or preview HTTP X-Robots-Tag missing noindex")
         if base==PREVIEW and 'noindex' not in headers.get("X-Robots-Tag","").lower():
             raise RuntimeError("workers.dev missing noindex response header")
         checks.append({"url":base+path,"http":status,"scope":robots})
@@ -64,6 +66,8 @@ def verify():
     if urls!=[PUBLIC+"/"]:raise RuntimeError("Public sitemap contains non-home URL")
     bad_sitemap=read(PREVIEW,"/sitemap.xml")
     if bad_sitemap[0]!=200 and bad_sitemap[0]!=404:raise RuntimeError("Unexpected preview sitemap status")
+    if bad_sitemap[0]==200 and 'noindex' not in bad_sitemap[1].get('X-Robots-Tag','').lower():
+        raise RuntimeError("Preview sitemap exposed without HTTP noindex")
     if bad_sitemap[0]==200 and b"<url>" in bad_sitemap[2]:
         # Can be public XML behind noindex/robots blocked; still not a submitted sitemap.
         pass
