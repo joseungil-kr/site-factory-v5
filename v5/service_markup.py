@@ -14,9 +14,14 @@ def _tel(site):
 
 def _head(site,title,description,path,error=False):
     """Use exact-domain canonical only for explicitly authorized indexable releases."""
-    indexable=(not error and site.get('publicIndexingApproved',False)
-               and site.get('id')=='daysky'
-               and site.get('domain')=='https://daysky.nalmada.net')
+    quicksky=(site.get('id')=='quicksky'
+              and site.get('domain')=='https://quicksky.nalmada.com'
+              and site.get('publicIndexingScope')=='quicksky-seoul-gyeonggi-1733-20261027'
+              and site.get('imageAssetsApproved') is True
+              and site.get('contentQualityApproved') is True
+              and site.get('domainOwnershipVerified') is True)
+    daysky=(site.get('id')=='daysky' and site.get('domain')=='https://daysky.nalmada.net')
+    indexable=(not error and site.get('publicIndexingApproved',False) and (daysky or quicksky))
     robots='index,follow' if indexable else 'noindex,nofollow'
     canonical=('<link rel="canonical" href="'+h(site['domain'].rstrip('/')+path)+'">'
                if indexable else '')
