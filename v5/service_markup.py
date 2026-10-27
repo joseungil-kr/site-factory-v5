@@ -37,8 +37,8 @@ def _head(site,title,description,path,error=False):
 
 def _image(site,i,css,alt):
     name=site['imagePool'][i%len(site['imagePool'])]
-    description=('스카이차 차량을 이용한 실제 건물 외부 작업 사진'
-                 if site.get('id')=='daysky' and name.endswith('.webp') else alt)
+    description=('스카이차 차량을 이용한 건물 외부 작업 사진'
+                 if site.get('id') in ('daysky','quicksky') and name.endswith('.webp') else alt)
     return f'<img src="/assets/images/{h(name)}" class="{h(css)}" alt="{h(description)}" loading="{"eager" if i==0 else "lazy"}">'
 
 
@@ -64,6 +64,10 @@ def _footer(site):
 
 
 def _prices(site,rates,services,selected=None):
+    if site.get('pricingPolicy')=='consult-only':
+        return ('<div class="rate-consult"><p>스카이차 이용 비용은 장비 종류와 현장 접근 조건, '
+                '작업 시간 및 이동 계획을 함께 확인해 전화로 상담합니다.</p>'
+                +_phone(site,'장비·비용 전화 상담')+'</div>')
     selected=set(selected or [s['id'] for s in services])
     by_id={s['id']:s for s in services}
     rows=[]
