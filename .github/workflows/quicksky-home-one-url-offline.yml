@@ -1,0 +1,82 @@
+name: Quicksky reviewed one-home public build gate (no deployment)
+on:
+  push:
+    branches: [feature/quicksky-nalmada-com-20261027]
+    paths:
+      - 'sites/quicksky/**'
+      - 'v5/quicksky_home_evidence.py'
+      - 'v5/engine.py'
+      - 'v5/service_model.py'
+      - 'v5/service_markup.py'
+      - 'v5/audit.py'
+      - 'worker/index.js'
+      - 'worker/worker.test.mjs'
+      - '.github/workflows/quicksky-home-one-url-offline.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Full Python and Worker regressions
+        run: |
+          python -m unittest discover -s tests -q
+          npm test
+      - name: Build real evidence-approved homepage-only release
+        run: |
+          python -m v5 build --site quicksky --mode home-indexing
+          python -m v5 audit --site quicksky
+          python - <<'PY'
+          import json,xml.etree.ElementTree as ET
+          from pathlib import Path
+          from v5.config import read_site
+          site=read_site('quicksky')['site']
+          assert site['homeIndexingApproved'] is True
+          assert site['homeBusinessFactsVerified'] is True
+          assert site['homeContentQualityApproved'] is True
+          assert site['publicIndexingApproved'] is False
+          assert site['publishEnabled'] is False
+          assert site['indexNow']=={'enabled':False,'key':None}
+          output=Path('dist/quicksky')
+          manifest=json.loads(Path('reports/quicksky/manifest.json').read_text())
+          audit=json.loads(Path('reports/quicksky/audit.json').read_text())
+          assert manifest['mode']=='home-indexing' and manifest['pageCount']==1733
+          assert not audit['errors'],audit
+          pages=sorted(output.glob('*.html'))
+          assert len(pages)==1734
+          home=(output/'index.html').read_text()
+          assert '<meta name="robots" content="index,follow">' in home
+          assert home.count('<link rel="canonical" href="https://quicksky.nalmada.net/">')==1
+          assert '<nav id="regions"' not in home
+          assert '실제 배차 가능 지역과 장비 종류' in home
+          assert 'tel:01053221952' in home
+          for p in pages:
+              if p.name=='index.html':continue
+              html=p.read_text()
+              assert '<meta name="robots" content="noindex,nofollow">' in html,p.name
+              assert 'rel="canonical"' not in html,p.name
+          robots=(output/'robots.txt').read_text()
+          assert robots=='User-agent: *\nAllow: /\nSitemap: https://quicksky.nalmada.net/sitemap.xml\n'
+          tree=ET.parse(output/'sitemap.xml')
+          ns='{http://www.sitemaps.org/schemas/sitemap/0.9}'
+          locs=[t.text for t in tree.findall('.//'+ns+'loc')]
+          assert locs==['https://quicksky.nalmada.net/']
+          assert not list(output.glob('*indexnow*'))
+          print('ONE_HOME_RELEASE_OFFLINE_PASS',{'home':1,'regionNoindex':1732,
+                'totalPages':1733,'auditErrors':0,'manifestMode':manifest['mode']})
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quicksky-reviewed-home-only-offline
+          path: |
+            reports/quicksky/manifest.json
+            reports/quicksky/audit.json
+          if-no-files-found: error
+          retention-days: 15
