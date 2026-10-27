@@ -1,0 +1,232 @@
+"""Standalone, deterministic regional copy generator for Quicksky.
+
+No Daysky articles or dedicated Daysky pools are used. This generator
+does not deploy, submit IndexNow, or grant permission to index.
+"""
+from __future__ import annotations
+
+from collections import Counter
+from hashlib import sha256
+from math import ceil
+from pathlib import Path
+from random import Random
+import json
+import re
+
+ROOT=Path(__file__).resolve().parents[1]
+REGION_FILE=ROOT/"data/regions/seoul_gyeonggi_current_dong.json"
+PINNED_SHA="057679a9a6312dbb4dd284d2ca42856d40a828239b2483540a7000b630fc30eb"
+TARGET_COUNT=1733
+THRESHOLD=0.49
+SEED=20261027
+
+TOPICS={
+ "signage":("간판 설치·교체","건물 외벽의 광고물과 간판 구조물을 다루는 과정에서는 장비가 정차할 위치와 간판 고정 지점을 따로 살펴야 합니다.","돌출된 간판 뒤편에 손이 닿아야 할 때에는 벽면과 작업대 사이의 간격부터 가늠합니다."),
+ "glass":("유리·창호 작업","창호 외측 실링이나 유리 교체를 준비한다면 자재를 옮기는 경로와 작업자의 이동 위치를 함께 정리해야 합니다.","유리면 바로 앞에 장비를 세울 수 없는 구조에서는 측면에서 접근할 수 있는지 확인하는 과정이 필요합니다."),
+ "paint":("외벽 도장 작업","벽면을 도색하려면 작업할 면적과 작업대 이동 순서를 고려하여 필요한 장비 이용 시간을 비교합니다.","벽면의 모서리와 돌출 마감재는 작업대가 지나갈 경로에 영향을 줄 수 있습니다."),
+ "facade":("건물 외벽 점검","균열이나 외장 마감 상태를 확인하는 작업에서는 조사할 지점과 사진 촬영 방향을 먼저 정리하는 편이 좋습니다.","출입구 상부와 건물 후면처럼 이동이 어려운 구간은 같은 차량으로 접근 가능한지 따로 검토합니다."),
+ "lighting":("높은 위치의 조명 교체","고층 외부 조명이나 건물 표지등을 교체하려면 등기구의 위치와 전선의 접근성을 함께 살펴야 합니다.","조명 커버와 교체 부품을 다루는 동안 작업대 위에서 확보해야 하는 공간도 점검합니다."),
+ "vent":("환기·실외기 설비 작업","높은 외벽에 놓인 배기 시설과 실외기 주변을 점검할 때는 장비 접근 경로와 설비 고정 위치를 함께 살펴봅니다.","설비 주변 배관과 연결부의 위치에 따라 작업대에 올라간 뒤 이동해야 하는 범위가 달라질 수 있습니다."),
+ "waterproof":("외벽 방수·보수","옥상 끝단이나 외벽 연결부의 방수 보수를 준비할 때는 실제 보수 범위와 필요한 자재 반입 조건을 확인합니다.","창호 주변 누수 보수와 외벽 전체 방수 작업은 같은 높이라도 필요한 작업대 이동 횟수가 다를 수 있습니다."),
+ "cleaning":("외부 구조물 세척","유리와 외벽 부착물의 세척 작업에는 물 사용 여부, 지상 통행, 작업대 이동 반경 등 여러 현장 조건이 영향을 줍니다.","세척 구간을 여러 면으로 나누어야 할 때는 지상 장비 재배치 계획부터 세우는 것이 도움이 됩니다."),
+ "communication":("통신·전기설비 접근","건물 외측의 통신 장비나 배선을 다룰 때는 해당 설비까지의 접근 거리와 작업 구간의 전기 안전 조치를 검토해야 합니다.","인접한 배선 및 시설물 사이로 장비를 움직여야 한다면 사전에 장애물 위치를 확인할 필요가 있습니다."),
+ "facility":("시설물 부착·철거","높은 곳에 설치된 외부 부착물이나 구조물을 철거할 때는 부품을 내려놓을 동선과 하부 작업 구역을 정리해야 합니다.","설치 작업과 철거 작업은 자재를 옮기는 방향이 달라서 필요한 장비 위치도 달라질 수 있습니다."),
+ "banner":("현수막·광고물 작업","고정식 광고판이나 외부 현수막의 설치에는 부착 지점의 위치뿐 아니라 지상에서 접근할 수 있는 경로를 함께 확인합니다.","일시적으로 걸어 놓는 광고물도 지지 구조물과 주변 시설을 먼저 살피는 것이 안전한 계획에 도움이 됩니다."),
+ "maintenance":("옥외 설비 유지관리","건물 외측의 다양한 설비를 점검할 때에는 순회할 위치를 목록으로 만들고 작업 순서를 계획해야 합니다.","한 번 출동하여 여러 지점을 살피는 경우에는 장비를 재설치할 장소의 수가 전체 일정에 영향을 줍니다.")
+}
+ACCESS=[
+"차량이 들어갈 출입구 폭과 회전 공간을 각각 확인하면 현장 도착 뒤 발생할 수 있는 동선 문제를 줄이는 데 도움이 됩니다.",
+"보행로와 차도가 구분되지 않는 진입로라면 장비 설치 동안 통행을 어떻게 관리할지 사전에 협의해야 합니다.",
+"건물 뒤편 작업이라도 실제 출입은 전면 도로로만 가능한 경우가 있어 진입 방향을 현장 사진에 표시해 두면 좋습니다.",
+"옥외 계단이나 낮은 담장도 작업대가 움직이는 경로에 영향을 줄 수 있으므로 작은 장애물까지 점검합니다.",
+"주차된 차량이 많은 상가 주변에서는 작업 날짜의 정차 공간 확보 방법을 별도 항목으로 정리하는 편이 좋습니다.",
+"건물 옆으로 난 좁은 통로는 차량 폭뿐 아니라 후진과 방향 전환이 가능한 공간까지 살펴야 합니다.",
+"차량이 서는 위치와 작업할 벽면 사이의 수평 거리를 대략적으로 정리해 두면 장비를 비교하기 수월합니다.",
+"출입문이 여러 개인 건물이라면 차량이 실제 진입할 수 있는 문과 사람의 출입문을 구분해 설명해야 합니다.",
+"지하주차장 상부의 바닥은 설치 조건을 별도 확인해야 할 수 있으므로 구조와 지면 상황을 전달하는 것이 중요합니다.",
+"작업 위치가 건물 모서리를 돌아 있는 경우에는 장비의 회전 범위와 장애물을 함께 살펴보는 과정이 필요합니다.",
+"외부 화단이나 경계석의 위치가 받침대 설치에 영향을 줄 수 있어 차량이 놓일 자리를 사진으로 남기면 좋습니다.",
+"진입로 주변에 가로수가 있으면 계절에 따라 잎과 가지가 작업 경로를 가릴 수 있으므로 실제 여건을 확인해야 합니다.",
+"높이만 비슷한 두 건물도 도로에서 벽면까지 떨어진 거리가 다르면 필요한 장비 조건이 달라집니다.",
+"주변 점포의 영업 동선을 가로지르는 자리는 현장 관계자와 통행 계획을 사전에 조율할 필요가 있습니다.",
+"출입구 앞의 경사나 턱 때문에 차량 위치를 바꿔야 할 수도 있으므로 진입로 전체 사진을 준비하면 편리합니다.",
+"도로변 현장은 차량의 정차 위치와 주변 교통 상황을 함께 고려하여 작업 계획을 세워야 합니다."
+]
+EQUIPMENT=[
+"1톤과 3.5톤, 5톤이라는 차종 표시만으로 작업대의 실제 도달 높이나 허용 하중을 판단하지 않습니다.",
+"차량 크기가 작은 편이어도 필요한 작업 반경을 충족하는지는 실제 장비 제원을 따로 확인해야 합니다.",
+"높은 건물의 작업에서는 목표 지점의 높이뿐 아니라 수평으로 얼마나 떨어져 있는지도 중요합니다.",
+"작업대에 들어갈 사람과 공구의 구성을 정리해 두면 장비별 허용 조건을 검토하는 데 도움이 됩니다.",
+"장비가 최대 높이에 도달하더라도 해당 위치에서 충분한 수평 이동이 가능한지는 별도로 살펴야 합니다.",
+"건물 외벽의 돌출 구조물을 피해야 한다면 장비의 이동 각도와 회전 범위를 함께 검토합니다.",
+"차량을 여러 차례 옮기기 어려운 현장이라면 작업 범위를 어디까지 묶을 수 있는지 먼저 살펴야 합니다.",
+"같은 톤수의 장비도 세부 모델에 따라 제원이 다를 수 있으므로 현장 요구와 차량 자료를 대조해야 합니다.",
+"안전하게 움직일 수 있는 작업대의 방향은 작업물의 위치와 지상 설치 조건을 함께 확인한 뒤 판단합니다.",
+"긴 자재를 다루는 작업이라면 작업대에서 취급할 수 있는 크기와 무게를 별도 확인해야 합니다.",
+"장비 선택 전에는 작업자 수와 필요한 공구를 나누어 적어 두면 상담 시 조건을 정리하기 편리합니다.",
+"건물에 인접한 가설 구조물은 장비를 세울 수 있는 자리를 제한할 수 있어 현장 조건에 포함해야 합니다.",
+"높이별 접근 가능 지점을 표시해 두면 장비 한 대로 전체 작업을 진행할 수 있는지 비교할 수 있습니다.",
+"장비의 작동 반경이 현장에 적합하더라도 안전한 설치 공간이 없다면 다른 접근 방법을 검토해야 합니다.",
+"차종을 먼저 확정하는 대신 실제 할 일을 설명하고 장비 추천을 받는 방식이 불필요한 변경을 줄입니다.",
+"작업대 사용 중 이동이 많은 공정은 충분한 운용 시간을 고려하여 장비 계획을 세우는 것이 좋습니다."
+]
+SAFETY=[
+"전선과 통신선이 인접한 작업 장소에서는 장비 이동 구간과 주변 전기설비를 먼저 확인해야 합니다.",
+"맨홀이나 배수구 주변의 지면은 하중 조건을 검토해야 할 수 있어 장비 설치 위치를 쉽게 확정하지 않습니다.",
+"작업대 아래쪽으로 공구가 떨어질 가능성을 고려해 지상 출입 통제 구간을 정리할 필요가 있습니다.",
+"비가 오거나 강한 바람이 예상되는 날은 실제 장비 운용 조건과 현장 안전 기준을 별도로 확인합니다.",
+"지면의 기울기나 포장 상태에 따라 받침대 설치 조건이 달라지므로 현장에서 확인하는 절차가 중요합니다.",
+"작업 구역에 보행자가 많다면 하부 공간을 어떤 방식으로 구분할지 현장 관계자와 조율해야 합니다.",
+"주변 구조물의 돌출부는 작업대 이동 중 간섭을 일으킬 수 있으므로 시야에 들어오는 장애물을 함께 살핍니다.",
+"장비를 움직이기 전에 작업 위치 인근의 유리, 간판, 가로등과 같은 시설을 점검할 필요가 있습니다.",
+"실제 작업 가능 여부는 장비 제원과 현장 상태를 담당자가 확인한 뒤 판단해야 합니다.",
+"작업 예정 지점 주변에 다른 공사가 진행 중이면 장비 동선을 따로 확보할 수 있는지 확인해야 합니다.",
+"차량 출입과 보행자 출입이 겹치는 시간에는 작업 구역과 이동 경로를 구분해 계획하는 것이 유리합니다.",
+"장비가 놓일 자리에 지하 시설이 있다면 설치 하중에 대한 검토가 필요한지 확인하는 절차가 중요합니다.",
+"야간 현장에서는 작업 구역과 접근 경로가 충분히 보이는지 조명 여건을 함께 살펴야 합니다.",
+"장비 설치 후에도 소방 통로나 긴급 통행이 필요한 공간을 어떻게 유지할지 검토해야 합니다.",
+"건물 주변의 나뭇가지나 옥외 배선은 작업대의 이동을 제한할 수 있어 사전 점검 대상입니다.",
+"현장 상태는 사진으로 파악하는 데 한계가 있으므로 최종 설치 판단은 현장 확인을 기준으로 진행합니다."
+]
+TIME=[
+"한 위치에서 끝나는 작업과 차량을 여러 번 이동시키는 작업은 필요한 시간이 달라질 수 있습니다.",
+"작업 준비와 장비 정리까지 포함하여 전체 소요 시간을 예상하면 일정 협의가 쉬워집니다.",
+"작업 지점이 여러 층으로 나뉜다면 층별 접근 순서를 미리 정리해 두는 편이 효율적입니다.",
+"작업할 장소를 방문할 수 있는 시간대와 주변 점포의 운영 시간을 함께 고려해야 합니다.",
+"하루 일정이라도 작업대가 이동하는 횟수에 따라 실제 사용 시간이 다르게 나타날 수 있습니다.",
+"차량을 옮겨 다시 설치해야 한다면 단순 작업 시간 외에 재배치 시간을 포함해서 계획해야 합니다.",
+"희망 날짜에 맞출 수 있는지는 실제 장비 배차와 현장 조건을 확인해 전화로 협의해야 합니다.",
+"외부 작업과 실내 보조 작업을 이어서 진행한다면 장비가 필요한 구간을 분리해 설명하면 좋습니다.",
+"간판이나 창호 자재가 현장에 도착하는 시점도 장비 이용 일정에 영향을 줄 수 있습니다.",
+"장비가 도착한 뒤 현장을 준비하는 시간까지 고려하면 전체 작업의 진행 순서를 정리하기 편리합니다.",
+"작업 팀이 여러 곳을 오가야 한다면 각 위치의 동선을 정리하여 이동 시간을 확인하는 것이 좋습니다.",
+"점포 개점 전 작업과 영업 이후 작업은 현장의 출입 여건이 달라질 수 있습니다.",
+"사용 시간을 결정하기 전에는 자재 준비, 보행 통제, 장비 설치 순서를 함께 살펴야 합니다.",
+"촬영이나 점검 중심의 작업인지 실제 부착 작업인지에 따라 필요한 체류 시간이 달라질 수 있습니다.",
+"건물의 앞면과 뒷면을 모두 작업한다면 서로 다른 진입로가 필요한지 따로 확인해야 합니다.",
+"작업 종류별로 예상 시간을 나누어 전달하면 장비를 얼마나 사용할지 상담하기 수월해집니다."
+]
+CONTACT=[
+"전화 상담에서는 작업 주소를 먼저 알려주고 건물 높이와 접근 가능한 방향을 이어서 설명하면 좋습니다.",
+"현장 사진을 보낼 수 있다면 건물 전체와 차량이 서게 될 자리를 각각 촬영하여 전달하는 것이 편리합니다.",
+"작업 위치를 가리킨 사진 한 장은 건물 층수만 알려주는 것보다 상담에 도움이 될 수 있습니다.",
+"장비를 이용할 날짜와 대략적인 시간대를 함께 정리하면 배차 가능 여부를 확인하기 수월합니다.",
+"간판이나 유리처럼 자재가 있는 작업은 크기와 무게를 대략적으로 설명해 두면 조건 확인에 도움이 됩니다.",
+"주소가 같은 복합 건물이라도 출입구가 여러 개라면 실제 진입할 출입구를 정확히 알려주는 것이 좋습니다.",
+"장비를 이용할 작업자가 따로 있다면 작업자와 장비 담당자의 역할을 상담에서 구분하면 혼동을 줄일 수 있습니다.",
+"주변 주차 상태가 자주 바뀌는 구간은 작업 시간대의 차량 정차 상황을 함께 전하면 도움이 됩니다.",
+"비용을 비교할 때는 장비 종류뿐 아니라 이동과 재설치 조건이 포함되는지 확인하는 것이 중요합니다.",
+"긴급하게 작업 계획을 잡아야 하더라도 장비가 들어갈 여건과 작업 위치를 먼저 확인해야 합니다.",
+"야간 작업을 계획한다면 관리사무소나 현장 관계자와 조율할 내용이 있는지 사전에 살펴보세요.",
+"여러 작업을 묶어 진행할 계획이라면 위치별 목록과 예상 시간을 구분해 전달하면 상담이 수월합니다.",
+"건물 관리자에게 확인해야 하는 출입 정보가 있다면 상담 전에 미리 받아두는 것이 좋습니다.",
+"작업을 시작하기 전에 필요한 안전 조치의 담당 범위를 현장 관계자와 함께 확인하는 편이 좋습니다.",
+"작업 위치가 좁거나 복잡하다면 가까운 사진과 멀리서 찍은 사진을 함께 준비하는 것이 유용합니다.",
+"견적을 문의할 때 현장 사정을 구체적으로 알려주면 필요한 장비와 이용 시간에 대한 상담이 쉬워집니다."
+]
+
+def load_rows():
+    doc=json.loads(REGION_FILE.read_text(encoding="utf-8"))
+    rows=doc.get("rows",[])
+    if doc.get("sourceSHA256")!=PINNED_SHA or doc.get("asOf")!="2026-10-12":
+        raise ValueError("Quicksky requires the pinned region snapshot")
+    if len(rows)!=1732 or len({tuple(x) for x in rows})!=1732:
+        raise ValueError("Unexpected number of current districts")
+    if any(not parent.startswith(("서울특별시 ","경기도 ")) or not dong for parent,dong in rows):
+        raise ValueError("Unsafe region label")
+    return rows
+
+def _choose(values,key,count):
+    if count>len(values):
+        raise ValueError("Insufficient copy variants")
+    order=sorted(range(len(values)),key=lambda i:sha256((key+"|"+str(i)).encode()).digest())
+    return [values[i] for i in order[:count]]
+
+def _display(parent,dong):
+    prefix="서울 " if parent.startswith("서울특별시 ") else "경기 "
+    return prefix+parent.split(" ",1)[1]+" "+dong
+
+def make_page(parent,dong,index):
+    name=parent+" "+dong
+    display=_display(parent,dong)
+    topic_ids=sorted(TOPICS)
+    topic_id=topic_ids[int.from_bytes(sha256(("quicksky-topic-v1|"+name).encode()).digest()[:8],"big")%len(topic_ids)]
+    topic,lead,context=TOPICS[topic_id]
+    salt="quicksky-v1|"+name+"|"+topic_id
+    def take(source,label,n):
+        return _choose(source,salt+"|"+label,n)
+    access=take(ACCESS,"access",5)
+    equip=take(EQUIPMENT,"equipment",5)
+    safe=take(SAFETY,"safety",5)
+    time=take(TIME,"time",5)
+    call=take(CONTACT,"contact",5)
+    sections=[
+      {"heading":topic+" 현장에서 먼저 정할 범위",
+       "paragraph":" ".join([lead,context,access[0],time[0],equip[0]])},
+      {"heading":display+" 주변 차량 진입과 작업 위치",
+       "paragraph":" ".join([access[1],equip[1],access[2],safe[0],call[0]])},
+      {"heading":"작업대 접근 거리와 현장 안전 조건",
+       "paragraph":" ".join([equip[2],safe[1],safe[2],access[3],equip[3]])},
+      {"heading":display+" 스카이차 사용 일정 계획",
+       "paragraph":" ".join([time[1],time[2],time[3],safe[3],call[1]])},
+      {"heading":"사진을 준비해 상담하는 방법",
+       "paragraph":" ".join([call[2],call[3],access[4],equip[4],safe[4],time[4],call[4]])}
+    ]
+    intro=(f"{display}에서 {topic}을 계획한다면 현장 접근 방법과 작업대가 닿아야 할 지점을 먼저 확인하는 것이 좋습니다. "
+           f"{lead} 빠른스카이는 1톤·3.5톤·5톤 스카이차 이용 시 확인할 항목을 안내하고 전화로 현장 조건을 상담합니다.")
+    return {
+      "id":"quicksky-dong-"+sha256(name.encode()).hexdigest()[:16],
+      "number":index+2,"region":name,"searchKeyword":"스카이차","topic":topic,
+      "poolTopicId":topic_id,"title":f"{display} 스카이차 비용·장비 상담 | 빠른스카이",
+      "intro":intro,"sections":sections,
+      "serviceIds":["sky-1t","sky-35t","sky-5t"],
+      "faq":[
+        {"q":f"{display} 스카이차 작업 전에 필요한 현장 정보는 무엇인가요?",
+         "a":call[0]+" 건물과 정차 위치의 사진을 함께 준비하면 작업 조건을 전달하는 데 도움이 됩니다."},
+        {"q":f"{display} 스카이차 비용은 어떻게 상담하나요?",
+         "a":"현장 접근 방식과 사용 시간, 장비 종류 등에 따라 견적이 달라질 수 있습니다. 필요한 조건을 확인해 전화로 상담합니다."}
+      ]
+    }
+
+def expand(pages,regions):
+    if len(pages)!=1 or pages[0]["number"]!=1 or pages[0]["id"]!="quicksky-home":
+        raise ValueError("Quicksky homepage seed changed")
+    rows=load_rows()
+    generated=[make_page(parent,dong,i) for i,(parent,dong) in enumerate(rows)]
+    reg={**regions,"regions":list(regions["regions"])+[
+        {"name":parent+" "+dong,"kind":"current-dong"} for parent,dong in rows]}
+    if len(pages)+len(generated)!=TARGET_COUNT:
+        raise ValueError("Quicksky expected page count differs")
+    return pages+generated,reg
+
+def text_body(page):
+    return " ".join([page["intro"]]+[s["paragraph"] for s in page["sections"]])
+
+def grams(t,n=5):
+    t=re.sub(r"\s+","",t).lower()
+    return {t[i:i+n] for i in range(max(0,len(t)-n+1))}
+
+def audit_one_percent(pages,seed=SEED):
+    groups={"서울":[],"경기":[]}
+    for p in pages[1:]:
+        groups["서울" if p["region"].startswith("서울특별시 ") else "경기"].append(p)
+    rng=Random(seed)
+    sample=sum((rng.sample(g,max(1,ceil(len(g)*.01))) for g in groups.values()),[])
+    hashes=[sha256(text_body(p).encode()).hexdigest() for p in pages]
+    duplicates=sum(v-1 for v in Counter(hashes).values() if v>1)
+    full=[grams(text_body(p)) for p in pages]
+    worst=0.0
+    failure=[]
+    for page in sample:
+        i=page["number"]-1
+        a=full[i]
+        for j,b in enumerate(full):
+            if i==j:continue
+            score=len(a&b)/len(a|b) if (a|b) else 1
+            if score>worst:worst=score
+            if score>=THRESHOLD:
+                failure.append({"first":i+1,"other":j+1,"similarity":round(score,5)})
+                break
+    return {"population":len(pages),"sample":len(sample),"thresholdExclusive":THRESHOLD,
+            "exactDuplicates":duplicates,"maxSimilarity":round(worst,5),"violations":failure,
+            "passes":not failure and not duplicates}
