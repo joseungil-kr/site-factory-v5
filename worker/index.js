@@ -6,6 +6,7 @@ const EVENTS = new Set(['phone', 'shop', 'calculator']);
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    const originalPath = url.pathname;
     if (url.pathname === '/__v5_event') {
       if (request.method !== 'POST' || !env.ANALYTICS) return new Response('Not found', {status:404});
       const origin = request.headers.get('Origin');
@@ -60,6 +61,17 @@ export default {
         return new Response('User-agent: *\nDisallow: /\n', {status:200,headers});
       }
       return new Response(response.body, {status:response.status, statusText:response.statusText, headers});
+    }
+    // One-URL Quicksky release: region HTML and noncanonical /index.html
+    // are blocked at the HTTP layer even if their page meta is changed later.
+    // This applies only to the approved exact custom domain, never the preview.
+    if (indexedHost && env.V5_HOME_ONLY === '1'
+        && url.hostname.toLowerCase() === 'quicksky.nalmada.net'
+        && originalPath !== '/' && originalPath !== '/robots.txt'
+        && originalPath !== '/sitemap.xml') {
+      const headers=new Headers(response.headers);
+      headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
+      return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
     }
     if (indexedHost && response.status === 404) {
       const headers=new Headers(response.headers);
