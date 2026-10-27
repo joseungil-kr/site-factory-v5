@@ -101,7 +101,7 @@ jobs:
             assert '<meta name="robots" content="noindex,nofollow">' in s
             assert '근조화환 주문 가격안내' in s and '날마다꽃' in s
             assert '59,000원' in s and '79,000원' in s and '109,000원' in s
-            assert '2026.10.22' in s and '전화 상담' in s
+            assert '2026.10.27' in s and '전화 상담' in s
             assert '/assets/images/B203.jpg' in s and '/assets/css/site.css' in s
             assert 'class="article-card"' in s and 'class="product-card"' in s
             assert '<link rel="canonical"' not in s
