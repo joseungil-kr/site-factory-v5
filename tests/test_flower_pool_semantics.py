@@ -31,6 +31,23 @@ class FuneralHallContentGroups(unittest.TestCase):
                 self.assertFalse(set(ids)&excluded)
         self.assertEqual(visited_groups,set(flower.GROUP_LABELS))
 
+    def test_real_optimized_1080_selection_stays_within_assigned_groups(self):
+        contents=flower.create_population(self.facilities,self.assignments,
+                                          self.curated,self.support,self.allowed)
+        self.assertEqual(len(contents),1080)
+        for c,a,f in zip(contents,self.assignments,self.facilities):
+            self.assertEqual(c["group"],a["group"])
+            self.assertEqual(c["sections"][1][0],flower.BODY_HEADINGS[a["group"]])
+            for field in flower.CORE_FIELDS:
+                selected=c["selectedIndices"][field]
+                self.assertEqual(selected[0],a[field])
+                self.assertEqual(len(selected),4)
+                self.assertTrue(set(selected).issubset(self.allowed[a["group"]]),(f["id"],field))
+            for field in flower.SUPPORT_FIELDS:
+                selected=c["supportSelectedIndices"][field]
+                self.assertEqual(len(selected),2 if field=="order" else 1)
+                self.assertTrue(all(i<len(self.support[field]) for i in selected))
+
     def test_all_eight_group_representatives_have_matching_section_headings(self):
         representatives={}
         for i,assignment in enumerate(self.assignments):
