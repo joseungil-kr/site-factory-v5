@@ -6,6 +6,7 @@ No venue buildings or inaccurate per-hall venue images are fabricated.
 from __future__ import annotations
 
 from html import escape
+import argparse
 import json
 from pathlib import Path
 from flower_design import head,header,footer,photo,price_cards,reference_note,contact_band
@@ -33,7 +34,10 @@ input.addEventListener("input",show);province.addEventListener("change",show);
 })();
 """
 
-def package():
+def package(*,public=False):
+    if public:
+        from build_flower_funeral_national import require_public_release_authorization
+        require_public_release_authorization()
     manifest=json.loads((OUT/"manifest.json").read_text(encoding="utf-8"))
     report=json.loads(REPORT.read_text(encoding="utf-8"))
     source=json.loads(SOURCE.read_text(encoding="utf-8"))
@@ -42,11 +46,11 @@ def package():
     assert source["publicationAllowed"] is False
     facilities=source["facilities"]
     pages=manifest["pages"]
-    assert manifest["mode"]=="noindex-preview" and manifest["qaPasses"] and len(pages)==len(facilities)==1080
+    assert manifest["mode"]==("production-indexable" if public else "noindex-preview") and manifest["qaPasses"] and len(pages)==len(facilities)==1080
     assert {f["id"] for f in facilities}=={p["id"] for p in pages}
     for p in pages:
         markup=(OUT/p["filename"]).read_text(encoding="utf-8")
-        assert '<meta name="robots" content="noindex,nofollow">' in markup and "날마다꽃" in markup
+        assert '<meta name="robots" content="'+("index,follow" if public else "noindex,nofollow")+'">' in markup and "날마다꽃" in markup
         assert 'src="/assets/images/B203.jpg"' in markup
         assert 'class="article-card"' in markup and 'class="product-card"' in markup
     for local in ("assets/css/site.css","assets/images/B201.jpg","assets/images/B203.jpg",
@@ -106,7 +110,8 @@ def package():
         '<div><h3>03. 제작·배송 상담</h3><p>해당 지역의 실제 제작과 도착 가능 시간을 상담으로 확인해 주세요.</p></div>'
         '</div></section>')
     index=(head("전국 꽃배달·근조화환 주문 가격안내 | 날마다꽃",
-                "전국 장례식장 1,080곳 근조화환 주문 안내. 날마다꽃 꽃바구니와 관엽화분 상품 상담.")+
+                "전국 장례식장 1,080곳 근조화환 주문 안내. 날마다꽃 꽃바구니와 관엽화분 상품 상담.",
+                public=public,path="/")+
            header()+'<main id="main">'+hero+categories+products_html+directory_html+guide+contact_band()+
            '</main><script src="/assets/js/hall-search.js" defer></script>'+footer())
     (OUT/"index.html").write_text(index,encoding="utf-8")
