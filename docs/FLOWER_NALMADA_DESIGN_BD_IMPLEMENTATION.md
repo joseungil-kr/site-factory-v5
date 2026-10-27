@@ -37,3 +37,17 @@
 2. 전문 문구 원장의 `readyForPublication=false`·최종 내용 사실성 검수 미완료.
 3. 참고 상품 가격·상품 재고·배송 조건·사진 이용 범위의 운영 전 재확인.
 4. 사용자의 최종 디자인 확인 전 `flower.nalmada.net` 정식 공개 및 IndexNow 금지.
+
+
+## 2026-10-27 — 방문자 임시안내 삭제 및 이미지 프레임 최종 검수
+
+- V5 공통 규칙 `AGENTS.md`, `SITE_CREATION_PROTOCOL.md`, `v5/visitor_copy.py` 추가·병합: [PR #15](https://github.com/joseungil-kr/site-factory-v5/pull/15), main merge `d4f58c660655afc5f8359fe0fa70b98fc7588309`.
+- 방문자 화면에서 '보유 상품 사진 · 실제 상품 구성은 달라질 수 있습니다', '검수용', '상품 정보 준비 중', '미검증', '원장 기재', '참고 가격' 등 노출 문구 제거. 시설별 주소는 최신 검증 전까지 숨김. 가격은 2026.10.22 판매처 등록가격이라는 시점이 분명한 상품 카드로 표현하고, 판매처 상세 링크를 유지.
+- 본문/시설·상품 원장 자체의 승인·진위 정보는 GitHub JSON/QA 문서에 계속 보존. noindex/robots/IndexNow 금지는 유지.
+- 공통 CSS에서 히어로·카테고리·상품 이미지 `object-fit:cover`, 카드 이미지 정사각형 전체채움 및 잘림 완화 적용. 원본 사진은 공용 자산 그대로 사용.
+- 소스/검사 고정 커밋: `30c8f5a2507df1da3073e9c236c0ba697c39962b`.
+- [1,080페이지 생성 + 방문자 임시 문구 전수검사](https://github.com/joseungil-kr/site-factory-v5/actions/runs/40436216138): SUCCESS. 1,082 HTML(시설 1,080 + 홈 + 404)에서 금지 문구 **0건**, 유사도 전수 최대 **29.3863%**, 초과 0쌍.
+- [PC 1440px + 모바일 390px 브라우저 스크린샷 QA](https://github.com/joseungil-kr/site-factory-v5/actions/runs/40436216038): SUCCESS. 홈 이미지 7개, 상세 이미지 4개 정상 표시, 전부 cover/full-frame, 가로 넘침 0.
+- [독립 Cloudflare noindex Worker 재배포](https://github.com/joseungil-kr/fwith-site-factory/actions/runs/40436346450): SUCCESS. Worker `sfv5-nalmada-flower-preview`, provider-readback 버전 `92ed9a9f-2179-44c4-a223-8ff7a51a506a`.
+- 별도 GitHub 러너의 외부 HTTPS 검사에는 **HTTP 403**이 남아 있으므로, 배포 API 성공과 실제 방문자 접근성 성공을 혼동하지 않는다.
+- Custom Domain `flower.nalmada.net` 및 DNS, 공개 색인과 IndexNow는 변경하지 않음.
