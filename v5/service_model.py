@@ -118,6 +118,9 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
             fail('Daysky page count differs from its explicit indexing scope')
         if target==29 and site.get('indexNow',{}).get('enabled'):
             fail('Original 29-page scope disables IndexNow')
+    if site_id=='quicksky' and site.get('homeIndexingApproved'):
+        from .quicksky_home_evidence import validate_home_evidence
+        validate_home_evidence(site,ordered,rates)
     if site_id=='quicksky' and site.get('publicIndexingApproved') and len(ordered)!=1733:
         fail('Quicksky indexable release requires exactly 1733 pages')
     if site_id in ('daysky','quicksky'):
