@@ -12,7 +12,7 @@
   "region": "서울·경기",
   "serviceLabel": "스카이차",
   "theme": "classic",
-  "status": "draft",
+  "status": "preview",
   "serviceHours": "전화 상담",
   "workTypes": [
     "간판 설치·교체",
@@ -44,7 +44,7 @@
     "key": null
   },
   "staticAssetSoftLimit": 18000,
-  "source": "Independent Quicksky preview config. Owner must confirm number, rates and cross-brand image use before indexing.",
+  "source": "2026-10-27 user-approved 1733-page Quicksky preview and telephone; owner-hosted Daysky asset provenance tracked separately. Public indexing and DNS remain gated.",
   "navigation": [
     {
       "label": "홈",
