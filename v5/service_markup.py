@@ -155,9 +155,11 @@ def home(site,page,pages,services,rates):
     body+='</div></section>'
     body+='<section class="block-section doc-overview"><span class="eyebrow">FIELD GUIDE</span><h2>서비스 이용 안내</h2>'+_sections(page)+'</section>'
     body+=_faq(page.get('faq',[]))+_call_section(site)
-    body+='<nav id="regions" class="region-links" aria-label="지역별 서비스 문서"><h2>지역별 ' + h(site['serviceLabel']) + ' 안내</h2><div>'
-    for p in pages[1:]:body+=f'<a href="{url_path(p["number"])}">{h(p["region"])} ↗</a>'
-    body+='</div></nav>'+render_pagination(pages,1)+'</main>'+_footer(site)
+    if not (site.get('id')=='quicksky' and site.get('homeIndexingApproved') is True):
+        body+='<nav id="regions" class="region-links" aria-label="지역별 서비스 문서"><h2>지역별 ' + h(site['serviceLabel']) + ' 안내</h2><div>'
+        for p in pages[1:]:body+=f'<a href="{url_path(p["number"])}">{h(p["region"])} ↗</a>'
+        body+='</div></nav>'+render_pagination(pages,1)
+    body+='</main>'+_footer(site)
     return body
 
 
