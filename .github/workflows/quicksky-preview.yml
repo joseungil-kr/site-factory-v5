@@ -1,0 +1,173 @@
+name: Quicksky 1733-page noindex preview build and isolated deploy
+on:
+  push:
+    branches:
+      - feature/quicksky-nalmada-com-20261027
+    paths:
+      - 'sites/quicksky/**'
+      - 'v5/quicksky_pages.py'
+      - 'v5/service_model.py'
+      - 'v5/service_markup.py'
+      - 'tests/test_quicksky.py'
+      - '.github/workflows/quicksky-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: quicksky-noindex-preview
+  cancel-in-progress: false
+jobs:
+  build-audit-preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER_SEND_METRICS: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Quicksky identity and preview-only approval
+        run: |
+          python - <<'PY'
+          from v5.site_plan import check_site
+          from v5.config import read_site
+          from v5.quicksky_pages import TARGET_COUNT
+          import json
+          plan=check_site('quicksky')
+          assert plan['ready'] and plan['approved'],plan
+          site=read_site('quicksky')
+          x=site['site']
+          assert x['domain']=='https://quicksky.nalmada.com'
+          assert x['brand']=='빠른스카이' and x['phone']=='010-5322-1952'
+          assert x['status']=='preview' and not x['publishEnabled']
+          assert not x['publicIndexingApproved'] and not x['indexNow']['enabled']
+          assert len(site['pages'])==TARGET_COUNT
+          assert site['rates']['plans']==[]
+          print('APPROVED PLAN, PREVIEW ONLY, 1733 PAGES, NO RATE CLAIMS')
+          PY
+      - name: Execute Quicksky and shared regression tests
+        run: |
+          python -m unittest discover -s tests -q
+          npm test
+      - name: Generate actual 1733 preview HTML pages
+        run: |
+          python -m v5 plan-check --site quicksky
+          python -m v5 build --site quicksky --mode preview
+          python -m v5 audit --site quicksky
+          python -m v5 prepare-staging --site quicksky
+      - name: Assert complete files noindex, brand, approved phone and no sitemap
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          base=Path('dist/quicksky')
+          pages=sorted(base.glob('*.html'))
+          docs=[p for p in pages if p.name!='404.html']
+          manifest=json.loads(Path('reports/quicksky/manifest.json').read_text())
+          audit=json.loads(Path('reports/quicksky/audit.json').read_text())
+          assert len(docs)==1733 and len(pages)==1734
+          assert manifest['pageCount']==1733
+          assert not audit['errors'],audit
+          assert not (base/'sitemap.xml').exists()
+          assert (base/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
+          assert (base/'1733.html').is_file()
+          for path in pages:
+              html=path.read_text()
+              assert '<meta name="robots" content="noindex,nofollow">' in html,path
+              assert '당일스카이' not in html and '영진' not in html,path
+              assert '빠른스카이' in html and '010-5322-1952' in html,path
+              assert 'rel="canonical"' not in html,path
+          print(json.dumps({'generated_html':len(docs),'indexable':False,'errors':audit['errors'],
+                 'max_pair_sample_similarity':audit['maxBodyChar5gramJaccard']},ensure_ascii=False))
+          PY
+      - name: Archive verified HTML and audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: quicksky-1733-reviewed-preview-${{ github.sha }}
+          path: |
+            dist/quicksky/
+            reports/quicksky/manifest.json
+            reports/quicksky/audit.json
+            deploy/quicksky/staging.wrangler.json
+          if-no-files-found: error
+          retention-days: 14
+      - name: Require existing Cloudflare credentials (never configure or change permissions)
+        id: credentials
+        run: |
+          if [[ -n "$CLOUDFLARE_ACCOUNT_ID" && -n "$CLOUDFLARE_API_TOKEN" ]]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Cloudflare credentials unavailable: preview artifact retained, deployment skipped." >> "$GITHUB_STEP_SUMMARY"
+            echo "available=false" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Ensure staging Worker has no custom-domain bindings
+        if: steps.credentials.outputs.available == 'true'
+        run: |
+          python - <<'PY'
+          import json,os
+          from urllib.request import Request,urlopen
+          url=('https://api.cloudflare.com/client/v4/accounts/'
+            +os.environ['CLOUDFLARE_ACCOUNT_ID']+'/workers/domains')
+          req=Request(url,headers={'Authorization':'Bearer '+os.environ['CLOUDFLARE_API_TOKEN']})
+          with urlopen(req,timeout=30) as res: data=json.load(res)
+          if not data.get('success'):raise RuntimeError('Cloudflare domain preflight failed')
+          assert not any(x.get('service')=='sfv5-quicksky-preview' for x in data['result']), \
+            'Refusing preview deployment with an existing custom-domain binding'
+          print('Staging Worker has no production custom domain binding')
+          PY
+      - name: Deploy only separate Quicksky noindex workers.dev staging Worker
+        if: steps.credentials.outputs.available == 'true'
+        run: npx --yes wrangler@4.148.0 deploy --config deploy/quicksky/staging.wrangler.json
+      - name: Resolve actual account workers.dev address
+        if: steps.credentials.outputs.available == 'true'
+        id: origin
+        run: |
+          python - <<'PY'
+          import json,os
+          from urllib.request import Request,urlopen
+          a=os.environ['CLOUDFLARE_ACCOUNT_ID']
+          req=Request('https://api.cloudflare.com/client/v4/accounts/'+a+'/workers/subdomain',
+              headers={'Authorization':'Bearer '+os.environ['CLOUDFLARE_API_TOKEN']})
+          with urlopen(req,timeout=30) as r: d=json.load(r)
+          if not d.get('success') or not d.get('result',{}).get('subdomain'):
+              raise RuntimeError('workers.dev address unavailable')
+          origin='https://sfv5-quicksky-preview.'+d['result']['subdomain']+'.workers.dev'
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:f.write('url='+origin+'\n')
+          print('Actual worker hostname:',origin)
+          PY
+      - name: Verify external HTTP status, images and noindex across 200 and 404
+        if: steps.credentials.outputs.available == 'true'
+        env:
+          STAGING_URL: ${{ steps.origin.outputs.url }}
+        run: |
+          set -euo pipefail
+          for n in 1 2 3 4 5; do
+            if python -m v5 staging-check --site quicksky --origin "$STAGING_URL"; then
+              python - <<'PY'
+          import os,urllib.request
+          url=os.environ['STAGING_URL']+'/assets/images/skycar-hero.webp'
+          with urllib.request.urlopen(url,timeout=30) as r:
+              assert r.status==200
+              assert 'noindex' in r.headers.get('X-Robots-Tag','').lower()
+              assert len(r.read())>1000
+          PY
+              echo "QUICKSKY VERIFIED NOINDEX STAGING: $STAGING_URL" >> "$GITHUB_STEP_SUMMARY"
+              exit 0
+            fi
+            if [[ "$n" -eq 5 ]]; then exit 1; fi
+            sleep 10
+          done
+      - name: Save external verification report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: quicksky-http-readback-${{ github.run_id }}
+          path: reports/quicksky/staging-readback.json
+          if-no-files-found: warn
+          retention-days: 30
