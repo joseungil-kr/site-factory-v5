@@ -64,6 +64,11 @@ def resolved_reference(ref):
 def audit(site_id, *,output:Path|None=None,write_report=True,release_mode:str|None=None):
     data=read_site(site_id);site=data['site']
     out=(output or target_dir(site_id)).resolve()
+    if release_mode is None and output is None:
+        manifest_file=report_dir(site_id)/'manifest.json'
+        if manifest_file.is_file():
+            release_mode=json.loads(manifest_file.read_text(encoding='utf-8')).get('mode')
+    home_only=release_mode=='home-indexing'
     errors=[];warnings=[]
     if not out.exists():
         return {'site':site_id,'errors':['Build directory absent'],'warnings':[]}
@@ -146,11 +151,6 @@ def audit(site_id, *,output:Path|None=None,write_report=True,release_mode:str|No
     if max_sim[0]>=0.49:errors.append(f'Body similarity over 49%: {max_sim}')
     robots_text=(out/'robots.txt').read_text(encoding='utf-8')
     indexable='Allow: /' in robots_text
-    if release_mode is None and output is None:
-        manifest_file=report_dir(site_id)/'manifest.json'
-        if manifest_file.is_file():
-            release_mode=json.loads(manifest_file.read_text(encoding='utf-8')).get('mode')
-    home_only=release_mode=='home-indexing'
     if home_only and (site_id!='quicksky' or not indexable):
         errors.append('Home-only release must be on Quicksky exact indexable origin')
     if not indexable:
