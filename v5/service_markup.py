@@ -64,6 +64,12 @@ def _footer(site):
 
 
 def _prices(site,rates,services,selected=None):
+    if site.get('id')=='onehour-sky':
+        return ('<div class="rate-note onehour-pricing"><strong>1시간 작업도 반나절 요금 기준</strong>'
+                '<p>'+h(site['minimumBillingText'])+'</p>'
+                '<p>장비 종류·현장 접근 조건·요청 시각에 따라 최종 금액이 달라질 수 있습니다. '
+                '정확한 금액은 전화로 상담해 주세요.</p></div>'
+                +_phone(site,'반나절 기준 견적 상담'))
     selected=set(selected or [s['id'] for s in services])
     by_id={s['id']:s for s in services}
     rows=[]
@@ -103,11 +109,17 @@ def _call_section(site):
 
 def home(site,page,pages,services,rates):
     body=_head(site,page['title'],page['intro'],'/')+_header(site)
+    if site.get('id')=='onehour-sky':
+        hero_h1='<h1>'+h(page['title'])+'</h1>'
+        hero_note='<p>'+h(site['heroSlogan'])+'</p>'
+    else:
+        hero_h1=f'<h1>{h(site["region"])} <em>{h(site["serviceLabel"])} 작업</em><br>필요할 때, {h(site["brand"])}</h1>'
+        hero_note=''
     body+=('<main id="main" class="wrap"><section class="hero"><div class="hero-copy">'
            '<span class="eyebrow">LOCAL SERVICE CONSULTATION</span>'
-           f'<h1>{h(site["region"])} <em>{h(site["serviceLabel"])} 작업</em><br>필요할 때, {h(site["brand"])}</h1>'
-           f'<p>{h(page["intro"])}</p>'
-           '<div class="hero-actions">'+_phone(site)+'<a class="outline-button" href="#rates">작업 요금표 보기</a></div>'
+           +hero_h1+hero_note
+           +f'<p>{h(page["intro"])}</p>'
+           +'<div class="hero-actions">'+_phone(site)+'<a class="outline-button" href="#rates">'+('반나절 기준요금 상담' if site.get('id')=='onehour-sky' else '작업 요금표 보기')+'</a></div>'
            f'<p class="service-hours">● {h(site.get("serviceHours","전화 상담"))}</p></div>'
            '<div class="hero-visual">'+_image(site,0,'hero-art','서비스 현장 안내용 공용 일러스트')+'</div></section>')
     body+=('<section class="intro-tiles"><div><span class="accent-number">01</span><h2>'+h(' · '.join(s['name'] for s in services))+'</h2>'
@@ -126,7 +138,7 @@ def home(site,page,pages,services,rates):
     for i,s in enumerate(services):
         body+='<div class="equip-card">'+_image(site,i+1,'equip-art','서비스 안내용 공용 일러스트')+'<h3>'+h(s['name'])+'</h3><p>'+h(s['description'])+'</p></div>'
     body+='</div></section>'
-    body+='<section id="rates" class="block-section rate-section"><span class="eyebrow">PRICING</span><h2>'+h(site['serviceLabel'])+' 기본 요금</h2>'+_prices(site,rates,services)+'</section>'
+    body+='<section id="rates" class="block-section rate-section"><span class="eyebrow">PRICING</span><h2>'+h(site['serviceLabel'])+(' 반나절 기준요금 상담' if site.get('id')=='onehour-sky' else ' 기본 요금')+'</h2>'+_prices(site,rates,services)+'</section>'
     body+='<section id="works" class="block-section works-section"><span class="eyebrow">WORK TYPES</span><h2>상담 가능한 서비스 유형</h2><div class="work-grid">'
     for name in site.get('workTypes',[]):body+='<span>'+h(name)+'</span>'
     body+='</div></section>'
@@ -145,7 +157,7 @@ def detail(site,page,pages,services,rates):
     body+=f'<h1>{h(page["title"])}</h1><p class="lead">{h(page["intro"])}</p><p class="service-hours">● {h(site.get("serviceHours","전화 상담"))}</p></div>'
     body+=_image(site,page['number']%len(site['imagePool']),'document-art','서비스 현장 안내용 공용 일러스트')+'</header>'
     body+='<div class="article-layout"><div>'+_sections(page)
-    body+='<section class="block-section rate-section"><h2>'+h(page['region'])+' '+h(site['serviceLabel'])+' 기본 요금</h2>'+_prices(site,rates,services,page['serviceIds'])+'</section>'
+    body+='<section class="block-section rate-section"><h2>'+h(page['region'])+' '+h(site['serviceLabel'])+(' 반나절 기준요금 상담' if site.get('id')=='onehour-sky' else ' 기본 요금')+'</h2>'+_prices(site,rates,services,page['serviceIds'])+'</section>'
     body+=_faq(page.get('faq',[]))+'</div><aside class="side-contact"><strong>현장 상담 안내</strong><p>현장 위치, 요청 범위와 희망 이용 시간을 알려주세요.</p>'+_phone(site,'전화하기')+'</aside></div>'
     body+=_call_section(site)+render_pagination(pages,page['number'])+'</main>'+_footer(site)
     return body
