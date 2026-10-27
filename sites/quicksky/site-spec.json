@@ -7,18 +7,19 @@
   "businessModel": "service-lead",
   "serviceScope": {
     "region": "서울특별시·경기도",
-    "granularity": "2026-10-12 기준 행정동",
+    "granularity": "2026-10-12 기준 지역명 원장 (법정동·행정동 혼합 가능, 전수 분류 미확인)",
     "facilities": null,
     "regionLedger": "data/regions/seoul_gyeonggi_current_dong.json",
-    "regionRows": 1732
+    "regionRows": 1732,
+    "regionLedgerClassification": "V4 NAME_CANDIDATES 유래 지역명 원장; 개별 법정동/행정동 구분 검증 전"
   },
   "pageTypes": [
     "메인 안내 1페이지",
-    "서울·경기 행정동별 스카이차 안내 1732페이지"
+    "서울·경기 지역명 원장별 스카이차 안내 1732페이지"
   ],
   "targetPageCount": 1733,
   "titlePattern": "{지역명} 스카이차 비용·장비 상담 | 빠른스카이",
-  "urlPattern": "/ (홈), /2.html부터 /1733.html까지 (행정동 원장 순서 고정)",
+  "urlPattern": "/ (홈), /2.html부터 /1733.html까지 (2026-10-12 지역명 원장 순서 고정)",
   "keywordGroups": {
     "primary": [
       "스카이차"
