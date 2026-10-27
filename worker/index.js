@@ -36,8 +36,70 @@ export default {
       env.ANALYTICS.writeDataPoint({blobs:[body.event,route],doubles:[1],indexes:[url.hostname]});
       return new Response(null,{status:204,headers:{'Cache-Control':'no-store'}});
     }
+    // Exact-authorized host only. workers.dev remains noindex and does not get
+    // the production sitemap or dynamically indexable documents.
+    const approvedHosts = new Set(['plants.nalmada.net','daysky.nalmada.net','flower.nalmada.net']);
+    const indexedHost = env.V5_STAGING === '1' &&
+      approvedHosts.has(env.V5_PUBLIC_HOST) &&
+      url.hostname.toLowerCase() === env.V5_PUBLIC_HOST;
+
+    // Keep production crawler policy and IndexNow proof independent of static
+    // asset edge routing, which has differed from verified uploaded files.
+    if (indexedHost && url.hostname.toLowerCase()==='flower.nalmada.net') {
+      if (url.pathname==='/robots.txt' &&
+          (request.method==='GET' || request.method==='HEAD')) {
+        const robots='User-agent: *\nAllow: /\nSitemap: https://flower.nalmada.net/sitemap.xml\n';
+        return new Response(request.method==='HEAD'?null:robots,{
+          status:200,headers:{'Content-Type':'text/plain; charset=utf-8',
+                             'Cache-Control':'public, max-age=300'}
+        });
+      }
+      const publicKey=env.FLOWER_INDEXNOW_KEY;
+      if (typeof publicKey==='string' && /^[0-9a-f]{32}$/.test(publicKey) &&
+          url.pathname==='/'+publicKey+'.txt' &&
+          (request.method==='GET' || request.method==='HEAD')) {
+        return new Response(request.method==='HEAD'?null:publicKey,{
+          status:200,headers:{'Content-Type':'text/plain; charset=utf-8',
+                             'Cache-Control':'public, max-age=300'}
+        });
+      }
+    }
+
+    // Cloudflare Asset binding has returned 404 for the uploaded sitemap.xml on
+    // this specific Worker. Derive the same validated 1081 URLs from the deployed
+    // 1080-hall search index instead of silently publishing a broken sitemap.
+    if (indexedHost && url.hostname.toLowerCase()==='flower.nalmada.net' &&
+        url.pathname==='/sitemap.xml' &&
+        (request.method==='GET' || request.method==='HEAD')) {
+      const indexUrl=new URL('/halls.json',url.origin);
+      const hallResponse=await env.ASSETS.fetch(new Request(indexUrl,request));
+      if (hallResponse.status!==200) return new Response('Hall index missing',{status:503});
+      let halls;
+      try { halls=await hallResponse.json(); }
+      catch { return new Response('Invalid hall index',{status:503}); }
+      if (!Array.isArray(halls) || halls.length!==1080) {
+        return new Response('Incomplete hall index',{status:503});
+      }
+      const seen=new Set();
+      const locs=['/'];
+      for (const hall of halls) {
+        if (typeof hall?.u!=='string' || !/^\/fh-[0-9a-f]{20}\.html$/.test(hall.u) ||
+            seen.has(hall.u)) return new Response('Invalid hall URL',{status:503});
+        seen.add(hall.u);
+        locs.push(hall.u);
+      }
+      const xml='<?xml version="1.0" encoding="UTF-8"?>'+
+        '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+
+        locs.map(path=>'<url><loc>https://flower.nalmada.net'+path+'</loc></url>').join('')+
+        '</urlset>';
+      return new Response(request.method==='HEAD'?null:xml,{
+        status:200,
+        headers:{'Content-Type':'application/xml; charset=utf-8',
+                 'Cache-Control':'public, max-age=600',
+                 'X-Robots-Tag':'index, follow'}
+      });
+    }
     // All staging assets go through the Worker, including / and 404 responses.
-    // This is intentionally independent of any custom-domain production headers.
     let response;
     if (url.pathname === '/') {
       url.pathname = '/index.html';
@@ -45,11 +107,7 @@ export default {
     } else {
       response = await env.ASSETS.fetch(request);
     }
-    // Only this user-approved hostname is indexable. Keep workers.dev blocked.
-    const approvedHosts = new Set(['plants.nalmada.net','daysky.nalmada.net']);
-    const indexedHost = env.V5_STAGING === '1' &&
-      approvedHosts.has(env.V5_PUBLIC_HOST) &&
-      url.hostname.toLowerCase() === env.V5_PUBLIC_HOST;
+
     if (env.V5_STAGING === '1' && !indexedHost) {
       const headers = new Headers(response.headers);
       headers.set('X-Robots-Tag', 'noindex, nofollow, noarchive');

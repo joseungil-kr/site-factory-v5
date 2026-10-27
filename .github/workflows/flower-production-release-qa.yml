@@ -1,0 +1,107 @@
+name: Nalmada Flower owner-authorized indexable 1080-page release QA
+on:
+  pull_request:
+    paths:
+      - 'scripts/build_flower_funeral_national.py'
+      - 'scripts/prepare_flower_funeral_preview.py'
+      - 'scripts/flower_design.py'
+      - 'data/flower/nalmada_release_authorization_20261027.json'
+      - 'data/flower/indexnow_public_key_20261027.json'
+      - 'worker/index.js'
+      - 'tests/flower_sitemap_worker.test.mjs'
+      - '.github/workflows/flower-production-release-qa.yml'
+permissions:
+  contents: read
+jobs:
+  production-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test production host XML sitemap and workers.dev noindex response
+        run: node tests/flower_sitemap_worker.test.mjs
+      - name: Confirm separate owner authorization, source provenance and current commercial evidence
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          src=Path('data/flower')
+          auth=json.loads((src/'nalmada_release_authorization_20261027.json').read_text())
+          original=json.loads((src/'v4_facilities_1080.snapshot.json').read_text())
+          professional=json.loads(Path('data/pools/flower_funeral_professional_600.v4.json').read_text())
+          catalog=json.loads((src/'nalmada_funeral_product_reference.json').read_text())
+          assert auth['authorizationDate']=='2026-10-27'
+          assert auth['scope']['publicReleaseAuthorized'] is True
+          assert original['publicationAllowed'] is False
+          assert professional['readyForPublication'] is False
+          assert catalog['commercialPublicationApproved'] is False
+          assert auth['facilities']['addressHiddenUntilConfirmed']
+          assert auth['facilities']['currentExistenceAllVerified'] is False
+          assert {p['id']:p['priceKRW'] for p in auth['products']['records']}=={'B201':59000,'B203':79000,'B205':109000}
+          print('OWNER RELEASE AUTH IS DISTINCT FROM IMMUTABLE UNVERIFIED SOURCE FLAGS')
+          PY
+      - name: Test actual group selections, 8 headings and reported facility regressions
+        run: python -m unittest discover -s tests -p 'test_flower_pool_semantics.py' -v
+      - name: Full-pair content-first QA then generate authorized public HTML
+        run: |
+          python -m py_compile scripts/build_flower_funeral_national.py scripts/prepare_flower_funeral_preview.py scripts/flower_design.py
+          python scripts/build_flower_funeral_national.py --audit-only --public
+          test ! -e dist/flower-funeral-national-preview/index.html
+          python scripts/build_flower_funeral_national.py --public
+          python scripts/prepare_flower_funeral_preview.py --public
+          python scripts/flower_visible_copy_check.py
+      - name: Inspect all 1080 canonical HTML, 1081 sitemap URLs and ownership key
+        run: |
+          python - <<'PY'
+          import json,xml.etree.ElementTree as ET
+          from pathlib import Path
+          out=Path('dist/flower-funeral-national-preview')
+          root=json.loads((out/'manifest.json').read_text())
+          report=json.loads(Path('reports/flower-funeral/pool-1080-1pct-audit.json').read_text())
+          key=json.loads(Path('data/flower/indexnow_public_key_20261027.json').read_text())
+          assert root['pageCount']==1080 and root['mode']=='production-indexable'
+          assert root['qaPasses'] and report['passes']
+          assert report['fullPairComparisons']==1165320 and report['fullPairFailures']==0
+          assert report['maximumSimilarity']<.49
+          assert report['renderedBodyScope'].startswith('Visible text')
+          pages=list(out.glob('fh-*.html'))
+          assert len(pages)==1080
+          links=[]
+          for path in pages:
+              text=path.read_text()
+              uri='https://flower.nalmada.net/'+path.name
+              assert '<meta name="robots" content="index,follow">' in text
+              assert '<link rel="canonical" href="'+uri+'">' in text
+              assert '날마다꽃' in text and '근조화환 주문 가격안내' in text
+              assert '2026.10.27 판매처 확인 가격' in text
+              assert '59,000원' in text and '79,000원' in text and '109,000원' in text
+              assert '원장 기재 주소' not in text
+              links.append(uri)
+          home=(out/'index.html').read_text()
+          assert '<meta name="robots" content="index,follow">' in home
+          assert '<link rel="canonical" href="https://flower.nalmada.net/">' in home
+          assert '<meta name="robots" content="noindex,nofollow">' in (out/'404.html').read_text()
+          assert (out/(key['key']+'.txt')).read_text()==key['key']
+          assert 'Allow: /' in (out/'robots.txt').read_text()
+          assert 'Sitemap: https://flower.nalmada.net/sitemap.xml' in (out/'robots.txt').read_text()
+          xml=ET.parse(out/'sitemap.xml')
+          sitemap=[x.text for x in xml.findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+          assert len(sitemap)==len(set(sitemap))==1081
+          assert set(sitemap)==set(links+['https://flower.nalmada.net/'])
+          assert 'flower.nalmada.net' in Path('worker/index.js').read_text()
+          print('PUBLIC_CANDIDATE_VALIDATED 1080 page canonical indexable, 1081 sitemap, owner key, noindex 404')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: flower-1080-owner-authorized-production-html
+          path: |
+            dist/flower-funeral-national-preview/
+            reports/flower-funeral/pool-1080-1pct-audit.json
+          if-no-files-found: error
+          retention-days: 14
