@@ -52,9 +52,10 @@ class QuickskyHomeOnlyTests(unittest.TestCase):
     def test_scope_fails_closed_when_any_essential_proof_is_missing(self):
         permitted=self.simulated_approved(self.site)
         self.assertEqual(len(read_service_site("quicksky",permitted,self.source)["pages"]),1733)
+        # Disabled approval is a safe noindex state, not a validation error.
+        # All other evidence flags must be present before home approval is valid.
         for field in ("imageAssetsApproved","domainOwnershipVerified",
-                      "homeIndexingApproved","homeBusinessFactsVerified",
-                      "homeContentQualityApproved"):
+                      "homeBusinessFactsVerified","homeContentQualityApproved"):
             x=deepcopy(permitted);x[field]=False
             with self.subTest(field=field):
                 with self.assertRaises(ConfigError):
