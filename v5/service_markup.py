@@ -15,7 +15,7 @@ def _tel(site):
 def _head(site,title,description,path,error=False):
     """Use exact-domain canonical only for explicitly authorized indexable releases."""
     quicksky=(site.get('id')=='quicksky'
-              and site.get('domain')=='https://quicksky.nalmada.com'
+              and site.get('domain')=='https://quicksky.nalmada.net'
               and site.get('publicIndexingScope')=='quicksky-seoul-gyeonggi-1733-20261027'
               and site.get('imageAssetsApproved') is True
               and site.get('contentQualityApproved') is True

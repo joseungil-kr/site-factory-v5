@@ -46,7 +46,7 @@ export default {
       response = await env.ASSETS.fetch(request);
     }
     // Only this user-approved hostname is indexable. Keep workers.dev blocked.
-    const approvedHosts = new Set(['plants.nalmada.net','daysky.nalmada.net','quicksky.nalmada.com']);
+    const approvedHosts = new Set(['plants.nalmada.net','daysky.nalmada.net','quicksky.nalmada.net']);
     const indexedHost = env.V5_STAGING === '1' &&
       approvedHosts.has(env.V5_PUBLIC_HOST) &&
       url.hostname.toLowerCase() === env.V5_PUBLIC_HOST;

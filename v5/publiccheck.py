@@ -22,7 +22,7 @@ def request_url(url,timeout=35):
 def check(site_id):
     data=read_site(site_id);site=data['site']
     service_quicksky=(site_id=='quicksky'
-        and site.get('domain')=='https://quicksky.nalmada.com'
+        and site.get('domain')=='https://quicksky.nalmada.net'
         and site.get('publicIndexingScope')=='quicksky-seoul-gyeonggi-1733-20261027'
         and site.get('publicIndexingApproved') is True
         and site.get('imageAssetsApproved') is True

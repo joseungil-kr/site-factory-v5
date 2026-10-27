@@ -25,7 +25,7 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
 
     def test_no_price_claim_or_cross_brand_leak(self):
         site=self.data["site"]
-        self.assertEqual(site["domain"],"https://quicksky.nalmada.com")
+        self.assertEqual(site["domain"],"https://quicksky.nalmada.net")
         self.assertEqual(site["brand"],"빠른스카이")
         self.assertEqual(site["pricingPolicy"],"consult-only")
         self.assertFalse(site["publishEnabled"])
@@ -68,7 +68,7 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
         self.assertIn('name="robots" content="noindex,nofollow"',preview)
         self.assertNotIn('rel="canonical"',preview)
         candidate=deepcopy(plan)
-        candidate["domain"]="https://quicksky.nalmada.net"
+        candidate["domain"]="https://quicksky.nalmada.com"
         candidate["imageAssetsApproved"]=True
         candidate["contentQualityApproved"]=True
         candidate["domainOwnershipVerified"]=True
@@ -76,11 +76,11 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
             read_service_site("quicksky",candidate,root)
         # Simulated all-positive flags demonstrate exact-host gating only;
         # actual published site keeps these flags FALSE until external proof.
-        candidate["domain"]="https://quicksky.nalmada.com"
+        candidate["domain"]="https://quicksky.nalmada.net"
         idx=_head(candidate,"빠른스카이 스카이차","설명","/2.html")
         self.assertIn('name="robots" content="index,follow"',idx)
-        self.assertIn('href="https://quicksky.nalmada.com/2.html"',idx)
-        candidate["domain"]="https://quicksky.nalmada.net"
+        self.assertIn('href="https://quicksky.nalmada.net/2.html"',idx)
+        candidate["domain"]="https://quicksky.nalmada.com"
         denied=_head(candidate,"빠른스카이 스카이차","설명","/2.html")
         self.assertIn('name="robots" content="noindex,nofollow"',denied)
         with self.assertRaises(ConfigError):

@@ -13,7 +13,7 @@ from .engine import report_dir
 
 def submission(site_id,key,*,submit=False):
     data=read_site(site_id);site=data['site']
-    quicksky_public=(site_id=='quicksky' and site.get('domain')=='https://quicksky.nalmada.com'
+    quicksky_public=(site_id=='quicksky' and site.get('domain')=='https://quicksky.nalmada.net'
         and site.get('publicIndexingScope')=='quicksky-seoul-gyeonggi-1733-20261027'
         and site.get('publicIndexingApproved') is True
         and site.get('imageAssetsApproved') is True

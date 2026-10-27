@@ -97,7 +97,7 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
                 and site.get('publicIndexingApproved',False)
                 and ((site.get('publicIndexingScope')=='daysky-ansan-29-20261025' and len(data['pages'])==29)
                   or (site.get('publicIndexingScope')=='daysky-seoul-gyeonggi-1736-20261025' and len(data['pages'])==1736)))
-        quicksky=(site['id']=='quicksky' and site['domain']=='https://quicksky.nalmada.com'
+        quicksky=(site['id']=='quicksky' and site['domain']=='https://quicksky.nalmada.net'
                   and site.get('publicIndexingScope')=='quicksky-seoul-gyeonggi-1733-20261027'
                   and site.get('publicIndexingApproved',False)
                   and site.get('imageAssetsApproved') is True

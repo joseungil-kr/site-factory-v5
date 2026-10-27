@@ -18,7 +18,7 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
     if site.get('publicIndexingApproved'):
         daysky=(site_id=='daysky' and site.get('domain')=='https://daysky.nalmada.net'
                 and site.get('publicIndexingScope') in ('daysky-ansan-29-20261025','daysky-seoul-gyeonggi-1736-20261025'))
-        quicksky=(site_id=='quicksky' and site.get('domain')=='https://quicksky.nalmada.com'
+        quicksky=(site_id=='quicksky' and site.get('domain')=='https://quicksky.nalmada.net'
                 and site.get('publicIndexingScope')=='quicksky-seoul-gyeonggi-1733-20261027'
                 and site.get('imageAssetsApproved') is True
                 and site.get('contentQualityApproved') is True

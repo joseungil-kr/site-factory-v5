@@ -43,7 +43,7 @@ jobs:
           assert plan['ready'] and plan['approved'],plan
           site=read_site('quicksky')
           x=site['site']
-          assert x['domain']=='https://quicksky.nalmada.com'
+          assert x['domain']=='https://quicksky.nalmada.net'
           assert x['brand']=='빠른스카이' and x['phone']=='010-5322-1952'
           assert x['status']=='preview' and not x['publishEnabled']
           assert not x['publicIndexingApproved'] and not x['indexNow']['enabled']
