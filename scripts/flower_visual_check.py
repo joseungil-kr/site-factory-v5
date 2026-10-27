@@ -86,7 +86,7 @@ def main():
                 page.goto(origin+"/"+sample,wait_until="networkidle",timeout=60000)
                 data=inspect(page,"hall-"+tag)
                 assert page.locator("h1").count()==1
-                assert page.locator(".article-card .text-section").count()==6
+                assert page.locator(".article-card .text-section").count()==7
                 assert page.locator("#prices .product-card").count()==3
                 assert page.locator(".aside .btn").count()==1
                 assert "원장 기재 주소" not in page.content() and "외부 검증 전" not in page.content()
