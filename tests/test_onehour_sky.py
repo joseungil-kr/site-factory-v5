@@ -1,6 +1,7 @@
 """Onehour Sky real V5 build/input regression tests; never touch other sites."""
 import json
 import unittest
+from html import escape
 from pathlib import Path
 from v5.config import ROOT, read_site
 from v5.onehour_sky_pages import _rows, _pool, EXPECTED_PAGES
@@ -49,7 +50,7 @@ class OneHourSky(unittest.TestCase):
         home_html = home(site, pages[0], pages, data["services"], data["rates"])
         detail_html = detail(site, pages[1], pages, data["services"], data["rates"])
         for content, page in ((home_html, pages[0]), (detail_html, pages[1])):
-            self.assertIn("<h1>" + page["title"] + "</h1>", content)
+            self.assertIn("<h1>" + escape(page["title"]) + "</h1>", content)
             self.assertIn("1시간 작업도 반나절 요금 기준", content)
             self.assertIn('content="noindex,nofollow"', content)
             self.assertNotIn('rel="canonical"', content)
