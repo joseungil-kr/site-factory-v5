@@ -60,23 +60,22 @@ def price_cards(class_name="products"):
     source=products()
     cards=[]
     for p in source["products"]:
-        cards.append('<div class="product-card"><div class="product-photo">'+photo(p["id"]+".jpg",p["name"]+" 공통 상품 사진")+'</div>'
+        cards.append('<div class="product-card"><div class="product-photo">'+photo(p["id"]+".jpg",p["name"]+" 상품 이미지")+'</div>'
                      '<div class="info"><h3>'+escape(p["name"])+'</h3>'
-                     '<span class="product-price-label reference">2026-10-22 판매처 확인 참고가</span>'
+                     '<span class="product-price-label reference">2026.10.22 판매처 등록 가격</span>'
                      '<div class="product-price">'+format(p["referencePrice"],",")+'원</div>'
                      '<a class="more" href="'+escape(p["orderUrl"],quote=True)+'" target="_blank" rel="noopener noreferrer">'
                      '판매처 상품정보 보기 ↗</a></div></div>')
     return '<div class="'+escape(class_name,quote=True)+'">'+"".join(cards)+'</div>'
 
 def reference_note():
-    return ('<div class="notice">가격은 2026-10-22 기존 꽃이랑 판매처 확인 자료의 <b>참고 금액</b>으로, '
-            '날마다꽃의 현재 최종 판매가·재고·해당 장례식장 배송비를 보장하지 않습니다. '
-            '주문 전에 <a href="tel:18440644">1844-0644</a>로 확인해 주세요.</div>')
+    """Internal price provenance belongs in the private catalogue/QA, not customer UI."""
+    return ""
 
 def footer():
     return ('<footer class="footer"><div class="wrap inner">'
             '<div><b>✿ 날마다꽃</b><p>전국 꽃배달 상담 · 1844-0644</p></div>'
-            '<p>디자인 검수용 페이지 · 시설 및 상품 정보 확인 중 · 검색 제외(noindex)</p>'
+            '<p>근조화환 · 축하화환 · 꽃바구니 · 관엽식물</p>'
             '</div></footer><div class="mobile-call"><a class="btn" href="tel:18440644">'
             '☎ 날마다꽃 전화 상담 1844-0644</a></div></body></html>')
 
