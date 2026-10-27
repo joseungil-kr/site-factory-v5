@@ -11,7 +11,7 @@ import re
 ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/"dist/flower-funeral-national-preview"
 FORBIDDEN=(
-    r"검수용",r"공사\s*중",r"준비\s*중",r"미검증",r"미확정",
+    r"검수용",r"공사\s*중",r"(?:사이트|페이지|상품\s*정보|서비스|콘텐츠|디자인)\s*(?:가\s*)?준비\s*중",r"미검증",r"(?:가격|상품|이미지|시설\s*정보|판매가)\s*미확정",
     r"보유\s*상품\s*사진",r"공통\s*상품\s*사진",
     r"실제\s*상품\s*구성은\s*달라질\s*수\s*있습니다",
     r"장례식장\s*건물\s*사진이\s*아닌",r"원장\s*(?:기재|기준)",
