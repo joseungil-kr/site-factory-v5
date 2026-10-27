@@ -57,6 +57,10 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
             self.assertNotIn("기본 요금</h2>",text)
             self.assertNotIn("300,000원",text)
         self.assertIn("비용 상담 안내 보기",front)
+        # Licensed photos are generic skycar worksites; no photo is represented
+        # as a particular 1t/3.5t/5t model or as directly owned equipment.
+        self.assertNotIn('class="equip-art"',front)
+        self.assertIn('class="hero-art"',front)
         self.assertIn("스카이차 비용 상담 안내</h2>",front)
         self.assertIn("스카이차 비용 상담 안내</h2>",page)
         self.assertNotIn("<table",front)
@@ -121,6 +125,7 @@ class QuickskyIsolatedSiteTests(unittest.TestCase):
         page=daysky["pages"][0]
         rendered=home(site,page,daysky["pages"],daysky["services"],daysky["rates"])
         self.assertIn("작업 요금표 보기",rendered)
+        self.assertIn('class="equip-art"',rendered)
         self.assertIn("스카이차 기본 요금",rendered)
         self.assertIn("<table",rendered)
         self.assertIn("300,000원",rendered)
