@@ -116,7 +116,7 @@ def home(site,page,pages,services,rates):
            '<span class="eyebrow">LOCAL SERVICE CONSULTATION</span>'
            f'<h1>{h(site["region"])} <em>{h(site["serviceLabel"])} 작업</em><br>필요할 때, {h(site["brand"])}</h1>'
            f'<p>{h(page["intro"])}</p>'
-           '<div class="hero-actions">'+_phone(site)+'<a class="outline-button" href="#rates">'+('비용 상담 안내' if site.get('pricingPolicy')=='consult-only' else '작업 요금표 보기')+'</a></div>'
+           '<div class="hero-actions">'+_phone(site)+'<a class="outline-button" href="#rates">'+('비용 상담 안내 보기' if site.get('pricingPolicy')=='consult-only' else '작업 요금표 보기')+'</a></div>'
            f'<p class="service-hours">● {h(site.get("serviceHours","전화 상담"))}</p></div>'
            '<div class="hero-visual">'+_image(site,0,'hero-art','서비스 현장 안내용 공용 일러스트')+'</div></section>')
     body+=('<section class="intro-tiles"><div><span class="accent-number">01</span><h2>'+h(' · '.join(s['name'] for s in services))+'</h2>'
@@ -135,7 +135,7 @@ def home(site,page,pages,services,rates):
     for i,s in enumerate(services):
         body+='<div class="equip-card">'+_image(site,i+1,'equip-art','서비스 안내용 공용 일러스트')+'<h3>'+h(s['name'])+'</h3><p>'+h(s['description'])+'</p></div>'
     body+='</div></section>'
-    body+='<section id="rates" class="block-section rate-section"><span class="eyebrow">PRICING</span><h2>'+h(site['serviceLabel'])+(' 비용 상담' if site.get('pricingPolicy')=='consult-only' else ' 기본 요금')+'</h2>'+_prices(site,rates,services)+'</section>'
+    body+='<section id="rates" class="block-section rate-section"><span class="eyebrow">PRICING</span><h2>'+h(site['serviceLabel'])+(' 비용 상담 안내' if site.get('pricingPolicy')=='consult-only' else ' 기본 요금')+'</h2>'+_prices(site,rates,services)+'</section>'
     body+='<section id="works" class="block-section works-section"><span class="eyebrow">WORK TYPES</span><h2>상담 가능한 서비스 유형</h2><div class="work-grid">'
     for name in site.get('workTypes',[]):body+='<span>'+h(name)+'</span>'
     body+='</div></section>'
