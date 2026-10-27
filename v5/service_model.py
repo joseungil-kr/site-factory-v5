@@ -100,7 +100,8 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
             fail('Original 29-page scope disables IndexNow')
     if site_id in ('daysky','onehour-sky'):
         public=json.dumps({'site':site,'pages':pages,'services':services,'rates':rates},ensure_ascii=False)
-        if any(x in public for x in ('영진','1844-0644','fwith','당일스카이','빠른스카이')):
+        forbidden=('영진','1844-0644','fwith') if site_id=='daysky' else ('당일스카이','빠른스카이','영진','1844-0644','fwith')
+        if any(x in public for x in forbidden):
             fail('foreign customer branding detected')
     from .addons import validate as validate_addons
     validate_addons(site.get('addOns'), pages)
