@@ -73,7 +73,7 @@ def main(argv=None):
         elif args.command=='build':
             from .engine import build
             data=build(args.site,mode=args.mode)
-            print(json.dumps({'status':'ok','site':args.site,'pages':data['manifest']['pageCount'],'files':data['manifest']['assetFileCount'],'indexable':args.mode in ('publish','public-indexing'),'output':data['output']},ensure_ascii=False,indent=2))
+            print(json.dumps({'status':'ok','site':args.site,'pages':data['manifest']['pageCount'],'files':data['manifest']['assetFileCount'],'indexable':args.mode in ('publish','public-indexing','home-indexing'),'output':data['output']},ensure_ascii=False,indent=2))
         elif args.command=='audit':
             from .audit import audit
             data=audit(args.site)
