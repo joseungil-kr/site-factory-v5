@@ -8,6 +8,7 @@ on:
       - 'data/flower/nalmada_release_authorization_20261027.json'
       - 'data/flower/indexnow_public_key_20261027.json'
       - 'worker/index.js'
+      - 'tests/flower_sitemap_worker.test.mjs'
       - '.github/workflows/flower-production-release-qa.yml'
 permissions:
   contents: read
@@ -20,6 +21,11 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test production host XML sitemap and workers.dev noindex response
+        run: node tests/flower_sitemap_worker.test.mjs
       - name: Confirm separate owner authorization, source provenance and current commercial evidence
         run: |
           python - <<'PY'
