@@ -149,6 +149,8 @@ def home(site,page,pages,services,rates):
         card_photo='' if site.get('id')=='quicksky' else _image(site,i+1,'equip-art','서비스 안내용 공용 일러스트')
         body+='<div class="equip-card">'+card_photo+'<h3>'+h(s['name'])+'</h3><p>'+h(s['description'])+'</p></div>'
     body+='</div></section>'
+    if site.get('id')=='quicksky':
+        body+='<p class="service-note">서울·경기 스카이차 상담 시 실제 배차 가능 지역과 장비 종류, 이용 일정은 현장 정보를 확인해 안내합니다. 특정 차량의 즉시 출동이나 작업 가능 여부를 미리 보장하지 않습니다.</p>'
     body+='<section id="rates" class="block-section rate-section"><span class="eyebrow">PRICING</span><h2>'+h(site['serviceLabel'])+(' 비용 상담 안내' if site.get('pricingPolicy')=='consult-only' else ' 기본 요금')+'</h2>'+_prices(site,rates,services)+'</section>'
     body+='<section id="works" class="block-section works-section"><span class="eyebrow">WORK TYPES</span><h2>상담 가능한 서비스 유형</h2><div class="work-grid">'
     for name in site.get('workTypes',[]):body+='<span>'+h(name)+'</span>'
