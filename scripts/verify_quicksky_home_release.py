@@ -50,7 +50,14 @@ def verify():
             if text.count(canonical)!=1 or 'noindex' in headers.get("X-Robots-Tag","").lower():
                 raise RuntimeError("Home public canonical or robots header wrong")
         elif 'rel="canonical"' in text:
-            raise RuntimeError("Preview or region incorrectly canonicalized")
+            # The workers.dev origin shares homepage HTML with the verified custom
+            # domain; an exact PUBLIC canonical is acceptable only under a
+            # noindex HTTP header. No regional canonical is ever acceptable.
+            allowed_preview_home=(base==PREVIEW and path=='/'
+                and text.count(canonical)==1
+                and 'noindex' in headers.get('X-Robots-Tag','').lower())
+            if not allowed_preview_home:
+                raise RuntimeError("Preview or region incorrectly canonicalized")
         if robots=="noindex" and 'noindex' not in headers.get("X-Robots-Tag","").lower():
             raise RuntimeError("Regional or preview HTTP X-Robots-Tag missing noindex")
         if base==PREVIEW and 'noindex' not in headers.get("X-Robots-Tag","").lower():
