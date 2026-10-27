@@ -22,6 +22,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Regression-check 1080 topic groups and final HTML scope
+        run: python -m unittest discover -s tests -p 'test_flower_pool_semantics.py' -v
       - name: Audit 1080 pages then build B / D layouts
         run: |
           python scripts/build_flower_funeral_national.py
