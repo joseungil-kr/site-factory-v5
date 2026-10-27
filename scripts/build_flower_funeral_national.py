@@ -119,9 +119,9 @@ def create_content(facility, assignment, curated, supplement, eligible):
     title=HALL_TITLE.format(hall=facility["facilityName"])
     # The first five items preserve the V4 editorial assignment. Extra scenario
     # paragraphs are explicitly optional/general guidance, not venue-specific facts.
-    lead=(f'{facility["regionName"]} 원장에 기록된 {facility["facilityName"]}으로 근조화환을 '
+    lead=(f'{facility["regionName"]}의 {facility["facilityName"]}으로 근조화환을 '
           '준비하신다면 빈소와 상주명, 장례 일정부터 확인해 주세요. '
-          '아래 안내는 주문 시 참고할 일반적인 상황을 조합한 문서입니다.')
+          '근조화환 종류와 리본 문구, 주문 전에 확인할 내용을 안내합니다.')
     sections=[
         ("부고를 받고 근조화환을 준비할 때",fields["opening"]+supplemental["intro"]),
         ("장례식장 위치와 빈소를 확인하는 순서",fields["body"]+supplemental["facility"]),
@@ -285,7 +285,6 @@ def render(facility,c):
     """
     name=escape(facility["facilityName"])
     region=escape(facility["regionName"])
-    address=escape(facility["sourceAddress"])
     title=escape(c["title"])
     paragraphs=[]
     for heading, parts in c["sections"]:
@@ -295,7 +294,7 @@ def render(facility,c):
     price_section=('<section id="prices" class="price-box">'
                    '<div class="eyebrow">CONDOLENCE WREATHS · PRODUCT GUIDE</div>'
                    '<h2>근조화환 종류별 가격 안내</h2>'
-                   '<p>기본형·고급형·특대형 상품 구성과 참고 가격을 비교해 보세요.</p>'
+                   '<p>기본형·고급형·특대형 근조화환의 상품과 가격을 비교해 보세요.</p>'
                    +price_cards()+reference_note()+'</section>')
     paragraphs.insert(2,price_section)
     faq=('<section class="faq" id="faq"><h2>자주 묻는 질문</h2>'+
@@ -310,19 +309,16 @@ def render(facility,c):
           '<span>☎ 전화 주문 상담</span><span>🌿 근조화환 종류별 비교</span></div>'
           '<div class="hero-actions"><a class="btn" href="#prices">화환 종류·가격 보기</a>'
           '<a class="btn btn-outline" href="tel:18440644">☎ 1844-0644</a></div>'
-          '<p class="reference">원장 기재 주소(현행 정보 미검증): '+address+'</p>'
-          '</div><div class="hero-visual">'+photo("B203.jpg","근조 고급 3단 화환 공통 상품 사진","eager")+
-          '<span class="photo-label">장례식장 건물 사진이 아닌 공통 근조화환 상품 사진</span>'
+          '</div><div class="hero-visual">'+photo("B203.jpg","근조 고급 3단 화환","eager")+
           '</div></div></section>')
     sidebar=('<aside class="aside"><div class="side-card tint"><h3>근조화환 전화 상담</h3>'
              '<p>장례식장명·빈소·상주명·희망일·리본 문구를 준비해 주세요.</p>'
              '<a class="btn" href="tel:18440644">☎ 1844-0644 전화하기</a></div>'
              '<div class="side-card"><h3>페이지 바로가기</h3>'
-             '<p><a href="#prices">근조화환 종류와 참고 가격</a></p>'
+             '<p><a href="#prices">근조화환 종류와 가격</a></p>'
              '<p><a href="#faq">자주 묻는 질문</a></p>'
              '<p><a href="/">전국 장례식장 찾기</a></p></div>'
-             '<div class="notice">주소와 장례식장 운영 여부는 외부 검증 전입니다. '
-             '원장 기재 정보가 실제와 다를 수 있으므로 주문 전 확인해 주세요.</div></aside>')
+             '</aside>')
     return (head(c["title"]+" | "+facility["regionName"]+" | 날마다꽃",c["lead"])+
             header()+'<main id="main">'+hero+
             '<div class="wrap layout"><article class="article-card">'+
