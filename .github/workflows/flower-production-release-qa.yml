@@ -81,7 +81,6 @@ jobs:
           assert '<meta name="robots" content="index,follow">' in home
           assert '<link rel="canonical" href="https://flower.nalmada.net/">' in home
           assert '<meta name="robots" content="noindex,nofollow">' in (out/'404.html').read_text()
-          assert (out/key['key'].join(['',' .txt']).replace(' ','')).exists() is False if False else True
           assert (out/(key['key']+'.txt')).read_text()==key['key']
           assert 'Allow: /' in (out/'robots.txt').read_text()
           assert 'Sitemap: https://flower.nalmada.net/sitemap.xml' in (out/'robots.txt').read_text()
