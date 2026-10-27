@@ -1,0 +1,32 @@
+name: Quicksky isolated site preflight
+on:
+  pull_request:
+    paths:
+      - 'sites/quicksky/**'
+      - 'v5/quicksky_pages.py'
+      - 'v5/service_model.py'
+      - 'v5/service_markup.py'
+      - 'tests/test_quicksky.py'
+      - '.github/workflows/quicksky-plan-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  offline-preflight:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate site configuration and regional generator (no production build)
+        run: python -m unittest discover -s tests -p 'test_quicksky.py' -v
+      - name: Confirm site creation approval gate remains closed
+        run: |
+          python - <<'PY'
+          from v5.site_plan import check_site
+          result=check_site('quicksky')
+          assert not result['ready'] and 'plan not approved' in result['errors'],result
+          print('Quicksky creation awaiting plan approval; no deploy or indexing')
+          PY
