@@ -21,7 +21,18 @@ def _head(site,title,description,path,error=False):
               and site.get('contentQualityApproved') is True
               and site.get('domainOwnershipVerified') is True)
     daysky=(site.get('id')=='daysky' and site.get('domain')=='https://daysky.nalmada.net')
-    indexable=(not error and site.get('publicIndexingApproved',False) and (daysky or quicksky))
+    home_only=(site.get('id')=='quicksky'
+               and site.get('domain')=='https://quicksky.nalmada.net'
+               and site.get('homeIndexingScope')=='quicksky-home-1-20261027'
+               and site.get('homeIndexingApproved') is True
+               and site.get('homeBusinessFactsVerified') is True
+               and site.get('homeContentQualityApproved') is True
+               and site.get('imageAssetsApproved') is True
+               and site.get('domainOwnershipVerified') is True
+               and site.get('publicIndexingApproved') is False
+               and path=='/')
+    indexable=(not error and ((site.get('publicIndexingApproved',False) and (daysky or quicksky))
+               or home_only))
     robots='index,follow' if indexable else 'noindex,nofollow'
     canonical=('<link rel="canonical" href="'+h(site['domain'].rstrip('/')+path)+'">'
                if indexable else '')
