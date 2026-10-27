@@ -1,3 +1,5 @@
+> **현행화 (2026-10-27 11:18 UTC):** 이 문서는 11:15 UTC의 실제 도메인 연결 전에 작성된 이전 상태 기록입니다. 현재 `quicksky.nalmada.net`에 기존 `sfv5-quicksky-preview` Worker가 연결됐으며 HTTP 200/404·noindex가 독립 검증됐습니다. 최신 사실·12주제×서울/경기 24개 표본·사진 SHA와 미해결 검수는 [QUICKSKY_LIVE_CONTENT_AUDIT_20261027.md](QUICKSKY_LIVE_CONTENT_AUDIT_20261027.md)를 우선 참조하세요. **검색 공개, IndexNow, 사진 권리/서비스 제공 실체는 미검증입니다.** 아래 DNS/Route 403 기록은 연결 *이전* API 사전검사 결과이며, 현재 운영 연결 실패를 의미하지 않습니다.
+
 # 빠른스카이 V5 — 2026-10-27 운영 배포 준비·검증 현황
 
 ## 최종 도메인 정정
