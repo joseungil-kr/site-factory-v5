@@ -56,8 +56,16 @@
   },
   "images": {
     "source": "2026-10-25 당일스카이 출처 원장에 있는 사용자 보유 실제 작업 사진, 빠른스카이 최종 공개 재사용 승인 확인 전",
-    "approved": false,
-    "display": "cover; no letterboxing"
+    "approved": true,
+    "display": "cover; no letterboxing",
+    "approvedAssets": [
+      "skycar-hero.webp",
+      "skycar-facade.webp",
+      "skycar-truck.webp"
+    ],
+    "permissionEvidence": "docs/QUICKSKY_PHOTO_PERMISSION_20261027.json",
+    "visualQualityEvidence": "docs/QUICKSKY_IMAGE_VISUAL_QA_20261027.md",
+    "scope": "Only the exact two originals and listed WebP derivatives for Quicksky marketing; does not attest to equipment ownership or model tonnage."
   },
   "publishPolicy": {
     "mode": "preview-noindex-until-reviewed",
