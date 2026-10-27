@@ -163,6 +163,11 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
             if site.get('indexNow',{}).get('enabled',False):
                 key=site['indexNow']['key']
                 _write_file(tmp,key+'.txt',key+'\n')
+        # New scoped sites must not ship draft-status text in visitor-visible HTML.
+        # Legacy sites without site-spec.json remain unaffected by this new gate.
+        if (ROOT/'sites'/site_id/'site-spec.json').is_file():
+            from .visitor_copy import require_clean_html
+            require_clean_html(tmp)
         manifest=_manifest(data,tmp,mode)
         if len(manifest['files'])>site['staticAssetSoftLimit']:
             raise ConfigError('File count exceeds configured Worker asset soft limit')
