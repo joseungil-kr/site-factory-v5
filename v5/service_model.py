@@ -42,6 +42,9 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
     if rates.get('currency')!='KRW' or rates.get('vatIncluded') is not False:fail('only VAT-exclusive KRW prices supported')
     if not isinstance(regions,dict) or not isinstance(regions.get('regions'),list):fail('missing region ledger')
     if links or special:fail('service v1 has no webshop special pages or product links')
+    if site_id=='onehour-sky':
+        from .onehour_sky_pages import expand
+        pages,regions=expand(pages,regions)
     if site_id=='daysky' and site.get('publicIndexingScope')=='daysky-seoul-gyeonggi-1736-20261025':
         from .skycar_pool import candidates
         original, generated, _ = candidates()
@@ -57,7 +60,12 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
     unique_by(services,'id','equipment id');unique_by(rates['plans'],'serviceId','rate id')
     services_by_id={s['id']:s for s in services}
     plans={r['serviceId']:r for r in rates['plans']}
-    if set(services_by_id)!=set(plans):fail('rate plans and equipment mismatch')
+    if site_id=='onehour-sky':
+        if site.get('pricingPolicy')!='half-day-minimum-consult' or plans:
+            fail('Onehour billing must be a verified consultation-only half-day minimum; numeric rate tables forbidden')
+        if not site.get('minimumBillingText') or '반나절' not in site['minimumBillingText']:
+            fail('Onehour requires half-day minimum billing disclosure')
+    elif set(services_by_id)!=set(plans):fail('rate plans and equipment mismatch')
     for s in services:
         if not re.fullmatch(r'[a-z0-9-]{2,40}',str(s['id'])) or not s.get('name') or not s.get('description'):
             fail('invalid equipment')
@@ -80,7 +88,7 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
             fail('incomplete FAQ')
     from .markup import filename
     allowed={'/'}|{'/'+filename(x['number']) for x in pages}
-    if site_id=='daysky':
+    if site_id in ('daysky','onehour-sky'):
         allowed.update({'/#rates','/#works','/#regions'})
     for nav in site.get('navigation',[]):
         if nav.get('href') not in allowed or not nav.get('label'):fail('navigation refers to nonexistent page')
@@ -90,9 +98,10 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
             fail('Daysky page count differs from its explicit indexing scope')
         if target==29 and site.get('indexNow',{}).get('enabled'):
             fail('Original 29-page scope disables IndexNow')
-    if site_id=='daysky':
+    if site_id in ('daysky','onehour-sky'):
         public=json.dumps({'site':site,'pages':pages,'services':services,'rates':rates},ensure_ascii=False)
-        if any(x in public for x in ('영진','1844-0644','fwith')):fail('foreign customer branding detected')
+        if any(x in public for x in ('영진','1844-0644','fwith','당일스카이','빠른스카이')):
+            fail('foreign customer branding detected')
     from .addons import validate as validate_addons
     validate_addons(site.get('addOns'), pages)
     return {'site':site,'pages':ordered,'products':[],'services':services,'rates':rates,
