@@ -9,6 +9,7 @@ const halls=Array.from({length:1080},(_,i)=>({
 const env={
   V5_STAGING:'1',
   V5_PUBLIC_HOST:'flower.nalmada.net',
+  FLOWER_INDEXNOW_KEY:'a8268664ba94ac17777f7d37683b253b',
   ASSETS:{
     fetch:async req=>{
       const path=new URL(req.url).pathname;
@@ -29,6 +30,16 @@ assert.match(xml,/<loc>https:\/\/flower.nalmada.net\/fh-00000000000000000000.htm
 const head=await worker.fetch(new Request('https://flower.nalmada.net/sitemap.xml',{method:'HEAD'}),env);
 assert.equal(head.status,200);
 assert.equal(await head.text(),'');
+
+const robots=await worker.fetch(new Request('https://flower.nalmada.net/robots.txt'),env);
+assert.equal(robots.status,200);
+const robotsText=await robots.text();
+assert.match(robotsText,/Allow: \//);
+assert.match(robotsText,/Sitemap: https:\/\/flower.nalmada.net\/sitemap.xml/);
+assert.doesNotMatch(robotsText,/Disallow: \//);
+const proof=await worker.fetch(new Request('https://flower.nalmada.net/a8268664ba94ac17777f7d37683b253b.txt'),env);
+assert.equal(proof.status,200);
+assert.equal(await proof.text(),'a8268664ba94ac17777f7d37683b253b');
 
 const preview=await worker.fetch(new Request('https://sfv5-nalmada-flower-preview.joseungil.workers.dev/sitemap.xml'),env);
 assert.equal(preview.status,404);
