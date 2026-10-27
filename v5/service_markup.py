@@ -133,7 +133,10 @@ def home(site,page,pages,services,rates):
         body+='</section>'
     body+='<section id="equipment" class="block-section"><span class="eyebrow">SERVICE OPTIONS</span><h2>서비스 항목 안내</h2><div class="equip-grid">'
     for i,s in enumerate(services):
-        body+='<div class="equip-card">'+_image(site,i+1,'equip-art','서비스 안내용 공용 일러스트')+'<h3>'+h(s['name'])+'</h3><p>'+h(s['description'])+'</p></div>'
+        # Quicksky's licensed generic worksite photos have no verified per-tonnage model identity.
+        # Do not position one beside a specific 1t/3.5t/5t label as evidence of that vehicle.
+        card_photo='' if site.get('id')=='quicksky' else _image(site,i+1,'equip-art','서비스 안내용 공용 일러스트')
+        body+='<div class="equip-card">'+card_photo+'<h3>'+h(s['name'])+'</h3><p>'+h(s['description'])+'</p></div>'
     body+='</div></section>'
     body+='<section id="rates" class="block-section rate-section"><span class="eyebrow">PRICING</span><h2>'+h(site['serviceLabel'])+(' 비용 상담 안내' if site.get('pricingPolicy')=='consult-only' else ' 기본 요금')+'</h2>'+_prices(site,rates,services)+'</section>'
     body+='<section id="works" class="block-section works-section"><span class="eyebrow">WORK TYPES</span><h2>상담 가능한 서비스 유형</h2><div class="work-grid">'
