@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "siteId": "onehour-sky",
+  "approved": false,
+  "domain": "https://1hrsky.nalmada.net",
+  "brand": "한시간스카이",
+  "businessModel": "service-lead",
+  "serviceScope": {
+    "region": "전국",
+    "granularity": "전국 시·군·구를 기본 후보로 검토하고 행정동·읍면동의 추가 생성은 공식 지역명 원장 및 지역별 실질 정보 확인 후 결정",
+    "facilities": null,
+    "sourceLedger": null,
+    "validatedRegionCount": null
+  },
+  "pageTypes": [
+    "메인 서비스·요금정책 안내",
+    "지역별 스카이차 1시간 작업·반일 작업 안내",
+    "작업 종류별 1시간/반일 상담 가이드"
+  ],
+  "targetPageCount": null,
+  "titlePattern": "{지역명} 스카이차 1시간 작업, 반일작업 전문 '한시간스카이'",
+  "urlPattern": "/ (메인), /2.html부터 순번 고정 지역 페이지 (최종 총수·지역 원장 확정 전 URL 발행 금지)",
+  "keywordGroups": {
+    "primary": [
+      "{지역명} 스카이차 1시간 작업",
+      "{지역명} 스카이차 반일작업"
+    ],
+    "secondary": [
+      "1시간 스카이차 비용",
+      "스카이차 반나절 요금",
+      "가까운 스카이차 배차",
+      "스카이차 간판 작업",
+      "스카이차 외벽 보수",
+      "스카이차 간단 점검"
+    ]
+  },
+  "copyPoolPlan": {
+    "industry": "스카이차 단시간·반일 작업",
+    "source": "data/pools/onehour_sky_copy_pool.json — 원문 요청 및 새롭게 작성한 독립 문장. Daysky/Quicksky 본문을 복사하지 않음.",
+    "sentenceTarget": 90,
+    "contentPolicy": "작업 종류, 진입 조건, 짧은 작업 시간 계획, 현장 안전, 상담 체크리스트를 조합. 지역명만 교체하는 문서는 색인 대상으로 승인하지 않음.",
+    "differentiation": "지역별 실제 배차 가능 범위·작업 현장/사진 등 검증 가능한 근거가 있는 페이지부터 선택 공개"
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-jaccard",
+    "thresholdExclusive": 0.49,
+    "sampleFraction": 0.01,
+    "seed": 20261027,
+    "population": "동일 사이트 초안 전 모수; Daysky/Quicksky 간 교차 유사도도 별도 검토",
+    "qualityRequirement": "유사도 통과만으로 고유 지역 정보·색인 적합성을 입증하지 않음"
+  },
+  "conversion": {
+    "phone": null,
+    "phoneCandidate": "010-5322-1952",
+    "phoneCandidateProvenance": "기존 Quicksky/Daysky 사이트에서 확인, 한시간스카이 전용 사용 승인은 아직 확인되지 않음",
+    "orderUrl": null,
+    "mode": "전화 견적 상담",
+    "callChecklist": [
+      "정확한 작업 주소",
+      "작업 종류 및 목표 높이·수평거리",
+      "희망 시작 시각",
+      "실제 작업 예상 시간",
+      "차량 진입·주차·아웃트리거 공간",
+      "현장 사진과 장애물"
+    ]
+  },
+  "images": {
+    "source": "기존 Daysky 보유 원본 사진 2종 및 WebP 3개 사용 후보; 신규 브랜드용 이용 권리 별도 확인",
+    "approved": false,
+    "visualRequirement": "실사진 권리·차량 상표·초상권 확인 후 object-fit:cover; 390px/1440px QA",
+    "avoid": "새 브랜드 소유장비·시공실적처럼 오해 유발 금지"
+  },
+  "publishPolicy": {
+    "mode": "preview-noindex-until-verified",
+    "indexNow": false,
+    "customDomainBinding": "not-attempted",
+    "dnsChangesApproved": false,
+    "production": false,
+    "robots": "noindex,nofollow; robots.txt Disallow /; sitemap/IndexNow disabled"
+  },
+  "brandStatements": {
+    "requestedSlogan": "신청 한시간 이내 도착, 1시간 작업도 가능한 빠른 스카이 전문기업",
+    "publishSafeSlogan": "신청 후 1시간 이내 도착을 목표로 가까운 기사를 신속 배차합니다. 1시간 작업도 상담하세요.",
+    "travelLimit": "전국 단위 배차 상담 접수. 실제 출동·도착 시간은 지역별 기사·장비 현황, 이동 거리와 교통 상황 등에 따라 상담 후 확정.",
+    "minimumBillable": "실제 작업이 1시간이어도 기본 출동·세팅·작업비용으로 반나절 요금을 기준으로 견적을 협의.",
+    "priceDisplay": "구체적인 금액·부가세/야간 할증은 확인 자료 없으므로 사이트에 표시하지 않음"
+  },
+  "requiredBeforeBuild": [
+    "전국 지역 페이지 유형 및 전체 생성 수 확정",
+    "전용 전화번호 확인",
+    "이미지 1차 사용/권리 근거",
+    "시·군·구/읍면동 지역명 원장",
+    "전용 비용 상담 렌더러 및 QA"
+  ],
+  "evidence": {
+    "userInstructionDate": "2026-10-27 KST",
+    "reusedRepository": "joseungil-kr/site-factory-v5",
+    "adjacentReference": "feature/quicksky-nalmada-com-20261027",
+    "operationalSourceIntegrity": "Daysky/Quicksky original branches and Workers untouched"
+  }
+}
