@@ -26,6 +26,7 @@ ASSIGNMENTS = DATA / "flower" / "v4_facility_assignments_1080.snapshot.json"
 POLICY = DATA / "flower" / "v4_assignment_policy.snapshot.json"
 CURATED = DATA / "pools" / "flower_funeral_professional_600.v4.json"
 SUPPLEMENT = DATA / "pools" / "flower_funeral_sample_pool.json"
+AUTHORIZATION = DATA / "flower" / "nalmada_release_authorization_20261027.json"
 OUT = ROOT / "dist" / "flower-funeral-national-preview"
 REPORT = ROOT / "reports" / "flower-funeral" / "pool-1080-1pct-audit.json"
 
@@ -386,7 +387,7 @@ def audit(facilities,contents):
 def _paragraphs(items):
     return "".join("<p>"+escape(item)+"</p>" for item in items)
 
-def render(facility,c):
+def render(facility,c,*,public=False):
     """B green-premium hero + D long-form document for all 1080 halls.
 
     No invented facility photos, maps, stock or guaranteed delivery claims.
@@ -428,13 +429,14 @@ def render(facility,c):
              '<p><a href="#faq">자주 묻는 질문</a></p>'
              '<p><a href="/">전국 장례식장 찾기</a></p></div>'
              '</aside>')
-    return (head(c["title"]+" | "+facility["regionName"]+" | 날마다꽃",c["lead"])+
+    return (head(c["title"]+" | "+facility["regionName"]+" | 날마다꽃",c["lead"],
+                 public=public,path="/"+facility["id"]+".html")+
             header()+'<main id="main">'+hero+
             '<div class="wrap layout"><article class="article-card">'+
             "".join(paragraphs)+faq+'</article>'+sidebar+'</div>'+
             contact_band()+'</main>'+footer())
 
-def build(facilities,contents,qa):
+def build(facilities,contents,qa,*,public=False):
     if not qa["passes"]:
         raise ValueError("Refuse HTML generation until similarity quality gate passes")
     if OUT.exists():shutil.rmtree(OUT)
@@ -443,23 +445,49 @@ def build(facilities,contents,qa):
     files=[]
     for f,c in zip(facilities,contents):
         filename=f["id"]+".html"
-        (OUT/filename).write_text(render(f,c),encoding="utf-8")
+        (OUT/filename).write_text(render(f,c,public=public),encoding="utf-8")
         files.append({"id":f["id"],"filename":filename,
                       "facility":f["facilityName"],"region":f["regionName"],
                       "locationVerification":f.get("locationVerification","not_verified")})
     (OUT/"manifest.json").write_text(json.dumps({
-        "mode":"noindex-preview","pageCount":len(files),
+        "mode":"production-indexable" if public else "noindex-preview","pageCount":len(files),
         "sourceDigests":source_digests(),"qaPasses":qa["passes"],
         "qaReport":"reports/flower-funeral/pool-1080-1pct-audit.json",
         "pages":files},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-    (OUT/"robots.txt").write_text("User-agent: *\nDisallow: /\n",encoding="utf-8")
+    (OUT/"robots.txt").write_text(
+        "User-agent: *\nAllow: /\nSitemap: https://flower.nalmada.net/sitemap.xml\n"
+        if public else "User-agent: *\nDisallow: /\n",encoding="utf-8")
     if len(list(OUT.glob("fh-*.html")))!=1080:
         raise ValueError("Generated HTML count != 1080")
+
+def require_public_release_authorization():
+    """Owner publication approval is separate from V4's immutable provenance flags."""
+    authorization=_read(AUTHORIZATION)
+    assert authorization["authorizationDate"]=="2026-10-27"
+    scope=authorization["scope"]
+    assert scope["hostname"]=="flower.nalmada.net"
+    assert scope["publicReleaseAuthorized"] is True
+    assert authorization["sourceSnapshotPreserved"] is True
+    assert authorization["facilities"]["sourcePublicationAllowedRemainsFalse"] is True
+    assert authorization["facilities"]["currentExistenceAllVerified"] is False
+    assert authorization["facilities"]["addressHiddenUntilConfirmed"] is True
+    assert authorization["facilities"]["noCurrentOperationOrGuaranteedDeliveryClaims"] is True
+    assert authorization["images"]["originalSHA256MustMatch"] is True
+    assert authorization["products"]["notVerified"]
+    source=_read(FACILITIES)
+    pool=_read(CURATED)
+    if source.get("publicationAllowed") is not False or pool.get("readyForPublication") is not False:
+        raise ValueError("Source evidence provenance unexpectedly changed")
+    return authorization
+
 
 def main():
     arg=argparse.ArgumentParser()
     arg.add_argument("--audit-only",action="store_true",help="Audit all source texts before writing any HTML")
+    arg.add_argument("--public",action="store_true",help="Owner-authorized production indexable HTML release")
     args=arg.parse_args()
+    if args.public:
+        require_public_release_authorization()
     facilities,assignments,curated,support,eligible=load_sources()
     contents=create_population(facilities,assignments,curated,support,eligible)
     qa=audit(facilities,contents)
@@ -470,10 +498,11 @@ def main():
     if not qa["passes"]:
         raise SystemExit(2)
     if not args.audit_only:
-        build(facilities,contents,qa)
+        build(facilities,contents,qa,public=args.public)
         print("FLOWER_FUNERAL_1080_GENERATED="+json.dumps({
             "pages":len(facilities),"location":"dist/flower-funeral-national-preview",
-            "mode":"noindex-preview","similarityMax":qa["maximumSimilarity"]},
+            "mode":"production-indexable" if args.public else "noindex-preview",
+            "similarityMax":qa["maximumSimilarity"]},
             ensure_ascii=False))
 
 if __name__=="__main__":
