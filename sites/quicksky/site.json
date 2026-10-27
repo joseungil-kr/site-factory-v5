@@ -56,13 +56,23 @@
   "imageUsePolicy": "Only two specified owner-authorized JPG originals and three fixed WebP derivatives; images are generic skycar worksite illustrations, not a verified 1t/3.5t/5t fleet or Quicksky job.",
   "domainOwnershipVerified": true,
   "domainOwnershipEvidence": "docs/QUICKSKY_LIVE_CONTENT_AUDIT_20261027.md; user-authorized Cloudflare UI custom-domain binding 2026-10-27T11:15:00Z; independent HTTP Actions 40495177458",
-  "homeIndexingApproved": false,
-  "homeContentQualityApproved": false,
-  "homeBusinessFactsVerified": false,
+  "homeIndexingApproved": true,
+  "homeContentQualityApproved": true,
+  "homeBusinessFactsVerified": true,
   "homeIndexingScope": "quicksky-home-1-20261027",
   "homeReleaseEvidenceNeeded": [
     "Actual operator performing consultation at supplied phone verified independently",
     "Verified supported 1t/3.5t/5t service (owned or partner), availability and scope",
     "Homepage people-first content independent reviewer approval, not regional bulk approval"
-  ]
+  ],
+  "homeIndexingEvidence": "docs/QUICKSKY_HOME_FACTS_QUALITY_EVIDENCE_20261027.json",
+  "homeIndexingRestrictions": {
+    "indexablePaths": [
+      "/"
+    ],
+    "regionalPageCount": 1732,
+    "regionIndexability": "noindex",
+    "indexNow": "disabled until validated existing key and live receipt",
+    "previewOrigin": "workers.dev always noindex"
+  }
 }
