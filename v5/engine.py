@@ -198,7 +198,7 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
             raise ConfigError('Unexpected deletion of existing numbered pages; restore source ledger')
         if changes['removedFiles'] and preserve_previous:
             raise ConfigError('Removing existing deployment files requires explicit migration review: '+', '.join(changes['removedFiles'][:3]))
-        inspection=audit(site_id,output=tmp,write_report=False)
+        inspection=audit(site_id,output=tmp,write_report=False,release_mode=mode)
         if inspection['errors']:
             raise ConfigError('Build quality gate rejected: '+ '; '.join(inspection['errors'][:4]))
         if out.exists() and preserve_previous and output is None and reports is None:
