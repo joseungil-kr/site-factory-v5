@@ -1,4 +1,4 @@
-name: Onehour Sky V5 285-page noindex preview
+name: Onehour Sky V5 national 5436-page noindex preview
 
 on:
   pull_request:
@@ -6,6 +6,8 @@ on:
       - 'sites/onehour-sky/**'
       - 'data/pools/onehour_sky_copy_pool.json'
       - 'data/regions/onehour_national_city_districts.json'
+      - 'data/regions/onehour_national_dong_names.json'
+      - 'v5/onehour_sky_quality.py'
       - 'v5/onehour_sky_pages.py'
       - 'v5/service_model.py'
       - 'v5/service_markup.py'
@@ -19,7 +21,7 @@ permissions:
 jobs:
   build-audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -29,10 +31,11 @@ jobs:
         run: |
           python -m v5 plan-check --site onehour-sky
           python -m unittest discover -s tests -p 'test_*.py' -v
-      - name: Generate actual 285-page V5 site with noindex
+      - name: Generate actual 5436-page V5 site with noindex and full-population 1-percent audit
         run: |
           python -m v5 build --site onehour-sky --mode preview
           python -m v5 audit --site onehour-sky
+          python -m v5.onehour_sky_quality
       - name: Independent result assertions (no DNS or Cloudflare writes)
         run: |
           python - <<'PY'
@@ -40,9 +43,9 @@ jobs:
           from pathlib import Path
           out=Path('dist/onehour-sky')
           files=sorted(out.glob('*.html'))
-          assert len(files)==286, len(files)  # 285 real pages + 404
-          assert (out/'index.html').exists() and (out/'285.html').exists()
-          assert not (out/'286.html').exists()
+          assert len(files)==5437, len(files)  # 5436 real pages + 404
+          assert (out/'index.html').exists() and (out/'5436.html').exists()
+          assert not (out/'5437.html').exists()
           assert not (out/'sitemap.xml').exists()
           assert (out/'robots.txt').read_text().splitlines()==['User-agent: *','Disallow: /']
           assert all('content="noindex,nofollow"' in p.read_text() for p in files)
@@ -50,7 +53,11 @@ jobs:
           assert '반나절 요금 기준' in (out/'2.html').read_text()
           report=json.loads(Path('reports/onehour-sky/audit.json').read_text())
           assert not report['errors'],report['errors']
-          print('VERIFIED 285 Site Factory V5 pages, 404, noindex, half-day policy, SEO audit')
+          sample=json.loads(Path('reports/onehour-sky/sample_full_audit.json').read_text())
+          assert sample['population']==5436 and sample['pairsCompared']==sample['sampleCount']*5435
+          assert sample['passed'] and sample['worstSampleToPopulationSimilarity']<0.49
+          assert sample['wholePopulationExactBodyDuplicates']==0
+          print('VERIFIED 5436 Site Factory V5 pages, 1pct-vs-all, 404, noindex, half-day policy, SEO audit')
           PY
       - name: Preserve website and QA as artifacts (do not publish)
         uses: actions/upload-artifact@v4
@@ -60,5 +67,6 @@ jobs:
             dist/onehour-sky/
             reports/onehour-sky/audit.json
             reports/onehour-sky/manifest.json
+            reports/onehour-sky/sample_full_audit.json
           if-no-files-found: error
           retention-days: 14
