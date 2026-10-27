@@ -52,13 +52,17 @@ def _pool():
     topics = doc.get("topics", {})
     if len(shared) != 9 or len(topics) != 8:
         raise ValueError("Onehour copy pool group count changed")
+    deep = doc.get("deepDive", {})
+    if len(deep)!=4 or any(len(v)!=14 for v in deep.values()):
+        raise ValueError("Insufficient site-specific long-form copy buckets")
     phrases = [s for group in shared.values() for s in group]
+    phrases.extend(s for group in deep.values() for s in group)
     for topic in topics.values():
         phrases.extend(topic[field] for field in ("scene", "risk", "request"))
-    if (len(phrases) != 96 or len(set(phrases)) != len(phrases)
+    if (len(phrases) != 152 or len(set(phrases)) != len(phrases)
             or any(len(s) < 26 or s[-1] not in ".!?" for s in phrases)):
         raise ValueError("Insufficient or duplicate customer copy")
-    return shared, topics
+    return shared, topics, deep
 
 
 def _choose(values, key, n):
@@ -69,7 +73,7 @@ def _choose(values, key, n):
     return [values[i] for i in positions[:n]]
 
 
-def make_page(record, index, shared, topics):
+def make_page(record, index, shared, topics, deep):
     full = record["name"]
     code = record["code"]
     salt = "onehour-v1|" + code + "|" + full
@@ -88,6 +92,10 @@ def make_page(record, index, shared, topics):
     consult = take("consultation", 3)
     cta = take("cta", 2)
     topic_label = topic["label"]
+    prep_more = _choose(deep["dispatchPreparation"], salt + "|deep-dispatch", 2)
+    setup_more = _choose(deep["setupWorkflow"], salt + "|deep-setup", 2)
+    safety_more = _choose(deep["siteSafety"], salt + "|deep-safety", 2)
+    cost_more = _choose(deep["costAgreement"], salt + "|deep-cost", 2)
     sections = [
         {"heading": full + " " + topic_label + " 1시간 작업을 준비할 때",
          "paragraph": " ".join([topic["scene"]] + short + [consult[0]])},
@@ -99,6 +107,10 @@ def make_page(record, index, shared, topics):
          "paragraph": " ".join([topic["risk"]] + access + safety)},
         {"heading": full + " 스카이차 상담 시 필요한 정보",
          "paragraph": " ".join([topic["request"]] + consult[1:] + rates[2:] + cta[1:])},
+        {"heading": full + " 빠른 출동을 준비하는 점검 순서",
+         "paragraph": " ".join(prep_more + setup_more)},
+        {"heading": "짧은 현장 작업의 안전과 최종 견적 확인",
+         "paragraph": " ".join(safety_more + cost_more)},
     ]
     intro = (
         f"{full}에서 {topic_label}을 위한 스카이차 1시간 작업이나 반일작업을 알아보신다면 "
@@ -134,8 +146,8 @@ def expand(pages, regions):
     if len(regions.get("regions", [])) != 1 or regions["regions"][0].get("name") != "전국":
         raise ValueError("Onehour root region record changed")
     rows = _rows()
-    shared, topics = _pool()
-    regional = [make_page(row, i, shared, topics) for i, row in enumerate(rows)]
+    shared, topics, deep = _pool()
+    regional = [make_page(row, i, shared, topics, deep) for i, row in enumerate(rows)]
     result = pages + regional
     if len(result) != EXPECTED_PAGES or result[-1]["number"] != EXPECTED_PAGES:
         raise ValueError("Onehour generation count mismatch")
