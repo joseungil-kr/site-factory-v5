@@ -38,10 +38,12 @@
   "copyPoolPlan": {
     "industry": "스카이차 단시간·반일 작업",
     "source": "data/pools/onehour_sky_copy_pool.json — 원문 요청 및 새롭게 작성한 독립 문장. Daysky/Quicksky 본문을 복사하지 않음.",
-    "sentenceTarget": 96,
+    "sentenceTarget": 152,
     "contentPolicy": "작업 종류, 진입 조건, 짧은 작업 시간 계획, 현장 안전, 상담 체크리스트를 조합. 지역명만 교체하는 문서는 색인 대상으로 승인하지 않음.",
     "differentiation": "지역별 실제 배차 가능 범위·작업 현장/사진 등 검증 가능한 근거가 있는 페이지부터 선택 공개",
-    "generation": "V5 deterministic 284 regional pages via onehour_sky_pages.expand, sentences drawn from dedicated 96 line pool with stable hash selection"
+    "generation": "V5 deterministic 284 regional pages via onehour_sky_pages.expand, sentences drawn from dedicated 96 line pool with stable hash selection",
+    "poolBuckets": "공통 72문장 / 현장유형 24문장 / 출동·설치·안전·비용 심화 56문장",
+    "note": "V5 자체 유사도 49% 게이트 유지, 각 페이지 7섹션과 FAQ로 차별화하나 실제 현장 운영 및 지역 특성 검증은 별도"
   },
   "similarityAudit": {
     "metric": "char-5gram-jaccard",
