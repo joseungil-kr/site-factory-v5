@@ -11,7 +11,8 @@
     "facilities": null,
     "regionLedger": "data/regions/seoul_gyeonggi_current_dong.json",
     "regionRows": 1732,
-    "regionLedgerClassification": "V4 NAME_CANDIDATES 유래 지역명 원장; 개별 법정동/행정동 구분 검증 전"
+    "regionLedgerClassification": "V4 NAME_CANDIDATES 유래 지역명 원장; 개별 법정동/행정동 구분 검증 전",
+    "coverageClaim": "서울·경기 관련 상담 대상, 전 동 출동·시간·장비 확약 불가"
   },
   "pageTypes": [
     "메인 안내 1페이지",
@@ -55,7 +56,7 @@
     "mode": "전화상담"
   },
   "images": {
-    "source": "2026-10-25 당일스카이 출처 원장에 있는 사용자 보유 실제 작업 사진, 빠른스카이 최종 공개 재사용 승인 확인 전",
+    "source": "Owner attested authorized use of exact 2 original skycar1day.com photos 2026-10-27T11:26Z; three pinned derived WebPs; see docs/QUICKSKY_PHOTO_PERMISSION_20261027.json",
     "approved": true,
     "display": "cover; no letterboxing",
     "approvedAssets": [
@@ -70,7 +71,7 @@
   "publishPolicy": {
     "mode": "preview-noindex-until-reviewed",
     "indexNow": false,
-    "customDomainBinding": "unverified",
+    "customDomainBinding": "bound to sfv5-quicksky-preview; production hostname HTTPS200 verified noindex 2026-10-27T11:18Z",
     "dnsChangesApproved": false
   },
   "planningNotes": [
