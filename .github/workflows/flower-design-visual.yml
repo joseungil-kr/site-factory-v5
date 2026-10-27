@@ -6,6 +6,7 @@ on:
       - 'scripts/prepare_flower_funeral_preview.py'
       - 'scripts/flower_design.py'
       - 'scripts/flower_visual_check.py'
+      - 'scripts/flower_visible_copy_check.py'
       - 'templates/flower-nalmada/site.css'
       - 'assets/library/flower-nalmada/**'
       - 'data/flower/nalmada_funeral_product_reference.json'
@@ -25,6 +26,7 @@ jobs:
         run: |
           python scripts/build_flower_funeral_national.py
           python scripts/prepare_flower_funeral_preview.py
+          python scripts/flower_visible_copy_check.py
       - name: Set up headless Chromium
         run: |
           python -m pip install --disable-pip-version-check playwright==1.55.0
