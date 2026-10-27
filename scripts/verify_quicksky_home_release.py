@@ -37,7 +37,11 @@ def verify():
         if status!=expected:raise RuntimeError(f"{base}{path}: HTTP {status}, expected {expected}")
         text=body.decode("utf-8","replace")
         if path not in ("/1734.html",):
-            wanted='name="robots" content="'+("index,follow" if robots=="index" else "noindex,nofollow")+'"'
+            # Same static index.html is served on bound production and workers.dev.
+            # Production / must have index meta; workers.dev must be blocked at
+            # the stronger HTTP X-Robots-Tag layer even if its HTML says index.
+            html_index=(robots=="index" or (base==PREVIEW and path=="/"))
+            wanted='name="robots" content="'+("index,follow" if html_index else "noindex,nofollow")+'"'
             if wanted not in text:raise RuntimeError(f"Meta robots wrong {base}{path}")
             if "빠른스카이" not in text or "010-5322-1952" not in text:
                 raise RuntimeError("Brand/phone mismatch")
