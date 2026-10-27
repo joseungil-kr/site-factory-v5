@@ -16,11 +16,21 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
     if site.get('publishEnabled') is not False:
         fail('service product-checkout production mode is not supported')
     if site.get('publicIndexingApproved'):
-        if (site_id != 'daysky' or site.get('domain') != 'https://daysky.nalmada.net'
-                or site.get('publicIndexingScope') not in ('daysky-ansan-29-20261025','daysky-seoul-gyeonggi-1736-20261025')):
-            fail('Service index approval is limited to the explicitly authorized Daysky 29-page hostname')
-    if any(site.get(field,{}).get('enabled') for field in ('analytics','indexNow','siteSearch')):
-        fail('analytics, IndexNow and search are disabled on first service preview')
+        daysky=(site_id=='daysky' and site.get('domain')=='https://daysky.nalmada.net'
+                and site.get('publicIndexingScope') in ('daysky-ansan-29-20261025','daysky-seoul-gyeonggi-1736-20261025'))
+        quicksky=(site_id=='quicksky' and site.get('domain')=='https://quicksky.nalmada.com'
+                and site.get('publicIndexingScope')=='quicksky-seoul-gyeonggi-1733-20261027'
+                and site.get('imageAssetsApproved') is True
+                and site.get('contentQualityApproved') is True
+                and site.get('domainOwnershipVerified') is True)
+        if not (daysky or quicksky):
+            fail('Indexable release requires exact approved hostname, content/image rights, and provider ownership')
+    if any(site.get(field,{}).get('enabled') for field in ('analytics','siteSearch')):
+        fail('analytics and search remain disabled on service sites')
+    if site.get('indexNow',{}).get('enabled'):
+        if not (site_id=='quicksky' and site.get('publicIndexingApproved')
+                and re.fullmatch(r'[a-f0-9]{32,64}',str(site['indexNow'].get('key','')))):
+            fail('IndexNow requires approved Quicksky public release and a valid hosted key')
     if site.get('domain'):
         p=check_https_url(site['domain'],'service domain')
         if p.path not in ('','/') or p.query:fail('domain must be bare HTTPS origin')
@@ -96,6 +106,8 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
             fail('Daysky page count differs from its explicit indexing scope')
         if target==29 and site.get('indexNow',{}).get('enabled'):
             fail('Original 29-page scope disables IndexNow')
+    if site_id=='quicksky' and site.get('publicIndexingApproved') and len(ordered)!=1733:
+        fail('Quicksky indexable release requires exactly 1733 pages')
     if site_id in ('daysky','quicksky'):
         public=json.dumps({'site':site,'pages':pages,'services':services,'rates':rates},ensure_ascii=False)
         foreign=('영진','1844-0644','fwith') if site_id=='daysky' else ('당일스카이','영진','1844-0644','fwith')
