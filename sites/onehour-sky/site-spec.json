@@ -7,20 +7,22 @@
   "businessModel": "service-lead",
   "serviceScope": {
     "region": "전국",
-    "granularity": "2026-10-22 공식 법정지역 코드 기반 광역/시군구/일부 구 (읍면동 제외)",
+    "granularity": "2026-10-22 V4 공식 상위 법정지역 284개 + 2026-10-12 V4 기존 법정/행정 혼합 동·가·로 5,151개 (읍면 제외)",
     "facilities": null,
     "regionLedger": "data/regions/onehour_national_city_districts.json",
-    "regionRows": 284,
-    "source": "V4 official-source snapshot; 16 province + 229 municipality + 39 ward",
-    "limits": "service-availability per region not yet verified; page generation in noindex preview only"
+    "regionRows": 5435,
+    "source": "V4 pinned region snapshots; province 16, municipality 229, ward 39, names of dong/ga/ro 5151",
+    "limits": "동·가·로 이름 전수이지 읍·면 전체 또는 기사 배차 현황 검증은 아님",
+    "additionalRegionLedger": "data/regions/onehour_national_dong_names.json"
   },
   "pageTypes": [
-    "메인 서비스 안내 1페이지",
-    "V4 법정지역 코드의 광역·시군구·비자치구 284페이지"
+    "전국 메인 서비스 안내 1페이지",
+    "V4 광역·시군구·일반구 284페이지",
+    "V4 동·가·로 지역명 5,151페이지"
   ],
-  "targetPageCount": 285,
+  "targetPageCount": 5436,
   "titlePattern": "{지역명} 스카이차 1시간 작업, 반일작업 전문 '한시간스카이'",
-  "urlPattern": "/ (메인), /2.html ~ /285.html (V4 법정지역 코드 원장 순번 고정)",
+  "urlPattern": "/ (메인), /2.html ~ /285.html (기존 284지역 URL 보존), /286.html ~ /5436.html (추가 V4 동/가/로 5151개)",
   "keywordGroups": {
     "primary": [
       "{지역명} 스카이차 1시간 작업",
@@ -38,20 +40,21 @@
   "copyPoolPlan": {
     "industry": "스카이차 단시간·반일 작업",
     "source": "data/pools/onehour_sky_copy_pool.json — 원문 요청 및 새롭게 작성한 독립 문장. Daysky/Quicksky 본문을 복사하지 않음.",
-    "sentenceTarget": 152,
+    "sentenceTarget": 752,
     "contentPolicy": "작업 종류, 진입 조건, 짧은 작업 시간 계획, 현장 안전, 상담 체크리스트를 조합. 지역명만 교체하는 문서는 색인 대상으로 승인하지 않음.",
     "differentiation": "지역별 실제 배차 가능 범위·작업 현장/사진 등 검증 가능한 근거가 있는 페이지부터 선택 공개",
-    "generation": "V5 deterministic 284 regional pages via onehour_sky_pages.expand, sentences drawn from dedicated 96 line pool with stable hash selection",
-    "poolBuckets": "공통 72문장 / 현장유형 24문장 / 출동·설치·안전·비용 심화 56문장",
-    "note": "V5 자체 유사도 49% 게이트 유지, 각 페이지 7섹션과 FAQ로 차별화하나 실제 현장 운영 및 지역 특성 검증은 별도"
+    "generation": "Original 152 unique curated full sentences plus 6 thematic 10x10=600 contextual combinations. New V5 region generator now 5436 pages; deterministic SHA choice per region.",
+    "poolBuckets": "기본 152 고유 문장 + 600 문장 조합 (출동, 장비세팅, 실제 작업, 반나절 요금, 안전, 상담)",
+    "note": "1% fixed seed 20261027 exact 5gram Jaccard vs ALL 5436 docs after build; do not weaken threshold 0.49"
   },
   "similarityAudit": {
     "metric": "char-5gram-jaccard",
     "thresholdExclusive": 0.49,
     "sampleFraction": 0.01,
     "seed": 20261027,
-    "population": "동일 사이트 초안 전 모수; Daysky/Quicksky 간 교차 유사도도 별도 검토",
-    "qualityRequirement": "유사도 통과만으로 고유 지역 정보·색인 적합성을 입증하지 않음"
+    "population": "V5 generated 5436 documents including home; fixed-seed 1% sample versus every other page; whole-population exact duplicates; also retain V5 own audit",
+    "qualityRequirement": "유사도 통과만으로 고유 지역 정보·색인 적합성을 입증하지 않음",
+    "independentCommand": "python -m v5.onehour_sky_quality"
   },
   "conversion": {
     "phone": "010-5322-1952",
@@ -76,7 +79,7 @@
     "avoid": "새 브랜드 소유장비·시공실적처럼 오해 유발 금지"
   },
   "publishPolicy": {
-    "mode": "preview-only-noindex",
+    "mode": "preview-only-noindex; production requires operational verification and domain/IndexNow key proof",
     "indexNow": false,
     "customDomainBinding": "not-attempted",
     "dnsChangesApproved": false,
