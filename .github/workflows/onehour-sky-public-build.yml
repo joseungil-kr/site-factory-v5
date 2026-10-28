@@ -12,6 +12,7 @@ on:
       - 'v5/service_markup.py'
       - 'v5/engine.py'
       - 'worker/index.js'
+      - 'scripts/onehour_public_release.py'
       - 'tests/test_onehour_sky.py'
 permissions:
   contents: read
@@ -36,6 +37,7 @@ jobs:
           python -m v5 plan-check --site onehour-sky
           python -m unittest discover -s tests -q
           npm test
+          python -m py_compile scripts/onehour_public_release.py
       - name: Build and audit exactly 5436 public indexable HTML pages
         run: |
           set -euo pipefail
