@@ -1,7 +1,7 @@
 name: Signsky isolated review artifact
 on:
   pull_request:
-    paths: ['sites/signsky/**', 'scripts/signsky.py', '.github/workflows/signsky-review.yml']
+    paths: ['sites/signsky/**', 'scripts/signsky.py', '.github/workflows/signsky-review.yml', 'tests/signsky/**']
   workflow_dispatch:
 permissions:
   contents: read
@@ -16,12 +16,51 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - run: python -m v5 plan-check --site signsky
-      - run: python scripts/signsky.py build && python scripts/signsky.py audit
-      - run: node --test sites/signsky/worker.test.mjs
+      - name: Plan and source checks
+        run: python -m v5 plan-check --site signsky
+      - name: Build and audit PUBLIC candidate without deploying
+        run: |
+          python scripts/signsky.py build --mode public
+          python scripts/signsky.py audit
+          mkdir -p reports/signsky/public-build
+          cp -a dist/signsky/. reports/signsky/public-build/
+          cp reports/signsky/qa.json reports/signsky/public-qa.json
+          cp reports/signsky/manifest.json reports/signsky/public-manifest.json
+      - name: Build and audit PREVIEW to ensure crawler protection remains default
+        run: |
+          python scripts/signsky.py build --mode preview
+          python scripts/signsky.py audit
+          cp reports/signsky/qa.json reports/signsky/preview-qa.json
+      - name: Worker and host-isolation tests
+        run: node --test sites/signsky/worker.test.mjs
+      - name: Verify public candidate and preview are both distinct and exact
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          public=Path('reports/signsky/public-build')
+          preview=Path('dist/signsky')
+          manifest=json.loads(Path('reports/signsky/public-manifest.json').read_text())
+          assert manifest['mode']=='public' and manifest['pageCount']==139
+          assert len(manifest['urls'])==len(set(manifest['urls']))==139
+          assert json.loads(Path('reports/signsky/public-qa.json').read_text())['passed'] is True
+          assert json.loads(Path('reports/signsky/preview-qa.json').read_text())['passed'] is True
+          robots=(public/'robots.txt').read_text()
+          assert robots=='User-agent: *\\nAllow: /\\nSitemap: https://signsky.nalmada.net/sitemap.xml\\n'
+          sitemap=json.loads('null') if False else (public/'sitemap.xml').read_text()
+          assert sitemap.count('<loc>')==139
+          assert len(list(public.glob('*.html'))) == 139
+          assert not (preview/'sitemap.xml').exists()
+          assert 'Disallow: /' in (preview/'robots.txt').read_text()
+          assert all('<meta name="robots" content="noindex,nofollow">' in p.read_text()
+                     for p in preview.glob('*.html'))
+          print('SIGNSKY_PUBLIC_AND_PREVIEW_BUILDS_SEPARATELY_VERIFIED')
+          PY
       - uses: actions/upload-artifact@v4
         with:
           name: signsky-review
           path: |
             dist/signsky
             reports/signsky
+          if-no-files-found: error
+          retention-days: 30
