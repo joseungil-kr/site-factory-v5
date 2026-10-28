@@ -46,3 +46,13 @@ The generated site has no LocalBusiness address or fake reviews. Region coverage
 - The generate/reset controls are initially disabled `type=button` controls. JavaScript enables them only after every handler is attached. Missing or failing JavaScript leaves both controls disabled.
 - Browser tests use synthetic values only and verify no-JS and JS-runtime-failure cases cannot navigate or put sender, recipient, phone or address into the URL. Normal order-note generation remains client-only; checkout URL contains only the verified seller SKU.
 - Public IndexNow key is site-scoped and public, not a secret. It is emitted only in the public build, never in the workers.dev preview. Submission is a separate one-shot post-release step with an immutable receipt.
+
+
+## Public release / IndexNow single-shot path
+
+1. Rebuild from the pinned V5 source and rerun all 72 Python tests, 11 Worker tests, browser checks, 3,468 local HTTP URL checks, exact product photo hashes, and copy-pool similarity audit.
+2. Deploy the dedicated Worker first to its workers.dev noindex preview; run the live HTTPS Chromium check. The preview must have X-Robots-Tag noindex, robots Disallow, sitemap 404 and must not expose the IndexNow key file.
+3. Before public release, use the existing V4 Cloudflare Actions account proof and read-only domain inventory. Abort if the Worker or hostname is bound elsewhere. Use only the official Workers Custom Domain binding API; never edit DNS records directly or create a new secret.
+4. Record the exact previous 100%-traffic Worker version. Attach only officeplant.nalmada.net to sfv52-officeplant if not already bound to that same Worker, then deploy wrangler.public.json. If any public HTTP/SEO check fails, restore the recorded preview version and verify noindex.
+5. Verify all 3,468 sitemap URLs with exact response bodies, sitemap count/uniqueness, robots Allow, canonical/indexable meta, key file HTTP 200 and exact contents, 404 noindex, live images/mobile layout, and that the workers.dev preview remains noindex.
+6. Only after all live checks pass, run scripts/submit_officeplant_indexnow.py once. It checks prior V4 workflow receipt artifacts, writes the receipt before POST, submits the exact live sitemap URL list once, preserves the HTTP response, and never retries an uncertain/rejected result. Google Search Console / Naver registration remains a separate parent-controlled step.

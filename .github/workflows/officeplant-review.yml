@@ -2,9 +2,9 @@ name: Officeplant isolated review
 on:
   push:
     branches: [feature/v52-officeplant]
-    paths: ['sites/officeplant/**', 'scripts/*officeplant.py', 'scripts/prepare_officeplant_assets.py', 'tests/officeplant-worker.test.mjs', 'tests/officeplant-browser-smoke.py', 'tests/officeplant-live-preview-smoke.py', '.github/workflows/officeplant-review.yml']
+    paths: ['sites/officeplant/**', 'scripts/*officeplant.py', 'scripts/prepare_officeplant_assets.py', 'tests/officeplant-worker.test.mjs', 'tests/officeplant-browser-smoke.py', 'tests/officeplant-live-preview-smoke.py', 'tests/officeplant-live-public-smoke.py', 'scripts/submit_officeplant_indexnow.py', '.github/workflows/officeplant-review.yml']
   pull_request:
-    paths: ['sites/officeplant/**', 'scripts/*officeplant.py', 'scripts/prepare_officeplant_assets.py', 'tests/officeplant-worker.test.mjs', 'tests/officeplant-browser-smoke.py', 'tests/officeplant-live-preview-smoke.py', '.github/workflows/officeplant-review.yml']
+    paths: ['sites/officeplant/**', 'scripts/*officeplant.py', 'scripts/prepare_officeplant_assets.py', 'tests/officeplant-worker.test.mjs', 'tests/officeplant-browser-smoke.py', 'tests/officeplant-live-preview-smoke.py', 'tests/officeplant-live-public-smoke.py', 'scripts/submit_officeplant_indexnow.py', '.github/workflows/officeplant-review.yml']
 permissions:
   contents: read
 jobs:
@@ -27,7 +27,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m v5 plan-check --site officeplant
-          python -m py_compile scripts/*officeplant.py scripts/prepare_officeplant_assets.py tests/officeplant-browser-smoke.py tests/officeplant-live-preview-smoke.py
+          python -m py_compile scripts/*officeplant.py scripts/prepare_officeplant_assets.py tests/officeplant-browser-smoke.py tests/officeplant-live-preview-smoke.py tests/officeplant-live-public-smoke.py scripts/submit_officeplant_indexnow.py
           python -m unittest discover -s tests -v
           node --test worker/worker.test.mjs tests/officeplant-worker.test.mjs
       - name: Build preview and public candidate with original V5 region ledger
