@@ -31,6 +31,8 @@ test('only exact approved host is indexable; preview HTML is noindex and canonic
     const sitemap=await worker.fetch(new Request('https://'+host+'/sitemap.xml'),env);
     assert.equal(sitemap.status,isPublic?200:404);
     const robots=await worker.fetch(new Request('https://'+host+'/robots.txt'),env);
-    assert.match(await robots.text(),isPublic?/Allow: \///:/Disallow: \//);
+    const robotsText=await robots.text();
+    if(isPublic) assert.match(robotsText,/Allow: \/\//);
+    else assert.match(robotsText,/Disallow: \//);
   }
 });
