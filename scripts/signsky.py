@@ -88,7 +88,8 @@ class HeadMetadata(HTMLParser):
 def shell(title,description,path,body,mode):
     index=mode=='public'
     canonical=f'<link rel="canonical" href="{ORIGIN}{path}">' if index else ''
-    return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}</title><meta name="description" content="{html.escape(description,quote=True)}"><meta name="robots" content="{'index,follow' if index else 'noindex,nofollow'}">{canonical}<link rel="stylesheet" href="/assets/signsky.css"></head><body><header><a class="brand" href="/">간판<span>스카이</span></a><nav><a href="/#regions">지역 찾기</a><a href="tel:{PHONE}">전화 상담 ↗</a></nav></header>{body}<footer><strong>간판스카이</strong><p>서울·경기 간판교체 · 현수막설치 스카이차 상담</p><a href="tel:{PHONE}">{PHONE}</a></footer><a class="mobile-call" href="tel:{PHONE}">작업 일정 전화 상담　{PHONE}</a></body></html>'''
+    naver_verification = '<meta name="naver-site-verification" content="8e67435fd9189fe8b8713c020bd5ccc0acf4e6ca" />' if index and path=='/' else ''
+    return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{html.escape(title)}</title><meta name="description" content="{html.escape(description,quote=True)}"><meta name="robots" content="{'index,follow' if index else 'noindex,nofollow'}">{canonical}{naver_verification}<link rel="stylesheet" href="/assets/signsky.css"></head><body><header><a class="brand" href="/">간판<span>스카이</span></a><nav><a href="/#regions">지역 찾기</a><a href="tel:{PHONE}">전화 상담 ↗</a></nav></header>{body}<footer><strong>간판스카이</strong><p>서울·경기 간판교체 · 현수막설치 스카이차 상담</p><a href="tel:{PHONE}">{PHONE}</a></footer><a class="mobile-call" href="tel:{PHONE}">작업 일정 전화 상담　{PHONE}</a></body></html>'''
 
 def render(p,pages,mode):
     peer=next(x for x in pages if x['region']==p['region'] and x['intent']!=p['intent'])
@@ -131,6 +132,11 @@ def audit():
         assert raw.count('<h1>')==1 and 'tel:'+PHONE in raw
         meta=HeadMetadata();meta.feed(raw)
         assert meta.robots==expected_robots,(path,meta.robots,expected_robots)
+        naver_tags=re.findall(r'<meta\\s+name=["']naver-site-verification["']\\s+content=["']([^"']+)["']\\s*/?>',raw,re.I)
+        if manifest['mode']=='public' and path=='/':
+            assert naver_tags==['8e67435fd9189fe8b8713c020bd5ccc0acf4e6ca'],(path,naver_tags)
+        else:
+            assert naver_tags==[],(path,naver_tags)
         assert meta.description and meta.description.strip(),(path,'missing description')
         descriptions.append(meta.description)
         if manifest['mode']=='public':
