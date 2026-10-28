@@ -33,3 +33,14 @@
 ## Safety
 
 The existing dedicated Worker defaults to noindex and only enables indexing for exact host `wallsky.nalmada.net` when `WALLSKY_PUBLIC=1`; workers.dev and 404 responses remain noindex. No DNS, Secret, OAuth, permission or existing site/Worker mutation has occurred in the V5 branch work so far.
+
+## Actual remote preview update — 2026-10-28 15:23 UTC
+
+- Latest Wallsky source HEAD: `8d5e316732b40cd385ea24575a73860602654f3a`.
+- V5 run [40714749737](https://github.com/joseungil-kr/site-factory-v5/actions/runs/40714749737): passed after fixing the Worker to forward non-root asset requests unchanged; Python 72 and Node Worker 6 passed. Artifact [12826224590](https://github.com/joseungil-kr/site-factory-v5/actions/runs/40714749737/artifacts/12826224590), 10,590,531 bytes, includes the 5,197 review HTML files and QA reports. ZIP SHA-256: `04b6822eebc558a9e062422b0977bd6d97ef5cd82f423c4a039f6d8aeebe192c`.
+- Existing V4 success-path run [40715062374](https://github.com/joseungil-kr/site-factory-v4/actions/runs/40715062374): dedicated Worker `sfv52-wallsky` deployed to `https://sfv52-wallsky.joseungil.workers.dev`; all **5,201 live resources** passed, errors 0, missing route 404, noindex headers/meta and preview robots verified. Existing 84 custom-domain bindings were unchanged.
+- Preview live report artifact [12827483600](https://github.com/joseungil-kr/site-factory-v4/actions/runs/40715062374/artifacts/12827483600), 10,584,021 bytes. ZIP SHA-256: `e505679d6186e30a2badf728d3a73b1e93e8b55c990080b16b8fa0d695ce534a`. It contains `dist/wallsky`, `reports/wallsky/qa-public.json`, `cross-daysky.json`, `http.json` and the read-only binding snapshot.
+- Current preview URL: https://sfv52-wallsky.joseungil.workers.dev. This is **noindex preview**, not the requested production hostname.
+- Domain preflight: `nalmada.net` zone active in existing account; no `wallsky.nalmada.net` custom-domain binding in the account; DNS/Worker route read returned HTTP 403 for routes, so route collision remains unproven. No DNS, route, custom-domain or permission changes were made. Do not attach production domain until the route conflict check is readable.
+- A prior preview run failed because the Worker wrapped every request in `new Request(url, request)`, causing the static-assets adapter to return 404. The proven V5 adapter was adopted: root is rewritten to `/index.html`, non-root requests pass through unchanged. Updated Worker test asserts both paths; latest preview run confirms the fix.
+- V4's separate foundation check failed at `scripts/verify_substantive_qa.py` with `.gitattributes hash mismatch`. It did not block the isolated preview workflow and was not modified as part of Wallsky.
