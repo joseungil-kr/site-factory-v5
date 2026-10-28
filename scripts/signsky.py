@@ -132,11 +132,11 @@ def audit():
         assert raw.count('<h1>')==1 and 'tel:'+PHONE in raw
         meta=HeadMetadata();meta.feed(raw)
         assert meta.robots==expected_robots,(path,meta.robots,expected_robots)
-        naver_tags=re.findall(r'<meta\\s+name=["']naver-site-verification["']\\s+content=["']([^"']+)["']\\s*/?>',raw,re.I)
+        naver_tag='<meta name="naver-site-verification" content="8e67435fd9189fe8b8713c020bd5ccc0acf4e6ca" />'
         if manifest['mode']=='public' and path=='/':
-            assert naver_tags==['8e67435fd9189fe8b8713c020bd5ccc0acf4e6ca'],(path,naver_tags)
+            assert raw.count(naver_tag)==1 and raw.count('name="naver-site-verification"')==1,(path,'Naver verification tag count/value')
         else:
-            assert naver_tags==[],(path,naver_tags)
+            assert 'name="naver-site-verification"' not in raw,(path,'Naver tag must be homepage-only')
         assert meta.description and meta.description.strip(),(path,'missing description')
         descriptions.append(meta.description)
         if manifest['mode']=='public':
