@@ -4,8 +4,10 @@
   "compatibility_date": "2026-10-21",
   "workers_dev": true,
   "preview_urls": false,
-  "keep_vars": true,
-  "vars": {"WALLSKY_PUBLIC": "0"},
+  "keep_vars": false,
+  "vars": {
+    "WALLSKY_PUBLIC": "0"
+  },
   "assets": {
     "directory": "../../dist/wallsky",
     "binding": "ASSETS",
