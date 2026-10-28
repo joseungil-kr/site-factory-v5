@@ -1,0 +1,37 @@
+{
+  "origin": "https://plants.nalmada.net",
+  "checkedPages": [
+    {
+      "path": "/",
+      "status": 200,
+      "indexable": true
+    },
+    {
+      "path": "/2.html",
+      "status": 200,
+      "indexable": true
+    },
+    {
+      "path": "/3465.html",
+      "status": 200,
+      "indexable": true
+    },
+    {
+      "path": "/page-404.html",
+      "status": 200,
+      "indexable": true
+    },
+    {
+      "path": "/404-naver-check.html",
+      "status": 404,
+      "indexable": false
+    }
+  ],
+  "sitemapUrls": 3467,
+  "naverHomepageMeta": true,
+  "canonical": true,
+  "robotsAllow": true,
+  "previewNoindex": true,
+  "v4Changed": false,
+  "attempt": 1
+}

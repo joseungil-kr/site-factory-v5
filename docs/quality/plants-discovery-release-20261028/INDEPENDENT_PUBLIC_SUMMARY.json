@@ -1,0 +1,29 @@
+{
+  "rootStatus": 200,
+  "rootNormalizedSHA256": "7f84b8efa411bba5338854a18bb40536ee5747ab3a1c92b2c10bc239a3395502",
+  "staticDetailURLs": 3464,
+  "sitemapURLs": 3467,
+  "sitemapUnchanged": true,
+  "sitemapSHA256": "d01cc639726959f955846216c1e0da4a3af9fd445da892b812e5cf6466aad7b4",
+  "samples": [
+    {
+      "url": "https://plants.nalmada.net/2.html",
+      "status": 200,
+      "canonical": "https://plants.nalmada.net/2.html",
+      "robots": "index,follow"
+    },
+    {
+      "url": "https://plants.nalmada.net/1734.html",
+      "status": 200,
+      "canonical": "https://plants.nalmada.net/1734.html",
+      "robots": "index,follow"
+    },
+    {
+      "url": "https://plants.nalmada.net/%EB%B0%B0%EC%86%A1%EC%95%88%EB%82%B4.html",
+      "status": 200,
+      "canonical": "https://plants.nalmada.net/%EB%B0%B0%EC%86%A1%EC%95%88%EB%82%B4.html",
+      "robots": "index,follow"
+    }
+  ],
+  "missingURLStatus": 404
+}

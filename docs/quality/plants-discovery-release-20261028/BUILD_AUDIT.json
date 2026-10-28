@@ -1,0 +1,22 @@
+{
+  "site": "seoul-gyeonggi-plants",
+  "checkedHtmlFiles": 3468,
+  "checkedAssetFiles": 3483,
+  "verifiedInternalReferences": 124804,
+  "similarityMode": "fixed-stratified-1pct",
+  "similaritySampleSize": 37,
+  "similarityPopulation": 3465,
+  "similarityPairs": 666,
+  "maxBodyChar5gramJaccard": 0.45854,
+  "maxSimilarPair": [
+    709,
+    3411
+  ],
+  "errors": [],
+  "warnings": [
+    "Similarity calculated on pinned 1% stratified sample, not complete pairs; independent semantic review required before indexable publication",
+    "Indexing permitted by user; indexed pages still require independent inventory, delivery and content quality review",
+    "Product price/stock and order destinations are referenced V4 data, not independently rechecked live",
+    "Illustrative shared SVG art is placeholder; replace with approved actual product images before production"
+  ]
+}
