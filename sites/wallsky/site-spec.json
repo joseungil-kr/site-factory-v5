@@ -1,0 +1,62 @@
+{
+  "siteId": "wallsky",
+  "approved": true,
+  "approvalEvidence": "User delegated Wallsky domain, brand, Seoul/Gyeonggi consultation scope, and creation/publication/search-registration on 2026-10-28; remote destination joseungil-kr/site-factory-v5 explicitly designated.",
+  "domain": "https://wallsky.nalmada.net",
+  "brand": "외벽스카이",
+  "businessModel": "service-lead",
+  "serviceScope": {
+    "region": "서울·경기",
+    "granularity": "Pinned V4 NAME_CANDIDATES region-name snapshot dated 2026-10-12; legal-dong/administrative-dong classification is not independently verified for every row.",
+    "facilities": [
+      "빌딩외벽",
+      "공장외벽",
+      "상가외벽"
+    ],
+    "exclusions": [
+      "간판교체",
+      "현수막설치",
+      "전문방수 직접시공",
+      "전문도장 직접시공"
+    ]
+  },
+  "pageTypes": [
+    "home",
+    "region-intent"
+  ],
+  "targetPageCount": 5197,
+  "countFormula": "1,732 pinned Seoul/Gyeonggi region-name rows × 3 intents + 1 home = 5,197 URLs; not a claim of verified facility presence or dispatch coverage.",
+  "titlePattern": "{지역명} {의도} 스카이차 작업 | 외벽스카이",
+  "urlPattern": "/ for home; /2.html through /5198.html, excluding reserved /404.html",
+  "keywordGroups": {
+    "primary": [
+      "빌딩외벽 스카이차",
+      "공장외벽 스카이차",
+      "상가외벽 스카이차"
+    ]
+  },
+  "copyPoolPlan": {
+    "industry": "facade equipment access support",
+    "source": "Dedicated Wallsky intent text + filtered V5 facade/facility/HVAC and shared pools; signage/advertising/painting service claims excluded.",
+    "file": "sites/wallsky/copy-pool.json"
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-jaccard",
+    "thresholdExclusive": 0.49,
+    "sampleFraction": 0.01,
+    "seed": 20261028
+  },
+  "conversion": {
+    "phone": "010-5322-1952",
+    "mode": "tel consultation; no form submission"
+  },
+  "images": {
+    "source": "docs/DAYSKY_PHOTO_PROVENANCE.json",
+    "approved": true
+  },
+  "publishPolicy": {
+    "mode": "public only after tests, parent integration review and Cloudflare binding preflight",
+    "indexNow": "after live HTTP and existing authorized key verification; no new key"
+  },
+  "sourceCommit": "d4f58c660655afc5f8359fe0fa70b98fc7588309"
+}
