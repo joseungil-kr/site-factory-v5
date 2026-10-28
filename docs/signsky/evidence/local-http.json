@@ -1,0 +1,563 @@
+{
+  "origin": "http://127.0.0.1:64021",
+  "publicDeployment": false,
+  "checked": [
+    {
+      "url": "/",
+      "status": 200
+    },
+    {
+      "url": "/2e8dfcbf4e-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/2e8dfcbf4e-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/c89b2316b8-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/c89b2316b8-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/ecc07b9d0f-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/ecc07b9d0f-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/b82ad137fb-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/b82ad137fb-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/9b8f10596f-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/9b8f10596f-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/48846a1858-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/48846a1858-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/10e248fd6c-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/10e248fd6c-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/bb52bfef2c-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/bb52bfef2c-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/82885bb77b-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/82885bb77b-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/864c2277b5-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/864c2277b5-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/b4a36186e6-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/b4a36186e6-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/f80882fcb7-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/f80882fcb7-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/665ac4f1f9-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/665ac4f1f9-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/cdef77bf85-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/cdef77bf85-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/67cf9c889f-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/67cf9c889f-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/e1d7dc94a7-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/e1d7dc94a7-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/e1e1514cb0-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/e1e1514cb0-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/bbcee46a36-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/bbcee46a36-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/c80e638a70-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/c80e638a70-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/034babf77b-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/034babf77b-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/800f63fd2b-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/800f63fd2b-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/85afa8b5c2-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/85afa8b5c2-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/289067b4ec-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/289067b4ec-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/241bb9ee5e-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/241bb9ee5e-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/428de1dca8-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/428de1dca8-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/cf0943e5e7-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/cf0943e5e7-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/0faca31cc6-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/0faca31cc6-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/b190876363-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/b190876363-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/e9ecc04f72-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/e9ecc04f72-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/310fde842f-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/310fde842f-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/84f9f7bc04-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/84f9f7bc04-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/70a9a1ebac-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/70a9a1ebac-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/1708719c7b-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/1708719c7b-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/d454ac0874-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/d454ac0874-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/6cb245d30b-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/6cb245d30b-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/4369d46abe-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/4369d46abe-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/66af9deabd-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/66af9deabd-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/333b1759e2-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/333b1759e2-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/ddb83d9bb8-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/ddb83d9bb8-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/e71182b343-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/e71182b343-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/2bba90f00b-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/2bba90f00b-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/b17df4946c-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/b17df4946c-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/4e7fa4e985-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/4e7fa4e985-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/677d873a18-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/677d873a18-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/5bf0535ad4-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/5bf0535ad4-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/11db373669-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/11db373669-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/47b8a11588-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/47b8a11588-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/e071b24732-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/e071b24732-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/5ec9b44fc4-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/5ec9b44fc4-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/1eb90abb42-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/1eb90abb42-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/543d022159-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/543d022159-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/2c22aa6603-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/2c22aa6603-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/fddcd1c575-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/fddcd1c575-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/7cf8bc89c4-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/7cf8bc89c4-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/7474b3eec4-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/7474b3eec4-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/c79b5a36f9-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/c79b5a36f9-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/6a396977e7-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/6a396977e7-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/ec97ffb085-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/ec97ffb085-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/22398834bd-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/22398834bd-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/304b4eb546-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/304b4eb546-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/1579b0fc19-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/1579b0fc19-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/fcf187e334-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/fcf187e334-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/06923e2968-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/06923e2968-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/3f37ce7a40-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/3f37ce7a40-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/4f155cbe0b-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/4f155cbe0b-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/e3ef6d490d-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/e3ef6d490d-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/8b3caf1981-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/8b3caf1981-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/7c903bb77a-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/7c903bb77a-advertising.html",
+      "status": 200
+    },
+    {
+      "url": "/f39d8a85f1-signage.html",
+      "status": 200
+    },
+    {
+      "url": "/f39d8a85f1-advertising.html",
+      "status": 200
+    }
+  ],
+  "missingStatus": 404
+}
