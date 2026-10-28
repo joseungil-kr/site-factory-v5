@@ -38,3 +38,11 @@ The generated site has no LocalBusiness address or fake reviews. Region coverage
 - The actual V5 checkout file `data/regions/seoul_gyeonggi_current_dong.json` is unchanged between main and `feature/v52-officeplant` (Git blob `6de6e5751b26a13a2132238f13633df3de0cd2aa`) and its checkout-byte SHA-256 is `48fb6a7cef914a4ef784478b7284761a84e1dd7dc9d7663215880c3a23a67e18`.
 - The 1,732-row ordered list was compared against the frozen handoff's generated regional titles; normalized row-sequence FNV-1a64 matches exactly: `a47540b27d784155`. First and last rows also match. No region ledger was edited.
 - The build pin now uses the exact V5 checkout SHA-256, while the frozen local handoff report remains preserved unchanged in the original Library ZIP.
+
+
+## Privacy fail-closed correction (2026-10-28)
+
+- The order-note UI is a `div`, not an HTML `form`; personal fields have no native submission destination.
+- The generate/reset controls are initially disabled `type=button` controls. JavaScript enables them only after every handler is attached. Missing or failing JavaScript leaves both controls disabled.
+- Browser tests use synthetic values only and verify no-JS and JS-runtime-failure cases cannot navigate or put sender, recipient, phone or address into the URL. Normal order-note generation remains client-only; checkout URL contains only the verified seller SKU.
+- Public IndexNow key is site-scoped and public, not a secret. It is emitted only in the public build, never in the workers.dev preview. Submission is a separate one-shot post-release step with an immutable receipt.

@@ -2,9 +2,9 @@ name: Officeplant isolated review
 on:
   push:
     branches: [feature/v52-officeplant]
-    paths: ['sites/officeplant/**', 'scripts/*officeplant.py', 'scripts/prepare_officeplant_assets.py', 'tests/officeplant-worker.test.mjs', 'tests/officeplant-browser-smoke.py', '.github/workflows/officeplant-review.yml']
+    paths: ['sites/officeplant/**', 'scripts/*officeplant.py', 'scripts/prepare_officeplant_assets.py', 'tests/officeplant-worker.test.mjs', 'tests/officeplant-browser-smoke.py', 'tests/officeplant-live-preview-smoke.py', '.github/workflows/officeplant-review.yml']
   pull_request:
-    paths: ['sites/officeplant/**', 'scripts/*officeplant.py', 'scripts/prepare_officeplant_assets.py', 'tests/officeplant-worker.test.mjs', 'tests/officeplant-browser-smoke.py', '.github/workflows/officeplant-review.yml']
+    paths: ['sites/officeplant/**', 'scripts/*officeplant.py', 'scripts/prepare_officeplant_assets.py', 'tests/officeplant-worker.test.mjs', 'tests/officeplant-browser-smoke.py', 'tests/officeplant-live-preview-smoke.py', '.github/workflows/officeplant-review.yml']
 permissions:
   contents: read
 jobs:
@@ -27,7 +27,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m v5 plan-check --site officeplant
-          python -m py_compile scripts/*officeplant.py scripts/prepare_officeplant_assets.py tests/officeplant-browser-smoke.py
+          python -m py_compile scripts/*officeplant.py scripts/prepare_officeplant_assets.py tests/officeplant-browser-smoke.py tests/officeplant-live-preview-smoke.py
           python -m unittest discover -s tests -v
           node --test worker/worker.test.mjs tests/officeplant-worker.test.mjs
       - name: Build preview and public candidate with original V5 region ledger
@@ -37,6 +37,7 @@ jobs:
           python scripts/build_officeplant.py --public
           python scripts/audit_officeplant.py
           python tests/officeplant-browser-smoke.py
+          python -c "from pathlib import Path; k=Path('sites/officeplant/indexnow-public-key.txt').read_text().strip(); assert len(k)==32 and all(c in '0123456789abcdef' for c in k); assert (Path('dist/officeplant-public')/(k+'.txt')).read_text().strip()==k; assert not (Path('dist/officeplant')/(k+'.txt')).exists(); print('OFFICEPLANT_INDEXNOW_KEY_BUILD_PASS')"
       - name: Exhaustive local HTTP checks for preview and public candidate
         shell: bash
         run: |

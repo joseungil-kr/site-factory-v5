@@ -64,6 +64,16 @@
     "mode": "preview until parent independent review",
     "indexNow": "only after parent-controlled public HTTP verification; no borrowed verification/key",
     "worker": "sfv52-officeplant",
-    "domainCollision": "DNS NXDOMAIN observed; authenticated Worker Domain inventory still required"
+    "domainCollision": "DNS NXDOMAIN observed; authenticated Worker Domain inventory still required",
+    "previewURL": "https://sfv52-officeplant.<verified-account-subdomain>.workers.dev",
+    "previewMode": "noindex + robots Disallow + sitemap 404",
+    "publicMode": "indexable only on officeplant.nalmada.net; workers.dev stays noindex",
+    "publicRelease": "Use existing V4 Cloudflare credentials and custom-domain binding path after exact collision preflight; no DNS record edits or new secrets"
+  },
+  "indexNow": {
+    "publicKeyFile": "sites/officeplant/indexnow-public-key.txt",
+    "keyFileRoute": "/<32-hex-key>.txt",
+    "submitAfter": "live HTTPS, robots, sitemap, all representative pages, image and order destination checks",
+    "retryPolicy": "one-shot; record every HTTP response; never auto-retry an uncertain or rejected submission"
   }
 }

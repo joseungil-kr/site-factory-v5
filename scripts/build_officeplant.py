@@ -110,6 +110,11 @@ def build(public=False):
         sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>'+DOMAIN+p['path']+'</loc></url>' for p in pages)+'</urlset>',encoding='utf-8')
     elif sitemap.exists():
         sitemap.unlink()
+    if public:
+        key=(SITE/'indexnow-public-key.txt').read_text(encoding='utf-8').strip()
+        if len(key)!=32 or any(char not in '0123456789abcdef' for char in key):
+            raise RuntimeError('Officeplant public IndexNow key must be 32 lowercase hexadecimal characters')
+        (out/(key+'.txt')).write_text(key+'\n',encoding='utf-8')
     report=ROOT/'reports/officeplant';report.mkdir(parents=True,exist_ok=True)
     manifest={'site':'officeplant','public':public,'pages':pages,'contentCount':len(pages),'regions':len(rows),'poolBlocks':len(pool),'poolAllocation':{'method':'GF(9) Reed-Solomon code, 9x9 groups + 1 shared block','regionalPages':len(allocation),'uniqueSelections':len({tuple(x) for x in allocation}),'maximumSharedBlocks':max_shared,'maximumAllowedSharedBlocks':4,'pass':max_shared<=4},'sourceRegionSHA256':source_region_sha}
     (report/('manifest-public.json' if public else 'manifest.json')).write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
