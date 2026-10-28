@@ -1,27 +1,33 @@
-# Parent-controlled publication
+# Wallsky release plan — updated 2026-10-28
 
-No main merge, production deployment, domain mutation, IndexNow submission or new scheduled task has been executed by the original local handoff. Remote persistence is being handled on the explicitly requested Wallsky branch separately.
+## Current state
 
-## Reused operational evidence
+- Dedicated source branch: `feature/v52-wallsky`.
+- Target hostname: `wallsky.nalmada.net`.
+- Intended dedicated Worker: `sfv52-wallsky`.
+- V5 offline build/static QA run [40711586641](https://github.com/joseungil-kr/site-factory-v5/actions/runs/40711586641) succeeded. The later cross-Daysky comparison is being checked separately.
+- The source ZIP was verified by SHA-256 and its key files have been committed to the dedicated remote branch. No main merge, Cloudflare binding, DNS edit, production deployment or IndexNow submission has occurred.
 
-- V5 baseline d4f58c660655afc5f8359fe0fa70b98fc7588309; V4 read-only clone 223b9348f32b700af98645d034943772d590aaba.
-- V4 `.github/workflows/publish-national-flower-a.yml`: explicit dispatch/main gate, shared concurrency, before-version capture, readback, rollback, then IndexNow. `scripts/publish_national_release.py`: exact full-release HTTP/hash verification and separate IndexNow phase.
-- V5 `.github/workflows/daysky-1736-deploy.yml`: existing custom-domain identity check, stable rollback version, Workers static-assets adapter. Most recent checked deploy runs 40435132123 and 40225502317 failed; do not describe them as successful. V5 build run 40643531356 succeeded.
-- Existing V5 Worker `worker/index.js` permits indexing only for daysky/plants. Do not deploy Wallsky with an assumption that this allowlist includes the new hostname.
+## Reuse the existing successful V4 path
 
-## Target and conflict policy
+Use V4 branch `ops/v5-isolated-staging-20261024`, which already contains successful site-specific releases for Daysky and Quicksky and uses existing `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID` secrets. Pin the exact reviewed V5 source commit. Do not create new Secrets, tokens, OAuth scopes or permissions.
 
-Candidate domain `wallsky.nalmada.net`, dedicated Worker `sfv52-wallsky`. A DNS query on 2026-10-28 reportedly returned that the name did not exist; this is historical and must be rechecked. Account-level Worker custom domains, routes and DNS wildcard bindings have not yet been verified. Stop on collision; do not overwrite an existing binding.
+## Required read-only preflight
 
-Earlier automatic approval review denied a source push and a proposed workflow for continuous remote artifact upload, citing insufficient explicit authorization for sending the business phone/content to the named GitHub destination. No bypass was attempted. The current user has now explicitly designated this repository, the Wallsky business purpose and creation/publication work; use only the normal GitHub write path. Do not create an artifact-upload workaround or widen permissions. If the standard write action is denied again, stop and record the exact denial.
+1. Identify the existing Cloudflare account by matching the already authorized V4 proof Worker domains.
+2. Confirm `nalmada.net` is active in that same account.
+3. Check account-level custom-domain bindings for `wallsky.nalmada.net` and `sfv52-wallsky`; read existing Worker deployments.
+4. Read DNS records and Worker routes for the target hostname. If DNS/Routes Read returns 403, do not infer absence from empty arrays; use the established public DNS fallback only where safe and stop if route conflict remains unknown.
+5. If the hostname is attached to another Worker or any record/route conflicts, stop and report. Do not overwrite it.
 
-## Reviewed release procedure
+## Dedicated public release
 
-1. Review the pinned region-name source, source copy pool, similarity audit and saved desktop/mobile screenshots. These screenshots are historical local observations, not a live browser check.
-2. Through an already-authorized Cloudflare connection, read current `nalmada.net` zone DNS, routes, account Worker custom-domain bindings and `sfv52-wallsky` existence. Stop on collision. Do not create credentials, change nameservers or widen permissions.
-3. Build `python scripts/build_wallsky.py --public`, run `python scripts/qa_wallsky.py`, inspect sitemap/robots. Keep only the new hostname indexable; workers.dev and 404 must retain noindex. Use the existing Workers static-assets `html_handling:none`, `not_found_handling:404-page`, `run_worker_first:true` pattern with the dedicated adapter.
-4. Snapshot previous new-site Worker version and binding state. For a fresh release with no previous version, rollback is to withdraw only the newly added Wallsky publication/binding and preserve all existing site routes. For subsequent releases deploy the previous captured version at 100%.
-5. Deploy only dedicated Wallsky assets after build/QA and collision preflight. Read all 5,197 canonical URLs plus assets/sitemap/robots, unknown-path 404 and both display widths against the live host. Verify tel links without placing calls.
-6. Only after live checks, reuse the existing authorized IndexNow key process, host the appropriate key file and submit the canonical sitemap URL list. Record the API response separately; acceptance does not guarantee search indexing.
+1. Pin the reviewed source SHA, run Python and Worker regressions, `python scripts/build_wallsky.py --public`, `python scripts/qa_wallsky.py`, `python scripts/cross_wallsky_daysky.py`, and local HTTP checks.
+2. Build a Wrangler config for only `sfv52-wallsky`, `workers_dev:true`, `preview_urls:false`, static assets `html_handling:none`, `not_found_handling:404-page`, `run_worker_first:true`. Set `WALLSKY_PUBLIC=1` only for the exact `wallsky.nalmada.net` release. Do not modify V5 shared Worker routing or any other site's variables.
+3. Capture the pre-deploy Worker version if it exists. Deploy the isolated Worker assets and attach only the exact hostname after preflight. If the new site has no prior version, rollback means withdraw only this new site's binding/release; preserve all existing bindings. If an existing site version is present, restore that captured version at 100%.
+4. Live-check every canonical URL (5,197), four supporting resources, robots, sitemap, exact canonical/robots meta, phone links, image status, unknown path 404/noindex, error asset noindex, and workers.dev noindex. Also inspect desktop/mobile screenshots from live HTML. Save an immutable run/readback report.
+5. Only after live HTTP success, validate an existing authorized IndexNow key file by HTTPS 200 and exact body, submit the intended canonical URLs once, and save the actual response. Do not claim Google/Naver indexing; parent registration owner handles their submissions.
 
-The local review build is noindex. `--public` generates public files locally and is not itself a deployment or indexing submission.
+## Truth boundaries
+
+The 1,732 inputs are V4 `NAME_CANDIDATES` region-name rows as of 2026-10-12, not independently verified legal/administrative classifications or proof of facility presence. Pages describe equipment access consultation, not completed work, professional waterproofing/painting or guaranteed dispatch. No guessed local case studies, fleet counts, rates or arrival times.
