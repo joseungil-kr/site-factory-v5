@@ -14,10 +14,13 @@
       "상가외벽"
     ],
     "exclusions": [
-      "간판교체",
-      "현수막설치",
-      "전문방수 직접시공",
-      "전문도장 직접시공"
+      "간판 교체·옥외 안내판 교체",
+      "현수막 설치",
+      "공공 표지판·공공시설물 자체 교체",
+      "고소 조명탑 단독 작업",
+      "전문 방수 직접 시공",
+      "전문 도장 직접 시공",
+      "전기·설비 전문 공정 직접 시공"
     ]
   },
   "pageTypes": [
@@ -37,7 +40,7 @@
   },
   "copyPoolPlan": {
     "industry": "facade equipment access support",
-    "source": "Dedicated Wallsky intent text + filtered V5 facade/facility/HVAC and shared pools; signage/advertising/painting service claims excluded.",
+    "source": "Wallsky-specific intent text + V5 facade/facility/HVAC and shared pools after explicit scope phrase exclusion; no sign/banner/lighting-tower/public-fixture replacement or professional painting/waterproofing/electrical claims.",
     "file": "sites/wallsky/copy-pool.json"
   },
   "similarityAudit": {
