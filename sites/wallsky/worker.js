@@ -8,8 +8,15 @@ export default {
         headers: {'Content-Type':'text/plain; charset=utf-8','X-Robots-Tag':'noindex, nofollow'}
       });
     }
-    if (url.pathname === '/') url.pathname = '/index.html';
-    const response = await env.ASSETS.fetch(new Request(url, request));
+    // Reuse the V5-proven static-assets pattern: forward non-root requests
+    // unchanged; only translate "/" to the actual index.html asset path.
+    let response;
+    if (url.pathname === '/') {
+      url.pathname = '/index.html';
+      response = await env.ASSETS.fetch(new Request(url, request));
+    } else {
+      response = await env.ASSETS.fetch(request);
+    }
     const headers = new Headers(response.headers);
     headers.set('X-Content-Type-Options','nosniff');
     if (!indexable || response.status === 404) headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
