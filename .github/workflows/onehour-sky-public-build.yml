@@ -1,0 +1,97 @@
+name: Onehour Sky exact-host 5436 indexable release QA (no deployment)
+on:
+  push:
+    branches: [feature/onehour-sky-site-preflight-20261027]
+    paths:
+      - '.github/workflows/onehour-sky-public-build.yml'
+      - 'sites/onehour-sky/**'
+      - 'data/regions/onehour_national_*'
+      - 'data/pools/onehour_sky_copy_pool.json'
+      - 'v5/onehour*'
+      - 'v5/service_model.py'
+      - 'v5/service_markup.py'
+      - 'v5/engine.py'
+      - 'worker/index.js'
+      - 'tests/test_onehour_sky.py'
+permissions:
+  contents: read
+concurrency:
+  group: onehour-exact-public-qa
+  cancel-in-progress: false
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Full V5/Worker regressions and owner provenance
+        run: |
+          set -euo pipefail
+          python -m v5 plan-check --site onehour-sky
+          python -m unittest discover -s tests -q
+          npm test
+      - name: Build and audit exactly 5436 public indexable HTML pages
+        run: |
+          set -euo pipefail
+          python -m v5 build --site onehour-sky --mode public-indexing
+          python -m v5 audit --site onehour-sky
+          python -m v5.onehour_sky_quality
+          python - <<'PY'
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          from v5.config import read_site
+          import json
+          data=read_site('onehour-sky');site=data['site']
+          assert site['domain']=='https://1hrsky.nalmada.net'
+          assert site['naverSiteVerification']=='24640409f1b53459210054eec4e83176009a0a84'
+          assert site['publicIndexingApproved'] and site['imageAssetsApproved'] and site['phoneUseApproved']
+          assert not site['indexNow']['enabled'] and not site['publishEnabled']
+          root=Path('dist/onehour-sky')
+          pages=list(root.glob('*.html'))
+          assert len(pages)==5437,len(pages)
+          assert (root/'5436.html').is_file() and not (root/'5437.html').exists()
+          sitemap=root/'sitemap.xml'
+          urls=[x.text for x in ET.parse(sitemap).findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+          assert len(urls)==5436 and len(set(urls))==5436
+          assert urls[0]=='https://1hrsky.nalmada.net/'
+          assert urls[-1]=='https://1hrsky.nalmada.net/5436.html'
+          robots=(root/'robots.txt').read_text()
+          assert 'Allow: /' in robots and 'Disallow: /' not in robots
+          assert 'Sitemap: https://1hrsky.nalmada.net/sitemap.xml' in robots
+          home=(root/'index.html').read_text()
+          assert home.count('name="naver-site-verification"')==1
+          assert home.count('content="24640409f1b53459210054eec4e83176009a0a84"')==1
+          for path in ('index.html','2.html','286.html','5436.html'):
+              html=(root/path).read_text()
+              loc='/' if path=='index.html' else '/'+path
+              assert '<meta name="robots" content="index,follow">' in html
+              assert '<link rel="canonical" href="https://1hrsky.nalmada.net'+loc+'">' in html
+              if path!='index.html': assert 'name="naver-site-verification"' not in html
+          assert '<meta name="robots" content="noindex,nofollow">' in (root/'404.html').read_text()
+          assert all('name="naver-site-verification"' not in p.read_text() for p in pages if p.name!='index.html')
+          key=Path('sites/onehour-sky/indexnow-public-key.txt').read_text().strip()
+          assert len(key)==32 and all(c in '0123456789abcdef' for c in key)
+          (root/(key+'.txt')).write_text(key+'\n')
+          sample=json.loads(Path('reports/onehour-sky/sample_full_audit.json').read_text())
+          audit=json.loads(Path('reports/onehour-sky/audit.json').read_text())
+          assert sample['passed'] and sample['sampleCount']==55 and sample['pairsCompared']==298925
+          assert sample['worstSampleToPopulationSimilarity']<.49 and sample['wholePopulationExactBodyDuplicates']==0
+          assert audit['errors']==[]
+          print('ONEHOUR_PUBLIC_BUILD_OK pages=5436 sitemap=5436 naver-home-only=1 robots=index,follow quality=passed')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: onehour-indexable-reviewed-${{ github.sha }}
+          path: |
+            dist/onehour-sky/
+            reports/onehour-sky/manifest.json
+            reports/onehour-sky/audit.json
+            reports/onehour-sky/sample_full_audit.json
+          if-no-files-found: error
+          retention-days: 30
