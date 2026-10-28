@@ -1,0 +1,243 @@
+{
+  "generatedFiles": "PASS",
+  "errors": [],
+  "contentPages": 3468,
+  "htmlFilesIncluding404": 3469,
+  "internalLinkChecks": 41600,
+  "images": [
+    "/assets/D144.jpg",
+    "/assets/D149.jpg",
+    "/assets/D158.jpg"
+  ],
+  "uniqueTitles": 3468,
+  "sitemapURLs": 3468,
+  "exactDuplicateBodies": 0,
+  "similarity": {
+    "metric": "char-5gram-jaccard",
+    "normalization": "NFC; collapse whitespace; complete body visible text including chrome, article, product and navigation; exclude head/script/style",
+    "seed": 20261028,
+    "sampleCount": 35,
+    "population": 3468,
+    "comparisons": 121345,
+    "thresholdExclusive": 0.49,
+    "maximum": 0.393434,
+    "pass": true,
+    "nearest": [
+      {
+        "path": "/r/1265-gift.html",
+        "nearest": "/r/1691-gift.html",
+        "score": 0.38748,
+        "pass": true
+      },
+      {
+        "path": "/r/1143-gift.html",
+        "nearest": "/r/204-gift.html",
+        "score": 0.386486,
+        "pass": true
+      },
+      {
+        "path": "/r/1411-opening.html",
+        "nearest": "/r/1087-opening.html",
+        "score": 0.371579,
+        "pass": true
+      },
+      {
+        "path": "/r/1483-gift.html",
+        "nearest": "/r/1147-gift.html",
+        "score": 0.387646,
+        "pass": true
+      },
+      {
+        "path": "/r/1195-opening.html",
+        "nearest": "/r/760-opening.html",
+        "score": 0.393434,
+        "pass": true
+      },
+      {
+        "path": "/r/93-opening.html",
+        "nearest": "/r/474-opening.html",
+        "score": 0.378986,
+        "pass": true
+      },
+      {
+        "path": "/r/1184-opening.html",
+        "nearest": "/r/1529-opening.html",
+        "score": 0.389857,
+        "pass": true
+      },
+      {
+        "path": "/r/1400-opening.html",
+        "nearest": "/r/1404-opening.html",
+        "score": 0.382415,
+        "pass": true
+      },
+      {
+        "path": "/r/434-opening.html",
+        "nearest": "/r/440-opening.html",
+        "score": 0.381003,
+        "pass": true
+      },
+      {
+        "path": "/r/76-gift.html",
+        "nearest": "/r/496-gift.html",
+        "score": 0.385523,
+        "pass": true
+      },
+      {
+        "path": "/r/1022-opening.html",
+        "nearest": "/r/1658-opening.html",
+        "score": 0.386328,
+        "pass": true
+      },
+      {
+        "path": "/r/1107-opening.html",
+        "nearest": "/r/360-opening.html",
+        "score": 0.37567,
+        "pass": true
+      },
+      {
+        "path": "/r/290-gift.html",
+        "nearest": "/r/263-gift.html",
+        "score": 0.382735,
+        "pass": true
+      },
+      {
+        "path": "/r/1683-opening.html",
+        "nearest": "/r/1338-opening.html",
+        "score": 0.380625,
+        "pass": true
+      },
+      {
+        "path": "/r/538-opening.html",
+        "nearest": "/r/448-opening.html",
+        "score": 0.387421,
+        "pass": true
+      },
+      {
+        "path": "/r/14-gift.html",
+        "nearest": "/r/572-gift.html",
+        "score": 0.381886,
+        "pass": true
+      },
+      {
+        "path": "/r/940-gift.html",
+        "nearest": "/r/1519-gift.html",
+        "score": 0.389984,
+        "pass": true
+      },
+      {
+        "path": "/r/477-gift.html",
+        "nearest": "/r/723-gift.html",
+        "score": 0.386196,
+        "pass": true
+      },
+      {
+        "path": "/r/1221-gift.html",
+        "nearest": "/r/1352-gift.html",
+        "score": 0.386218,
+        "pass": true
+      },
+      {
+        "path": "/r/1694-gift.html",
+        "nearest": "/r/1685-gift.html",
+        "score": 0.389441,
+        "pass": true
+      },
+      {
+        "path": "/r/443-opening.html",
+        "nearest": "/r/206-opening.html",
+        "score": 0.381383,
+        "pass": true
+      },
+      {
+        "path": "/r/1197-gift.html",
+        "nearest": "/r/1473-gift.html",
+        "score": 0.387691,
+        "pass": true
+      },
+      {
+        "path": "/r/1344-opening.html",
+        "nearest": "/r/1599-opening.html",
+        "score": 0.381579,
+        "pass": true
+      },
+      {
+        "path": "/r/1590-gift.html",
+        "nearest": "/r/1560-gift.html",
+        "score": 0.38522,
+        "pass": true
+      },
+      {
+        "path": "/r/1506-gift.html",
+        "nearest": "/r/1068-gift.html",
+        "score": 0.384615,
+        "pass": true
+      },
+      {
+        "path": "/r/1587-gift.html",
+        "nearest": "/r/1176-gift.html",
+        "score": 0.386049,
+        "pass": true
+      },
+      {
+        "path": "/r/68-opening.html",
+        "nearest": "/r/1253-opening.html",
+        "score": 0.378421,
+        "pass": true
+      },
+      {
+        "path": "/r/1198-opening.html",
+        "nearest": "/r/88-opening.html",
+        "score": 0.377508,
+        "pass": true
+      },
+      {
+        "path": "/r/2-gift.html",
+        "nearest": "/r/383-gift.html",
+        "score": 0.3697,
+        "pass": true
+      },
+      {
+        "path": "/r/435-gift.html",
+        "nearest": "/r/546-gift.html",
+        "score": 0.381614,
+        "pass": true
+      },
+      {
+        "path": "/r/940-opening.html",
+        "nearest": "/r/1303-opening.html",
+        "score": 0.375264,
+        "pass": true
+      },
+      {
+        "path": "/r/834-opening.html",
+        "nearest": "/r/258-opening.html",
+        "score": 0.383036,
+        "pass": true
+      },
+      {
+        "path": "/r/722-gift.html",
+        "nearest": "/r/560-gift.html",
+        "score": 0.388391,
+        "pass": true
+      },
+      {
+        "path": "/r/1400-gift.html",
+        "nearest": "/r/1568-gift.html",
+        "score": 0.391212,
+        "pass": true
+      },
+      {
+        "path": "/r/1351-opening.html",
+        "nearest": "/r/793-opening.html",
+        "score": 0.370607,
+        "pass": true
+      }
+    ]
+  },
+  "limitations": [
+    "Similarity is fixed 1% sample versus full population, NOT all-pairs.",
+    "Local file checks are NOT public HTTP checks.",
+    "No live order or payment submitted."
+  ]
+}

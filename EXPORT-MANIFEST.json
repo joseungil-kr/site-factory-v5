@@ -1,0 +1,115 @@
+{
+  "baseSHA": "d4f58c660655afc5f8359fe0fa70b98fc7588309",
+  "files": [
+    {
+      "path": ".github/workflows/officeplant-review.yml",
+      "bytes": 1309,
+      "sha256": "36255cc564d53f588485c701c89173ef1ab316209f0be109457c1a532abb61b4"
+    },
+    {
+      "path": "HANDOFF.md",
+      "bytes": 2107,
+      "sha256": "51b1b21c4deadb092bda5641dfea120f0b64aab6e1daa5d72d3e9b756ce1c3bd"
+    },
+    {
+      "path": "reports/officeplant/audit.json",
+      "bytes": 6171,
+      "sha256": "c879983fbb700bef16f8f505363dcae6882f1b4abe1ef54de9a533465c821f8a"
+    },
+    {
+      "path": "reports/officeplant/http.json",
+      "bytes": 353390,
+      "sha256": "b04dc6d3b7b8e4898958ef61d14531c483172e1b18712d9d4a6412a97a062267"
+    },
+    {
+      "path": "reports/officeplant/manifest-public.json",
+      "bytes": 449550,
+      "sha256": "ddae93d9c6d7a06ce3b3f7920b2e86a8c00fa69f2ddb226a26687f94764eb984"
+    },
+    {
+      "path": "reports/officeplant/manifest.json",
+      "bytes": 449551,
+      "sha256": "9777ca923546fd4eaf3a7de335281e498c945b08e5c7f445e0938b79bf1d9569"
+    },
+    {
+      "path": "scripts/audit_officeplant.py",
+      "bytes": 6020,
+      "sha256": "837f5c9f4df74c16eebf496f94816990bf542feadf05e9cfc1221f2c1507384d"
+    },
+    {
+      "path": "scripts/build_officeplant.py",
+      "bytes": 15425,
+      "sha256": "f7abea114179651830fbf694f7226e81377ee4e70ae4d5a9c3a4c1fdab0f35dc"
+    },
+    {
+      "path": "scripts/http_check_officeplant.py",
+      "bytes": 2025,
+      "sha256": "700f1ca7c8ab613d6b17956de997bee6ce4f910ff952add0c9f504409a7894c5"
+    },
+    {
+      "path": "sites/officeplant/RELEASE.md",
+      "bytes": 3746,
+      "sha256": "c14c1542e07bdfa529b5cbf35cedfda114b4f062fdd16b8a66fe93ceaacb9c92"
+    },
+    {
+      "path": "sites/officeplant/assets/D144.jpg",
+      "bytes": 46393,
+      "sha256": "ac97d1d377896d41029c88d6efc145d11bcb111088c02cb45aab55dcaaf2b48a"
+    },
+    {
+      "path": "sites/officeplant/assets/D149.jpg",
+      "bytes": 55364,
+      "sha256": "fb9336f02a5bfe5cace2f24cb8c2828355ee303199c7ed4ed053e8c260b25109"
+    },
+    {
+      "path": "sites/officeplant/assets/D158.jpg",
+      "bytes": 41267,
+      "sha256": "a8f652157303d2c08a3a8d0074d4d96e13c7c6249eda7a21f3e77595f7fe7823"
+    },
+    {
+      "path": "sites/officeplant/assets/officeplant.css",
+      "bytes": 7204,
+      "sha256": "8a8251c264cf2d6ecbd19bcda0a94b76ad4c209e1f1226a0769137b1d3f84c5c"
+    },
+    {
+      "path": "sites/officeplant/assets/officeplant.js",
+      "bytes": 3769,
+      "sha256": "a82f4399615b3f593c703fd2f445b7a9b97af68ef04088393b57ff84ac28fe0b"
+    },
+    {
+      "path": "sites/officeplant/copy-pool.txt",
+      "bytes": 21851,
+      "sha256": "e9705ae939432c0215d7f7a6a9548b0138f256dfc19c5eabb837522ac4594119"
+    },
+    {
+      "path": "sites/officeplant/research.md",
+      "bytes": 6102,
+      "sha256": "2f87ffe963994337d2cc3b6233bdedd2825412cb8fcf88ff99a4dd067d212e8b"
+    },
+    {
+      "path": "sites/officeplant/site-spec.json",
+      "bytes": 2518,
+      "sha256": "f01b5ba520783bf33dc121e240df3ad3ddcc370bb627fda985f1ab303ea55c19"
+    },
+    {
+      "path": "sites/officeplant/worker.js",
+      "bytes": 924,
+      "sha256": "9ec343f05894411717b5b5b5490804b5d620124fa74c561421faeb70ba085079"
+    },
+    {
+      "path": "sites/officeplant/wrangler.preview.json",
+      "bytes": 316,
+      "sha256": "ce761ff01c880d50144c0c816c05275fbece0daace3b4f9fffa8af447b51e7e6"
+    },
+    {
+      "path": "sites/officeplant/wrangler.public.json",
+      "bytes": 323,
+      "sha256": "9210fbc51b8fb525bfa38b8707f69e089f9ed3d4db7726f56cff5f773e6027df"
+    },
+    {
+      "path": "tests/officeplant-worker.test.mjs",
+      "bytes": 1142,
+      "sha256": "cea208b9850ed0cf58f8031803d7e862f6284667591081713ef7bb8ef910ff37"
+    }
+  ]
+}
