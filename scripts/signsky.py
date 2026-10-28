@@ -145,6 +145,17 @@ def audit():
             assert word not in raw,(path,word)
     page_descriptions=descriptions[1:]
     assert len(page_descriptions)==138 and len(set(page_descriptions))==138, 'Repeated regional descriptions'
+    for page, description in zip(pages,page_descriptions):
+        prefix=f"{page['region']} {page['label']} 스카이차 예약 안내."
+        assert description.startswith(prefix), (page['path'], 'description missing region + intent')
+        if page['intent']=='signage':
+            assert '기존 간판 철거와 새 간판 설치 범위' in description, page['path']
+            assert '현수막 크기와 수량' not in description, page['path']
+        elif page['intent']=='advertising':
+            assert '현수막 크기와 수량' in description, page['path']
+            assert '기존 간판 철거와 새 간판 설치 범위' not in description, page['path']
+        else:
+            raise AssertionError('Unknown intent: '+str(page['intent']))
     for p in pages:
         # Primary metric matches V5: intro + article paragraphs; additionally audit rendered main text below.
         texts.append(grams(p['intro']+' '+' '.join(' '.join(s) for _,s in p['sections'])))
