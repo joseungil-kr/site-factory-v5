@@ -172,7 +172,11 @@ def moment_cards(site,pages):
 
 
 def related_documents(pages,current=None,limit=4):
-    chosen=[x for x in pages if x['number']!=current][:limit]
+    current_page=next((p for p in pages if p['number']==current),None)
+    candidates=[p for p in pages if p['number'] not in (1,current)]
+    if current_page:
+        candidates.sort(key=lambda p:(p['region']!=current_page['region'],abs(p['number']-current),p['number']))
+    chosen=candidates[:limit]
     return '<div class="related-grid">'+''.join(
         '<a class="related-card" href="'+h(url_path(p['number']))+'">'
         '<span class="related-icon" aria-hidden="true">✿</span>'
@@ -189,6 +193,18 @@ def article_body(page):
         f'<section class="document-section" id="section-{i}"><span class="section-index">{i:02d}</span>'
         f'<h2>{h(s["heading"])}</h2><p>{h(s["paragraph"])}</p></section>'
         for i,s in enumerate(page['sections'],1))+'</article>')
+
+
+def document_directory(pages):
+    groups={}
+    for page in sorted(pages,key=lambda p:p['number']):
+        if page['number']!=1:
+            groups.setdefault(' '.join(page['region'].split()[:2]),[]).append(page)
+    return ('<section class="home-section wide-inner" aria-label="지역별 안내 문서">'
+        '<h2>지역별 안내 문서</h2><div class="faq-list">'+''.join(
+        '<details><summary>'+h(region)+'</summary><ul>'+''.join(
+        '<li><a href="'+h(url_path(p['number']))+'">'+h(p['region']+' '+p['topic'])+'</a></li>'
+        for p in group)+'</ul></details>' for region,group in groups.items())+'</div></section>')
 
 
 def home(site,page,pages,products,links):
@@ -239,7 +255,8 @@ def home(site,page,pages,products,links):
         '<p>축하화분과 승진화분으로 소중한 순간을 더욱 특별하게 전하세요.</p></div>'
         +phone_buttons(site)+'</section>'
         +link_block(relevant_links(links,page,'body'),'body-links wide-inner')
-        +render_pagination(pages,page['number'])+'</main>')
+        +render_pagination(pages,page['number'])
+        +(document_directory(pages) if site['id']=='seoul-gyeonggi-plants' else '')+'</main>')
     return body+footer(site,links,page)
 
 
