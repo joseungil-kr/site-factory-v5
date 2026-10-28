@@ -1,0 +1,73 @@
+name: Officeplant isolated review
+on:
+  push:
+    branches: [feature/v52-officeplant]
+    paths: ['sites/officeplant/**', 'scripts/*officeplant.py', 'scripts/prepare_officeplant_assets.py', 'tests/officeplant-worker.test.mjs', 'tests/officeplant-browser-smoke.py', '.github/workflows/officeplant-review.yml']
+  pull_request:
+    paths: ['sites/officeplant/**', 'scripts/*officeplant.py', 'scripts/prepare_officeplant_assets.py', 'tests/officeplant-worker.test.mjs', 'tests/officeplant-browser-smoke.py', '.github/workflows/officeplant-review.yml']
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Install Chromium for real browser tests
+        run: |
+          python -m pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+      - name: Restore exact original product photos by pinned SHA-256
+        run: python scripts/prepare_officeplant_assets.py
+      - name: Full V5 regressions, plan and syntax checks
+        run: |
+          set -euo pipefail
+          python -m v5 plan-check --site officeplant
+          python -m py_compile scripts/*officeplant.py scripts/prepare_officeplant_assets.py tests/officeplant-browser-smoke.py
+          python -m unittest discover -s tests -v
+          node --test worker/worker.test.mjs tests/officeplant-worker.test.mjs
+      - name: Build preview and public candidate with original V5 region ledger
+        run: |
+          set -euo pipefail
+          python scripts/build_officeplant.py
+          python scripts/build_officeplant.py --public
+          python scripts/audit_officeplant.py
+          python tests/officeplant-browser-smoke.py
+      - name: Exhaustive local HTTP checks for preview and public candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m http.server 8894 --directory dist/officeplant >/tmp/officeplant-preview.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8894/ >/dev/null; then break; fi
+            sleep 1
+          done
+          python scripts/http_check_officeplant.py --origin http://127.0.0.1:8894
+          cp reports/officeplant/http.json reports/officeplant/http-preview.json
+          kill "$server" 2>/dev/null || true
+          wait "$server" 2>/dev/null || true
+          trap - EXIT
+          python -m http.server 8895 --directory dist/officeplant-public >/tmp/officeplant-public.log 2>&1 &
+          server=$!
+          trap 'kill "$server" 2>/dev/null || true' EXIT
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8895/ >/dev/null; then break; fi
+            sleep 1
+          done
+          python scripts/http_check_officeplant.py --origin http://127.0.0.1:8895 --public
+          cp reports/officeplant/http.json reports/officeplant/http-public.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: officeplant-review-${{ github.sha }}
+          path: |
+            dist/officeplant/
+            dist/officeplant-public/
+            reports/officeplant/
+          retention-days: 14
+          if-no-files-found: error

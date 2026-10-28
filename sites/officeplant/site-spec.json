@@ -6,16 +6,64 @@
   "domain": "https://officeplant.nalmada.net",
   "brand": "오피스화분",
   "businessModel": "사무실 개업 선물 선택 안내 및 기존 꽃이랑 상품 상세·전화 주문 연결",
-  "serviceScope": {"region": "서울·경기", "granularity": "기존 1732개 동 원장; 배송 확정 지역이나 지점 수가 아닌 상담 대상 주소", "facilities": "사무실 개업·거래처 선물; 현지 매장 주장 없음"},
-  "pageTypes": ["home", "regional-office-opening", "regional-office-gift", "region-directory", "order-helper", "moran-market-guide"],
+  "serviceScope": {
+    "region": "서울·경기",
+    "granularity": "기존 1732개 동 원장; 배송 확정 지역이나 지점 수가 아닌 상담 대상 주소",
+    "facilities": "사무실 개업·거래처 선물; 현지 매장 주장 없음",
+    "regionLedgerSHA256": "e7788fd6d7fa3fab10699991d82af714c5215967217c2d96bf6650beaf40310f"
+  },
+  "pageTypes": [
+    "home",
+    "regional-office-opening",
+    "regional-office-gift",
+    "region-directory",
+    "order-helper",
+    "moran-market-guide"
+  ],
   "targetPageCount": 3468,
   "countFormula": "1732 regions × 2 intents + home + region directory + order helper + Moran guide = 3468; 404 excluded",
   "titlePattern": "{시군구} {동} {사무실 개업화분|사무실 개업선물} | 오피스화분",
   "urlPattern": "/r/{stable-ledger-index}-{opening|gift}.html",
-  "keywordGroups": {"primary": ["사무실 개업화분", "사무실 개업선물"], "secondary": ["모란시장 사무실 개업꽃집", "책상 화분", "거래처 개업 리본", "개업화분 예산"]},
-  "copyPoolPlan": {"industry": "office-opening-plant", "source": "sites/officeplant/copy-pool.json; original advice based on accessed search documents' structure", "sentenceTarget": 160},
-  "similarityAudit": {"metric": "char-5gram-jaccard", "thresholdExclusive": 0.49, "sampleFraction": 0.01, "seed": 20261028, "scope": "NFC whitespace-normalized visible body; fixed sample compared against every other generated page, including shared UI; report article-only separately if needed"},
-  "conversion": {"phone": "1844-0644", "orderUrl": "https://fwith.co.kr", "mode": "client-only preparation sheet, copy explicitly, then existing product checkout or tel link; no submissions, storage or analytics"},
-  "images": {"source": "Existing fwith.co.kr D144 D158 D149 actual product photos, product pages viewed 2026-10-28", "approved": true, "approvalSource": "User authorizes verified existing product photographs reuse"},
-  "publishPolicy": {"mode": "preview until parent independent review", "indexNow": "only after parent-controlled public HTTP verification; no borrowed verification/key", "worker": "sfv52-officeplant", "domainCollision": "DNS NXDOMAIN observed; authenticated Worker Domain inventory still required"}
+  "keywordGroups": {
+    "primary": [
+      "사무실 개업화분",
+      "사무실 개업선물"
+    ],
+    "secondary": [
+      "모란시장 사무실 개업꽃집",
+      "책상 화분",
+      "거래처 개업 리본",
+      "개업화분 예산"
+    ]
+  },
+  "copyPoolPlan": {
+    "industry": "office-opening-plant",
+    "source": "sites/officeplant/copy-pool.txt; 82 original topic blocks grouped by space, purpose, budget, care, ribbon, delivery, order and selection",
+    "blockTarget": 82,
+    "sentenceTarget": null,
+    "allocation": "GF(9) Reed-Solomon selection with one common region-verification block; maximum shared blocks per pair <=4"
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-jaccard",
+    "thresholdExclusive": 0.49,
+    "sampleFraction": 0.01,
+    "seed": 20261028,
+    "scope": "NFC whitespace-normalized visible body; fixed sample compared against every other generated page, including shared UI; report article-only separately if needed"
+  },
+  "conversion": {
+    "phone": "1844-0644",
+    "orderUrl": "https://fwith.co.kr",
+    "mode": "client-only preparation sheet, copy explicitly, then existing product checkout or tel link; no submissions, storage or analytics"
+  },
+  "images": {
+    "source": "Existing fwith.co.kr D144 D158 D149 actual product photos, product pages viewed 2026-10-28",
+    "approved": true,
+    "approvalSource": "User authorizes verified existing product photographs reuse"
+  },
+  "publishPolicy": {
+    "mode": "preview until parent independent review",
+    "indexNow": "only after parent-controlled public HTTP verification; no borrowed verification/key",
+    "worker": "sfv52-officeplant",
+    "domainCollision": "DNS NXDOMAIN observed; authenticated Worker Domain inventory still required"
+  }
 }

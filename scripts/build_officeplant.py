@@ -41,7 +41,13 @@ def build(public=False):
     (out/'r').mkdir(exist_ok=True)
     for asset in (SITE/'assets').iterdir():
         shutil.copy2(asset, out/'assets'/asset.name)
-    rows = json.loads((ROOT/'data/regions/seoul_gyeonggi_current_dong.json').read_text(encoding='utf-8'))['rows']
+    region_path = ROOT/'data/regions/seoul_gyeonggi_current_dong.json'
+    region_bytes = region_path.read_bytes()
+    source_region_sha = hashlib.sha256(region_bytes).hexdigest()
+    expected_region_sha = json.loads((SITE/'site-spec.json').read_text(encoding='utf-8'))['serviceScope']['regionLedgerSHA256']
+    if source_region_sha != expected_region_sha:
+        raise RuntimeError('Region ledger SHA-256 mismatch: expected ' + expected_region_sha + ', got ' + source_region_sha)
+    rows = json.loads(region_bytes.decode('utf-8'))['rows']
     assert len(rows) == 1732 and len({tuple(r) for r in rows}) == 1732
     pool = [line.split('|',1) for line in (SITE/'copy-pool.txt').read_text(encoding='utf-8').splitlines() if line]
     pages = []
@@ -89,7 +95,7 @@ def build(public=False):
     elif sitemap.exists():
         sitemap.unlink()
     report=ROOT/'reports/officeplant';report.mkdir(parents=True,exist_ok=True)
-    manifest={'site':'officeplant','public':public,'pages':pages,'contentCount':len(pages),'regions':len(rows),'poolBlocks':len(pool),'sourceRegionSHA256':hashlib.sha256((ROOT/'data/regions/seoul_gyeonggi_current_dong.json').read_bytes()).hexdigest()}
+    manifest={'site':'officeplant','public':public,'pages':pages,'contentCount':len(pages),'regions':len(rows),'poolBlocks':len(pool),'sourceRegionSHA256':source_region_sha}
     (report/('manifest-public.json' if public else 'manifest.json')).write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({k:v for k,v in manifest.items() if k!='pages'},ensure_ascii=False))
 

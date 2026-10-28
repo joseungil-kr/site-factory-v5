@@ -46,7 +46,7 @@ if (spaceFilter) {
   const update = () => {
     let shown = 0;
     for (const card of document.querySelectorAll('#collection .product')) {
-      card.hidden = (spaceFilter.value !== 'all' && card.dataset.space !== spaceFilter.value) || Number(card.dataset.price) > Number(budgetFilter.value);
+      card.hidden = (spaceFilter.value !== 'all' && card.dataset.space !== spaceFilter.value) || Number(card.dataset.price) > Number(budgetFilter.value) || !card.dataset.purposes.split(' ').includes(purposeFilter.value);
       if (!card.hidden) shown++;
       const link = card.querySelector('.subtle');
       const url = new URL(link.href);
@@ -57,4 +57,5 @@ if (spaceFilter) {
     document.querySelector('#selection-advice').textContent = advice[purposeFilter.value];
   };
   for (const control of [spaceFilter,budgetFilter,purposeFilter]) control.addEventListener('change',update);
+  update();
 }
