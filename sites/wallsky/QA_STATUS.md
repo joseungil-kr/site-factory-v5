@@ -1,26 +1,35 @@
-# Wallsky review handoff — 2026-10-28
+# Wallsky review handoff — updated 2026-10-28
 
-PLAN / POOL / GENERATED / LOCAL_QA were reported complete in the local worktree. The archive preserves the original outputs and local commits. DEPLOYED / LIVE_HTTP / INDEXNOW were not executed in the original handoff; this is not a claim of finished public launch.
+## Source and provenance
 
-## Checked in the supplied local reports
+- Original archive: `wallsky-handoff-d5351e3.zip`, 1,519,243 bytes, SHA-256 `b31656dce752bd4052399c858afee1981720e33865d16c1a9312d66d5ae8d951`.
+- Local original commit in archive: `d5351e36d95d231a7d853ef19756b357c2551753`; implementation commit: `089b2175bf96a402045ab448f46c626956d64a2e`. Neither is claimed to be a remote commit.
+- Remote main baseline: `d4f58c660655afc5f8359fe0fa70b98fc7588309`.
+- Current remote Wallsky branch: `feature/v52-wallsky`. It now contains the dedicated spec, benchmark, source pool/ledger manifests, isolated Worker/config, build/QA/HTTP scripts and tests. No main merge or Cloudflare change yet.
 
-- 1,732 pinned Seoul/Gyeonggi region-name rows from the V4 `NAME_CANDIDATES` snapshot dated 2026-10-12 × three intents + home = 5,197 canonical URLs. These names have not all been independently classified as legal dong vs administrative dong and do not prove facility presence or dispatch availability. Numeric detail filenames reserve `404.html`; final detail is `5198.html`.
-- Entire static HTML population: canonical, robots mode, one H1, regional title/intro retention, image existence/alt, phone links, forbidden copy and 46,748 internal link targets. No errors were reported in the public or preview build.
-- Exact sitemap set equals all intended URLs. The 404 error asset is noindex and excluded from sitemap/population.
-- Seed 20261028: 52 regional documents (1.00077%) compared against all 5,196 regional documents, 270,140 comparisons. Whitespace-free character-5gram Jaccard maximum 0.355586 (<0.49). Exact duplicate regional bodies 0. Scope is intro+four paragraphs, excluding title/navigation/shared conversion block. This is not full pairwise or semantic uniqueness proof. Home is separately inspected.
-- Same 52 body samples against existing Daysky's 1,736 documents: maximum 0.182156. Other concurrent V5-2 sites were not included.
-- Browser screenshots: home and building detail at 1440×900 and 390×844; factory at desktop and store at mobile. Existing screenshots inspected in the supplied archive. Viewport/scroll width matched, images loaded, CTA pointed to `tel:01053221952`. No calls/submissions were made.
-- `node tests/wallsky-worker.mjs`: intended-host indexing isolation, preview robots, root translation and unknown-path 404 noindex were reported passed. Python compilation and plan-check were reported passed.
-- HTTP readback script is intended to check all 5,197 HTML and four resources, plus missing URL 404. The saved report targets local server; actual Cloudflare behavior is not thereby verified.
+## Actual GitHub Actions evidence
 
-## Supplied local evidence
+- [Run 40711586641](https://github.com/joseungil-kr/site-factory-v5/actions/runs/40711586641), completed success at commit `35a13510123e5c5f0d352ac85668d7ff53ffe7eb`.
+- Built 5,197 URLs (5,196 region-intent pages plus home); reserved `404.html`; final detail `5198.html`.
+- Static QA checked all 5,197 sitemap HTML URLs, all canonical/robots/H1/title retention/image existence+alt/phone links/forbidden copy and 46,748 internal links; errors 0.
+- Seed 20261028: 52 sampled Wallsky pages versus all 5,196 Wallsky pages, 270,140 comparisons, whitespace-free character-5gram Jaccard maximum 0.355586 (<0.49), exact duplicate bodies 0. This is seeded 1% sample-to-population QA, **not all-pairs proof**.
+- Worker isolation tests passed; Python 72 tests and Node Worker 6 tests passed.
+- Local HTTP test: 5,201 resources checked, errors 0, missing route 404. This is a local static server, not production Cloudflare HTTP.
 
-`reports/wallsky/qa.json`, `qa-public.json`, `http.json`, `cross-daysky.json`, `manifest.json` and six PNGs are in the handoff ZIP. The ZIP deliberately excludes generated HTML and `reports/wallsky/pages.json`. These are historical local observations, not newly run tests in this chat.
+## Source scope / truth boundaries
 
-## Known limitations / exact pending action
+- Region input is the pinned V4 `NAME_CANDIDATES` snapshot from 2026-10-12. It contains 1,732 names but is not independently classified as all legal/administrative dongs. It does not establish that each facility exists or that a vehicle can dispatch there.
+- Site purpose is equipment access support for building/factory/store exterior tasks. It does not claim professional waterproofing or painting, completed regional jobs, specific fleet ownership, or guaranteed dispatch time.
+- Existing user-provided phone `010-5322-1952`, Seoul/Gyeonggi consultation scope and approved shared worksite image are reused from V5. CTA is tel-only; no call or lead submission was performed.
+- Benchmark sources and observations are in `sites/wallsky/BENCHMARK.md`; competitor wording/photos/prices/vehicle claims were not copied.
 
-No Cloudflare account binding/route inspection or live production HTTP test is included. Need independent code review, merge coordination with other V5-2 sites, binding preflight, public deployment, live HTTP and IndexNow.
+## Still not done
 
-The prior automatic approval review denied the source-only push and a proposed workflow for continuous remote artifact upload before execution. The recorded reason was insufficient explicit authorization for sending the business phone/content to the named GitHub destination. No bypass was attempted. The user has now explicitly designated the repository and requested Wallsky creation/publication; the normal GitHub write path is being tested against that updated authorization. No alternate upload path, secret access or permission expansion is authorized.
+- Current live Cloudflare binding/zone/DNS/routes preflight for `wallsky.nalmada.net`.
+- Production Worker deployment, all-5,197-URL live HTTPS/canonical/robots/sitemap checks and public visual readback.
+- IndexNow submission. It must use an existing authorized key only after public HTTP checks; do not create a new key or Secret.
+- Google/Naver submission belongs to the parent registration owner; do not duplicate it.
 
-The original local commits remain preserved in the handoff archive. This document does not claim that the local SHA is present on GitHub.
+## Safety
+
+The existing dedicated Worker defaults to noindex and only enables indexing for exact host `wallsky.nalmada.net` when `WALLSKY_PUBLIC=1`; workers.dev and 404 responses remain noindex. No DNS, Secret, OAuth, permission or existing site/Worker mutation has occurred in the V5 branch work so far.
