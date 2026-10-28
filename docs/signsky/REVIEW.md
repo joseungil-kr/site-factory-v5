@@ -59,3 +59,22 @@ IndexNow는 공개 HTTP 확인 뒤 사이트 독립키로 부모가 처리한다
 단계: PLAN/POOL/GENERATED/QA 완료, COMMITTED는 인계 SHA 참조, DEPLOYED/LIVE_HTTP/INDEXNOW 미실행.
 
 한 차례 `0.0.0.0` 검수 서버는 미공개 자료 외부 노출 위험으로 자동승인 검토 거부(미실행). 더 안전한 127.0.0.1 자동할당 포트 서버로 화면 검수 완료. 해당 거부를 우회하거나 네트워크 보안 설정을 변경하지 않았다.
+
+
+## 2026-10-28 — Public-candidate metadata/audit improvements and Cloudflare preflight
+
+Latest source candidate: `141e7e2ff913e6cd1b218dbbebada25257a91160`.
+
+- Replaced repeated small intro-only meta descriptions with region + work-purpose + intro + intent-specific task checklist. CI verifies **138/138 regional descriptions unique**.
+- `scripts/signsky.py audit` now verifies exact robots contents for public/preview, each canonical and robots directive, unique 139 manifest URLs, and that the sitemap's complete unique URL set exactly matches all 139 canonical public URLs. Preview must have `Disallow: /` and no sitemap. 404 stays noindex.
+- `signsky-review.yml` builds/audits both public and preview modes without deploying, archives the public candidate separately, then rebuilds preview and tests host isolation. [Latest CI run](https://github.com/joseungil-kr/site-factory-v5/actions/runs/40667348714): **SUCCESS** at SHA `141e7e2ff913e6cd1b218dbbebada25257a91160`; artifact `signsky-review`.
+- Same existing V4 Actions credential context, read-only preflight [run #40668271943](https://github.com/joseungil-kr/site-factory-v4/actions/runs/40668271943) confirms:
+  - active `nalmada.net` zone/account identity and existing Flower binding match,
+  - `signsky.nalmada.net` has no existing Worker Custom Domain binding,
+  - Worker script name `sfv52-signsky` does not exist,
+  - public A/AAAA/CNAME lookups return NXDOMAIN.
+  - **DNS-record API GET returned HTTP 403 Authentication error; Workers Routes GET returned HTTP 403 “No access to the specified resource.”** Thus we cannot certify there are no hidden existing DNS records or route entries from the Cloudflare inventory.
+- No Cloudflare writes, DNS/routes/custom-domain changes, Secrets, token changes, OAuth, ownership tags, or production deploy were performed by the preflight.
+- Read-only scope needed to finish collision inspection: existing Cloudflare API token needs Zone-scoped `DNS Read` and `Workers Routes Read` for `nalmada.net`. Custom Domain creation/deployment also requires `Workers Routes Write` for that zone (and existing Worker Scripts write permission, already demonstrated by prior V5 deployments). No permission has been added.
+- Public-candidate build and quality gate are ready, but **production custom-domain attachment is intentionally blocked** until these permissions are separately approved and the read-only inventory confirms no conflict. We can deploy an isolated `noindex` `workers.dev` preview without DNS/route changes while this is unresolved.
+- Cross-site comparison limitation remains: full within-site 9,453-pair audit passed; Daysky was sampled against 1,736 pages (3,472 comparisons), while full cross-site comparisons against Quicksky/Onehour were not run. This is disclosed, not claimed as a pass.
