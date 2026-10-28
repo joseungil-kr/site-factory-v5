@@ -60,6 +60,31 @@ def records():
     assert len(pages)==138
     return pages
 
+def description_for(p):
+    """Unique region + purpose description; avoid only repeating the intro pool."""
+    task = {
+        'signage': '기존 간판 철거와 새 간판 설치 범위, 장비 접근 방향, 현장 사진과 시공 일정을 전화 상담 전에 확인하세요.',
+        'advertising': '현수막 크기와 수량, 고정 지점, 장비 접근 방향과 설치·철거 일정을 전화 상담 전에 확인하세요.'
+    }[p['intent']]
+    return f"{p['region']} {p['label']} 스카이차 예약 안내. {p['intro']} {task}"
+
+
+class HeadMetadata(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.description = None
+        self.robots = None
+        self.canonicals = []
+    def handle_starttag(self, tag, attrs):
+        a = dict(attrs)
+        if tag == 'meta' and a.get('name') == 'description':
+            self.description = a.get('content', '')
+        elif tag == 'meta' and a.get('name') == 'robots':
+            self.robots = a.get('content', '')
+        elif tag == 'link' and 'canonical' in a.get('rel', '').lower().split():
+            self.canonicals.append(a.get('href', ''))
+
+
 def shell(title,description,path,body,mode):
     index=mode=='public'
     canonical=f'<link rel="canonical" href="{ORIGIN}{path}">' if index else ''
@@ -71,7 +96,7 @@ def render(p,pages,mode):
     task={'signage':('철거할 기존 간판','새 간판 설치 위치','시공팀 도착 시간'),'advertising':('현수막 수량과 크기','상단·하단 고정 위치','설치일과 철거일')}[p['intent']]
     checklist=''.join(f'<label><input type="checkbox">{x}</label>' for x in task)
     body=f'''<main><div class="breadcrumb"><a href="/">홈</a> / {p['region']} / {p['label']}</div><div class="hero detail"><div><p class="eyebrow">SIGN WORK / {p['label']}</p><h1>{p['region']}<br>{p['label']}<br><em>스카이차 예약</em></h1><p>{p['intro']}</p><a class="button" href="#call">상담 준비 항목 보기 ↓</a></div><figure><img src="/assets/skycar-truck.webp" alt="스카이차와 고소작업 장비" width="884" height="514"></figure></div><div class="article-grid"><article>{sections}</article><aside id="call"><p class="eyebrow">BEFORE YOU CALL</p><h2>통화할 때<br>이렇게 알려주세요</h2><p>{p['region']}의 작업 주소와 함께 다음 항목을 준비하면 상담이 구체적입니다.</p>{checklist}<p class="note">높이·진입 여건·작업 인원과 자재를 함께 전달해 주세요. 장비 이용 범위와 시공 담당자의 역할, 금액과 일정을 통화에서 정합니다.</p><a class="button" href="tel:{PHONE}">{PHONE} ↗</a></aside></div><section class="local"><h2>{p['region']} 작업 주소 확인</h2><p class="dong-list">{' · '.join(p['dongs'])}</p><p>도로명 주소와 건물 앞 진입 사진을 함께 준비해 주세요.</p><a class="text-link" href="{peer['path']}">{p['region']} {peer['label']} 안내 →</a></section></main>'''
-    return shell(p['title'],p['intro'],p['path'],body,mode)
+    return shell(p['title'],description_for(p),p['path'],body,mode)
 
 def build(mode):
     require_site_plan('signsky')
@@ -98,17 +123,28 @@ def build(mode):
 def audit():
     manifest=read(ROOT/'reports/signsky/manifest.json')
     pages=manifest['pages']; errors=[]; texts=[]
+    descriptions=[]
+    expected_robots = 'index,follow' if manifest['mode']=='public' else 'noindex,nofollow'
+    assert len(manifest['urls']) == 139 and len(set(manifest['urls'])) == 139
     for path in manifest['urls']:
         raw=(OUT/('index.html' if path=='/' else path[1:])).read_text(encoding='utf-8')
         assert raw.count('<h1>')==1 and 'tel:'+PHONE in raw
-        assert ('content="index,follow"' in raw)==(manifest['mode']=='public')
-        if manifest['mode']=='public': assert f'href="{ORIGIN}{path}"' in raw
+        meta=HeadMetadata();meta.feed(raw)
+        assert meta.robots==expected_robots,(path,meta.robots,expected_robots)
+        assert meta.description and meta.description.strip(),(path,'missing description')
+        descriptions.append(meta.description)
+        if manifest['mode']=='public':
+            assert meta.canonicals==[ORIGIN+path],(path,meta.canonicals)
+        else:
+            assert meta.canonicals==[],(path,meta.canonicals)
         for link in re.findall(r'(?:href|src)="([^"#]+)',raw):
             if link.startswith('/'):
                 file=link.split('#')[0]
                 assert (OUT/('index.html' if file=='/' else file[1:])).exists(),(path,link)
         for word in ['준비 중','검수용','미검증','참고가','원장 기준','보유 상품 사진','영진','당일스카이']:
             assert word not in raw,(path,word)
+    page_descriptions=descriptions[1:]
+    assert len(page_descriptions)==138 and len(set(page_descriptions))==138, 'Repeated regional descriptions'
     for p in pages:
         # Primary metric matches V5: intro + article paragraphs; additionally audit rendered main text below.
         texts.append(grams(p['intro']+' '+' '.join(' '.join(s) for _,s in p['sections'])))
@@ -131,7 +167,23 @@ def audit():
     result['crossDayskySampleComparisons']=len(sample)*len(daysky)
     result['crossDayskySampleMax']=max(score(texts[i],other) for i in sample for other in daysky)
     result['passed']=result['passed'] and visiblemax<.49 and result['crossDayskySampleMax']<.49
-    if manifest['mode']=='public': assert len(ET.parse(OUT/'sitemap.xml').getroot())==139
+    robots=(OUT/'robots.txt').read_text(encoding='utf-8')
+    if manifest['mode']=='public':
+        assert robots=='User-agent: *\nAllow: /\nSitemap: '+ORIGIN+'/sitemap.xml\n'
+        sitemap=ET.parse(OUT/'sitemap.xml').getroot()
+        assert sitemap.tag=='{http://www.sitemaps.org/schemas/sitemap/0.9}urlset'
+        ns='{http://www.sitemaps.org/schemas/sitemap/0.9}'
+        locs=[node.text for node in sitemap.findall(ns+'url/'+ns+'loc')]
+        expected={ORIGIN+path for path in manifest['urls']}
+        assert len(locs)==139 and len(set(locs))==139
+        assert set(locs)==expected, 'Sitemap must exactly equal all 139 canonical URLs'
+        assert all(x.startswith(ORIGIN+'/') or x==ORIGIN+'/' for x in locs)
+    else:
+        assert robots=='User-agent: *\nDisallow: /\n'
+        assert not (OUT/'sitemap.xml').exists(), 'Preview must not publish a sitemap'
+    error_page=(OUT/'404.html').read_text(encoding='utf-8')
+    error_meta=HeadMetadata();error_meta.feed(error_page)
+    assert error_meta.robots=='noindex,nofollow', '404 must remain noindex'
     write(ROOT/'reports/signsky/qa.json',result)
     print(json.dumps(result))
     assert result['passed'],'copy similarity threshold failed'
