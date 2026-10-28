@@ -1,0 +1,27 @@
+name: Signsky isolated review artifact
+on:
+  pull_request:
+    paths: ['sites/signsky/**', 'scripts/signsky.py', '.github/workflows/signsky-review.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: python -m v5 plan-check --site signsky
+      - run: python scripts/signsky.py build && python scripts/signsky.py audit
+      - run: node --test sites/signsky/worker.test.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: signsky-review
+          path: |
+            dist/signsky
+            reports/signsky
