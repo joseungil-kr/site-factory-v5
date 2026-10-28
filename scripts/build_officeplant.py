@@ -4,7 +4,6 @@ from html import escape
 import argparse
 import hashlib
 import json
-import random
 import shutil
 import sys
 
@@ -15,9 +14,9 @@ from v5.site_plan import require_site_plan
 SITE = ROOT / 'sites/officeplant'
 DOMAIN = 'https://officeplant.nalmada.net'
 PRODUCTS = [
-    dict(sku='D144', name='금전수 탁상용', price=53000, use='책상·작은 선반'),
-    dict(sku='D158', name='스투키 탁상용', price=50000, use='업무 책상·카운터'),
-    dict(sku='D149', name='녹보수 소형', price=65000, use='접견 자리·사무공간'),
+    dict(sku='D144', name='금전수 탁상용', price=53000, use='책상·작은 선반', purposes=('opening','move','partner')),
+    dict(sku='D158', name='스투키 탁상용', price=50000, use='업무 책상·카운터', purposes=('opening','move')),
+    dict(sku='D149', name='녹보수 소형', price=65000, use='접견 자리·사무공간', purposes=('opening','partner')),
 ]
 for p in PRODUCTS:
     p['url'] = 'https://fwith.co.kr/shop/item.php?it_id=' + p['sku']
@@ -28,7 +27,7 @@ def shell(title, content, path, public=False):
     return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>{escape(title)} | 오피스화분</title><meta name="description" content="{escape(title)}. 놓을 자리와 예산으로 개업화분을 고르고 리본 문구와 수령 정보를 준비하세요."><meta name="robots" content="{'index,follow' if public else 'noindex,nofollow'}">{canonical}<link rel="stylesheet" href="/assets/officeplant.css"><script src="/assets/officeplant.js" defer></script></head><body><header><a class="brand" href="/">오피스<span>화분</span><small>새로운 일의 시작에</small></a><nav aria-label="주 메뉴"><a href="/#collection">화분 고르기</a><a href="/regions.html">지역 안내</a><a href="/order.html">주문 준비</a></nav><a class="phone" href="tel:18440644">1844-0644</a></header><main>{content}</main><footer><div><strong>오피스화분</strong><p>사무실 개업·이전·거래처 선물</p></div><div><a href="tel:18440644">꽃이랑 상담 1844-0644</a><p><a href="https://fwith.co.kr">상품 주문 · 꽃이랑</a></p></div><a href="/order.html">리본과 수령정보 준비하기 ↗</a></footer></body></html>'''
 
 def card(p):
-    return f'''<article class="product" data-price="{p['price']}" data-space="{'desk' if p['sku'] in ('D144','D158') else 'reception'}"><a href="{p['url']}"><img src="/assets/{p['sku']}.jpg" alt="{p['name']}" width="500" height="500" loading="lazy"></a><div class="product-info"><small>{p['use']}</small><h3>{p['name']}</h3><strong>{p['price']:,}원</strong><p><a href="{p['url']}">상품 상세 · 주문하기 ↗</a></p><a class="subtle" href="/order.html?sku={p['sku']}">이 화분으로 주문 준비</a></div></article>'''
+    return f'''<article class="product" data-price="{p['price']}" data-space="{'desk' if p['sku'] in ('D144','D158') else 'reception'}" data-purposes="{' '.join(p['purposes'])}"><a href="{p['url']}"><img src="/assets/{p['sku']}.jpg" alt="{p['name']}" width="500" height="500" loading="lazy"></a><div class="product-info"><small>{p['use']}</small><h3>{p['name']}</h3><strong>{p['price']:,}원</strong><p><a href="{p['url']}">상품 상세 · 주문하기 ↗</a></p><a class="subtle" href="/order.html?sku={p['sku']}">이 화분으로 주문 준비</a></div></article>'''
 
 def helper():
     options = ''.join(f'<option value="{p["sku"]}">{p["name"]} · {p["price"]:,}원</option>' for p in PRODUCTS)
@@ -51,8 +50,33 @@ def build(public=False):
     assert len(rows) == 1732 and len({tuple(r) for r in rows}) == 1732
     pool = [line.split('|',1) for line in (SITE/'copy-pool.txt').read_text(encoding='utf-8').splitlines() if line]
     pages = []
-    # Bound shared paragraph combinations across the whole corpus, independently of QA sample.
-    assigned = []
+    # q=9 Reed-Solomon code: 9 groups of 9 topical blocks + one shared region-check block.
+    # Distinct degree<4 polynomials over GF(9) agree at at most 3 of 9 evaluation points.
+    # Therefore any two pages share at most 3 selected blocks + the common final block = 4.
+    def gf_add(a, b):
+        return ((a % 3 + b % 3) % 3) + 3 * (((a // 3) + (b // 3)) % 3)
+    def gf_mul(a, b):
+        a0, a1 = a % 3, a // 3
+        b0, b1 = b % 3, b // 3
+        return ((a0*b0 - a1*b1) % 3) + 3 * ((a0*b1 + a1*b0) % 3)
+    def selection_for(ordinal):
+        coeff = [(ordinal // (9**i)) % 9 for i in range(4)]
+        selected = []
+        for group, x in enumerate(range(9)):
+            y = coeff[3]
+            for c in (coeff[2], coeff[1], coeff[0]):
+                y = gf_add(gf_mul(y, x), c)
+            selected.append(group * 9 + y)
+        selected.append(81)
+        return sorted(selected)
+    if len(pool) != 82:
+        raise RuntimeError(f'Officeplant pool requires 82 blocks, found {len(pool)}')
+    allocation = [selection_for(i) for i in range(3464)]
+    masks = [sum(1 << index for index in indices) for indices in allocation]
+    max_shared = max((masks[i] & masks[j]).bit_count() for i in range(len(masks)) for j in range(i))
+    if max_shared > 4 or len({tuple(x) for x in allocation}) != 3464:
+        raise RuntimeError(f'Copy-pool codebook invariant failed: maxShared={max_shared}')
+    allocation_cursor = 0
     def write(path,title,body):
         (out/('index.html' if path=='/' else path.lstrip('/'))).write_text(shell(title,body,path,public),encoding='utf-8')
         pages.append(dict(path=path,title=title))
@@ -66,17 +90,9 @@ def build(public=False):
         region = district+' '+dong
         directory += f'<div class="region-row"><strong>{region}</strong><a href="/r/{i}-opening.html">개업화분</a><a href="/r/{i}-gift.html">개업선물</a></div>'
         for intent,label in [('opening','사무실 개업화분'),('gift','사무실 개업선물')]:
-            key=f'{region}/{intent}'
-            rng=random.Random(int(hashlib.sha256(key.encode()).hexdigest()[:16],16))
-            for attempt in range(100000):
-                indices=rng.sample(range(len(pool)),10)
-                mask=sum(1<<n for n in indices)
-                if all((mask & prior).bit_count() <= 4 for prior in assigned):
-                    assigned.append(mask)
-                    selected=[pool[n] for n in sorted(indices)]
-                    break
-            else:
-                raise RuntimeError('Copy pool cannot allocate distinct paragraph combinations')
+            indices=allocation[allocation_cursor]
+            allocation_cursor+=1
+            selected=[pool[n] for n in indices]
             paragraphs=''.join(f'<section><h2>{escape(h)}</h2><p>{escape(t)}</p></section>' for h,t in selected)
             p=PRODUCTS[i%len(PRODUCTS)]
             lead = '사무실에 놓을 자리를 정하고 상품 크기와 수령 방법을 함께 준비하세요.' if intent=='opening' else '받는 분과의 관계, 예산, 축하 문구를 정리해 마음에 맞는 선물을 선택하세요.'
@@ -95,7 +111,7 @@ def build(public=False):
     elif sitemap.exists():
         sitemap.unlink()
     report=ROOT/'reports/officeplant';report.mkdir(parents=True,exist_ok=True)
-    manifest={'site':'officeplant','public':public,'pages':pages,'contentCount':len(pages),'regions':len(rows),'poolBlocks':len(pool),'sourceRegionSHA256':source_region_sha}
+    manifest={'site':'officeplant','public':public,'pages':pages,'contentCount':len(pages),'regions':len(rows),'poolBlocks':len(pool),'poolAllocation':{'method':'GF(9) Reed-Solomon code, 9x9 groups + 1 shared block','regionalPages':len(allocation),'uniqueSelections':len({tuple(x) for x in allocation}),'maximumSharedBlocks':max_shared,'maximumAllowedSharedBlocks':4,'pass':max_shared<=4},'sourceRegionSHA256':source_region_sha}
     (report/('manifest-public.json' if public else 'manifest.json')).write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
     print(json.dumps({k:v for k,v in manifest.items() if k!='pages'},ensure_ascii=False))
 
