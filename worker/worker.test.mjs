@@ -108,3 +108,16 @@ test('Quicksky home-only public host allows only /; regions and index.html canno
   const wrong=await adapter.fetch(new Request('https://daysky.nalmada.net/'),scoped);
   assert.match(wrong.headers.get('X-Robots-Tag'),/noindex/);
 });
+
+test('Quicksky regional release removes home-only restriction but protects preview and errors',async()=>{
+  const scoped={...env,V5_STAGING:'1',V5_PUBLIC_HOST:'quicksky.nalmada.net',V5_HOME_ONLY:'0'};
+  for(const path of ['/', '/2.html','/1733.html','/sitemap.xml']) {
+    const reply=await adapter.fetch(new Request('https://quicksky.nalmada.net'+path),scoped);
+    assert.equal(reply.headers.get('X-Robots-Tag'),null);
+    const preview=await adapter.fetch(new Request('https://sfv5-quicksky-preview.joseungil.workers.dev'+path),scoped);
+    assert.match(preview.headers.get('X-Robots-Tag'),/noindex/);
+  }
+  const error=await adapter.fetch(new Request('https://quicksky.nalmada.net/404-test.html'),scoped);
+  assert.equal(error.status,404);
+  assert.match(error.headers.get('X-Robots-Tag'),/noindex/);
+});
