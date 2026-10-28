@@ -61,12 +61,12 @@ def main():
     (OUT/'style.css').write_text(CSS,encoding='utf-8')
     shutil.copy2(ROOT/'assets/library/daysky/skycar-facade.webp',OUT/'facade.webp')
     groups={}
+    by_number={item['number']:item for item in items}
     for p in items:
         path=f'/{p["number"]}.html'
         hero=f'<section class="hero"><div><div class="eyebrow">WALLSKY / EXTERIOR ACCESS</div><h1>{h(p["title"])}</h1><p class="lead">{h(p["intro"])}</p><a class="call" href="tel:01053221952">현장 조건 상담하기 ↗</a></div><img src="/facade.webp" alt="건물 외벽에 접근하는 스카이차 작업 모습" width="1200" height="1152"></section>'
         body='<div class="grid">'+''.join(f'<section class="card"><h2>{h(s["heading"])}</h2><p>{h(s["paragraph"])}</p></section>' for s in p['sections'])+'</div>'
         body+='<section class="guide"><h2>장비 이용과 시공 범위를 나누어 상담합니다</h2><p>외벽스카이는 외벽 점검과 시설물 접근에 필요한 스카이차 작업을 상담합니다. 방수·도장 등 전문 공정은 시공 담당자가 진행할 범위와 장비 이용 시간을 구분해 알려 주세요.</p><p>현장 주소 · 대상 높이 · 벽면 사진 · 희망 날짜를 준비해 전화해 주세요.</p><a class="call" href="tel:01053221952">010-5322-1952</a></section>'
-        by_number={item['number']:item for item in items}
         adjacent=[by_number[n] for n in range(max(2,p['number']-3),min(5199,p['number']+4))
                   if n not in (p['number'],404) and n in by_number]
         body+='<nav class="links" aria-label="주변 외벽 작업 문서">'+''.join(
