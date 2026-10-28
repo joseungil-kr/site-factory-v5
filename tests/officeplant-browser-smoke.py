@@ -12,7 +12,7 @@ CSS=(ROOT/"sites/officeplant/assets/officeplant.css").read_text(encoding="utf-8"
 JS=(ROOT/"sites/officeplant/assets/officeplant.js").read_text(encoding="utf-8")
 IMAGES={sku:"data:image/jpeg;base64,"+base64.b64encode((ROOT/"sites/officeplant/assets"/f"{sku}.jpg").read_bytes()).decode("ascii") for sku in ("D144","D149","D158")}
 
-def render(source:Path,query:str=""):
+def render(source:Path,query:str="",include_js:bool=True):
     html=source.read_text(encoding="utf-8")
     html=html.replace("<head>","<head><base href='https://officeplant.nalmada.net/'><style>"+CSS+"</style>")
     html=html.replace('<link rel="stylesheet" href="/assets/officeplant.css">',"")
@@ -20,7 +20,8 @@ def render(source:Path,query:str=""):
     for sku,data in IMAGES.items():
         html=html.replace(f'src="/assets/{sku}.jpg"',f'src="{data}"')
     prelude=f"<script>history.replaceState({{}},'', 'about:blank{query}');</script>" if query else ""
-    return html.replace("</body>",prelude+"<script>"+JS+"</script></body>")
+    script="<script>"+JS+"</script>" if include_js else ""
+    return html.replace("</body>",prelude+script+"</body>")
 
 def main():
     checks=[]
@@ -80,6 +81,25 @@ def main():
                 assert page.locator("#no-products").is_hidden()
                 record("combined filter recovery",2)
             page.close()
+        # Fail-closed test: without JavaScript there is no form and the action stays disabled.
+        for mode in ("no-js","js-failure"):
+            page=browser.new_page(viewport={"width":390,"height":844})
+            markup=render(OUT/"order.html",include_js=False)
+            if mode=="js-failure":
+                markup=markup.replace("</body>","<script>throw new Error('synthetic JavaScript failure')</script></body>")
+            page.set_content(markup,wait_until="load")
+            assert page.locator("form").count()==0
+            assert page.locator("#generate-note").is_disabled()
+            assert page.locator("#reset-note").is_disabled()
+            before=page.url
+            for field,value in (("sender","SYNTHETIC-SENDER"),("recipient","SYNTHETIC-RECIPIENT"),("phone","5550100000"),("address","SYNTHETIC-ADDRESS")):
+                page.locator('[name="'+field+'"]').fill(value)
+            page.locator("#generate-note").dispatch_event("click")
+            page.locator('[name="recipient"]').press("Enter")
+            assert page.url==before and all(value not in page.url for value in ("SYNTHETIC-SENDER","SYNTHETIC-RECIPIENT","5550100000","SYNTHETIC-ADDRESS"))
+            assert page.locator(".note-output").is_hidden()
+            record(mode+" cannot submit private fields",{"formElements":0,"actionDisabled":True,"URLUnchanged":True})
+            page.close()
         page=browser.new_page(viewport={"width":390,"height":844})
         page.set_content(render(OUT/"order.html","?sku=D149&purpose=partner"),wait_until="load")
         assert page.locator('select[name="sku"]').input_value()=="D149"
@@ -88,14 +108,18 @@ def main():
         page.locator('input[name="sender"]').fill("테스트 회사")
         page.locator('input[name="recipient"]').fill("수령 담당자")
         page.locator('input[name="address"]').fill("테스트 주소")
-        page.locator('button[type="submit"]').click()
+        assert page.locator("form").count()==0
+        assert page.locator("#generate-note").is_enabled()
+        page.locator("#generate-note").click()
         assert page.locator(".note-output").is_visible()
         summary=page.locator("#summary").inner_text()
         assert "녹보수 소형" in summary and "거래처 개업선물" in summary and "테스트 주소" in summary
         checkout=page.locator("#checkout").get_attribute("href")
         assert "D149" in checkout and "테스트 주소" not in checkout
+        assert "테스트 회사" not in page.url and "수령 담당자" not in page.url and "테스트 주소" not in page.url
+        record("no personal values in checkout URL")
         record("order note and privacy-safe checkout",checkout)
-        page.locator('button[type="reset"]').click()
+        page.locator("#reset-note").click()
         assert page.locator(".note-output").is_hidden() and page.locator("#summary").inner_text()==""
         record("order note reset")
         page.close()
