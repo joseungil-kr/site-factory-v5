@@ -1,0 +1,67 @@
+name: Wallsky isolated build and full static QA
+on:
+  push:
+    branches: [feature/v52-wallsky]
+    paths:
+      - 'sites/wallsky/**'
+      - 'scripts/build_wallsky.py'
+      - 'scripts/qa_wallsky.py'
+      - 'scripts/http_wallsky.py'
+      - 'tests/wallsky-worker.mjs'
+      - '.github/workflows/wallsky-offline-qa.yml'
+  pull_request:
+    paths:
+      - 'sites/wallsky/**'
+      - 'scripts/build_wallsky.py'
+      - 'scripts/qa_wallsky.py'
+      - 'scripts/http_wallsky.py'
+      - 'tests/wallsky-worker.mjs'
+      - '.github/workflows/wallsky-offline-qa.yml'
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate Wallsky plan and pinned sources
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from v5.site_plan import require_site_plan
+          require_site_plan('wallsky')
+          spec=json.loads(Path('sites/wallsky/site-spec.json').read_text())
+          pool=json.loads(Path('sites/wallsky/copy-pool.json').read_text())
+          regions=json.loads(Path('sites/wallsky/regions.json').read_text())
+          assert spec['domain']=='https://wallsky.nalmada.net'
+          assert spec['targetPageCount']==5197 and spec['conversion']['phone']=='010-5322-1952'
+          assert set(pool['intents'])=={'빌딩외벽','공장외벽','상가외벽'}
+          assert regions['rowCount']==1732 and regions['sourceSHA256']=='057679a9a6312dbb4dd284d2ca42856d40a828239b2483540a7000b630fc30eb'
+          print('WALLSKY_PLAN_PASS')
+          PY
+      - name: Generate noindex review build and run static/similarity QA
+        run: |
+          python scripts/build_wallsky.py
+          python scripts/qa_wallsky.py
+      - name: Worker isolation regression
+        run: node tests/wallsky-worker.mjs
+      - name: Local HTTP full resource verification
+        run: |
+          python -m http.server 8768 --directory dist/wallsky >/tmp/wallsky-http.log 2>&1 &
+          for i in $(seq 1 20); do
+            if python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8768/robots.txt',timeout=2).read()" 2>/dev/null; then break; fi
+            sleep 1
+          done
+          python scripts/http_wallsky.py --origin http://127.0.0.1:8768
+      - name: V5 regression
+        run: |
+          python -m unittest discover -s tests -q
+          npm test
