@@ -31,8 +31,14 @@ def main():
     for page in items:
         html=(OUT/(str(page['number'])+'.html')).read_text(encoding='utf-8')
         if page['title'] not in html or page['intro'] not in html:errors.append([page['number'],'lost regional content'])
-    forbidden=('검수용','미검증','참고가','준비 중','보유 상품 사진','원장 기준','당일 도착','방수 전문 시공','도장 전문 시공','실제 시공 완료','전 지역 출동 보장',
-               '옥외 안내판','안내판을 교체','방향표지','공공시설물','공공 시설물','조명탑')
+    spec=read(BASE/'site-spec.json')
+    pool=read(BASE/'copy-pool.json')
+    forbidden=tuple(dict.fromkeys((
+        '검수용','미검증','참고가','준비 중','보유 상품 사진','원장 기준','당일 도착',
+        '방수 전문 시공','도장 전문 시공','실제 시공 완료','전 지역 출동 보장',
+        *pool.get('claimPolicy',{}).get('excludedPoolPhrases',())
+    )))
+    scope_counts={term:0 for term in pool.get('claimPolicy',{}).get('excludedPoolPhrases',())}
     css=(OUT/'style.css').read_text(encoding='utf-8')
     if 'word-break:keep-all' not in css or 'overflow-wrap:anywhere' not in css:
         errors.append(['style.css','Korean heading word preservation'])
@@ -49,6 +55,8 @@ def main():
         if parser.h1!=1 or not parser.phone:errors.append([name,'h1/phone'])
         if parser.robots!=['index,follow' if manifest['mode']=='public' else 'noindex,nofollow']:errors.append([name,'robots'])
         if any(x in text for x in forbidden):errors.append([name,'unsupported/placeholder copy'])
+        for term in scope_counts:
+            scope_counts[term]+=text.count(term)
         for link in parser.links:
             if link.startswith('/'):
                 edgecount+=1;target=OUT/('index.html' if link=='/' else link[1:].split('#')[0])
@@ -63,7 +71,9 @@ def main():
         score,j=max((_jaccard(grams[i],g),j) for j,g in enumerate(grams) if j!=i)
         results.append({'page':items[i]['number'],'closest':items[j]['number'],'score':round(score,6)})
     exact=len(texts)-len(set(texts));worst=max(r['score'] for r in results)
-    qa={'static':{'population':len(expected),'allChecked':True,'internalLinksChecked':edgecount,'errors':errors},
+    qa={'static':{'population':len(expected),'allChecked':True,'internalLinksChecked':edgecount,'errors':errors,
+          'scopePolicy':{'excludedTermOccurrences':scope_counts,'allExcludedTermsAbsent':not any(scope_counts.values()),
+                         'sourceExclusions':list(pool.get('claimPolicy',{}).get('excludedPoolPhrases',()))}},
         'similarity':{'metric':'whitespace-free char-5gram Jaccard','scope':'intro + four prose paragraphs; excludes repeated navigation, titles and conversion footer',
           'population':len(items),'seed':20261028,'sampleSize':len(samples),'sampleFraction':len(samples)/len(items),
           'comparisons':len(samples)*(len(items)-1),'thresholdExclusive':.49,'worst':worst,'exactDuplicateBodies':exact,
