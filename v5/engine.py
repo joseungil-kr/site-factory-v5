@@ -97,8 +97,15 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
                 and site.get('publicIndexingApproved',False)
                 and ((site.get('publicIndexingScope')=='daysky-ansan-29-20261025' and len(data['pages'])==29)
                   or (site.get('publicIndexingScope')=='daysky-seoul-gyeonggi-1736-20261025' and len(data['pages'])==1736)))
-        if not (plants or daysky):
-            raise ConfigError('Indexed release is limited to the explicitly approved plants or Daysky hostname')
+        onehour=(site['id']=='onehour-sky' and site.get('domain')=='https://1hrsky.nalmada.net'
+                 and site.get('publicIndexingScope')=='onehour-5436-20261028'
+                 and site.get('publicIndexingApproved') is True
+                 and len(data['pages'])==5436)
+        if onehour:
+            from .onehour_public_gate import verify_content_qa
+            verify_content_qa(site,data['pages'])
+        if not (plants or daysky or onehour):
+            raise ConfigError('Indexed release requires an explicitly verified host and scope')
     if mode=='publish':
         from .config import assert_publish_ready
         assert_publish_ready(site)
