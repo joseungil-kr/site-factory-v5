@@ -49,7 +49,7 @@ jobs:
           assert robots=='User-agent: *\nAllow: /\nSitemap: https://signsky.nalmada.net/sitemap.xml\n'
           sitemap=(public/'sitemap.xml').read_text()
           assert sitemap.count('<loc>')==139
-          assert len(list(public.glob('*.html'))) == 139
+          assert len(list(public.glob('*.html'))) == 140  # 139 indexable URLs + noindex 404.html
           assert not (preview/'sitemap.xml').exists()
           assert 'Disallow: /' in (preview/'robots.txt').read_text()
           assert all('<meta name="robots" content="noindex,nofollow">' in p.read_text()
