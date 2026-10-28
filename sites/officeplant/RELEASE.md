@@ -31,3 +31,10 @@ Outputs: preview `dist/officeplant`, candidate public `dist/officeplant-public`;
 The order helper stores nothing and makes no network request. Only explicit copy writes to the user's clipboard. Recipient data is not put in a URL. External links point to verified seller product pages; customer completes checkout there. Browser tests used synthetic entries and did not call, order or pay.
 
 The generated site has no LocalBusiness address or fake reviews. Region coverage is a consultation/navigation scope, not guaranteed fulfillment. Prices were checked on 2026-10-28 and should be refreshed when the catalogue changes.
+
+## Region ledger serialization reconciliation (2026-10-28)
+
+- The frozen local handoff reports sourceRegionSHA256 `e7788fd6d7fa3fab10699991d82af714c5215967217c2d96bf6650beaf40310f` for its local serialization.
+- The actual V5 checkout file `data/regions/seoul_gyeonggi_current_dong.json` is unchanged between main and `feature/v52-officeplant` (Git blob `6de6e5751b26a13a2132238f13633df3de0cd2aa`) and its checkout-byte SHA-256 is `48fb6a7cef914a4ef784478b7284761a84e1dd7dc9d7663215880c3a23a67e18`.
+- The 1,732-row ordered list was compared against the frozen handoff's generated regional titles; normalized row-sequence FNV-1a64 matches exactly: `a47540b27d784155`. First and last rows also match. No region ledger was edited.
+- The build pin now uses the exact V5 checkout SHA-256, while the frozen local handoff report remains preserved unchanged in the original Library ZIP.

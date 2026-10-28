@@ -39,3 +39,10 @@ V4 checkout default main `223b9348f32b700af98645d034943772d590aaba` is older tha
 `AGENTS.md` and `SITE_CREATION_PROTOCOL.md` read. No `.agents/skills` directory found in either cloned repo or the checked task directories; available ponytail/caveman skills read. Existing protocols are not modified.
 
 Domain `officeplant.nalmada.net`: Windows DNS lookup returned name does not exist. This alone does not prove absence of a Cloudflare Worker custom-domain binding. Authenticated domain inventory remains a parent release prerequisite. No domain, route, DNS, credential or security setting changed.
+
+## Region ledger serialization reconciliation (2026-10-28)
+
+- The frozen local handoff reports sourceRegionSHA256 `e7788fd6d7fa3fab10699991d82af714c5215967217c2d96bf6650beaf40310f` for its local serialization.
+- The actual V5 checkout file `data/regions/seoul_gyeonggi_current_dong.json` is unchanged between main and `feature/v52-officeplant` (Git blob `6de6e5751b26a13a2132238f13633df3de0cd2aa`) and its checkout-byte SHA-256 is `48fb6a7cef914a4ef784478b7284761a84e1dd7dc9d7663215880c3a23a67e18`.
+- The 1,732-row ordered list was compared against the frozen handoff's generated regional titles; normalized row-sequence FNV-1a64 matches exactly: `a47540b27d784155`. First and last rows also match. No region ledger was edited.
+- The build pin now uses the exact V5 checkout SHA-256, while the frozen local handoff report remains preserved unchanged in the original Library ZIP.

@@ -10,7 +10,7 @@
     "region": "서울·경기",
     "granularity": "기존 1732개 동 원장; 배송 확정 지역이나 지점 수가 아닌 상담 대상 주소",
     "facilities": "사무실 개업·거래처 선물; 현지 매장 주장 없음",
-    "regionLedgerSHA256": "e7788fd6d7fa3fab10699991d82af714c5215967217c2d96bf6650beaf40310f"
+    "regionLedgerSHA256": "48fb6a7cef914a4ef784478b7284761a84e1dd7dc9d7663215880c3a23a67e18"
   },
   "pageTypes": [
     "home",
