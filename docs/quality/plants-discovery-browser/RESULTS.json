@@ -1,0 +1,127 @@
+[
+  {
+    "site": "plants",
+    "label": "desktop",
+    "width": 1440,
+    "initialDimensions": {
+      "viewport": 1440,
+      "scroll": 1440
+    },
+    "groups": 53,
+    "expandedDimensions": {
+      "viewport": 1440,
+      "scroll": 1440
+    },
+    "lastExpandedDimensions": {
+      "viewport": 1440,
+      "scroll": 1440
+    },
+    "allGroupsExpandedDimensions": {
+      "viewport": 1440,
+      "scroll": 1440
+    },
+    "phone": "tel:18440644",
+    "shop": "https://fwith.co.kr",
+    "detailDimensions": {
+      "viewport": 1440,
+      "scroll": 1440
+    },
+    "calculatorButtonStyle": {
+      "text": "예산 계산하기",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(242, 81, 93)"
+    },
+    "calculator": "상품 합계: 159,000원",
+    "calculatorDimensions": {
+      "viewport": 1440,
+      "scroll": 1440
+    },
+    "javascriptErrors": [],
+    "status": "pass"
+  },
+  {
+    "site": "plants",
+    "label": "mobile",
+    "width": 390,
+    "initialDimensions": {
+      "viewport": 390,
+      "scroll": 390
+    },
+    "groups": 53,
+    "expandedDimensions": {
+      "viewport": 390,
+      "scroll": 390
+    },
+    "lastExpandedDimensions": {
+      "viewport": 390,
+      "scroll": 390
+    },
+    "allGroupsExpandedDimensions": {
+      "viewport": 390,
+      "scroll": 390
+    },
+    "phone": "tel:18440644",
+    "shop": "https://fwith.co.kr",
+    "detailDimensions": {
+      "viewport": 390,
+      "scroll": 390
+    },
+    "calculatorButtonStyle": {
+      "text": "예산 계산하기",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(242, 81, 93)"
+    },
+    "calculator": "상품 합계: 159,000원",
+    "calculatorDimensions": {
+      "viewport": 390,
+      "scroll": 390
+    },
+    "javascriptErrors": [],
+    "status": "pass"
+  },
+  {
+    "site": "plants",
+    "label": "small-mobile",
+    "width": 320,
+    "initialDimensions": {
+      "viewport": 320,
+      "scroll": 320
+    },
+    "groups": 53,
+    "expandedDimensions": {
+      "viewport": 320,
+      "scroll": 320
+    },
+    "lastExpandedDimensions": {
+      "viewport": 320,
+      "scroll": 320
+    },
+    "allGroupsExpandedDimensions": {
+      "viewport": 320,
+      "scroll": 320
+    },
+    "phone": "tel:18440644",
+    "shop": "https://fwith.co.kr",
+    "detailDimensions": {
+      "viewport": 320,
+      "scroll": 320
+    },
+    "calculatorButtonStyle": {
+      "text": "예산 계산하기",
+      "color": "rgb(255, 255, 255)",
+      "background": "rgb(242, 81, 93)"
+    },
+    "calculator": "상품 합계: 159,000원",
+    "calculatorDimensions": {
+      "viewport": 320,
+      "scroll": 320
+    },
+    "javascriptErrors": [],
+    "status": "pass"
+  },
+  {
+    "site": "plants",
+    "javascript": false,
+    "status": "pass"
+  }
+]
