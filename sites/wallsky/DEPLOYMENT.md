@@ -31,3 +31,25 @@ Use V4 branch `ops/v5-isolated-staging-20261024`, which already contains success
 ## Truth boundaries
 
 The 1,732 inputs are V4 `NAME_CANDIDATES` region-name rows as of 2026-10-12, not independently verified legal/administrative classifications or proof of facility presence. Pages describe equipment access consultation, not completed work, professional waterproofing/painting or guaranteed dispatch. No guessed local case studies, fleet counts, rates or arrival times.
+
+## Latest actual preview result — 2026-10-28 15:23 UTC
+
+The dedicated noindex preview is now deployed and independently verified:
+
+- Source pin: `8d5e316732b40cd385ea24575a73860602654f3a`.
+- V4 workflow commit: `cbda4b91ae5c0c003fca1f304809b0f033320da7`.
+- Run: [40715062374](https://github.com/joseungil-kr/site-factory-v4/actions/runs/40715062374), success.
+- URL: https://sfv52-wallsky.joseungil.workers.dev
+- 5,201 live resources checked, 5,197 HTML URLs, errors 0; missing path 404; noindex headers/meta and robots Disallow confirmed. All 84 pre-existing custom-domain bindings unchanged.
+- Review artifacts: [V5 build and QA ZIP #12826224590](https://github.com/joseungil-kr/site-factory-v5/actions/runs/40714749737/artifacts/12826224590) and [live preview + readback ZIP #12827483600](https://github.com/joseungil-kr/site-factory-v4/actions/runs/40715062374/artifacts/12827483600). The latter contains `wallsky-preview-before.json` with the exact provider snapshot.
+
+## Remaining production-domain blocker
+
+- Existing V4 credentials can read the active `nalmada.net` Zone and account-level Workers custom-domain list. They cannot read `/zones/{zone_id}/workers/routes` (HTTP 403). The preflight therefore cannot prove absence of wildcard/host route conflicts.
+- No `wallsky.nalmada.net` custom-domain binding exists in the observed 84 binding list. The isolated `sfv52-wallsky` Worker is only on workers.dev; production hostname has not been attached.
+- **No DNS, route, custom-domain, Secret, token, OAuth, or permission changes were made.**
+- To continue safely, the existing Cloudflare connection needs read access for the exact `nalmada.net` Zone's DNS records and Workers Routes. If the current credential cannot provide those reads, the minimum Cloudflare role/permission must be approved by the account owner; do not create a new token or broaden scopes from this chat. Domain attachment itself is a separate mutation and must follow a clean read-only preflight.
+
+## Preview worker bug corrected
+
+The initial preview deployment uploaded all 5,202 assets but the live HTTP readback returned 404 for page URLs. Root cause was using `new Request(url, request)` for every request. The Worker now mirrors the V5-proven adapter: rewrite only `/` to `/index.html`, forward every non-root request unchanged. Latest run 40715062374 verifies all 5,201 resources with zero errors.
