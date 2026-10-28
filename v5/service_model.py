@@ -16,9 +16,20 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
     if site.get('publishEnabled') is not False:
         fail('service product-checkout production mode is not supported')
     if site.get('publicIndexingApproved'):
-        if (site_id != 'daysky' or site.get('domain') != 'https://daysky.nalmada.net'
-                or site.get('publicIndexingScope') not in ('daysky-ansan-29-20261025','daysky-seoul-gyeonggi-1736-20261025')):
-            fail('Service index approval is limited to the explicitly authorized Daysky 29-page hostname')
+        daysky=(site_id=='daysky' and site.get('domain')=='https://daysky.nalmada.net'
+                and site.get('publicIndexingScope') in ('daysky-ansan-29-20261025','daysky-seoul-gyeonggi-1736-20261025'))
+        onehour=(site_id=='onehour-sky' and site.get('domain')=='https://1hrsky.nalmada.net'
+                 and site.get('publicIndexingScope')=='onehour-5436-20261028'
+                 and site.get('phone')=='010-5322-1952'
+                 and site.get('phoneUseApproved') is True
+                 and site.get('phonePendingBrandConfirmation') is False
+                 and site.get('imageAssetsApproved') is True
+                 and site.get('domainOwnershipVerified') is True)
+        if not (daysky or onehour):
+            fail('Indexable release needs verified exact host, phone/photo provenance and page scope')
+        if onehour:
+            from .onehour_public_gate import verify_owner_scope
+            verify_owner_scope(site)
     if any(site.get(field,{}).get('enabled') for field in ('analytics','indexNow','siteSearch')):
         fail('analytics, IndexNow and search are disabled on first service preview')
     if site.get('domain'):
@@ -98,6 +109,8 @@ def read_service_site(site_id: str, site: dict, root: Path) -> dict:
             fail('Daysky page count differs from its explicit indexing scope')
         if target==29 and site.get('indexNow',{}).get('enabled'):
             fail('Original 29-page scope disables IndexNow')
+    if site_id=='onehour-sky' and site.get('publicIndexingApproved') and len(ordered)!=5436:
+        fail('Onehour public scope requires 5436 pages')
     if site_id in ('daysky','onehour-sky'):
         public=json.dumps({'site':site,'pages':pages,'services':services,'rates':rates},ensure_ascii=False)
         forbidden=('영진','1844-0644','fwith') if site_id=='daysky' else ('당일스카이','빠른스카이','영진','1844-0644','fwith')

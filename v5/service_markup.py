@@ -15,13 +15,17 @@ def _tel(site):
 def _head(site,title,description,path,error=False):
     """Use exact-domain canonical only for explicitly authorized indexable releases."""
     indexable=(not error and site.get('publicIndexingApproved',False)
-               and site.get('id')=='daysky'
-               and site.get('domain')=='https://daysky.nalmada.net')
+               and ((site.get('id')=='daysky' and site.get('domain')=='https://daysky.nalmada.net')
+                    or (site.get('id')=='onehour-sky'
+                        and site.get('domain')=='https://1hrsky.nalmada.net'
+                        and site.get('publicIndexingScope')=='onehour-5436-20261028')))
     robots='index,follow' if indexable else 'noindex,nofollow'
     canonical=('<link rel="canonical" href="'+h(site['domain'].rstrip('/')+path)+'">'
                if indexable else '')
     title_text=h(title if site['brand'] in title else title+' | '+site['brand'])
     summary=h(description[:155])
+    verification=('<meta name="naver-site-verification" content="'+h(site['naverSiteVerification'])+'">'
+                  if indexable and site.get('id')=='onehour-sky' and path=='/' else '')
     ogimage=('<meta property="og:image" content="'
              +h(site['domain']+'/assets/images/'+site['imagePool'][0])+'">'
              if indexable else '')
@@ -29,7 +33,7 @@ def _head(site,title,description,path,error=False):
             '<meta name="viewport" content="width=device-width, initial-scale=1">'
             '<title>'+title_text+'</title>'
             '<meta name="description" content="'+summary+'">'
-            '<meta name="robots" content="'+robots+'">'+canonical
+            '<meta name="robots" content="'+robots+'">'+canonical+verification
             +'<meta property="og:type" content="website">'
             +'<meta property="og:title" content="'+title_text+'">'
             +'<meta property="og:description" content="'+summary+'">'+ogimage

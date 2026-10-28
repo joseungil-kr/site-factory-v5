@@ -19,10 +19,12 @@ class OneHourSky(unittest.TestCase):
         self.assertTrue(check_site("onehour-sky")["ready"])
         site = self.data["site"]
         self.assertEqual(site["domain"], "https://1hrsky.nalmada.net")
-        self.assertFalse(site["publicIndexingApproved"])
+        self.assertTrue(site["publicIndexingApproved"])
+        self.assertTrue(site["imageAssetsApproved"])
+        self.assertTrue(site["phoneUseApproved"])
+        self.assertEqual(site["naverSiteVerification"],"24640409f1b53459210054eec4e83176009a0a84")
         self.assertFalse(site["publishEnabled"])
         self.assertFalse(site["indexNow"]["enabled"])
-        self.assertFalse(site["imageAssetsApproved"])
         self.assertEqual(site["pricingPolicy"], "half-day-minimum-consult")
 
     def test_pinned_national_ledger_and_pool(self):
@@ -48,7 +50,7 @@ class OneHourSky(unittest.TestCase):
 
     def test_renderer_displays_exact_h1_and_half_day_terms(self):
         data = self.data
-        site = data["site"]
+        site = {**data["site"],"publicIndexingApproved":False}
         pages = data["pages"]
         home_html = home(site, pages[0], pages, data["services"], data["rates"])
         detail_html = detail(site, pages[1], pages, data["services"], data["rates"])
@@ -60,6 +62,12 @@ class OneHourSky(unittest.TestCase):
             self.assertNotIn("30만원", content)
             self.assertNotIn("400,000원", content)
             self.assertNotIn("부가세 별도", content)
+        indexed=home(data["site"],pages[0],pages,data["services"],data["rates"])
+        self.assertIn('content="index,follow"', indexed)
+        self.assertEqual(indexed.count('name="naver-site-verification"'),1)
+        indexed_region=detail(data["site"],pages[1],pages,data["services"],data["rates"])
+        self.assertEqual(indexed_region.count('name="naver-site-verification"'),0)
+        self.assertIn('<link rel="canonical" href="https://1hrsky.nalmada.net/">',indexed)
         self.assertIn('href="/2.html"', home_html)
         self.assertNotIn('href="/5436.html"', home_html)
         subarea=next(p for p in pages if p.get('regionLevel')=='dong')

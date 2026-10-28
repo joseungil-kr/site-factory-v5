@@ -70,20 +70,21 @@
       "차량 진입·주차·아웃트리거 공간",
       "현장 사진과 장애물"
     ],
-    "phoneProvenance": "기존 동일 소유 V5 Daysky/Quicksky 운영 전화번호, 한시간스카이 신규 브랜드 사용은 별도 확인 전; 검토용 noindex"
+    "phoneProvenance": "User responded 좋다 to 010-5322-1952 for onehour service, 2026-10-28"
   },
   "images": {
     "source": "V5 기존 daysky 실사진 pool 3장 (원본 2종의 가공 이미지); 한시간스카이 새 브랜드 사용권 확인 전 검토용 noindex",
-    "approved": false,
+    "approved": true,
     "visualRequirement": "실사진 권리·차량 상표·초상권 확인 후 object-fit:cover; 390px/1440px QA",
-    "avoid": "새 브랜드 소유장비·시공실적처럼 오해 유발 금지"
+    "avoid": "새 브랜드 소유장비·시공실적처럼 오해 유발 금지",
+    "approvalSource": "User responded 좋다 to reusing original skycar photos, 2026-10-28."
   },
   "publishPolicy": {
-    "mode": "preview-only-noindex; production requires operational verification and domain/IndexNow key proof",
-    "indexNow": false,
-    "customDomainBinding": "not-attempted",
+    "mode": "indexable-owner-authorized-after-audits",
+    "indexNow": "existing-public-key-host-verified-then-submit-only",
+    "customDomainBinding": "confirmed-run-40543796228",
     "dnsChangesApproved": false,
-    "production": false,
+    "production": true,
     "robots": "noindex,nofollow; robots.txt Disallow /; sitemap/IndexNow disabled"
   },
   "brandStatements": {
@@ -100,11 +101,7 @@
     "adjacentReference": "feature/quicksky-nalmada-com-20261027",
     "operationalSourceIntegrity": "Daysky/Quicksky original branches and Workers untouched"
   },
-  "approvalScope": "preview-build-only-noindex; user's explicit request to build using Site Factory V5",
-  "remainingBeforeIndex": [
-    "전화번호 브랜드 확인",
-    "사진 이용권",
-    "실제 전국 배차 제휴 지역 확인",
-    "지역별 실질 정보 확보 및 문서 품질 독립 검토"
-  ]
+  "approvalScope": "User-requested full nationwide indexable build after pinned-source content QA; email and Naver final verification handled by separate support.",
+  "remainingBeforeIndex": [],
+  "naverSiteVerification": "24640409f1b53459210054eec4e83176009a0a84"
 }

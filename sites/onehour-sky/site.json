@@ -7,7 +7,7 @@
   "requestedDomain": "https://1hrsky.nalmada.net",
   "workerName": null,
   "phone": "010-5322-1952",
-  "phonePendingBrandConfirmation": true,
+  "phonePendingBrandConfirmation": false,
   "locale": "ko-KR",
   "keyword": "스카이차",
   "region": "전국",
@@ -29,9 +29,9 @@
     "skycar-facade.webp",
     "skycar-truck.webp"
   ],
-  "imageAssetsApproved": false,
+  "imageAssetsApproved": true,
   "publishEnabled": false,
-  "publicIndexingApproved": false,
+  "publicIndexingApproved": true,
   "pricingPolicy": "half-day-minimum-consult",
   "minimumBillingText": "1시간만 작업해도 반나절 요금 기준으로 견적을 협의합니다. 출동·장비 세팅·작업·철수 기본비용이 발생하므로 최종 금액은 현장 조건을 확인한 뒤 전화로 안내합니다.",
   "heroTitle": "전국 스카이차 1시간 작업, 반일작업 전문 '한시간스카이'",
@@ -49,7 +49,7 @@
     "key": null
   },
   "staticAssetSoftLimit": 18000,
-  "source": "Owner supplied dispatch and half-day minimum billing; V4 legally classified nationwide region names; photo and brand-specific phone approval pending.",
+  "source": "Owner-approved nationwide service inquiry and half-day minimum, 010-5322-1952 and photos reused; verified public binding and 55-to-all Jaccard; no unverified work history or guaranteed 1-hour arrival",
   "navigation": [
     {
       "label": "홈",
@@ -67,5 +67,10 @@
       "label": "전국 지역",
       "href": "/#regions"
     }
-  ]
+  ],
+  "phoneUseApproved": true,
+  "domainOwnershipVerified": true,
+  "publicIndexingScope": "onehour-5436-20261028",
+  "naverSiteVerification": "24640409f1b53459210054eec4e83176009a0a84",
+  "releaseEvidencePath": "sites/onehour-sky/release-evidence.json"
 }
