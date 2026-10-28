@@ -32,7 +32,7 @@ test('only exact approved host is indexable; preview HTML is noindex and canonic
     assert.equal(sitemap.status,isPublic?200:404);
     const robots=await worker.fetch(new Request('https://'+host+'/robots.txt'),env);
     const robotsText=await robots.text();
-    if(isPublic) assert.match(robotsText,/Allow: \/\//);
-    else assert.match(robotsText,/Disallow: \//);
+    if(isPublic) assert.ok(robotsText.includes('Allow: /'));
+    else assert.ok(robotsText.includes('Disallow: /'));
   }
 });
