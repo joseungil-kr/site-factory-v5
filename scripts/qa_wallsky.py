@@ -31,9 +31,19 @@ def main():
     for page in items:
         html=(OUT/(str(page['number'])+'.html')).read_text(encoding='utf-8')
         if page['title'] not in html or page['intro'] not in html:errors.append([page['number'],'lost regional content'])
-    forbidden=('검수용','미검증','참고가','준비 중','보유 상품 사진','원장 기준','당일 도착','방수 전문 시공','도장 전문 시공','실제 시공 완료','전 지역 출동 보장')
+    forbidden=('검수용','미검증','참고가','준비 중','보유 상품 사진','원장 기준','당일 도착','방수 전문 시공','도장 전문 시공','실제 시공 완료','전 지역 출동 보장',
+               '옥외 안내판','안내판을 교체','방향표지','공공시설물','공공 시설물','조명탑')
+    css=(OUT/'style.css').read_text(encoding='utf-8')
+    if 'word-break:keep-all' not in css or 'overflow-wrap:anywhere' not in css:
+        errors.append(['style.css','Korean heading word preservation'])
     for name in expected:
         text=(OUT/name).read_text(encoding='utf-8');parser=HTML();parser.feed(text)
+        if name!='index.html':
+            nav=re.search(r'<nav class="links" aria-label="주변 외벽 작업 문서">(.*?)</nav>',text,re.S)
+            if not nav:
+                errors.append([name,'missing descriptive neighboring links'])
+            elif re.search(r'<a href="/\\d+\\.html">\\d+</a>',nav.group(1)):
+                errors.append([name,'numeric-only neighboring link label'])
         path='/' if name=='index.html' else '/'+name
         if parser.canonical!=['https://wallsky.nalmada.net'+path]:errors.append([name,'canonical'])
         if parser.h1!=1 or not parser.phone:errors.append([name,'h1/phone'])
