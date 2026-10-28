@@ -42,7 +42,7 @@ def main():
             nav=re.search(r'<nav class="links" aria-label="주변 외벽 작업 문서">(.*?)</nav>',text,re.S)
             if not nav:
                 errors.append([name,'missing descriptive neighboring links'])
-            elif re.search(r'<a href="/\\d+\\.html">\\d+</a>',nav.group(1)):
+            elif re.search(r'<a href="/\d+\.html">\d+</a>',nav.group(1)):
                 errors.append([name,'numeric-only neighboring link label'])
         path='/' if name=='index.html' else '/'+name
         if parser.canonical!=['https://wallsky.nalmada.net'+path]:errors.append([name,'canonical'])
