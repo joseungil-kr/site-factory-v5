@@ -46,8 +46,8 @@ jobs:
           assert json.loads(Path('reports/signsky/public-qa.json').read_text())['passed'] is True
           assert json.loads(Path('reports/signsky/preview-qa.json').read_text())['passed'] is True
           robots=(public/'robots.txt').read_text()
-          assert robots=='User-agent: *\\nAllow: /\\nSitemap: https://signsky.nalmada.net/sitemap.xml\\n'
-          sitemap=json.loads('null') if False else (public/'sitemap.xml').read_text()
+          assert robots=='User-agent: *\nAllow: /\nSitemap: https://signsky.nalmada.net/sitemap.xml\n'
+          sitemap=(public/'sitemap.xml').read_text()
           assert sitemap.count('<loc>')==139
           assert len(list(public.glob('*.html'))) == 139
           assert not (preview/'sitemap.xml').exists()
