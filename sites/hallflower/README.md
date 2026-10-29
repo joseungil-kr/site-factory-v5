@@ -29,3 +29,12 @@ Review `/`, three `/halls/*.html` pages, responsive 390px/1440px, actual product
 
 ## Known limitations
 Prototype generator and GitHub QA workflow are committed, but an independent successful Actions run, real browser screenshot, live HTTP test and deployment evidence were not available in this session. No public release is claimed.
+
+## Follow-up implementation (2026-10-29)
+- Verified seller category `https://fwith.co.kr/shop/list.php?ca_id=20` lists B200 59,000, B203 79,000, B205 109,000, B212 60,000 and B214 200,000 KRW; all point to their own `/shop/item.php?it_id=SKU`. Delivery fees or facility restrictions vary.
+- Frozen, minimized identity + status flags of **all 1,080** V4 records at `sites/hallflower/facilities-frozen.json`; **229** are marked `nameReviewRequired`. This snapshot is not verification of present operation.
+- `python scripts/build_hallflower_full.py` produces a separate **noindex** 1,080-page candidate, not a public release.
+- `python scripts/audit_hallflower_full.py` performs seeded 1% sample-versus-all rendered char-five-gram audit; nonpassing similarity must block publication. This is a test implementation, **not yet a PASS report**.
+- `python tests/hallflower-browser-smoke.py` checks real Chromium 390/1440 layout, five product links, no-JS disabled control and no personally identifying query-string submission. Workflow includes that test before full-corpus build.
+- Product photo assets still **missing**: correct product-image URL and original hashes must be verified from fwith and included; never fabricate an image path. This currently blocks visual approval and public release.
+- CI using GitHub's existing generic V5 offline workflow is not evidence that the new Hallflower-specific Chromium/similarity workflow completed.
