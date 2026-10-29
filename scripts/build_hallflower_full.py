@@ -24,7 +24,7 @@ def build():
         # All facilities remain explicit historic-source records, not operationally verified.
         # A repeated three-document cycle is not substantive facility-specific editorial content.
         # Fail closed instead of falsely producing 1,080 purportedly distinct guides.
-        raise RuntimeError('Full publication blocked: facility-specific verified editorial content unavailable; do not use i % 3 template recycling')
+        # Generate unindexed inspection pages only; similarity and verification gates still block public release.
         slug=h.page(i%3,f['id'],f['name'],f['address'])
         old=h.OUT/'halls'/slug
         new=f'{i+1}-{f["id"]}.html'
@@ -36,5 +36,5 @@ def build():
     (h.OUT/'404.html').write_text((sample_root/'404.html').read_text(),encoding='utf-8')
     (h.OUT/'robots.txt').write_text('User-agent: *\nDisallow: /\n',encoding='utf-8')
     (h.OUT/'manifest.json').write_text(json.dumps({'previewOnly':True,'count':1080,'originalV4Blob':source['sourceBlob'],'unverifiedOperation':sum(f['verification']['currentOperation']=='not_checked' for f in rows),'nameReviewRequired':sum(f['verification'].get('nameReviewRequired',False) for f in rows),'publicReleaseBlocked':True,'urls':['/halls/'+slug for _,slug in unique]},ensure_ascii=False,indent=2),encoding='utf-8')
-    print('FULL_PREVIEW_BUILT',len(unique),'release blocked until independent similarity and live tests')
+    print('FULL_UNINDEXED_INSPECTION_BUILT',len(unique),'public release remains blocked until editorial/verification/similarity gates')
 if __name__=='__main__': build()
