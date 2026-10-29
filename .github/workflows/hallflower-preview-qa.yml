@@ -35,7 +35,7 @@ jobs:
           for page in pages[1:]:
               t=page.read_text()
               assert all(x in t for x in ('빈소','리본','희망 전달시간','배송 확인','B205','B214'))
-              assert '배송을 보장하지 않습니다' not in t or True
+              assert '도착을 보장하지 않습니다' in t or '당일배송을 보장하지 않습니다' in t
           js=(root/'assets/site.js').read_text()
           assert 'btn.disabled=false' in js and 'addEventListener' in js
           assert 'fetch(' not in js and 'location.search' not in js
