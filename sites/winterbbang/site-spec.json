@@ -5,7 +5,7 @@
   "approvalSource": "User 2026-10-29 approved design and requested Seoul/Gyeonggi all locality-name pages, copy pool and deployment",
   "approvalScope": "PAGE_PLAN_AND_PREVIEW_BUILD_ONLY; NOT PROOF OF CUSTOM-DOMAIN OWNERSHIP OR SECURITY AUTHORIZATION",
   "domain": "https://winterbbang.nalmada.net",
-  "domainStatus": "CANDIDATE — user's nalmada.net preference, Cloudflare DNS/domain/Worker binding not independently verified",
+  "domainStatus": "CONNECTED_LIVE_HTTPS200_NOINDEX — 2026-10-29 V4 Actions 40867847521 exact host and existing Worker binding verified",
   "brand": "백세푸드",
   "businessModel": "Winter snack startup/shop-in-shop consultation and ingredient distribution (telephone lead), not a local storefront locator",
   "serviceScope": {
@@ -78,12 +78,16 @@
     "actualEvidence": false
   },
   "publishPolicy": {
-    "mode": "NOINDEX_PREVIEW_ONLY pending authorized Cloudflare account GET-only collision check and individual page quality review",
+    "mode": "CUSTOM_DOMAIN_CONNECTED_NOINDEX",
     "indexNow": false,
-    "ownershipProof": false,
-    "customDomainBindingAllowed": false,
+    "ownershipProof": true,
+    "customDomainBindingAllowed": true,
     "searchReleaseAllowed": false,
-    "workerNameCandidate": "sfv54-winterbbang-preview"
+    "workerNameCandidate": "sfv54-winterbbang-preview",
+    "customDomainBindingVerified": true,
+    "existingWorkerVerified": true,
+    "httpsVerified": true,
+    "domainBindingEvidence": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40867847521"
   },
   "sourceProvenance": {
     "regionBlobSha": "6de6e5751b26a13a2132238f13633df3de0cd2aa",
@@ -99,5 +103,20 @@
     ],
     "margin": "Operator-provided 60-70% of sale price minus ingredient cost ONLY, not net profit",
     "privateContractTerms": "Never put cost packages, minimum order volumes, equipment agreement details or negotiated prices in publicly served HTML, metadata or source."
+  },
+  "domainBinding": {
+    "host": "winterbbang.nalmada.net",
+    "worker": "sfv54-winterbbang-preview",
+    "status": "LIVE_HTTPS_NO_INDEX",
+    "newWorkerDeployed": false,
+    "manualDnsChange": false,
+    "cloudflareAutoManagedDnsCertificate": true,
+    "existingDomainsBefore": 87,
+    "existingDomainsAfter": 88,
+    "otherBindingsUnchanged": true,
+    "previewSourceSha": "da457ae5a6a3b667ac27505143fe353ddbb0b771",
+    "bindingRunId": 40867847521,
+    "readback": "origin home/region/image/robots/404 validated; custom hostname same paths HTTPS200/noindex and missing URL404",
+    "indexNow": false
   }
 }
