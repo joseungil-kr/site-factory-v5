@@ -67,7 +67,7 @@ def main():
     products=json.loads(CATALOG.read_text(encoding='utf-8'))['list']
     result=check(products)
     REPORT.parent.mkdir(parents=True,exist_ok=True)
-    REPORT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\\n',encoding='utf-8')
+    REPORT.write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('WREATH_SELLER_LIVE_CHECK='+json.dumps(result,ensure_ascii=False))
     if not result['passes']: sys.exit(1)
 
