@@ -3,7 +3,7 @@
   "siteId": "winterbbang",
   "approved": false,
   "approvalState": "PREFLIGHT_DRAFT_ONLY",
-  "domain": "https://winterbbang.nalmada.com",
+  "domain": null,
   "brand": "백세푸드",
   "businessModel": "백세푸드 4종 겨울 간식 창업·샵인샵·노점형 판매 상담, 전국 판매점/대리점 및 식자재 공급 문의",
   "serviceScope": {
@@ -129,7 +129,7 @@
     "매출총이익률 공개 문구에 사용할 대표 제품별 실제 판매가·재료비 산정 사례 확보",
     "생성형 이미지 5개 파일 제작 후 픽셀·실제 페이지 반응형 QA"
   ],
-  "notes": "AGENTS.md / SITE_CREATION_PROTOCOL.md 준수. site-spec 승인 전 build/public/indexnow 불가. 공개 GitHub 원장에는 가격/계약/공급 최소 조건의 개별 수치·구성을 저장하지 않음. 기존 V4/V5 Worker와 DNS 유지.",
+  "notes": "AGENTS.md / SITE_CREATION_PROTOCOL.md 준수. 도메인 후보는 nalmada.net과 nalmada.com 모두 소유·충돌 검증 전이며 미확정. site-spec 승인 전 build/public/indexnow 금지. 공개 GitHub 원장에는 거래 세부조건의 개별 수치/구성을 저장하지 않음. 기존 V4/V5 Worker와 DNS 유지.",
   "publicContentPolicy": {
     "hideCommercialTerms": true,
     "hideNumbersOrBreakdownOfEntryPackages": true,
@@ -145,5 +145,10 @@
     "menuSupportProof": "사용자 2026-10-29 확인: 4종 모두 공급 지원 가능",
     "photos": "AI 생성 이미지 사용, 실제 매장/납품사진으로 오인 금지",
     "doNotPublishCommercialTerms": true
-  }
+  },
+  "domainCandidates": [
+    "https://winterbbang.nalmada.net",
+    "https://winterbbang.nalmada.com"
+  ],
+  "domainStatus": "UNCONFIRMED; no DNS/Cloudflare binding changes or assumptions"
 }
