@@ -55,7 +55,8 @@ def page(path,title,description,main,public):
      '<p>고객센터 <a href="tel:18440644">'+PHONE+'</a> · 배송지·수령인 개인정보는 판매처 주문서에만 입력하세요.</p></div></footer>'
      '<a class="footbar" href="tel:18440644">전화 상담</a></body></html>')
 def hero(head,desc,eyebrow='CONDOLENCE FLOWERS'):
-    return '<section class="hero"><div class="wrap"><div class="eyebrow">'+esc(eyebrow)+'</div><h1>'+esc(head)+'</h1><p class="lead">'+esc(desc)+'</p><a class="call" href="#products">근조화환 상품 선택하기</a></div></section>'
+    href='/#products' if eyebrow.endswith('DIRECTORY') or '찾을 수 없습니다' in head else '#products'
+    return '<section class="hero"><div class="wrap"><div class="eyebrow">'+esc(eyebrow)+'</div><h1>'+esc(head)+'</h1><p class="lead">'+esc(desc)+'</p><a class="call" href="'+href+'">근조화환 상품 선택하기</a></div></section>'
 def products_html(products):
     cards=[]
     for p in products:
