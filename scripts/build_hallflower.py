@@ -36,7 +36,10 @@ if(panel && btn && output){
 def layout(title,body,canonical):
     return f'''<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>{escape(title)}</title><meta name="robots" content="noindex,nofollow"><meta name="description" content="{escape(title)}. 빈소 확인부터 리본 작성, 상품 비교와 전달 상담까지."><link rel="stylesheet" href="/assets/site.css"><script defer src="/assets/site.js"></script></head><body data-hall="{escape(canonical)}"><header><strong>꽃이랑 · 장례식화환 주문 안내</strong><nav><a href="/">장례식장 목록</a><a href="tel:18440644">상담 1844-0644</a></nav></header><main class="wrap">{body}</main><footer>장례식장과 제휴한 공식 사이트가 아닙니다. 상품 주문 및 배송 가능 여부는 꽃이랑에서 최종 확인합니다. <a href="https://fwith.co.kr">꽃이랑 주문몰</a></footer></body></html>'''
 def cards():
-    return '<div class="cards">'+''.join(f'<article class="card"><small>꽃이랑 상품번호 {sku}</small><h3>{escape(name)}</h3><p class="price">{price:,}원</p><p>지역·수령 조건에 따라 배송비와 가능 품목을 주문 전 확인하세요.</p><a class="cta" href="https://fwith.co.kr/shop/item.php?it_id={sku}" rel="noopener">실제 상품 확인·주문</a></article>' for sku,name,price in PRODUCTS)+'</div>'
+    def card(sku,name,price):
+        photo = '<figure><img src="https://fwith.co.kr/data/item/flower379/B205/main_pc.jpg" alt="꽃이랑 공식 B205 상품 상세사진" loading="lazy" style="max-width:100%;max-height:220px;object-fit:contain"><figcaption>상품 상세 이미지 · 실제 배송 결과는 다를 수 있음</figcaption></figure>' if sku == 'B205' else ''
+        return f'<article class="card">{photo}<small>꽃이랑 상품번호 {sku}</small><h3>{escape(name)}</h3><p class="price">{price:,}원</p><p>지역·수령 조건에 따라 배송비와 가능 품목을 주문 전 확인하세요.</p><a class="cta" href="https://fwith.co.kr/shop/item.php?it_id={sku}" rel="noopener">실제 상품 확인·주문</a></article>'
+    return '<div class="cards">'+''.join(card(*product) for product in PRODUCTS)+'</div>'
 def page(i,id,name,address):
     title=name+' 빠른 장례식화환 주문방법'
     intro=['빈소가 정해졌는지 먼저 확인하세요. 같은 병원 안에도 여러 빈소가 있으므로 장례식장 이름만으로 주문을 완료하지 마세요.',
