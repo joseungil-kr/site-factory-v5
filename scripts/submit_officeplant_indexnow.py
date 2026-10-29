@@ -33,11 +33,17 @@ def ensure_no_prior_receipt():
     for run in runs:
         if str(run.get("id"))==current:continue
         run_id=run.get("id")
-        status,_,body=get("https://api.github.com/repos/"+REPO+"/actions/runs/"+str(run_id)+"/artifacts?per_page=100",limit=1_500_000,headers=auth)
-        if status!=200:raise RuntimeError("Cannot inspect prior release receipts; fail closed")
-        artifacts=json.loads(body).get("artifacts",[])
-        if any(a.get("name","").startswith("officeplant-indexnow-receipt-") and not a.get("expired") for a in artifacts):
-            raise RuntimeError("Prior IndexNow receipt artifact exists; refusing duplicate submission")
+        # An always-run QA artifact may be named *-receipt-* even when IndexNow
+        # was skipped before deployment. Inspect the actual step execution,
+        # including rejected attempts, instead of treating an artifact name as proof.
+        status,_,body=get("https://api.github.com/repos/"+REPO+"/actions/runs/"+str(run_id)+"/jobs?per_page=100",limit=1_500_000,headers=auth)
+        if status!=200:raise RuntimeError("Cannot inspect prior IndexNow step history; fail closed")
+        data=json.loads(body)
+        if data.get("total_count",0)>100:raise RuntimeError("Prior run job history paginated; fail closed")
+        for job in data.get("jobs",[]):
+            for step in job.get("steps",[]):
+                if step.get("name","").startswith("Submit exactly 3468 public URLs to IndexNow") and step.get("status")=="completed" and step.get("conclusion")!="skipped":
+                    raise RuntimeError("Prior IndexNow attempt recorded in run "+str(run_id)+"; refuse duplicate submission")
 
 def main():
     if os.environ.get("GITHUB_ACTIONS")!="true" or os.environ.get("GITHUB_REPOSITORY")!=REPO:
