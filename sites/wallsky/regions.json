@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "site": "wallsky",
+  "source": "data/regions/seoul_gyeonggi_current_dong.json",
+  "sourceSHA256": "057679a9a6312dbb4dd284d2ca42856d40a828239b2483540a7000b630fc30eb",
+  "asOf": "2026-10-12",
+  "rowCount": 1732,
+  "semantics": "Pinned V4 NAME_CANDIDATES region-name snapshot. Legal-dong vs administrative-dong classification is not independently verified for every row. This manifest references the existing V5 source; it does not duplicate the 122 KB derived rows.",
+  "targetURLs": 5197,
+  "formula": "1732 × 3 intents + 1 homepage"
+}
