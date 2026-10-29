@@ -52,6 +52,12 @@ jobs:
           PY
       - name: Actual Chromium 390px/1440px, product checkout, JS disabled
         run: python tests/hallflower-browser-smoke.py
+      - name: Verify five official product photos, names and hashes
+        run: python scripts/verify_hallflower_product_photos.py
+      - name: Build full noindex corpus and write similarity result
+        run: |
+          python scripts/build_hallflower_full.py
+          python scripts/audit_hallflower_full.py
       - name: Prepare and audit separate public candidate (no deployment)
         run: |
           python -m py_compile scripts/prepare_hallflower_public_candidate.py
@@ -81,12 +87,6 @@ jobs:
           assert json.loads((preview/'manifest.json').read_text())['publicReleaseBlocked']
           print('HALLFLOWER_PUBLIC_CANDIDATE_AUDIT_PASS',report['pages'],report['sha256'])
           PY
-      - name: Verify five official product photos, names and hashes
-        run: python scripts/verify_hallflower_product_photos.py
-      - name: Build full noindex corpus and write similarity result
-        run: |
-          python scripts/build_hallflower_full.py
-          python scripts/audit_hallflower_full.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
