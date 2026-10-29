@@ -2,7 +2,7 @@
 Status: isolated preview source committed; NOT deployed; NOT indexed.
 
 ## Scope and evidence (2026-10-29)
-- Proposed hostname: `hallflower.nalmada.net` — candidate only; DNS and Cloudflare Worker custom-domain collision **not checked**.
+- Approved target hostname (user 2026-10-29): `hallflower.nalmada.net`. Cloudflare custom-domain collision **not yet checked**; no DNS/Worker binding performed.
 - Site source of record: `joseungil-kr/site-factory-v5`, branch `feature/v53-hallflower-order`.
 - Existing V4 facilities source (read only): `joseungil-kr/site-factory-v4`, `feature/funeralflower-mini/data/funeral-halls/facilities.json`, Git blob `b950e7bf2cde7b247447fbe670c976363e4e1a7e`; parsed count **1,080**.
 - Facility records carry `verification.currentAddress=not_checked`, `currentOperation=not_checked`, `officialName=not_externally_verified` for selected samples; historical name/address only, not independent operating-status confirmation.
@@ -45,3 +45,8 @@ Prototype generator and GitHub QA workflow are committed, but an independent suc
 - Disabled the invalid `i % 3` content-recycling nationwide path, explicitly failing before any claim of a valid 1,080-page release; 1,080 frozen facility records remain available for an editorially verified rewrite. This is an **unfinished development gate**, not a passing expansion.
 - Verified the seller-owned public product detail image **B205** at `https://fwith.co.kr/data/item/flower379/B205/main_pc.jpg` via the exact image link on `https://fwith.co.kr/shop/item.php?it_id=B205`. Added that actual observed URL to the B205 card. Download/hash verification was blocked by network access, so SHA-256 is **not recorded** and release image integrity gate remains open. Other SKU photo paths are not guessed or fabricated.
 - Real photos for remaining products, substantive independent per-facility copy, refreshed whole-corpus similarity and successful isolated workflow artifact run remain outstanding. Preserve noindex, no DNS/public release, no IndexNow.
+
+## User-approved nationwide start (2026-10-29)
+- User confirmed hostname and instructed nationwide construction/deployment start. This is authorization to proceed with an isolated deployment after collision checks, not evidence of completed Cloudflare binding.
+- `scripts/build_hallflower_full.py` now creates 1,080 **noindex inspection pages only** from the frozen 1,080-row source, without modifying the V4 ledger. Similarity and facility verification still block public indexing. The script explicitly reports `publicReleaseBlocked: true`.
+- Full QA intentionally fails if repetitive three-template bodies exceed the existing strict `<0.49` rendered-body char-5gram requirement. Do not reduce thresholds or skip the check to publish.
