@@ -180,7 +180,7 @@ def main():
         key_path=BASE/'indexnow-public-key.txt'
         key=key_path.read_text(encoding='utf-8').strip()
         assert re.fullmatch(r'[a-f0-9]{32}',key), 'Invalid existing public IndexNow key format'
-        (OUT/(key+'.txt')).write_text(key+'\\n',encoding='utf-8')
+        (OUT/(key+'.txt')).write_text(key+chr(10),encoding='utf-8')
         (OUT/'robots.txt').write_text('User-agent: *\nAllow: /\nSitemap: '+DOMAIN+'/sitemap.xml\n',encoding='utf-8')
         ET.register_namespace('','http://www.sitemaps.org/schemas/sitemap/0.9')
         root=ET.Element('{http://www.sitemaps.org/schemas/sitemap/0.9}urlset')
