@@ -1,0 +1,63 @@
+{
+  "siteId": "winterbbang",
+  "version": 1,
+  "createdOn": "2026-10-29",
+  "assetsStatus": "generated_in_conversation_zip_only; not yet tracked as Git binary assets",
+  "source": "Generated with OpenAI image generation and cropped from two rendered composites into 5 independent, text-free photographic scenes",
+  "reality": "illustrative AI imagery, not real store/customer/product/supply proof",
+  "usage": "all pages share same 5 assets; ensure single cached file per asset and semantic alt text",
+  "assetDirectory": "assets/library/winterbbang",
+  "requiredBeforeBuild": "Image binaries must be present at exact paths and checked against SHA-256; approve sources and conduct 390px/1440px visual QA",
+  "assets": [
+    {
+      "filename": "hero.webp",
+      "path": "assets/library/winterbbang/hero.webp",
+      "sha256": "8f3e06b9967c18975c8ff3d290ad5481734262f64dd81fd4fab8e2d9e16d2a2c",
+      "bytes": 85982,
+      "width": 1440,
+      "height": 630,
+      "alt": "홈 및 모든 페이지 히어로",
+      "slot": "hero"
+    },
+    {
+      "filename": "shop-in-shop.webp",
+      "path": "assets/library/winterbbang/shop-in-shop.webp",
+      "sha256": "189a4e46fd3c03fec42b10116af24e77a821f21beca3ffd4f65cf61bf652e8ac",
+      "bytes": 70828,
+      "width": 1200,
+      "height": 840,
+      "alt": "카페 샵인샵·기존 매장 활용",
+      "slot": "article"
+    },
+    {
+      "filename": "menu.webp",
+      "path": "assets/library/winterbbang/menu.webp",
+      "sha256": "bba6cf58bc30bdb174bb0f55f8db917bc3991c10ea026113ffba4cee878985e9",
+      "bytes": 54846,
+      "width": 1200,
+      "height": 840,
+      "alt": "붕어빵과 계란빵 메뉴",
+      "slot": "article"
+    },
+    {
+      "filename": "street.webp",
+      "path": "assets/library/winterbbang/street.webp",
+      "sha256": "41c474f3fe12af6048a2a965b5594cad35671c1264099f0a8426556fa7fdf6e9",
+      "bytes": 78684,
+      "width": 1200,
+      "height": 840,
+      "alt": "노점·실외 판매",
+      "slot": "article"
+    },
+    {
+      "filename": "ingredients.webp",
+      "path": "assets/library/winterbbang/ingredients.webp",
+      "sha256": "fbc70876a169a53188f98370a26ea5d85b1a20cc7a89cc88428263cf51b8fb73",
+      "bytes": 55116,
+      "width": 1200,
+      "height": 840,
+      "alt": "반죽·팥소·슈크림 등 원재료",
+      "slot": "article"
+    }
+  ]
+}
