@@ -203,5 +203,37 @@
       "marginDisclaimer": "매출총이익률 60~70% = 판매가격 minus ingredient costs; not net profit",
       "status": "SUCCESS"
     }
+  },
+  "naverOwnershipVerificationDeployment": {
+    "sourceFileCommit": "3434a0e447d3d35c08c3db911cf88a327b103335",
+    "sourceFilePath": "sites/winterbbang/naverf6f2cf7c98cc3b3483ccc524379d2605.html",
+    "sourceFileBlobSha": "84855151737b83be21ea2fbe1f595c682723267a",
+    "body": "naver-site-verification: naverf6f2cf7c98cc3b3483ccc524379d2605.html",
+    "bytes": 67,
+    "endsWithNewline": false,
+    "sha256": "3071b0e2e48ae7fcb8e5db95489a612eab7d01dcd6d1c2b33724121366b07ab3",
+    "deploymentWorkflowCommit": "a4e0db55769f68d3d18d709ce59a1e4521316ea2",
+    "deploymentRunId": 40905015383,
+    "deploymentRunUrl": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40905015383",
+    "activeVersionBefore": "f990ffd4-e391-435e-9ebc-3232e83f5d79",
+    "activeVersionAfter": "c3438c1a-89ff-4ffa-bd85-88c7fa5c1151",
+    "predeployUrlStatus": 404,
+    "liveUrl": "https://winterbbang.nalmada.net/naverf6f2cf7c98cc3b3483ccc524379d2605.html",
+    "liveUrlStatus": 200,
+    "liveBodyExact": true,
+    "liveBytes": 67,
+    "liveSha256": "3071b0e2e48ae7fcb8e5db95489a612eab7d01dcd6d1c2b33724121366b07ab3",
+    "newlineAdded": false,
+    "excludedFromContentCount": true,
+    "excludedFromSitemap": true,
+    "sitemapUrlCount": 1804,
+    "contentPageCount": 1804,
+    "existingIndexNowKey": "2a73e0239c3bcec564b34d6386cc622c",
+    "indexNowKeyPreserved": true,
+    "images5Preserved": true,
+    "workersDevPreviewNoindexPreserved": true,
+    "existingDomainBindingsUnchanged": true,
+    "indexNowSubmitted": false,
+    "status": "SUCCESS"
   }
 }
