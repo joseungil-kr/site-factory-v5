@@ -2,14 +2,6 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import worker from '../sites/wreath-region/worker.js';
 
-class TestHTMLRewriter {
-  constructor(){this.handlers=[];}
-  on(selector,handler){this.handlers.push({selector,handler});return this;}
-  transform(response){
-    const self=this;
-    return new Response(response.text().then?undefined:undefined);
-  }
-}
 test('wreath preview is isolated and noindex; only exact approved production host is indexable',async()=>{
   for(const [host,flag,blocked] of [
     ['wreath.nalmada.net','0',true],
