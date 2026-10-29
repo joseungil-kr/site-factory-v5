@@ -89,7 +89,24 @@
     ],
     "allResponsesNoindex": true,
     "phoneHref": "tel:0314070103",
-    "heroImageSignature": "RIFF/WEBP"
+    "heroImageSignature": "RIFF/WEBP",
+    "namedLocalityReadOnlyQA": {
+      "runId": 40857452014,
+      "url": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40857452014",
+      "status": "SUCCESS",
+      "sixNamedLocalityUrls200": true,
+      "allFiveWebpHttp200Sha256Match": true,
+      "noindexHeaders": true,
+      "specificLocalities": [
+        "서울특별시 강남구 역삼동",
+        "서울특별시 마포구 서교동",
+        "경기도 안산시 상록구 본오동",
+        "경기도 수원시 팔달구 인계동",
+        "경기도 성남시 분당구 야탑동",
+        "경기도 고양시 일산동구 정발산동"
+      ],
+      "readOnly": true
+    }
   },
   "domainPreflight": {
     "runId": 40856725727,
