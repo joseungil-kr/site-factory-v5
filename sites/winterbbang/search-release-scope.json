@@ -1,0 +1,33 @@
+{
+  "site": "winterbbang",
+  "version": 1,
+  "operatorApproval": "2026-10-29: user approved design, regional generation and requested SEO quality review and start IndexNow",
+  "domain": "https://winterbbang.nalmada.net",
+  "releaseType": "HOME_ONLY_CANARY",
+  "indexablePaths": [
+    "/"
+  ],
+  "excluded": {
+    "localityPages": 1732,
+    "districtHubs": 69,
+    "provinceHubs": 2,
+    "reason": "Generic regional names and deterministic shared copy pool, no independent evidence of region-specific offering, storefront, delivery conditions or unique user benefit"
+  },
+  "publishedPagesToRemainNoindex": 1803,
+  "noIndexPreviewHost": "sfv54-winterbbang-preview.joseungil.workers.dev",
+  "sourceOfTruth": "sites/winterbbang/site-spec.json",
+  "commitGate": "exact reviewed SHA required; never release from moving branch",
+  "indexNow": {
+    "enabledForSingleNewIndexableHomepage": true,
+    "autoRetry": false,
+    "endpoints": [
+      "https://api.indexnow.org/indexnow"
+    ],
+    "keyFilePath": "sites/winterbbang/indexnow-public-key.txt",
+    "keyHostedOnPublicHostOnly": true,
+    "neverSubmitNonindexPages": true,
+    "receiptRequired": true
+  },
+  "rollback": "Cloudflare existing Worker previous 100-percent version must be captured and restorable; fail if missing or domain mapping changed",
+  "furtherRegionalSearchRelease": "PROHIBITED until current official region names and independently verified local business facts or genuinely distinct search intent exist"
+}
