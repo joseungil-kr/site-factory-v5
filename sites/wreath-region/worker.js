@@ -4,7 +4,7 @@ export default {
     const u = new URL(request.url);
     const isPublicHost = u.hostname === 'wreath.nalmada.net' && env.WREATH_PUBLIC === '1';
     if (!isPublicHost && u.pathname === '/robots.txt') {
-      return new Response('User-agent: *\\nDisallow: /\\n', {
+      return new Response('User-agent: *\nDisallow: /\n', {
         headers: {'Content-Type': 'text/plain; charset=utf-8', 'X-Robots-Tag': 'noindex,nofollow,noarchive'}
       });
     }
