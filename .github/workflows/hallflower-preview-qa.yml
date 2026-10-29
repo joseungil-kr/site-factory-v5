@@ -96,7 +96,7 @@ jobs:
           assert preview['name']=='sfv53-hallflower' and preview['workers_dev'] is True
           assert preview['name']!=cfg['name']
           print('HALLFLOWER_PUBLIC_WORKER_ISOLATION_PASS',cfg['name'],preview['name'])
-                    print('HALLFLOWER_PUBLIC_CANDIDATE_AUDIT_PASS',report['pages'],report['sha256'])
+          print('HALLFLOWER_PUBLIC_CANDIDATE_AUDIT_PASS',report['pages'],report['sha256'])
           PY
       - uses: actions/upload-artifact@v4
         if: always()
