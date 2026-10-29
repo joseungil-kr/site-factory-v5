@@ -3,6 +3,8 @@ on:
   push:
     branches: [feature/v53-hallflower-order]
     paths: ['scripts/build_hallflower.py', 'scripts/build_hallflower_full.py', 'scripts/audit_hallflower_full.py', 'tests/hallflower-browser-smoke.py', 'sites/hallflower/**', '.github/workflows/hallflower-preview-qa.yml']
+  pull_request:
+    paths: ['scripts/build_hallflower.py', 'scripts/build_hallflower_full.py', 'scripts/audit_hallflower_full.py', 'tests/hallflower-browser-smoke.py', 'sites/hallflower/**', '.github/workflows/hallflower-preview-qa.yml']
   workflow_dispatch:
 permissions:
   contents: read
