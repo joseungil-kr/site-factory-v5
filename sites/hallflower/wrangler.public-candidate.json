@@ -1,0 +1,16 @@
+{
+  "name": "sfv53-hallflower-public",
+  "main": "worker.public.js",
+  "compatibility_date": "2026-10-24",
+  "workers_dev": false,
+  "assets": {
+    "directory": "../../dist/hallflower-public-candidate",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "none",
+    "not_found_handling": "404-page"
+  },
+  "vars": {
+    "HALLFLOWER_PUBLIC": "0"
+  }
+}
