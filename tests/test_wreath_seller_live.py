@@ -10,7 +10,7 @@ class SellerLiveTests(unittest.TestCase):
                 'imageSHA256':hashlib.sha256(self.img).hexdigest()}
     def get(self,url):
         if 'item.php' in url:
-            return (b'<html>B201 <div id="it_price">59,000</div><button>바로구매</button></html>','text/html')
+            return ('<html>B201 <div id="it_price">59,000</div><button>바로구매</button></html>'.encode('utf-8'),'text/html')
         return (self.img,'image/jpeg')
     def test_live_extraction_not_catalog_copy(self):
         self.assertEqual(live_price('<span id="it_price">59,000</span>'),59000)
@@ -30,7 +30,7 @@ class SellerLiveTests(unittest.TestCase):
         self.assertFalse(check([self.p]*6,bad)['passes'])
     def test_missing_price_fails(self):
         def no_price(url):
-            if 'item.php' in url:return (b'<html>B201 <button>바로구매</button></html>','text/html')
+            if 'item.php' in url:return ('<html>B201 <button>바로구매</button></html>'.encode('utf-8'),'text/html')
             return (self.img,'image/jpeg')
         self.assertFalse(check([self.p]*6,no_price)['passes'])
 
