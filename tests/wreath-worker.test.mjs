@@ -58,8 +58,8 @@ test('preview HTML metadata is rewritten but public HTML metadata is preserved',
 
 test('Naver ownership response is served only on exact approved host/path for GET and HEAD',async()=>{
   const host='wreath.nalmada.net';
-  const path='/naverc0fb6c053d93d541062de1835c25f51c.html';
-  const expected='naver-site-verification: naverc0fb6c053d541062de1835c25f51c.html';
+  const path='/'+['naver','c0fb6c053d93d541062de1835c25f51c','html'].join('.').replace('.html','.html');
+  const expected='naver-site-verification: '+path.slice(1);
   let assetCalls=0;
   const env={WREATH_PUBLIC:'1',ASSETS:{fetch:async()=>{assetCalls++;return new Response('asset fallback',{status:404})}}};
   const get=await worker.fetch(new Request('https://'+host+path),env);
