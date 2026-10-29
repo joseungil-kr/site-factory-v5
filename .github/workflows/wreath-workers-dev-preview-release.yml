@@ -1,5 +1,8 @@
 name: Wreath isolated noindex preview
 on:
+  push:
+    branches: [feature/v52-wreath-region]
+    paths: ['.github/workflows/wreath-workers-dev-preview-release.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -27,6 +30,10 @@ jobs:
           assert os.environ.get('CLOUDFLARE_API_TOKEN') and os.environ.get('CLOUDFLARE_ACCOUNT_ID'), 'Missing existing deploy credentials'
           print('ISOLATED_PREVIEW_GATE_PASS')
           PY
+      - name: Seller price and image SHA fail-closed gate
+        run: |
+          python -m unittest discover -s tests -p 'test_wreath_seller_live.py' -v
+          python -m scripts.qa_wreath_seller_live
       - name: Full noindex build and QA (existing V5 rules)
         run: |
           python -m scripts.build_wreath_region
