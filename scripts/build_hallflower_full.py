@@ -56,6 +56,28 @@ def build():
         page=h.layout(name+' 빠른 장례식화환 주문방법',intro+paragraphs+order+memo+tail,name)
         (h.OUT/'halls'/slug).write_text(page,encoding='utf-8')
         unique.append((f,slug))
+        if i==35:
+            # Independent 36-facility gate on the same NFC visible-body char-5grams.
+            import math, unicodedata
+            from html.parser import HTMLParser
+            class Visible(HTMLParser):
+                def __init__(self): super().__init__(); self.skip=0; self.words=[]
+                def handle_starttag(self,tag,attrs):
+                    if tag in ('head','script','style'): self.skip+=1
+                def handle_endtag(self,tag):
+                    if tag in ('head','script','style'): self.skip=max(0,self.skip-1)
+                def handle_data(self,data):
+                    if not self.skip: self.words.append(data)
+            sets=[]
+            for _,p in unique:
+                parser=Visible();parser.feed((h.OUT/'halls'/p).read_text(encoding='utf-8'))
+                s=unicodedata.normalize('NFC',re.sub(r'\\s+',' ',' '.join(parser.words)))
+                sets.append({s[j:j+5] for j in range(len(s)-4)})
+            scores=[len(sets[x]&sets[y])/len(sets[x]|sets[y]) for x in range(len(sets)) for y in range(x)]
+            high=max(scores)
+            print('REPRESENTATIVE_36_JACCARD_MAX',round(high,6))
+            if high>=.49: raise RuntimeError('Representative strict <0.49 similarity failed; nationwide build blocked')
+
     assert len(unique)==1080 and len(set(s for _,s in unique))==1080
     links=''.join(f'<li><a href="/halls/{slug}">{h.escape(f["name"])} 빠른 장례식화환 주문방법</a> — {h.escape(f["province"]+" "+f["district"])}</li>' for f,slug in unique)
     (h.OUT/'index.html').write_text(h.layout('장례식장별 빠른 장례식화환 주문방법','<h1>장례식장별 빠른 장례식화환 주문방법</h1><p>과거 장례식장 원장을 바탕으로 한 검색 제외 시안입니다. 현재 시설 운영과 명칭 및 주소를 확인한 목록이 아닙니다.</p><ul>'+links+'</ul>','목록'),encoding='utf-8')
