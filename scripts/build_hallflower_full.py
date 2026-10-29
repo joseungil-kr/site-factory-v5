@@ -31,7 +31,7 @@ def build():
     links=''.join(f'<li><a href="/halls/{slug}">{h.escape(f["name"])} 빠른 장례식화환 주문방법</a> — {h.escape(f["province"]+" "+f["district"])}</li>' for f,slug in unique)
     (h.OUT/'index.html').write_text(h.layout('장례식장별 빠른 장례식화환 주문방법','<h1>장례식장별 빠른 장례식화환 주문방법</h1><p>과거 장례식장 원장을 바탕으로 한 검색 제외 시안입니다. 현재 시설 운영과 명칭 및 주소를 확인한 목록이 아닙니다.</p><ul>'+links+'</ul>','목록'),encoding='utf-8')
     (h.OUT/'404.html').write_text((sample_root/'404.html').read_text(),encoding='utf-8')
-    (h.OUT/'robots.txt').write_text('User-agent: *\\nDisallow: /\\n',encoding='utf-8')
+    (h.OUT/'robots.txt').write_text('User-agent: *\nDisallow: /\n',encoding='utf-8')
     (h.OUT/'manifest.json').write_text(json.dumps({'previewOnly':True,'count':1080,'originalV4Blob':source['sourceBlob'],'unverifiedOperation':sum(f['verification']['currentOperation']=='not_checked' for f in rows),'nameReviewRequired':sum(f['verification'].get('nameReviewRequired',False) for f in rows),'publicReleaseBlocked':True,'urls':['/halls/'+slug for _,slug in unique]},ensure_ascii=False,indent=2),encoding='utf-8')
     print('FULL_PREVIEW_BUILT',len(unique),'release blocked until independent similarity and live tests')
 if __name__=='__main__': build()
