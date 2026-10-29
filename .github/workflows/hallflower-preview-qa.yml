@@ -96,4 +96,5 @@ jobs:
           path: |
             dist/hallflower-preview/
             dist/hallflower-full-preview/
+            dist/hallflower-public-candidate/
           retention-days: 14
