@@ -2,13 +2,79 @@
   {
     "sku": "D144",
     "name": "금전수 탁상용",
+    "group": "plant",
     "referencePrice": 53000,
-    "referenceDate": "2026-10-22",
+    "referenceDate": "2026-10-29",
     "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D144",
     "verifiedLive": true,
-    "lastLiveCheckedOn": "2026-10-24",
-    "lastLiveEvidence": "V5 기존 상품 원장: 제품명, 53000원 및 구매 버튼 확인 기록; 현시점 재검증은 별도",
+    "lastLiveCheckedOn": "2026-10-29",
     "imageUrl": "https://fwith.co.kr/data/item/flower379/D144/thumb-1_270x270.jpg",
-    "imageSource": "V5 기존 꽃이랑 상품 원장; 실제 공개 전 이미지 접근 재검증 필요"
+    "imageSource": "V5 recorded seller catalogue / 2026-10-22",
+    "priceEvidence": "2026-10-29 public seller page price and purchase UI observed"
+  },
+  {
+    "sku": "D149",
+    "name": "녹보수 소형",
+    "group": "plant",
+    "referencePrice": 65000,
+    "referenceDate": "2026-10-22",
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D149",
+    "verifiedLive": false,
+    "lastLiveCheckedOn": null,
+    "imageUrl": "https://fwith.co.kr/data/item/flower379/D149/thumb-1_270x270.jpg",
+    "imageSource": "V5 recorded seller catalogue / 2026-10-22",
+    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release"
+  },
+  {
+    "sku": "C200",
+    "name": "축하 3단 화환",
+    "group": "celebration",
+    "referencePrice": 59000,
+    "referenceDate": "2026-10-21",
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=C200",
+    "verifiedLive": false,
+    "lastLiveCheckedOn": null,
+    "imageUrl": "https://fwith.co.kr/data/item/flower379/C200/thumb-1_500x500.jpg",
+    "imageSource": "V4 checked 2026-10-21, image checksum recorded",
+    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release"
+  },
+  {
+    "sku": "C206",
+    "name": "축하 4단 화환",
+    "group": "celebration",
+    "referencePrice": 120000,
+    "referenceDate": "2026-10-21",
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=C206",
+    "verifiedLive": false,
+    "lastLiveCheckedOn": null,
+    "imageUrl": "https://fwith.co.kr/data/item/flower379/C206/thumb-1_500x500.jpg",
+    "imageSource": "V4 checked 2026-10-21, image checksum recorded",
+    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release"
+  },
+  {
+    "sku": "B201",
+    "name": "근조 3단 화환",
+    "group": "condolence",
+    "referencePrice": 59000,
+    "referenceDate": "2026-10-22",
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B201",
+    "verifiedLive": false,
+    "lastLiveCheckedOn": null,
+    "imageUrl": "https://fwith.co.kr/data/item/flower379/B201/thumb-1_500x500.jpg",
+    "imageSource": "V4 checked 2026-10-22, image checksum recorded",
+    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release"
+  },
+  {
+    "sku": "B205",
+    "name": "근조 특대 3단 화환",
+    "group": "condolence",
+    "referencePrice": 109000,
+    "referenceDate": "2026-10-29",
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B205",
+    "verifiedLive": true,
+    "lastLiveCheckedOn": "2026-10-29",
+    "imageUrl": "https://fwith.co.kr/data/item/flower379/B205/thumb-1_500x500.jpg",
+    "imageSource": "V4 checked 2026-10-22, image checksum recorded",
+    "priceEvidence": "2026-10-29 public seller page price and purchase UI observed"
   }
 ]
