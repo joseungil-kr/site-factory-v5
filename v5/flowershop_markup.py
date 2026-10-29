@@ -113,18 +113,42 @@ def product_gallery(products, selected_skus):
     )
 
 
+def pagination(pages, number):
+    """O(1) pagination for immutable consecutive flower URL identities."""
+    count = len(pages)
+    if (count == 0 or pages[0]["number"] != 1
+            or pages[-1]["number"] != count):
+        return base.render_pagination(pages, number)
+    start = max(1, min(number - 3, max(1, count - 6)))
+    items = []
+    for index in range(start, min(count, start + 6) + 1):
+        if index == number:
+            items.append(f'<span aria-current="page" class="active">{index}</span>')
+        else:
+            items.append(
+                f'<a href="{base.h(base.url_path(index))}"'
+                f' aria-label="{index}번 페이지">{index}</a>'
+            )
+    return '<nav class="pagination" aria-label="다른 글 페이지">' + "".join(items) + "</nav>"
+
+
 def related(pages, current):
+    """Use nearby region/topic records rather than repeating six national links."""
+    if pages and pages[0]["number"] == 1 and pages[-1]["number"] == len(pages):
+        if current == 1:
+            chosen = pages[1:7]
+        else:
+            index = current - 1
+            chosen = pages[max(1, index - 3):index] + pages[index + 1:index + 4]
+    else:
+        chosen = [p for p in pages if p["number"] != current][:6]
     links = []
-    for p in pages:
-        if p["number"] == current:
-            continue
+    for p in chosen[:6]:
         links.append(
             '<a href="' + base.h(base.url_path(p["number"])) + '">'
             '<strong>' + base.h(p["title"]) + '</strong>'
             '<small>' + base.h(p["region"]) + '</small></a>'
         )
-        if len(links) >= 6:
-            break
     return '<div class="fs-related-grid">' + "".join(links) + '</div>'
 
 
@@ -176,7 +200,7 @@ def home(site, page, pages, products, links):
         '<section class="fs-section"><h2>자주 묻는 질문</h2>'
         + faq(page) + '</section>'
         + base.link_block(base.relevant_links(links, page, "body"), "body-links")
-        + contact(site) + base.render_pagination(pages, page["number"])
+        + contact(site) + pagination(pages, page["number"])
         + '</div></main>' + base.footer(site, links, page)
     )
 
@@ -197,6 +221,6 @@ def detail(site, page, pages, products, links):
         '<section class="fs-section"><h2>다른 지역·상품 안내</h2>'
         + related(pages, page["number"]) + '</section>'
         + base.link_block(base.relevant_links(links, page, "body"), "body-links")
-        + contact(site) + base.render_pagination(pages, page["number"])
+        + contact(site) + pagination(pages, page["number"])
         + '</div></main>' + base.footer(site, links, page)
     )
