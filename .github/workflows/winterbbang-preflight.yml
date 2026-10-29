@@ -25,7 +25,8 @@ jobs:
           spec=json.loads((root/'site-spec.draft.json').read_text('utf-8'))
           pool=json.loads((root/'copy-pool.seed.json').read_text('utf-8'))
           assert spec['siteId']=='winterbbang'
-          assert spec['domain']=='https://winterbbang.nalmada.com'
+          assert spec['domain'] is None, 'domain is not confirmed yet'
+          assert set(spec['domainCandidates'])=={'https://winterbbang.nalmada.net','https://winterbbang.nalmada.com'}
           assert spec['approved'] is False, 'Never promote to approved automatically'
           preflight=validate_plan(spec,'winterbbang')
           assert not preflight['ready'] and 'plan not approved' in preflight['errors']
