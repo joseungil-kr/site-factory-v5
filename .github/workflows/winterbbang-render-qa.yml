@@ -45,7 +45,7 @@ jobs:
                   assert 'noindex,nofollow' in text, f'preview not protected: {folder/name}'
                   assert 'tel:0314070103' in text and '031-407-0103' in text, f'phone CTA missing: {folder/name}'
                   assert '매출총이익률' in text and '재료비' in text and '순이익률' in text, f'margin meaning missing: {folder/name}'
-                  assert not re.search(r'<link[^>]+rel=["\\']canonical',text,re.I), f'preview must not set canonical: {folder/name}'
+                  assert 'rel="canonical"' not in text and "rel='canonical'" not in text, f'preview must not set canonical: {folder/name}'
                   assert not forbidden.search(text), f'commercial terms leaked: {folder/name}'
                   for image in ('hero.webp','shop-in-shop.webp','menu.webp','street.webp','ingredients.webp'):
                       assert f'/assets/images/{image}' in text, f'{image} missing: {folder/name}'
