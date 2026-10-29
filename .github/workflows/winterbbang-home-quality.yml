@@ -1,0 +1,78 @@
+name: Winterbbang SEO quality and one-home IndexNow readiness QA
+on:
+  pull_request:
+    paths:
+      - 'sites/winterbbang/**'
+      - 'scripts/audit_winterbbang_search_quality.py'
+      - 'scripts/prepare_winterbbang_home_release.py'
+      - 'scripts/build_winterbbang_national.py'
+      - 'tests/winterbbang-home-worker.test.mjs'
+      - '.github/workflows/winterbbang-home-quality.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  home-quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Validate existing V5 plan and region generator
+        run: |
+          python -m v5 plan-check --site winterbbang
+          python -m unittest discover -s tests -p 'test_winterbbang_national.py' -v
+          python -m scripts.build_winterbbang_national
+      - name: Run policy-aware regional evidence and home quality audit
+        run: python -m scripts.audit_winterbbang_search_quality
+      - name: Build exact home-only public candidate with 1803 blocked regions
+        run: python -m scripts.prepare_winterbbang_home_release
+      - name: Validate Cloudflare Worker host-specific indexation policy
+        run: node --test tests/winterbbang-home-worker.test.mjs
+      - name: Validate artifact safety including all 1803 nonhome pages
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          base=Path('dist/winterbbang-home-indexable')
+          quality=json.loads(Path('reports/winterbbang/search-quality.json').read_text())
+          release=json.loads(Path('reports/winterbbang/home-release.json').read_text())
+          manifest=json.loads(Path('reports/winterbbang/manifest.json').read_text())
+          assert quality['status']=='PASS_FOR_HOME_ONLY_AND_BLOCK_ALL_REGION_URLS'
+          assert quality['localityReview']['regionPagesSearchEligible']==0
+          assert quality['excludedFromIndexNow']==1803
+          assert release['indexableCount']==1 and release['noindexNonhomePages']==1803
+          assert len(manifest['pages'])==1804
+          assert len(list(base.rglob('*.html')))==1805
+          assert len(list((base/'assets/images').glob('*.webp')))==5
+          home=(base/'index.html').read_text()
+          assert home.count('<meta name="robots" content="index,follow">')==1
+          assert home.count('<link rel="canonical" href="https://winterbbang.nalmada.net/">')==1
+          assert 'Disallow:' not in (base/'robots.txt').read_text()
+          assert 'Allow: /' in (base/'robots.txt').read_text()
+          sitemap=ET.parse(base/'sitemap.xml').getroot()
+          urls=[e.text for e in sitemap.iter() if e.tag.endswith('loc')]
+          assert urls==['https://winterbbang.nalmada.net/']
+          key=Path('sites/winterbbang/indexnow-public-key.txt').read_text().strip()
+          assert (base/(key+'.txt')).read_text()==key+'\n'
+          assert all('<meta name="robots" content="noindex,nofollow">' in
+              (base/p['path'].lstrip('/')).read_text()
+              for p in manifest['pages'] if p['path']!='/')
+          assert '<meta name="robots" content="noindex,nofollow">' in (base/'404.html').read_text()
+          print(json.dumps({'public':urls,'noindexRegionalAndHubPages':1803,
+              'images':5,'indexNowKeyPublicCandidate':True,'indexNowSubmitted':False}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: winterbbang-home-seo-audit-${{ github.sha }}
+          path: |
+            reports/winterbbang/search-quality.json
+            reports/winterbbang/home-release.json
+            reports/winterbbang/similarity.json
+            sites/winterbbang/search-release-scope.json
+          if-no-files-found: error
+          retention-days: 45
