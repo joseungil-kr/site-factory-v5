@@ -25,7 +25,7 @@ class WinterbbangNationalTests(unittest.TestCase):
         chosen1=w.make_selection(*rows[0],ext,fam)
         chosen2=w.make_selection(*rows[0],ext,fam)
         self.assertEqual(chosen1,chosen2)
-        self.assertEqual(len(chosen1[1]),12)
+        self.assertEqual(len(chosen1[1]),9)
 
     def test_noindex_sample_and_claim_safety(self):
         base=w.sample.load_pool(w.sample.POOL_DEFAULT)
@@ -37,7 +37,7 @@ class WinterbbangNationalTests(unittest.TestCase):
         self.assertNotIn('월 100만 원',result)
 
     def test_locality_navigation_escapes(self):
-        page=w.more_content("서울특별시 강남구","역삼동",["안전한 안내"]*12,[], "서울특별시 강남구")
+        page=w.more_content("서울특별시 강남구","역삼동",["안전한 안내"]*9,[], "서울특별시 강남구")
         self.assertIn(w.district_url("서울특별시 강남구"),page)
         self.assertIn("서울특별시 강남구 역삼동 창업 체크리스트",page)
 
