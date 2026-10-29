@@ -2,7 +2,7 @@ name: Hallflower isolated prototype QA
 on:
   push:
     branches: [feature/v53-hallflower-order]
-    paths: ['scripts/build_hallflower.py', 'scripts/verify_hallflower_product_photos.py', 'scripts/build_hallflower_full.py', 'scripts/audit_hallflower_full.py', 'tests/hallflower-browser-smoke.py', 'sites/hallflower/**', '.github/workflows/hallflower-preview-qa.yml']
+    paths: ['scripts/build_hallflower.py', 'scripts/prepare_hallflower_public_candidate.py', 'sites/hallflower/worker.public.js', 'sites/hallflower/wrangler.public-candidate.json', 'scripts/verify_hallflower_product_photos.py', 'scripts/build_hallflower_full.py', 'scripts/audit_hallflower_full.py', 'tests/hallflower-browser-smoke.py', 'sites/hallflower/**', '.github/workflows/hallflower-preview-qa.yml']
   pull_request:
     paths: ['scripts/build_hallflower.py', 'scripts/verify_hallflower_product_photos.py', 'scripts/build_hallflower_full.py', 'scripts/audit_hallflower_full.py', 'tests/hallflower-browser-smoke.py', 'sites/hallflower/**', '.github/workflows/hallflower-preview-qa.yml']
   workflow_dispatch:
@@ -52,6 +52,35 @@ jobs:
           PY
       - name: Actual Chromium 390px/1440px, product checkout, JS disabled
         run: python tests/hallflower-browser-smoke.py
+      - name: Prepare and audit separate public candidate (no deployment)
+        run: |
+          python -m py_compile scripts/prepare_hallflower_public_candidate.py
+          python scripts/prepare_hallflower_public_candidate.py
+          python - <<'PY'
+          from pathlib import Path
+          import json,re
+          root=Path('dist/hallflower-public-candidate')
+          report=json.loads((root/'public-candidate-manifest.json').read_text())
+          assert report['candidateOnly'] and report['publicReleaseBlocked']
+          assert report['pages']==1081 and report['sitemapUrls']==1081
+          sitemap=(root/'sitemap.xml').read_text()
+          assert sitemap.count('<url>')==1081
+          assert 'Sitemap: https://hallflower.nalmada.net/sitemap.xml' in (root/'robots.txt').read_text()
+          html=list(root.rglob('*.html'))
+          assert len(html)==1082 # 1081 indexable pages plus 404 page
+          for p in html:
+              t=p.read_text()
+              if p.name=='404.html':
+                  assert 'noindex,nofollow' in t
+                  continue
+              assert 'name="robots" content="index,follow"' in t
+              assert 'rel="canonical" href="https://hallflower.nalmada.net/' in t
+          preview=Path('dist/hallflower-full-preview')
+          assert 'Disallow: /' in (preview/'robots.txt').read_text()
+          assert not (preview/'sitemap.xml').exists()
+          assert json.loads((preview/'manifest.json').read_text())['publicReleaseBlocked']
+          print('HALLFLOWER_PUBLIC_CANDIDATE_AUDIT_PASS',report['pages'],report['sha256'])
+          PY
       - name: Verify five official product photos, names and hashes
         run: python scripts/verify_hallflower_product_photos.py
       - name: Build full noindex corpus and write similarity result
