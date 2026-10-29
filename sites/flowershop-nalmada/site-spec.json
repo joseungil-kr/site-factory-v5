@@ -18,13 +18,17 @@
     "지역명 화환전문 꽃집 안내",
     "배송·주문 안내"
   ],
-  "targetPageCount": 3,
+  "targetPageCount": 10137,
   "rollout": {
-    "phase": "representative-pilot",
+    "phase": "nationwide-generated-noindex",
     "pilotPageCount": 3,
-    "nationwideTarget": "기존 V4 공식 지역마스터·V5 동 원장과 전국 읍면동 코드 전수 대조 후 목표수 확정",
-    "nationwideCompletionClaim": false,
-    "immutablePageNumbers": true
+    "legalDongCount": 5067,
+    "keywordDocumentsPerArea": 2,
+    "expectedContentPageCount": 10137,
+    "approvedForPublicIndexing": false,
+    "source": "V4 2026-10-22 official legal-dong ZIP sha256:44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
+    "immutablePageNumbers": true,
+    "sourceScope": "법정동 읍면동/가/로; 행정동 전수 증명 아님"
   },
   "titlePattern": "{지역명} 꽃집 개업화분·화환 전문 | {상황별 주문가이드}",
   "urlPattern": "/ (전국 홈), /2.html부터 지역별 독립 문서, /배송안내.html",
@@ -40,10 +44,10 @@
     ]
   },
   "copyPoolPlan": {
-    "industry": "개업·축하 화분·화환",
-    "source": "V4 공인 행정구역 및 verified fwith.co.kr 상품원장 + 고객 의사결정 FAQ",
+    "industry": "개업화분·축하화환·근조화환",
+    "source": "V4 data/opening-sentence-pool.json pinned and V4 product source snapshots",
     "sentenceTarget": 300,
-    "policy": "근거없는 실매장·지역 특성·가짜 후기·배송확약 금지"
+    "policy": "검증되지 않은 지역 상점·배송 보장·재고·가짜 후기 금지; 사람의 중복/의미 품질 검수 없이 색인 배포 금지"
   },
   "similarityAudit": {
     "metric": "char-5gram-jaccard",
@@ -67,6 +71,6 @@
     "mode": "preview-noindex",
     "indexNow": false,
     "production": false,
-    "requires": "실제 상품 이미지·주문URL·지역원장·SEO 문서검수 및 DNS/배포 별도 확인"
+    "requires": "대표 화면 390/1440 시각검사, 외부 상품 이미지·주문 URL 6종 재확인, 10137 페이지 QA, 공식 행정동 교차대조 후 별도 배포 승인"
   }
 }

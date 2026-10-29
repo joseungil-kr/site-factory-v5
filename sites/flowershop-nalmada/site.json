@@ -42,5 +42,18 @@
       "label": "배송 안내",
       "href": "/배송안내.html"
     }
-  ]
+  ],
+  "flowershopNational": {
+    "enabled": true,
+    "startNumber": 4,
+    "topics": [
+      "꽃집 개업화분",
+      "화환전문 꽃집"
+    ],
+    "expectedDongCount": 5067,
+    "expectedTotalPages": 10137,
+    "sourceSha256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
+    "dataModel": "official legal-dong suffix 읍/면/동/가/로; not administrative-dong",
+    "release": "noindex-preview-only"
+  }
 }

@@ -14,7 +14,7 @@ permissions:
 jobs:
   preview-qa:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -50,6 +50,23 @@ jobs:
           PY
       - name: Build flowershop preview
         run: python -m v5 build --site flowershop-nalmada --mode preview
+      - name: Verify exact nationwide generated document count
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          out=Path('dist/flowershop-nalmada')
+          pages=list(out.glob('*.html'))
+          assert len(pages)==10139,('HTML_COUNT_MISMATCH',len(pages))
+          report=json.loads(Path('reports/flowershop-nalmada/manifest.json').read_text())
+          assert report['pageCount']==10137,report['pageCount']
+          assert report['mode']=='preview',report['mode']
+          assert 'noindex,nofollow' in (out/'index.html').read_text()
+          assert not (out/'sitemap.xml').exists()
+          assert (out/'3.html').is_file()
+          assert (out/'10137.html').is_file()
+          print('FLOWERSHOP_NATIONWIDE_PREVIEW_PASS',report['pageCount'])
+          PY
       - name: Audit preview
         run: python -m v5 audit --site flowershop-nalmada
       - name: Preserve preview and audit artifacts
