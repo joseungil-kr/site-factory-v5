@@ -1,0 +1,59 @@
+name: Wreath V5-2 seller product and image HTTP read-only check
+on:
+  push:
+    branches: [feature/v52-wreath-region]
+    paths: ['.github/workflows/wreath-seller-live-qa.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  seller-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 7
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: SSL verified read-only exact seller item and image responses
+        run: |
+          python - <<'PY'
+          import json,ssl,urllib.request,urllib.error,re
+          from pathlib import Path
+          products=json.loads(Path('sites/wreath-region/products.json').read_text())['list']
+          ctx=ssl.create_default_context()
+          results=[]
+          for p in products:
+              record={'sku':p['id'],'referencePrice':p['referencePriceKRW']}
+              for kind,url in (('item',p['orderUrl']),('image',p['imageUrl'])):
+                  req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (compatible; WreathSellerLinkQA/1.0)'})
+                  try:
+                      with urllib.request.urlopen(req,timeout=25,context=ctx) as response:
+                          status=response.status;content_type=response.headers.get('content-type','')
+                          body=response.read(140000)
+                  except urllib.error.HTTPError as e:
+                      status=e.code;content_type=e.headers.get('content-type','');body=b''
+                  except Exception as e:
+                      record[kind+'_error']=type(e).__name__
+                      status=None;content_type='';body=b''
+                  record[kind+'_status']=status
+                  record[kind+'_content_type']=content_type
+                  if kind=='item':
+                      text=body.decode('utf-8','ignore')
+                      record['SKU_textFound']=(p['id'] in text)
+                      record['buyControlFound']=bool(re.search('바로구매|구매하기|장바구니',text))
+                  elif kind=='image':
+                      record['imageSignatureJpeg']=(body[:3]==b'\xff\xd8\xff')
+              results.append(record)
+          result={'seller':'fwith.co.kr','noOrderSubmitted':True,'noCustomerDataSent':True,
+                  'sellerUrls':len(products),'rows':results,
+                  'allHTTPValid':all(r.get('item_status')==200 and r.get('image_status')==200 for r in results)}
+          Path('reports/wreath-seller-live.json').parent.mkdir(exist_ok=True,parents=True)
+          Path('reports/wreath-seller-live.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          print('WREATH_SELLER_READ_ONLY='+json.dumps(result,ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wreath-seller-readonly-http-evidence
+          path: reports/wreath-seller-live.json
+          if-no-files-found: error
+          retention-days: 14
