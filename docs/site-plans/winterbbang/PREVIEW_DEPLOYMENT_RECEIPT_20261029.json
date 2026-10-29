@@ -179,6 +179,29 @@
     ],
     "contentReleaseSha": "da457ae5a6a3b667ac27505143fe353ddbb0b771",
     "actionUrl": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40867847521",
-    "limitations": "Site remains noindex; page corpus copy audits and locality factual uniqueness still required prior to search release. DNS and Routes GET 403 in preflight, but Cloudflare exact domain bind succeeded with expected Worker and HTTPS readback."
+    "limitations": "Site remains noindex; page corpus copy audits and locality factual uniqueness still required prior to search release. DNS and Routes GET 403 in preflight, but Cloudflare exact domain bind succeeded with expected Worker and HTTPS readback.",
+    "independentReadOnlyVerification": {
+      "runId": 40868333991,
+      "url": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40868333991",
+      "method": "GET_ONLY_NO_MUTATION",
+      "samples": [
+        "/",
+        "/r/f41a39a96e8d.html",
+        "/r/70bc4aaed6dc.html",
+        "/r/68a35ef70403.html",
+        "/r/e913c1706ebf.html",
+        "/r/d7b714416837.html",
+        "/r/49e71f228c93.html"
+      ],
+      "htmlHTTP200": 7,
+      "WebpHTTP200Sha256Matches": 5,
+      "httpNoindexAll": true,
+      "robotsDisallow": true,
+      "nonexistent404": true,
+      "privateContractConditionsAbsent": true,
+      "telephonyCTA": "tel:0314070103",
+      "marginDisclaimer": "매출총이익률 60~70% = 판매가격 minus ingredient costs; not net profit",
+      "status": "SUCCESS"
+    }
   }
 }
