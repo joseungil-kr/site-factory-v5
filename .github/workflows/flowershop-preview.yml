@@ -1,0 +1,35 @@
+name: Flowershop independent preview QA
+on:
+  pull_request:
+    paths:
+      - 'sites/flowershop-nalmada/**'
+      - 'v5/**'
+      - '.github/workflows/flowershop-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Build flowershop preview
+        run: python -m v5 build --site flowershop-nalmada --mode preview
+      - name: Audit preview
+        run: python -m v5 audit --site flowershop-nalmada
+      - name: Preserve preview and audit artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: flowershop-preview-${{ github.sha }}
+          path: |
+            dist/flowershop-nalmada/
+            reports/flowershop-nalmada/audit.json
+            reports/flowershop-nalmada/manifest.json
+          if-no-files-found: error
+          retention-days: 7
