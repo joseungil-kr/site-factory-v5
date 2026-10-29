@@ -87,7 +87,16 @@ jobs:
           assert 'Disallow: /' in (preview/'robots.txt').read_text()
           assert not (preview/'sitemap.xml').exists()
           assert json.loads((preview/'manifest.json').read_text())['publicReleaseBlocked']
-          print('HALLFLOWER_PUBLIC_CANDIDATE_AUDIT_PASS',report['pages'],report['sha256'])
+          cfg=json.loads(Path('sites/hallflower/wrangler.public-candidate.json').read_text())
+          assert cfg['name']=='sfv53-hallflower-public'
+          assert cfg['workers_dev'] is False
+          assert 'routes' not in cfg and 'routes' not in cfg.get('env',{})
+          assert cfg['vars']['HALLFLOWER_PUBLIC']=='0'
+          preview=json.loads(Path('sites/hallflower/wrangler.preview.json').read_text())
+          assert preview['name']=='sfv53-hallflower' and preview['workers_dev'] is True
+          assert preview['name']!=cfg['name']
+          print('HALLFLOWER_PUBLIC_WORKER_ISOLATION_PASS',cfg['name'],preview['name'])
+                    print('HALLFLOWER_PUBLIC_CANDIDATE_AUDIT_PASS',report['pages'],report['sha256'])
           PY
       - uses: actions/upload-artifact@v4
         if: always()
