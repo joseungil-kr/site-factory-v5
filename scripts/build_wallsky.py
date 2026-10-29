@@ -60,6 +60,8 @@ def main():
     require_site_plan('wallsky');spec=read(BASE/'site-spec.json');items=pages()
     OUT.mkdir(parents=True,exist_ok=True);REPORT.mkdir(parents=True,exist_ok=True)
     (OUT/'style.css').write_text(CSS,encoding='utf-8')
+    if args.public:
+        (OUT/'naverb08627c62daa2b2ef1e711f494b4a286.html').write_bytes(b'naver-site-verification: naverb08627c62daa2b2ef1e711f494b4a286.html')
     shutil.copy2(ROOT/'assets/library/daysky/skycar-facade.webp',OUT/'facade.webp')
     groups={}
     by_number={item['number']:item for item in items}
