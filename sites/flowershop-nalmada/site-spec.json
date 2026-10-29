@@ -63,9 +63,9 @@
     "mode": "전화 상담 + 판매처 실제 개별 상품 상세 링크"
   },
   "images": {
-    "source": "V5 promotion-plant library; V4 fwith.co.kr SKU image URLs",
+    "source": "V4 six SKU photographs locally bundled; source Git blob SHA matches original; seller image URLs retained in product ledger",
     "approved": false,
-    "policy": "확인되지 않은 사진을 상품 실사진처럼 표시하지 않음"
+    "visualReview": "pending full-screen browser check at 390px and 1440px"
   },
   "publishPolicy": {
     "mode": "preview-noindex",

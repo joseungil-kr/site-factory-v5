@@ -65,6 +65,9 @@ jobs:
           assert not (out/'sitemap.xml').exists()
           assert (out/'3.html').is_file()
           assert (out/'10137.html').is_file()
+          for sku in ('d144','d149','c200','c206','b201','b205'):
+              photo=out/'assets'/'images'/(sku+'.jpg')
+              assert photo.is_file() and photo.stat().st_size>10000,sku
           print('FLOWERSHOP_NATIONWIDE_PREVIEW_PASS',report['pageCount'])
           PY
       - name: Audit preview

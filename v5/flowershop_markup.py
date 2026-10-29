@@ -83,7 +83,7 @@ def product_gallery(products, selected_skus):
         for item in subset:
             name = base.h(item["name"])
             href = base.h(item["orderUrl"])
-            image = base.h(item["imageUrl"])
+            image = base.h(item.get("localImagePath") or item["imageUrl"])
             amount = f'{item["referencePrice"]:,}원'
             checked = base.h(item["referenceDate"])
             cards.append(

@@ -53,6 +53,8 @@ class FlowershopProductTest(unittest.TestCase):
                 )
                 self.assertTrue(p["imageUrl"].startswith("https://fwith.co.kr/"))
                 self.assertIn("/" + sku + "/", p["imageUrl"])
+                self.assertTrue((ROOT / "assets/library/promotion-plant" / (sku.lower()+".jpg")).is_file())
+                self.assertEqual(p["localImagePath"], "/assets/images/"+sku.lower()+".jpg")
 
     def test_representative_and_national_pages_render_real_cards(self):
         pages = self.data["pages"]
@@ -73,7 +75,7 @@ class FlowershopProductTest(unittest.TestCase):
                 self.assertIn('href="tel:18440644"',html)
                 for sku in page["productSkus"]:
                     p=self.products[sku]
-                    self.assertIn('src="'+p["imageUrl"]+'"',html)
+                    self.assertIn('src="'+p["localImagePath"]+'"',html)
                     self.assertIn('href="'+p["orderUrl"]+'"',html)
                     self.assertIn(f'{p["referencePrice"]:,}원',html)
                     self.assertIn('판매처 가격 확인일 '+p["referenceDate"],html)

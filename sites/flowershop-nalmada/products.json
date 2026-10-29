@@ -10,7 +10,10 @@
     "lastLiveCheckedOn": "2026-10-29",
     "imageUrl": "https://fwith.co.kr/data/item/flower379/D144/thumb-1_270x270.jpg",
     "imageSource": "V5 recorded seller catalogue / 2026-10-22",
-    "priceEvidence": "2026-10-29 public seller page price and purchase UI observed"
+    "priceEvidence": "2026-10-29 public seller page price and purchase UI observed",
+    "localImagePath": "/assets/images/d144.jpg",
+    "localImageSourceRepoPath": "joseungil-kr/site-factory-v4/site/national-flower-a/assets/v4-national/D144.jpg",
+    "localImageSourceBlobSha": "524c1e610d645bd20b1575e9a443c695bbac36db"
   },
   {
     "sku": "D149",
@@ -23,7 +26,10 @@
     "lastLiveCheckedOn": null,
     "imageUrl": "https://fwith.co.kr/data/item/flower379/D149/thumb-1_270x270.jpg",
     "imageSource": "V5 recorded seller catalogue / 2026-10-22",
-    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release"
+    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release",
+    "localImagePath": "/assets/images/d149.jpg",
+    "localImageSourceRepoPath": "joseungil-kr/site-factory-v4/site/national-flower-a/assets/v4-national/D149.jpg",
+    "localImageSourceBlobSha": "d39aaf720f27af19aa100f4cce3474722474f423"
   },
   {
     "sku": "C200",
@@ -36,7 +42,10 @@
     "lastLiveCheckedOn": null,
     "imageUrl": "https://fwith.co.kr/data/item/flower379/C200/thumb-1_500x500.jpg",
     "imageSource": "V4 checked 2026-10-21, image checksum recorded",
-    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release"
+    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release",
+    "localImagePath": "/assets/images/c200.jpg",
+    "localImageSourceRepoPath": "joseungil-kr/site-factory-v4/site/assets/products/C200.jpg",
+    "localImageSourceBlobSha": "f142abff10936c47f30b96ab37e79c6224bc1527"
   },
   {
     "sku": "C206",
@@ -49,7 +58,10 @@
     "lastLiveCheckedOn": null,
     "imageUrl": "https://fwith.co.kr/data/item/flower379/C206/thumb-1_500x500.jpg",
     "imageSource": "V4 checked 2026-10-21, image checksum recorded",
-    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release"
+    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release",
+    "localImagePath": "/assets/images/c206.jpg",
+    "localImageSourceRepoPath": "joseungil-kr/site-factory-v4/site/assets/products/C206.jpg",
+    "localImageSourceBlobSha": "f6f581d19f96d1537594d42918a536038feb3860"
   },
   {
     "sku": "B201",
@@ -62,7 +74,10 @@
     "lastLiveCheckedOn": null,
     "imageUrl": "https://fwith.co.kr/data/item/flower379/B201/thumb-1_500x500.jpg",
     "imageSource": "V4 checked 2026-10-22, image checksum recorded",
-    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release"
+    "priceEvidence": "V4 pinned original seller item page; current price and inventory must be rechecked before public release",
+    "localImagePath": "/assets/images/b201.jpg",
+    "localImageSourceRepoPath": "joseungil-kr/site-factory-v4/data/funeral-products/images/B201.jpg",
+    "localImageSourceBlobSha": "52f55c45c05a9a31488b8ac03a39975fba93c601"
   },
   {
     "sku": "B205",
@@ -75,6 +90,9 @@
     "lastLiveCheckedOn": "2026-10-29",
     "imageUrl": "https://fwith.co.kr/data/item/flower379/B205/thumb-1_500x500.jpg",
     "imageSource": "V4 checked 2026-10-22, image checksum recorded",
-    "priceEvidence": "2026-10-29 public seller page price and purchase UI observed"
+    "priceEvidence": "2026-10-29 public seller page price and purchase UI observed",
+    "localImagePath": "/assets/images/b205.jpg",
+    "localImageSourceRepoPath": "joseungil-kr/site-factory-v4/data/funeral-products/images/B205.jpg",
+    "localImageSourceBlobSha": "ab914ee924fd0bf0e39a2061cf74e2ef550186b9"
   }
 ]
