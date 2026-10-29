@@ -1,6 +1,15 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import worker from '../sites/wreath-region/worker.js';
+
+class TestHTMLRewriter {
+  constructor(){this.handlers=[];}
+  on(selector,handler){this.handlers.push({selector,handler});return this;}
+  transform(response){
+    const self=this;
+    return new Response(response.text().then?undefined:undefined);
+  }
+}
 test('wreath preview is isolated and noindex; only exact approved production host is indexable',async()=>{
   for(const [host,flag,blocked] of [
     ['wreath.nalmada.net','0',true],
@@ -20,5 +29,37 @@ test('wreath preview is isolated and noindex; only exact approved production hos
     r=await worker.fetch(new Request('https://'+host+'/not-real'),env);
     assert.equal(r.status,404);
     assert.match(r.headers.get('X-Robots-Tag'),/noindex/);
+  }
+});
+test('preview HTML metadata is rewritten but public HTML metadata is preserved',async()=>{
+  const old=globalThis.HTMLRewriter;
+  globalThis.HTMLRewriter=class {
+    constructor(){this.handlers=[];}
+    on(selector,handler){this.handlers.push({selector,handler});return this;}
+    transform(response){
+      const handlers=this.handlers;
+      return response.text().then(body=>{
+        let out=body;
+        if(handlers.some(x=>x.selector==='head link[rel="canonical"]'))out=out.replace(/<link\s+rel="canonical"[^>]*>/gi,'');
+        if(handlers.some(x=>x.selector==='head meta[name="robots"]'))out=out.replace(/(<meta\s+name="robots"\s+content=")[^"]*(")/i,'$1noindex,nofollow$2');
+        return new Response(out,{status:response.status,headers:response.headers});
+      });
+    }
+  };
+  try {
+    const html='<html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://wreath.nalmada.net/r/x"></head><body>ok</body></html>';
+    const env={WREATH_PUBLIC:'1',ASSETS:{fetch:async()=>new Response(html,{status:200,headers:{'Content-Type':'text/html; charset=utf-8'}})}};
+    const preview=await worker.fetch(new Request('https://sfv52-wreath-preview.joseungil.workers.dev/r/x'),env);
+    const previewHtml=await preview.text();
+    assert.match(previewHtml,/name="robots" content="noindex,nofollow"/);
+    assert.doesNotMatch(previewHtml,/rel="canonical"/);
+    assert.match(preview.headers.get('X-Robots-Tag'),/noindex/);
+    const publicResponse=await worker.fetch(new Request('https://wreath.nalmada.net/r/x'),env);
+    const publicHtml=await publicResponse.text();
+    assert.match(publicHtml,/name="robots" content="index,follow"/);
+    assert.match(publicHtml,/rel="canonical" href="https:\/\/wreath.nalmada.net\/r\/x"/);
+    assert.equal(publicResponse.headers.has('X-Robots-Tag'),false);
+  } finally {
+    if(old===undefined)delete globalThis.HTMLRewriter;else globalThis.HTMLRewriter=old;
   }
 });
