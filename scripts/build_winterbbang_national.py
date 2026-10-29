@@ -120,17 +120,17 @@ def make_selection(parent: str, dong: str, ext: dict, seed_by_family: dict):
     menu = choose(seed_by_family[menu_family], key + "|menu")
     supply = choose(seed_by_family["ingredients-and-supply"], key + "|supply")
     chosen = [choose(ext[family], key + "|" + family) for family in GROUPS]
-    # The sample layout contains three explanatory cards; those are also
-    # selected from independently authored V5 seed paragraphs.
+    # The approved template already renders start/shop/supply as three top cards.
+    # Repeat only the menu-specific seed paragraph below, followed by eight
+    # independently authored topical blocks; do not duplicate those three cards.
     base_blocks = [start["decision"], shop["decision"], supply["decision"]]
-    return base_blocks, [start["copy"], shop["copy"], menu["copy"], supply["copy"]] + chosen
+    return base_blocks, [menu["copy"]] + chosen
 
 def more_content(parent: str, dong: str, chosen: list, neighbors: list, district: str):
-    # Four seed paragraphs precede eight independently authored topical blocks.
-    headings = ["판매 공간과 첫 판매 준비", "기존 매장의 샵인샵 검토",
-                "메뉴별 조리 방법", "식자재 공급과 보관"]
-    headings += [GROUP_HEADINGS[g] for g in GROUPS]
-    assert len(headings) == len(chosen) == 12
+    # The top cards already cover space/shop/supply; the lower checklist adds
+    # one menu-specific paragraph plus eight distinct topical blocks.
+    headings = ["메뉴별 조리 방법"] + [GROUP_HEADINGS[g] for g in GROUPS]
+    assert len(headings) == len(chosen) == 9
     sections = ['<section class="local-detail"><h2>' + h(full_name(parent,dong)) + ' 창업 체크리스트</h2>'
                 '<p>해당 지역에서 실제 판매 장소를 정하기 전, 필요한 시설과 메뉴·원료를 점검하세요. '
                 '이 안내는 지역 내 점포 운영이나 매출 실적을 의미하지 않습니다.</p>']
