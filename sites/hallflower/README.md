@@ -38,3 +38,10 @@ Prototype generator and GitHub QA workflow are committed, but an independent suc
 - `python tests/hallflower-browser-smoke.py` checks real Chromium 390/1440 layout, five product links, no-JS disabled control and no personally identifying query-string submission. Workflow includes that test before full-corpus build.
 - Product photo assets still **missing**: correct product-image URL and original hashes must be verified from fwith and included; never fabricate an image path. This currently blocks visual approval and public release.
 - CI using GitHub's existing generic V5 offline workflow is not evidence that the new Hallflower-specific Chromium/similarity workflow completed.
+
+## Independent QA correction / current release blocker (2026-10-29)
+- Confirmed dedicated workflow run **40810612603**, job **123239762913**: Python sample build PASS, Chromium widths 390/1440 and JS-disabled privacy PASS; full audit FAIL: **11 fixed samples x 1,079 = 11,869** comparisons, maximum **0.969006**, worst pair 875/485. No threshold/scope changes are allowed.
+- Corrected `actions/upload-artifact@v4` by moving `if: always()` to step level, so failed jobs preserve generated preview and audit JSON.
+- Disabled the invalid `i % 3` content-recycling nationwide path, explicitly failing before any claim of a valid 1,080-page release; 1,080 frozen facility records remain available for an editorially verified rewrite. This is an **unfinished development gate**, not a passing expansion.
+- Verified the seller-owned public product detail image **B205** at `https://fwith.co.kr/data/item/flower379/B205/main_pc.jpg` via the exact image link on `https://fwith.co.kr/shop/item.php?it_id=B205`. Added that actual observed URL to the B205 card. Download/hash verification was blocked by network access, so SHA-256 is **not recorded** and release image integrity gate remains open. Other SKU photo paths are not guessed or fabricated.
+- Real photos for remaining products, substantive independent per-facility copy, refreshed whole-corpus similarity and successful isolated workflow artifact run remain outstanding. Preserve noindex, no DNS/public release, no IndexNow.
