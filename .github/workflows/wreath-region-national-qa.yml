@@ -4,6 +4,8 @@ on:
     branches: [feature/v52-wreath-region]
     paths:
       - '.github/workflows/wreath-region-national-qa.yml'
+      - 'sites/wreath-region/copy-pool.json'
+      - 'scripts/*wreath_region.py'
   workflow_dispatch:
 permissions:
   contents: read
