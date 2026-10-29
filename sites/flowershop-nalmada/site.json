@@ -1,0 +1,46 @@
+{
+  "id": "flowershop-nalmada",
+  "brand": "꽃이랑",
+  "siteTitle": "지역 꽃집 개업화분·화환 전문",
+  "domain": "flowershop.nalmada.net",
+  "workerName": null,
+  "locale": "ko-KR",
+  "phone": "1844-0644",
+  "keyword": "꽃집 개업화분 화환",
+  "region": "전국",
+  "theme": "classic",
+  "imageLibrary": "promotion-plant",
+  "imagePool": [
+    "hero-florist.webp",
+    "atelier-florist.webp",
+    "moment-blooms.webp",
+    "moment-leaves.webp",
+    "moment-flowers.webp"
+  ],
+  "orderBaseUrl": "https://fwith.co.kr",
+  "publishEnabled": false,
+  "imageAssetsApproved": false,
+  "cookiePrivacyReviewed": false,
+  "analytics": {
+    "enabled": false
+  },
+  "siteSearch": {
+    "enabled": false
+  },
+  "staticAssetSoftLimit": 18000,
+  "source": "V4 verified region master and V5 reference product inventory; representative preproduction content pending independent live validation",
+  "indexNow": {
+    "enabled": false,
+    "key": null
+  },
+  "navigation": [
+    {
+      "label": "홈",
+      "href": "/"
+    },
+    {
+      "label": "배송 안내",
+      "href": "/배송안내.html"
+    }
+  ]
+}
