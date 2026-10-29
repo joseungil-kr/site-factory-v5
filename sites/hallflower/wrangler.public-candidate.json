@@ -1,5 +1,5 @@
 {
-  "name": "sfv53-hallflower",
+  "name": "sfv53-hallflower-public",
   "main": "worker.public.js",
   "compatibility_date": "2026-10-24",
   "workers_dev": false,
