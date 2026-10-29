@@ -177,6 +177,10 @@ def main():
     error=page('/404.html','찾을 수 없는 페이지 | 꽃이랑','올바른 지역 안내에서 주문 방법을 확인해 주세요.',hero('페이지를 찾을 수 없습니다','지역 선택으로 돌아가 근조화환 주문 정보를 확인해 주세요.')+'<main class="wrap main"><a href="/">홈으로 돌아가기</a></main>',False)
     (OUT/'404.html').write_text(error,encoding='utf-8')
     if args.public:
+        key_path=BASE/'indexnow-public-key.txt'
+        key=key_path.read_text(encoding='utf-8').strip()
+        assert re.fullmatch(r'[a-f0-9]{32}',key), 'Invalid existing public IndexNow key format'
+        (OUT/(key+'.txt')).write_text(key+'\\n',encoding='utf-8')
         (OUT/'robots.txt').write_text('User-agent: *\nAllow: /\nSitemap: '+DOMAIN+'/sitemap.xml\n',encoding='utf-8')
         ET.register_namespace('','http://www.sitemaps.org/schemas/sitemap/0.9')
         root=ET.Element('{http://www.sitemaps.org/schemas/sitemap/0.9}urlset')
