@@ -22,6 +22,9 @@ def build():
     unique=[]
     for i,f in enumerate(rows):
         # All facilities remain explicit historic-source records, not operationally verified.
+        # A repeated three-document cycle is not substantive facility-specific editorial content.
+        # Fail closed instead of falsely producing 1,080 purportedly distinct guides.
+        raise RuntimeError('Full publication blocked: facility-specific verified editorial content unavailable; do not use i % 3 template recycling')
         slug=h.page(i%3,f['id'],f['name'],f['address'])
         old=h.OUT/'halls'/slug
         new=f'{i+1}-{f["id"]}.html'
