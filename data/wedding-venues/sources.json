@@ -1,0 +1,55 @@
+{
+  "schema_version": "1.0.0",
+  "checked_at": "2026-10-30",
+  "sources": [
+    {
+      "source_id": "SRC-KR-DATA-GO-KR-WEDDING-STANDARD",
+      "name": "전국결혼식장및예식장표준데이터",
+      "publisher": "공공데이터포털 / 지방자치단체 제공",
+      "url": "https://www.data.go.kr/data/15155669/standard.do",
+      "source_type": "official_public_dataset",
+      "displayed_dataset_updated_at": "2026-10-07",
+      "observed_at": "2026-10-30",
+      "fields": [
+        "사업장명",
+        "시도명",
+        "시군구명",
+        "소재지도로명주소",
+        "소재지지번주소",
+        "위도",
+        "경도",
+        "전화번호",
+        "예식홀수",
+        "운영여부",
+        "관리기관명",
+        "관리기관전화번호",
+        "데이터기준일자"
+      ],
+      "reuse_conditions": "공식 페이지에 게시된 데이터의 이용조건을 다운로드/활용 전 재확인. 페이지는 XLS/JSON/CSV/RDF 및 Open API를 안내하며, API 활용신청이 필요할 수 있음.",
+      "freshness_caveat": "개별 지자체 자료를 월초 병합하며 일부 시점 차이가 발생할 수 있다고 안내됨. 운영여부 Y만으로 현재 예식 운영을 최종 확정하지 않음.",
+      "use_in_this_batch": "후보 원장 생성 및 공공데이터 값의 출처 추적. 시설별 공식 홈페이지/예약 페이지의 예식 운영 근거는 아직 확인하지 않음.",
+      "coverage": "전국 표준데이터지만 호텔/컨벤션/공공시설 전체를 포괄한다고 가정하지 않음."
+    },
+    {
+      "source_id": "SRC-BETTERFUTURE-PUBLIC-WEDDING",
+      "name": "전국 공공예식장 현황",
+      "publisher": "인구전략위원회",
+      "url": "https://www.betterfuture.go.kr/home/kor/M924879073/contents.do",
+      "source_type": "official_government_directory",
+      "observed_at": "2026-10-30",
+      "reuse_conditions": "개별 예약 포털/지자체의 데이터 이용조건을 각각 확인",
+      "use_in_this_batch": "후속 공공시설 후보 발굴용. 아직 레코드로 수집하지 않음."
+    },
+    {
+      "source_id": "SRC-SEOUL-OPEN-DATA-PUBLIC-WEDDING",
+      "name": "서울시 더 아름다운 결혼식 공공예식장 현황",
+      "publisher": "서울특별시 / 서울 열린데이터광장",
+      "url": "https://data.seoul.go.kr/dataList/OA-22377/F/1/datasetView.do",
+      "source_type": "official_public_dataset",
+      "displayed_updated_at": "2026-08-31",
+      "observed_at": "2026-10-30",
+      "reuse_conditions": "페이지에 표시된 공공누리 제3유형: 출처표시 + 변경금지. 변형·재배포를 전제하지 않고 이용조건을 별도 검토.",
+      "use_in_this_batch": "후속 서울 공공예식시설 조사용. 이 묶음의 CSV/JSON 레코드에는 사용하지 않음."
+    }
+  ]
+}
