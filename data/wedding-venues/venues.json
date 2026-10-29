@@ -1,0 +1,283 @@
+{
+  "schema_version": "1.0.0",
+  "generated_at": "2026-10-30",
+  "records": [
+    {
+      "stable_id": "KR-WV-GYEONGGI-SUWON-PATI-WEDDING-U",
+      "official_name": "파티웨딩유",
+      "aliases": [],
+      "facility_type": "wedding_hall",
+      "region": {
+        "sido": "경기도",
+        "sigungu": "수원시 권선구",
+        "eupmyeondong": null
+      },
+      "road_address": "경기도 수원시 권선구 세화로 218",
+      "official_url": null,
+      "official_business_phone": "031-297-1000",
+      "venue_relationship": {
+        "parent_facility_id": null,
+        "hall_names": [],
+        "floor": null,
+        "building_or_branch": null
+      },
+      "wedding_operation_evidence": {
+        "status": "not_independently_verified",
+        "source_ids": [
+          "SRC-KR-DATA-GO-KR-WEDDING-STANDARD"
+        ],
+        "url": null,
+        "note": "표준데이터에 예식장 후보로 기재되고 운영여부 Y로 표시됨. 시설 자체의 최신 공식 예식 안내는 아직 확인하지 않음."
+      },
+      "access_parking": {
+        "status": "unknown",
+        "details": null,
+        "source_url": null
+      },
+      "flower_policy": {
+        "status": "unknown",
+        "delivery_location": null,
+        "delivery_hours": null,
+        "restrictions": null,
+        "source_url": null,
+        "checked_at": null
+      },
+      "source_ids": [
+        "SRC-KR-DATA-GO-KR-WEDDING-STANDARD"
+      ],
+      "source_record_date": "2026-03-20",
+      "checked_at": "2026-10-30",
+      "status": "candidate_official_dataset",
+      "unverified_fields": [
+        "official_url",
+        "current_wedding_operation",
+        "access_parking",
+        "flower_policy",
+        "hall_names",
+        "building_or_branch"
+      ]
+    },
+    {
+      "stable_id": "KR-WV-GYEONGGI-SUWON-WI-CONVENTION-U",
+      "official_name": "WI 컨벤션 웨딩홀",
+      "aliases": [],
+      "facility_type": "wedding_hall",
+      "region": {
+        "sido": "경기도",
+        "sigungu": "수원시 팔달구",
+        "eupmyeondong": null
+      },
+      "road_address": "경기도 수원시 팔달구 월드컵로 310",
+      "official_url": null,
+      "official_business_phone": "031-241-6000",
+      "venue_relationship": {
+        "parent_facility_id": null,
+        "hall_names": [],
+        "floor": null,
+        "building_or_branch": null
+      },
+      "wedding_operation_evidence": {
+        "status": "not_independently_verified",
+        "source_ids": [
+          "SRC-KR-DATA-GO-KR-WEDDING-STANDARD"
+        ],
+        "url": null,
+        "note": "표준데이터에 예식장 후보로 기재되고 예식홀 수 2, 운영여부 Y로 표시됨. 시설 자체의 최신 공식 예식 안내는 아직 확인하지 않음."
+      },
+      "access_parking": {
+        "status": "unknown",
+        "details": null,
+        "source_url": null
+      },
+      "flower_policy": {
+        "status": "unknown",
+        "delivery_location": null,
+        "delivery_hours": null,
+        "restrictions": null,
+        "source_url": null,
+        "checked_at": null
+      },
+      "source_ids": [
+        "SRC-KR-DATA-GO-KR-WEDDING-STANDARD"
+      ],
+      "source_record_date": "2026-03-20",
+      "checked_at": "2026-10-30",
+      "status": "candidate_official_dataset",
+      "unverified_fields": [
+        "official_url",
+        "current_wedding_operation",
+        "access_parking",
+        "flower_policy",
+        "hall_names",
+        "building_or_branch"
+      ]
+    },
+    {
+      "stable_id": "KR-WV-GYEONGGI-SUWON-NOBLESSE-U",
+      "official_name": "수원노블레스웨딩컨벤션",
+      "aliases": [],
+      "facility_type": "wedding_hall",
+      "region": {
+        "sido": "경기도",
+        "sigungu": "수원시 팔달구",
+        "eupmyeondong": null
+      },
+      "road_address": "경기도 수원시 팔달구 팔달문로 128",
+      "official_url": null,
+      "official_business_phone": "031-215-7000",
+      "venue_relationship": {
+        "parent_facility_id": null,
+        "hall_names": [],
+        "floor": null,
+        "building_or_branch": null
+      },
+      "wedding_operation_evidence": {
+        "status": "not_independently_verified",
+        "source_ids": [
+          "SRC-KR-DATA-GO-KR-WEDDING-STANDARD"
+        ],
+        "url": null,
+        "note": "표준데이터에 예식장 후보로 기재되고 운영여부 Y로 표시됨. 시설 자체의 최신 공식 예식 안내는 아직 확인하지 않음."
+      },
+      "access_parking": {
+        "status": "unknown",
+        "details": null,
+        "source_url": null
+      },
+      "flower_policy": {
+        "status": "unknown",
+        "delivery_location": null,
+        "delivery_hours": null,
+        "restrictions": null,
+        "source_url": null,
+        "checked_at": null
+      },
+      "source_ids": [
+        "SRC-KR-DATA-GO-KR-WEDDING-STANDARD"
+      ],
+      "source_record_date": "2026-03-20",
+      "checked_at": "2026-10-30",
+      "status": "candidate_official_dataset",
+      "unverified_fields": [
+        "official_url",
+        "current_wedding_operation",
+        "access_parking",
+        "flower_policy",
+        "hall_names",
+        "building_or_branch"
+      ]
+    },
+    {
+      "stable_id": "KR-WV-GANGWON-GANGNEUNG-SEAMARK-U",
+      "official_name": "씨마크",
+      "aliases": [],
+      "facility_type": "hotel",
+      "region": {
+        "sido": "강원특별자치도",
+        "sigungu": "강릉시",
+        "eupmyeondong": null
+      },
+      "road_address": "강원특별자치도 강릉시 해안로406번길 2, 씨마크호텔",
+      "official_url": null,
+      "official_business_phone": null,
+      "venue_relationship": {
+        "parent_facility_id": null,
+        "hall_names": [],
+        "floor": null,
+        "building_or_branch": null
+      },
+      "wedding_operation_evidence": {
+        "status": "not_independently_verified",
+        "source_ids": [
+          "SRC-KR-DATA-GO-KR-WEDDING-STANDARD"
+        ],
+        "url": null,
+        "note": "표준데이터에 결혼식장 후보로 기재되고 운영여부 Y로 표시됨. 호텔의 현재 웨딩 운영을 공식 페이지에서 확인하기 전에는 검증 완료로 보지 않음."
+      },
+      "access_parking": {
+        "status": "unknown",
+        "details": null,
+        "source_url": null
+      },
+      "flower_policy": {
+        "status": "unknown",
+        "delivery_location": null,
+        "delivery_hours": null,
+        "restrictions": null,
+        "source_url": null,
+        "checked_at": null
+      },
+      "source_ids": [
+        "SRC-KR-DATA-GO-KR-WEDDING-STANDARD"
+      ],
+      "source_record_date": "2026-02-03",
+      "checked_at": "2026-10-30",
+      "status": "candidate_official_dataset",
+      "unverified_fields": [
+        "official_url",
+        "official_business_phone",
+        "current_wedding_operation",
+        "access_parking",
+        "flower_policy",
+        "hall_names",
+        "building_or_branch"
+      ]
+    },
+    {
+      "stable_id": "KR-WV-GANGWON-GANGNEUNG-LAKAI-SANDPINE-U",
+      "official_name": "라카이샌드파인리조트",
+      "aliases": [],
+      "facility_type": "resort",
+      "region": {
+        "sido": "강원특별자치도",
+        "sigungu": "강릉시",
+        "eupmyeondong": null
+      },
+      "road_address": "강원특별자치도 강릉시 해안로 536",
+      "official_url": null,
+      "official_business_phone": null,
+      "venue_relationship": {
+        "parent_facility_id": null,
+        "hall_names": [],
+        "floor": null,
+        "building_or_branch": null
+      },
+      "wedding_operation_evidence": {
+        "status": "not_independently_verified",
+        "source_ids": [
+          "SRC-KR-DATA-GO-KR-WEDDING-STANDARD"
+        ],
+        "url": null,
+        "note": "표준데이터에 결혼식장 후보로 기재되고 운영여부 Y로 표시됨. 리조트의 현재 웨딩 운영을 공식 페이지에서 확인하기 전에는 검증 완료로 보지 않음."
+      },
+      "access_parking": {
+        "status": "unknown",
+        "details": null,
+        "source_url": null
+      },
+      "flower_policy": {
+        "status": "unknown",
+        "delivery_location": null,
+        "delivery_hours": null,
+        "restrictions": null,
+        "source_url": null,
+        "checked_at": null
+      },
+      "source_ids": [
+        "SRC-KR-DATA-GO-KR-WEDDING-STANDARD"
+      ],
+      "source_record_date": "2026-02-03",
+      "checked_at": "2026-10-30",
+      "status": "candidate_official_dataset",
+      "unverified_fields": [
+        "official_url",
+        "official_business_phone",
+        "current_wedding_operation",
+        "access_parking",
+        "flower_policy",
+        "hall_names",
+        "building_or_branch"
+      ]
+    }
+  ]
+}
