@@ -193,6 +193,9 @@ def article_body(page):
 
 def home(site,page,pages,products,links):
     """Free-form marketing index with the exact saved document content retained."""
+    if site.get("id") == "flowershop-nalmada":
+        from . import flowershop_markup
+        return flowershop_markup.home(site,page,pages,products,links)
     share='/assets/images/'+site['imagePool'][0]
     title=page['title'];region=site['region'];keyword=site['keyword']
     body=(head(site,title,page['intro'],'/',share)+header(site)+
@@ -244,6 +247,9 @@ def home(site,page,pages,products,links):
 
 
 def detail(site,page,pages,products,links):
+    if site.get("id") == "flowershop-nalmada":
+        from . import flowershop_markup
+        return flowershop_markup.detail(site,page,pages,products,links)
     share='/assets/images/'+site['imagePool'][(page['number']-1)%len(site['imagePool'])]
     body=(head(site,page['title'],page['intro'],url_path(page['number']),share)+header(site)+
         '<main id="main" class="container document-page">'
