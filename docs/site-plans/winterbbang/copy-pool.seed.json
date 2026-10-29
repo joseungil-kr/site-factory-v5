@@ -1,0 +1,595 @@
+{
+  "version": "0.1.0",
+  "siteId": "winterbbang",
+  "status": "SEED_POOL_DRAFT_NOT_APPROVED_FOR_PUBLICATION",
+  "createdOn": "2026-10-29",
+  "language": "ko-KR",
+  "method": "original standalone buyer-decision copy, not scraped or copied sentences",
+  "blockCount": 64,
+  "faqCount": 12,
+  "blocks": [
+    {
+      "id": "STARTUP_CORE_01",
+      "family": "startup-core",
+      "decision": "initial-choice",
+      "copy": "붕어빵 창업을 처음 생각하신다면 판매 장소, 하루에 운영할 시간, 주력 메뉴부터 정리해 보세요. 그 세 가지가 정해지면 필요한 장비와 첫 식자재 구성도 구체적으로 상담할 수 있습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "STARTUP_CORE_02",
+      "family": "startup-core",
+      "decision": "first-items",
+      "copy": "처음부터 여러 맛을 한꺼번에 운영할 필요는 없습니다. 기본 메뉴와 추가 메뉴의 조리 동선을 비교해 시작하고, 손님 반응과 준비 시간을 살펴 품목을 넓혀 보세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "STARTUP_CORE_03",
+      "family": "startup-core",
+      "decision": "pickup-flow",
+      "copy": "바쁜 시간대에는 굽는 속도만큼 계산과 포장 순서가 중요합니다. 주문받는 위치와 뜨거운 제품을 건네는 위치를 분리할 수 있는지 확인해 보세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "STARTUP_CORE_04",
+      "family": "startup-core",
+      "decision": "working-hours",
+      "copy": "일정한 운영시간을 정하기 어려운 분이라면 자신의 근무 가능 시간과 예상 손님 흐름을 함께 검토하세요. 장사가 가능한 장소와 시간은 해당 장소의 사용 조건도 확인해야 합니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "STARTUP_CORE_05",
+      "family": "startup-core",
+      "decision": "training",
+      "copy": "붕어빵 기계를 처음 다루더라도 조리 방법을 현장에서 배우는 지원을 상담할 수 있습니다. 반죽 사용과 속재료 분배, 제품 꺼내기와 기구 관리에 관한 교육 범위를 사전에 확인하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "STARTUP_CORE_06",
+      "family": "startup-core",
+      "decision": "location-fit",
+      "copy": "좋아 보이는 상권이라는 이유만으로 시작하지 마세요. 실제 판매 가능한 자리인지, 전기·환기·보관과 고객 대기 동선이 마련되는지부터 살펴야 준비 비용을 줄일 수 있습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_CAFE_01",
+      "family": "shop-in-shop-cafe",
+      "decision": "coffee-pairing",
+      "copy": "기존 카페에 따뜻한 붕어빵을 더하면 음료와 간식을 함께 고르는 세트메뉴를 검토할 수 있습니다. 기존 커피 주문을 방해하지 않는 조리·포장 동선을 먼저 점검하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_CAFE_02",
+      "family": "shop-in-shop-cafe",
+      "decision": "coffee-rush",
+      "copy": "오전 커피 주문이 집중되는 카페라면 붕어빵을 언제 굽고 어떻게 보온·포장할지 구분해 계획해 보세요. 직원이 계산과 기계 조리를 동시에 맡아도 되는지는 실제 피크 시간을 기준으로 판단합니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_CAFE_03",
+      "family": "shop-in-shop-cafe",
+      "decision": "coffee-vent",
+      "copy": "카페의 작은 공간에 굽는 장비를 추가할 때는 단순 면적보다 전기 용량과 환기, 화상 방지 동선이 중요합니다. 기존 영업신고 범위에 적합한지도 관할 기관에 확인해야 합니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_UNMANNED_01",
+      "family": "shop-in-shop-unmanned",
+      "decision": "unmanned-operator",
+      "copy": "무인카페에 조리 메뉴를 더한다면 기계를 누가 켜고, 굽고, 손님에게 전달할지 먼저 정해야 합니다. 뜨거운 조리장비를 손님이 자유롭게 조작하는 무인 방식으로 가정하지 않습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_UNMANNED_02",
+      "family": "shop-in-shop-unmanned",
+      "decision": "unmanned-staff",
+      "copy": "무인 매장의 매출을 늘리고 싶다면 유인 판매시간을 따로 운영하는 방식부터 검토하세요. 기존 무인 결제 동선과 현장 직원의 식품 취급 공간을 분리하면 운영 계획을 세우기 수월합니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_UNMANNED_03",
+      "family": "shop-in-shop-unmanned",
+      "decision": "unmanned-safety",
+      "copy": "출입 통제가 약한 매장에서는 어린이 접근, 뜨거운 판과 전선, 청소 후 잔열 관리가 중요합니다. 무인카페 샵인샵은 안전관리 인력과 가게 구조를 확인한 뒤 상담하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_PRODUCE_01",
+      "family": "shop-in-shop-produce",
+      "decision": "produce-counter",
+      "copy": "과일·채소 가게에 붕어빵을 더하려면 신선식품 진열대와 뜨거운 조리대를 어떻게 구분할지 살펴보세요. 기존 손님이 계산대를 오가는 길을 막지 않는 위치가 좋습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_PRODUCE_02",
+      "family": "shop-in-shop-produce",
+      "decision": "produce-season",
+      "copy": "제철 과일과 채소 중심의 가게라면 겨울 간식을 계절형 추가 메뉴로 검토할 수 있습니다. 장비를 사용할 기간과 사용하지 않을 기간의 보관 계획도 함께 세우세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_PRODUCE_03",
+      "family": "shop-in-shop-produce",
+      "decision": "produce-packing",
+      "copy": "채소·과일 포장에 쓰는 비닐과 붕어빵 포장재는 용도와 보관 위치가 다릅니다. 식품별 위생관리와 판매대 정리를 함께 고려해야 두 메뉴를 안정적으로 운영할 수 있습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_SNACKBAR_01",
+      "family": "shop-in-shop-snackbar",
+      "decision": "bunsik-cross",
+      "copy": "떡볶이와 어묵을 판매하는 분식집에서는 붕어빵을 포장 간식으로 함께 검토할 수 있습니다. 국물 메뉴 주문과 뜨거운 빵 포장이 한곳에 몰리지 않도록 작업 순서를 정해 보세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_SNACKBAR_02",
+      "family": "shop-in-shop-snackbar",
+      "decision": "bunsik-power",
+      "copy": "기존 조리장에 튀김기나 전열기가 있다면 붕어빵 기계의 추가 소비전력과 화구 배치를 먼저 확인하세요. 매장에 공간이 있어도 전기·환기 조건이 맞지 않으면 설비 조정이 필요할 수 있습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_SNACKBAR_03",
+      "family": "shop-in-shop-snackbar",
+      "decision": "bunsik-upsell",
+      "copy": "분식 손님에게 곁들임 간식으로 제공할지, 붕어빵만 사러 오는 포장 손님까지 받을지 선택해 보세요. 판매 목표에 따라 진열 위치와 주문 안내가 달라집니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_DOUGHNUT_01",
+      "family": "shop-in-shop-doughnut",
+      "decision": "twisted-dough",
+      "copy": "꽈배기 전문점에서는 따뜻한 붕어빵을 겨울철 선택 메뉴로 검토할 수 있습니다. 이미 사용하는 반죽·튀김 작업과 붕어빵 굽기 순서가 겹치지 않도록 시간대를 나눠 보세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_DOUGHNUT_02",
+      "family": "shop-in-shop-doughnut",
+      "decision": "twisted-bundle",
+      "copy": "꽈배기와 붕어빵을 묶은 간식 세트는 시험 판매할 수 있는 아이디어입니다. 세트 구성과 판매가격은 실제 원가·포장비와 손님 반응을 확인한 뒤 결정하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_DOUGHNUT_03",
+      "family": "shop-in-shop-doughnut",
+      "decision": "twisted-space",
+      "copy": "꽈배기 매장의 모든 조리 공간이 붕어빵 기계에 적합한 것은 아닙니다. 뜨거운 기계 주변 공간과 제품을 잠시 식힐 자리, 포장재 위치까지 함께 점검하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_TEAHOUSE_01",
+      "family": "shop-in-shop-teahouse",
+      "decision": "tea-pairing",
+      "copy": "전통차집에서는 따뜻한 차와 구운 겨울 간식의 조합을 검토할 수 있습니다. 좌석에서 바로 먹는 손님과 포장 손님에게 같은 구성을 제공할지 먼저 정해 보세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_TEAHOUSE_02",
+      "family": "shop-in-shop-teahouse",
+      "decision": "tea-style",
+      "copy": "차를 중심으로 운영하는 매장이라면 붕어빵을 큰 주력 메뉴로 늘리기보다 정해진 시간에 제공하는 간식 메뉴로 시험할 수 있습니다. 실제 조리 인력과 대기시간을 고려해 운영하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "SHOP_IN_SHOP_TEAHOUSE_03",
+      "family": "shop-in-shop-teahouse",
+      "decision": "tea-vent",
+      "copy": "차를 마시는 공간은 냄새와 소음, 열기가 고객 경험에 영향을 줄 수 있습니다. 붕어빵 기계 배치는 환기 방향과 좌석 간격을 함께 보며 결정하는 편이 좋습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_BUNGEOPPANG_01",
+      "family": "menu-bungeoppang",
+      "decision": "red-bean",
+      "copy": "팥 붕어빵은 재료 구성과 굽는 정도를 먼저 일정하게 맞추는 것이 중요합니다. 반죽 배합과 팥소 사용량, 포장 후 식감까지 실제 판매 조건에서 시험해 보세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_BUNGEOPPANG_02",
+      "family": "menu-bungeoppang",
+      "decision": "custard",
+      "copy": "슈크림 붕어빵을 함께 판매하려면 팥소와 다른 보관·취급 조건을 확인해야 합니다. 속재료별 위생관리와 준비 시간을 나눠 조리 계획을 세우세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_BUNGEOPPANG_03",
+      "family": "menu-bungeoppang",
+      "decision": "sizes",
+      "copy": "붕어빵은 크기와 기계 판에 따라 한 번에 굽는 수량과 포장 방식이 달라질 수 있습니다. 판매 단위와 시간당 생산량을 실제 장비로 확인해 선택하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_BUNGEOPPANG_04",
+      "family": "menu-bungeoppang",
+      "decision": "prep",
+      "copy": "첫 판매 전에 조리 시간을 반복 측정해 보세요. 반죽을 붓고 속을 넣는 순서부터 제품을 꺼내 포장하는 과정까지 일정한 기준을 만들면 고객 응대가 수월해집니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_INGEOPPANG_01",
+      "family": "menu-ingeoppang",
+      "decision": "machine-shape",
+      "copy": "잉어빵을 고려하신다면 먼저 사용할 기계의 판형과 완성 제품의 크기를 확인하세요. 붕어빵과 이름이 비슷하더라도 사용하려는 장비와 메뉴 구성은 별도로 상담할 수 있습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_INGEOPPANG_02",
+      "family": "menu-ingeoppang",
+      "decision": "comparison",
+      "copy": "붕어빵과 잉어빵을 같은 매장에서 취급할 계획이라면 구별되는 선택 이유가 있는지 고객 입장에서 살펴보세요. 별도 메뉴로 운영할 만큼 크기·식감·구성이 다른지는 실제 시제품으로 판단해야 합니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_INGEOPPANG_03",
+      "family": "menu-ingeoppang",
+      "decision": "fill",
+      "copy": "잉어빵의 팥·슈크림 구성은 사용할 기계와 반죽, 속재료에 맞춰 시험해야 합니다. 동일 재료를 그대로 바꿔 써도 되는지 장비·원료 공급처에 확인하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_INGEOPPANG_04",
+      "family": "menu-ingeoppang",
+      "decision": "menu-sign",
+      "copy": "메뉴판에는 기계 판형보다 손님이 받는 제품의 크기와 구성, 판매 수량을 명확하게 적는 것이 좋습니다. 붕어빵과 잉어빵을 구분해 팔 경우 실제 제품 사진도 함께 준비하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_EGG_BREAD_01",
+      "family": "menu-egg-bread",
+      "decision": "egg-hygiene",
+      "copy": "계란빵은 원료 계란의 보관과 취급, 조리 후 식품 안전관리가 중요합니다. 판매를 계획할 때 냉장 공간과 세척·위생 동선부터 확인하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_EGG_BREAD_02",
+      "family": "menu-egg-bread",
+      "decision": "egg-workflow",
+      "copy": "계란빵을 추가하면 기존 붕어빵과 준비해야 하는 원료와 조리 흐름이 달라질 수 있습니다. 피크 시간에 두 메뉴를 함께 만들 수 있는지 실제 장비로 확인해 보세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_EGG_BREAD_03",
+      "family": "menu-egg-bread",
+      "decision": "egg-packing",
+      "copy": "계란빵은 조리 후 바로 먹는 손님과 포장해 가는 손님을 나눠 생각해 보세요. 포장재와 제공 시간을 함께 시험하여 제품 품질을 확인할 수 있습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_EGG_BREAD_04",
+      "family": "menu-egg-bread",
+      "decision": "egg-supply",
+      "copy": "계란빵 창업 상담에서는 기계 규격과 반죽, 계란 등 원료의 공급·보관 조건을 따로 확인하는 것이 좋습니다. 메뉴별 실제 지원 품목은 상담에서 결정해야 합니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_TENWON_01",
+      "family": "menu-tenwon",
+      "decision": "tenwon-machine",
+      "copy": "십원빵을 시작하려면 사용 가능한 전용 판과 제품 크기, 필요한 전기·가스 조건을 먼저 살펴봐야 합니다. 다른 빵 기계와 호환되는지 추정하지 않고 실제 장비 사양으로 판단합니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_TENWON_02",
+      "family": "menu-tenwon",
+      "decision": "tenwon-fill",
+      "copy": "십원빵 속재료를 선택할 때는 맛뿐 아니라 가열 중 상태와 포장 후 식감을 함께 시험하세요. 특정 부재료가 기본 공급품에 포함되는지 주문 전에 확인하는 과정도 필요합니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_TENWON_03",
+      "family": "menu-tenwon",
+      "decision": "tenwon-display",
+      "copy": "십원빵을 매장에서 추가 판매한다면 조리 공간과 고객 대기 공간을 분리해 운영하는 방법을 검토하세요. 기존 메뉴의 주문 흐름을 막지 않는 위치가 중요합니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "MENU_TENWON_04",
+      "family": "menu-tenwon",
+      "decision": "tenwon-portion",
+      "copy": "판매가격을 결정하기 전에는 제품 크기, 원료 투입량, 포장비와 조리 손실을 같이 계산해 보세요. 유행하는 메뉴라는 이유만으로 높은 수익을 보장할 수는 없습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "STREET_AND_OUTDOOR_01",
+      "family": "street-and-outdoor",
+      "decision": "front-of-store",
+      "copy": "가게 앞에 붕어빵 매대를 두려면 그 공간을 실제로 사용할 권한이 있는지부터 확인해야 합니다. 통행로와 출입구를 막지 않는지, 영업장 신고 범위가 적합한지도 함께 검토하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "STREET_AND_OUTDOOR_02",
+      "family": "street-and-outdoor",
+      "decision": "vacant-lot",
+      "copy": "공터 판매를 생각하신다면 땅 소유자 사용 동의와 영업 가능 여부를 확인하세요. 전기·수도·쓰레기 처리와 보관 장소까지 확보해야 실제 준비비용을 계산할 수 있습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "STREET_AND_OUTDOOR_03",
+      "family": "street-and-outdoor",
+      "decision": "street-authority",
+      "copy": "노점형 장사는 판매 장비만 마련한다고 바로 시작할 수 있는 방식이 아닙니다. 영업 장소의 허용 여부와 식품위생 신고·시설 기준을 관할 기관에 확인한 후 계획을 세우세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "STREET_AND_OUTDOOR_04",
+      "family": "street-and-outdoor",
+      "decision": "commute-hours",
+      "copy": "출퇴근 시간대를 노리는 판매 방식이라면 보행 동선과 고객 대기열을 먼저 고려하세요. 영업시간을 스스로 정하더라도 장소 사용 조건과 해당 지역 규정이 우선합니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "STREET_AND_OUTDOOR_05",
+      "family": "street-and-outdoor",
+      "decision": "weather-plan",
+      "copy": "야외에서 겨울 간식을 판매할 때는 추위와 바람이 작업자와 제품 온도에 영향을 줍니다. 전기 설비 보호, 식자재 보관과 고객 대기 공간을 함께 준비하세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "STREET_AND_OUTDOOR_06",
+      "family": "street-and-outdoor",
+      "decision": "mobile-storage",
+      "copy": "노점형 판매는 영업을 마친 뒤 장비를 어디에 보관하고 어떻게 운반할지까지 계획해야 합니다. 수레 규모와 설치·철수 인력, 매일 관리할 청소 항목을 미리 따져 보세요.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "INGREDIENTS_AND_SUPPLY_01",
+      "family": "ingredients-and-supply",
+      "decision": "batter-supply",
+      "copy": "붕어빵 반죽을 공급받아 운영하려면 사용할 기계와 맞는 조리 방식인지 먼저 확인하세요. 포장 단위, 보관온도, 주문 주기와 배송비를 함께 상담하면 발주 계획을 세우기 좋습니다.",
+      "sourceTier": "business_site_and_operator",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "INGREDIENTS_AND_SUPPLY_02",
+      "family": "ingredients-and-supply",
+      "decision": "redbean-supply",
+      "copy": "팥소는 제품의 단맛과 식감에 영향을 주는 핵심 재료입니다. 사용량과 보관 조건을 확인하고, 하루 판매량에 맞춰 재고가 과도하게 남지 않도록 발주하세요.",
+      "sourceTier": "business_site_and_operator",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "INGREDIENTS_AND_SUPPLY_03",
+      "family": "ingredients-and-supply",
+      "decision": "custard-supply",
+      "copy": "슈크림 속재료를 취급할 때는 표시된 보관 조건과 사용 기한을 우선 따라야 합니다. 식자재를 받는 장소에 필요한 냉장·보관 여건이 있는지 확인해 보세요.",
+      "sourceTier": "business_site_and_operator",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "INGREDIENTS_AND_SUPPLY_04",
+      "family": "ingredients-and-supply",
+      "decision": "monthly-supply",
+      "copy": "매월 판매 계획이 달라지는 매장이라면 식자재 구매조건과 실제 배송주기를 나누어 살펴보세요. 백세푸드의 현재 안내에는 기본 월 100만 원 구매조건이 있으므로 적용 여부와 포함 품목을 상담에서 확인하세요.",
+      "sourceTier": "business_site_and_operator",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "INGREDIENTS_AND_SUPPLY_05",
+      "family": "ingredients-and-supply",
+      "decision": "nationwide-freight",
+      "copy": "서울·경기뿐 아니라 다른 지역에서도 식자재 공급 상담을 받을 수 있습니다. 다만 지역과 품목에 따른 운송 방법, 배송 일정과 비용은 주문 전에 개별 확인이 필요합니다.",
+      "sourceTier": "business_site_and_operator",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "INGREDIENTS_AND_SUPPLY_06",
+      "family": "ingredients-and-supply",
+      "decision": "seasonal-order",
+      "copy": "겨울철 주문량이 많아지면 재고와 발주 간격을 조정해야 할 수 있습니다. 제품별 유통기한과 매장 보관 공간을 확인한 뒤 적정 수량을 정해 보세요.",
+      "sourceTier": "business_site_and_operator",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "INGREDIENTS_AND_SUPPLY_07",
+      "family": "ingredients-and-supply",
+      "decision": "dealer-partner",
+      "copy": "판매점이나 대리점 창업을 계획하신다면 직접 판매할 메뉴와 공급받을 재료의 범위를 먼저 말씀해 주세요. 지역 독점, 판매권, 지원금 같은 계약조건은 별도 확인 전 약속하지 않습니다.",
+      "sourceTier": "business_site_and_operator",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "INGREDIENTS_AND_SUPPLY_08",
+      "family": "ingredients-and-supply",
+      "decision": "mix-support",
+      "copy": "기존에 사용하는 재료가 있는 매장이라면 새로 공급받을 원료와 함께 사용 가능한지부터 점검하세요. 선택한 메뉴에 필요한 반죽과 속재료, 설비 지원 범위를 나누어 상담할 수 있습니다.",
+      "sourceTier": "business_site_and_operator",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "COST_AND_OPERATIONS_01",
+      "family": "cost-and-operations",
+      "decision": "startup-cost-split",
+      "copy": "초기 부담금을 비교할 때 장비 구입비, 대여 보증금, 첫 식자재, 장소 비용, 인허가·설비 비용을 각각 구분해야 합니다. 본사 지원 항목이 있어도 모든 창업 비용이 없어지는 것은 아닙니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "COST_AND_OPERATIONS_02",
+      "family": "cost-and-operations",
+      "decision": "equipment-return",
+      "copy": "기계를 대여하는 조건이라면 계약 기간과 관리 책임, 사용 종료 시 반환 절차를 확인하세요. 장비를 새로 사는 방식과는 현금 흐름과 책임 범위가 다릅니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "COST_AND_OPERATIONS_03",
+      "family": "cost-and-operations",
+      "decision": "margin-definition",
+      "copy": "예상 마진을 계산할 때는 판매가격에서 재료비만 뺀 금액과 실제 순수익을 구분해야 합니다. 포장재, 연료·전기료, 카드수수료, 폐기·손실, 인건비와 자리 비용이 추가될 수 있습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "COST_AND_OPERATIONS_04",
+      "family": "cost-and-operations",
+      "decision": "daily-sales",
+      "copy": "하루 목표 매출은 영업 가능한 시간과 한 번에 구울 수 있는 수량을 기준으로 현실적으로 정해 보세요. 주말과 평일의 수요가 같다고 가정하지 않는 편이 안전합니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "COST_AND_OPERATIONS_05",
+      "family": "cost-and-operations",
+      "decision": "setup-timeline",
+      "copy": "오픈 일정을 정할 때는 판매 장소 확보, 인허가 확인, 전기·가스 설비, 재료 발주, 장비 설치와 교육 순서를 나누어 보세요. 준비 상황에 따라 실제 시작일이 달라질 수 있습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "COST_AND_OPERATIONS_06",
+      "family": "cost-and-operations",
+      "decision": "menu-test",
+      "copy": "시제품을 몇 차례 만들어 원료 투입량과 굽는 시간을 기록해 보세요. 실제 조리 손실과 포장비를 반영하면 예상 판매단가를 더 정확하게 검토할 수 있습니다.",
+      "sourceTier": "general_business_practice",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "CONTACT_AND_CONVERSION_01",
+      "family": "contact-and-conversion",
+      "decision": "consult-start",
+      "copy": "현재 운영 중인 매장이 있는지, 어느 지역에서 판매하고 싶은지 알려주시면 더 구체적인 창업 상담이 가능합니다. 백세푸드 분식창업 담당자 031-407-0103으로 문의해 주세요.",
+      "sourceTier": "operator",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "CONTACT_AND_CONVERSION_02",
+      "family": "contact-and-conversion",
+      "decision": "consult-stores",
+      "copy": "샵인샵을 생각하시는 사장님은 매장 업종과 남는 공간, 전기 설비, 추가 메뉴에 참여할 인력을 알려주세요. 적합한 기계와 식자재 구성을 상담할 때 도움이 됩니다.",
+      "sourceTier": "operator",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "CONTACT_AND_CONVERSION_03",
+      "family": "contact-and-conversion",
+      "decision": "consult-street",
+      "copy": "노점형 창업 문의 시에는 계획한 판매 장소와 사용 허가 여부, 전기와 보관 여건을 함께 정리해 주세요. 장소가 확정되지 않았다면 확인해야 할 조건부터 나눠 상담할 수 있습니다.",
+      "sourceTier": "operator",
+      "needsPerRegionEvidence": false
+    },
+    {
+      "id": "CONTACT_AND_CONVERSION_04",
+      "family": "contact-and-conversion",
+      "decision": "consult-supply",
+      "copy": "반죽·팥소·슈크림 납품을 원하시면 사업장 지역, 사용 기계, 예상 발주량을 말씀해 주세요. 품목별 공급 가능 여부와 배송 조건은 031-407-0103에서 안내받으실 수 있습니다.",
+      "sourceTier": "operator",
+      "needsPerRegionEvidence": false
+    }
+  ],
+  "faqs": [
+    {
+      "id": "FAQ_01",
+      "question": "이미 카페를 운영하고 있는데 붕어빵을 판매할 수 있나요?",
+      "answer": "기존 매장에 간식 메뉴를 더하는 샵인샵 상담이 가능합니다. 장비를 설치할 공간과 조리 인력, 영업신고 적합성을 먼저 확인하세요."
+    },
+    {
+      "id": "FAQ_02",
+      "question": "무인카페에서 기계도 무인으로 돌릴 수 있나요?",
+      "answer": "기계 조리와 안전관리를 맡을 운영 인력이 필요한지 먼저 검토해야 합니다. 가열장비를 방치하는 무인 운영을 전제로 안내하지 않습니다."
+    },
+    {
+      "id": "FAQ_03",
+      "question": "작은 공간에서 판매를 시작할 수 있나요?",
+      "answer": "가능 여부는 단순 면적보다 기계 크기, 전기·환기, 작업자 동선과 시설 기준에 달려 있습니다. 매장 사진과 사용 가능한 공간을 준비해 상담해 주세요."
+    },
+    {
+      "id": "FAQ_04",
+      "question": "붕어빵 기계는 구입해야 하나요?",
+      "answer": "백세 분식의 기존 안내는 장비 대여 방식입니다. 실제 지원 모델과 수량, 관리·반환 조건을 계약 전에 확인해 주세요."
+    },
+    {
+      "id": "FAQ_05",
+      "question": "반죽이나 팥소만 주문할 수도 있나요?",
+      "answer": "백세푸드의 반죽·팥소·슈크림 공급은 안내되어 있습니다. 품목별 최소 수량과 배송조건은 상담 시 확인해 주세요."
+    },
+    {
+      "id": "FAQ_06",
+      "question": "초기 부담금 0원은 모든 비용이 없다는 뜻인가요?",
+      "answer": "아닙니다. 기존 백세 분식 정책의 0원은 본사 초기 지원 범위 부담금이며 장소·식자재·현장 설비 등은 별도일 수 있습니다."
+    },
+    {
+      "id": "FAQ_07",
+      "question": "서울·경기 외 지역도 식자재를 받을 수 있나요?",
+      "answer": "기존 사업 안내에는 전국 식자재 공급이 명시되어 있습니다. 배송 가능 품목과 비용, 일정은 지역별로 확인해 주세요."
+    },
+    {
+      "id": "FAQ_08",
+      "question": "노점에서 장소만 정하면 판매할 수 있나요?",
+      "answer": "노점이나 외부 매대 운영은 장소 사용 권한과 식품위생 관련 신고·시설기준을 확인해야 합니다. 관할 지자체에 먼저 문의하세요."
+    },
+    {
+      "id": "FAQ_09",
+      "question": "개업 준비는 어떤 순서로 진행되나요?",
+      "answer": "메뉴·장소·신고 조건을 확인한 다음 장비와 공급품, 교육 일정을 정하는 순서로 검토할 수 있습니다. 실제 소요 기간은 현장 상황에 따라 다릅니다."
+    },
+    {
+      "id": "FAQ_10",
+      "question": "카페 메뉴와 세트로 판매해도 되나요?",
+      "answer": "커피나 차와 간식을 묶은 세트 구성은 시험해 볼 수 있습니다. 세트 판매가격은 실제 원가와 손님 반응을 확인해 정하세요."
+    },
+    {
+      "id": "FAQ_11",
+      "question": "계란빵·십원빵·잉어빵 기계도 공급되나요?",
+      "answer": "해당 메뉴의 실제 지원 장비와 식자재 구성은 아직 신규 사이트용으로 확정되지 않았습니다. 공급 가능 모델과 조건을 상담에서 확인해야 합니다."
+    },
+    {
+      "id": "FAQ_12",
+      "question": "판매점·대리점 모집은 어떻게 문의하나요?",
+      "answer": "희망 지역, 운영 형태, 사용 가능한 공간, 예상 메뉴를 정리하여 백세푸드 031-407-0103으로 연락해 주세요. 구체적인 계약 조건은 별도로 안내받으세요."
+    }
+  ],
+  "selectionRules": [
+    "상호·상품·지역별 증빙이 없는 문장을 실지역의 고유 서비스 사실로 만들지 않는다.",
+    "첫 답변과 본문, FAQ를 조합하더라도 의미상 복제 문서를 내보내지 않는다.",
+    "마진 60-70%, 초도 0-100만원, 준비 1주일은 사용자 답변·정의·실제 자료 검증 전 문서로 공개하지 않는다.",
+    "잉어빵·계란빵·십원빵은 지원 품목 확인 전 공급 확정 CTA로 쓰지 않는다.",
+    "판매점 모집과 가맹사업을 동일한 법적 계약으로 단정하지 않는다.",
+    "실외 노점의 무허가 개설이나 자유로운 장소 점유를 약속하지 않는다.",
+    "원문 출처·검수상태·미확정 문구 등 제작자 내부정보는 방문자 HTML에 표시하지 않는다."
+  ]
+}
