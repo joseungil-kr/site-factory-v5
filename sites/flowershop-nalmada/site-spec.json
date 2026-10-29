@@ -1,0 +1,72 @@
+{
+  "version": 1,
+  "siteId": "flowershop-nalmada",
+  "approved": true,
+  "approvalEvidence": "2026-10-29 user specified flowershop.nalmada.net and ordered development according to agreed plan; pilot->QA->national rollout",
+  "domain": "https://flowershop.nalmada.net",
+  "brand": "꽃이랑",
+  "businessModel": "product-referral-to-owned-shop",
+  "serviceScope": {
+    "region": "전국",
+    "granularity": "시·군·구/읍·면·동",
+    "facilities": null,
+    "claim": "지역별 실제 재고·도착시간·당일배송을 보장하지 않음"
+  },
+  "pageTypes": [
+    "전국 꽃집·개업화분·축하화환 안내 홈",
+    "지역명 꽃집 개업화분 안내",
+    "지역명 화환전문 꽃집 안내",
+    "배송·주문 안내"
+  ],
+  "targetPageCount": 3,
+  "rollout": {
+    "phase": "representative-pilot",
+    "pilotPageCount": 3,
+    "nationwideTarget": "기존 V4 공식 지역마스터·V5 동 원장과 전국 읍면동 코드 전수 대조 후 목표수 확정",
+    "nationwideCompletionClaim": false,
+    "immutablePageNumbers": true
+  },
+  "titlePattern": "{지역명} 꽃집 개업화분·화환 전문 | {상황별 주문가이드}",
+  "urlPattern": "/ (전국 홈), /2.html부터 지역별 독립 문서, /배송안내.html",
+  "keywordGroups": {
+    "primary": [
+      "{지역명} 꽃집 개업화분",
+      "{지역명} 화환전문 꽃집"
+    ],
+    "secondary": [
+      "{지역명} 축하화환",
+      "{지역명} 개업축하 화분",
+      "{지역명} 꽃배달 주문"
+    ]
+  },
+  "copyPoolPlan": {
+    "industry": "개업·축하 화분·화환",
+    "source": "V4 공인 행정구역 및 verified fwith.co.kr 상품원장 + 고객 의사결정 FAQ",
+    "sentenceTarget": 300,
+    "policy": "근거없는 실매장·지역 특성·가짜 후기·배송확약 금지"
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-jaccard",
+    "thresholdExclusive": 0.49,
+    "sampleFraction": 0.01,
+    "seed": 20261029,
+    "fullBodyHashUnique": true,
+    "semanticReviewBeforeIndexing": true
+  },
+  "conversion": {
+    "phone": "1844-0644",
+    "orderUrl": "https://fwith.co.kr",
+    "mode": "전화 상담 + 판매처 실제 개별 상품 상세 링크"
+  },
+  "images": {
+    "source": "V5 promotion-plant library; V4 fwith.co.kr SKU image URLs",
+    "approved": false,
+    "policy": "확인되지 않은 사진을 상품 실사진처럼 표시하지 않음"
+  },
+  "publishPolicy": {
+    "mode": "preview-noindex",
+    "indexNow": false,
+    "production": false,
+    "requires": "실제 상품 이미지·주문URL·지역원장·SEO 문서검수 및 DNS/배포 별도 확인"
+  }
+}
