@@ -55,7 +55,7 @@ def check(products, getter=fetch):
             image,imgtype=getter(p['imageUrl'])
             row['imageSHA256']=hashlib.sha256(image).hexdigest()
             row['imageMatches']=row['imageSHA256']==p['imageSHA256']
-            row['jpegValid']=image.startswith(b'\\xff\\xd8\\xff') and ('jpeg' in imgtype.lower() or 'jpg' in imgtype.lower())
+            row['jpegValid']=image.startswith(bytes.fromhex('ffd8ff')) and ('jpeg' in imgtype.lower() or 'jpg' in imgtype.lower())
             row['passed']=all(row[k] for k in ('priceMatches','skuFound','buyControlFound','imageMatches','jpegValid'))
         except Exception as exc:
             row['passed']=False
