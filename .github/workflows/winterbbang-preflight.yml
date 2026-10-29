@@ -1,0 +1,56 @@
+name: Winterbbang preflight and copy-pool QA
+on:
+  pull_request:
+    paths:
+      - 'docs/site-plans/winterbbang/**'
+      - '.github/workflows/winterbbang-preflight.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preflight-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate draft guard, original copy and pairwise 5-gram overlap
+        run: |
+          python - <<'PY'
+          import json, pathlib, re
+          from v5.site_plan import validate_plan
+          root=pathlib.Path('docs/site-plans/winterbbang')
+          spec=json.loads((root/'site-spec.draft.json').read_text('utf-8'))
+          pool=json.loads((root/'copy-pool.seed.json').read_text('utf-8'))
+          assert spec['siteId']=='winterbbang'
+          assert spec['domain']=='https://winterbbang.nalmada.com'
+          assert spec['approved'] is False, 'Never promote to approved automatically'
+          preflight=validate_plan(spec,'winterbbang')
+          assert not preflight['ready'] and 'plan not approved' in preflight['errors']
+          blocks=pool['blocks']; faqs=pool['faqs']
+          assert len(blocks)==pool['blockCount'] and len(blocks)>=60
+          assert len(faqs)==pool['faqCount'] and len(faqs)>=10
+          assert len({x['id'] for x in blocks})==len(blocks)
+          assert all(len(x['copy'].strip())>45 for x in blocks)
+          assert all(x['family'] and x['decision'] for x in blocks)
+          texts=[re.sub(r'\s+','',x['copy']) for x in blocks]
+          def grams(s):
+              return {s[i:i+5] for i in range(len(s)-4)}
+          sets=[grams(x) for x in texts]
+          worst=(0,None,None)
+          for i in range(len(sets)):
+              for j in range(i+1,len(sets)):
+                  score=len(sets[i]&sets[j])/len(sets[i]|sets[j])
+                  if score>worst[0]: worst=(score,blocks[i]['id'],blocks[j]['id'])
+          assert worst[0]<0.49, f'seed pool 5-gram overlap above threshold: {worst}'
+          assert not any(re.search(r'60\s*[~–-]\s*70\s*%',x['copy']) for x in blocks)
+          assert not any('1주일이면' in x['copy'] for x in blocks)
+          print(json.dumps({'site':'winterbbang','approved':False,'pagesGenerated':0,
+                            'seedBlocks':len(blocks),'faqs':len(faqs),
+                            'groups':len({x['family'] for x in blocks}),
+                            'max5GramJaccard':round(worst[0],4),
+                            'scope':'SEED COPY ONLY. Not full pages or site launch'},
+                           ensure_ascii=False))
+          PY
