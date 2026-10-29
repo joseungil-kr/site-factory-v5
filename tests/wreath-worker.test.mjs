@@ -55,3 +55,23 @@ test('preview HTML metadata is rewritten but public HTML metadata is preserved',
     if(old===undefined)delete globalThis.HTMLRewriter;else globalThis.HTMLRewriter=old;
   }
 });
+
+test('Naver ownership response is served only on exact approved host/path for GET and HEAD',async()=>{
+  const host='wreath.nalmada.net';
+  const path='/naverc0fb6c053d93d541062de1835c25f51c.html';
+  const expected='naver-site-verification: naverc0fb6c053d541062de1835c25f51c.html';
+  let assetCalls=0;
+  const env={WREATH_PUBLIC:'1',ASSETS:{fetch:async()=>{assetCalls++;return new Response('asset fallback',{status:404})}}};
+  const get=await worker.fetch(new Request('https://'+host+path),env);
+  assert.equal(get.status,200);
+  assert.equal(await get.text(),expected);
+  assert.equal(get.headers.get('Content-Type'),'text/html; charset=utf-8');
+  const head=await worker.fetch(new Request('https://'+host+path,{method:'HEAD'}),env);
+  assert.equal(head.status,200);
+  assert.equal(await head.text(),'');
+  const wrongPath=await worker.fetch(new Request('https://'+host+path+'x'),env);
+  assert.equal(wrongPath.status,404);
+  const preview=await worker.fetch(new Request('https://sfv52-wreath-preview.joseungil.workers.dev'+path),env);
+  assert.equal(preview.status,404);
+  assert.equal(assetCalls,2);
+});
