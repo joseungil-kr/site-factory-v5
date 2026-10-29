@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "siteId": "wreath-region",
+  "approved": true,
+  "approvalSource": "User 2026-10-29 delegated regional wreath delivery and professional-florist site creation and publication coordination to existing normal ChatGPT worker2",
+  "domain": "https://wreath.nalmada.net",
+  "domainStatus": "CANDIDATE; no Cloudflare binding or DNS write approved before preflight",
+  "brand": "꽃이랑",
+  "businessModel": "florist-direct-order-guide",
+  "serviceScope": {
+    "region": "전국",
+    "granularity": "5,034 historical locality-name rows from Guk0/KoreanAddressJson; full 2026 legal/administrative 읍면동 status not established",
+    "facilities": "funeral venue selected by buyer; no facility inventory or daily-delivery promise",
+    "auditedParentMatches": 3596,
+    "unmatchedParentNames": 1438
+  },
+  "pageTypes": [
+    "home",
+    "province-directory",
+    "district-directory",
+    "region-same-day-conditional",
+    "region-florist-choice"
+  ],
+  "targetPageCount": 10336,
+  "countFormula": "home 1 + 17 province directories + 250 district directories + 5,034 localities × 2 intents",
+  "titlePattern": "{지역명} 근조화환 당일배송 가능 여부 | {지역명} 화환전문 꽃집 선택 | 꽃이랑",
+  "urlPattern": "/ /p/{sha12}.html /d/{sha12}.html /r/{sha12}-{same-day|flower-shop}.html",
+  "keywordGroups": {
+    "primary": [
+      "{지역명} 근조화환 당일배송",
+      "{지역명} 화환전문 꽃집"
+    ],
+    "secondary": [
+      "근조 3단 화환",
+      "근조 오브제",
+      "리본 문구",
+      "빈소 호실",
+      "장례식장 배송 확인"
+    ]
+  },
+  "copyPoolPlan": {
+    "industry": "funeral wreaths, flower-shop ordering and conditional same-day delivery",
+    "source": "scripts/build_wreath_region.py original per-intent sentence banks; seller SKU catalog; no competitor prose replication",
+    "sentenceTarget": 20,
+    "distinctIntentRules": true
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-jaccard",
+    "thresholdExclusive": 0.49,
+    "sampleFraction": 0.01,
+    "seed": 20261029,
+    "population": "regional article intro + six prose section paragraphs, exclude products and navigation"
+  },
+  "conversion": {
+    "mode": "direct SKU order link on fwith.co.kr and tel:18440644; no buyer details in URL",
+    "phone": "1844-0644",
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B201"
+  },
+  "images": {
+    "source": "V4 data/funeral-products/CATALOGUE.json seller imageUrl SHA source",
+    "approved": true,
+    "scope": "six actual product photos only; no competitor photos or invented delivery installations"
+  },
+  "publishPolicy": {
+    "mode": "preview noindex until domain collision read and parent Cloudflare coordination; indexable release separate",
+    "indexNow": "existing valid key verification after live public, avoid new credentials"
+  },
+  "pricingPolicy": "V4 2026-10-22 reference prices with date; final live SKU pricing and surcharges checked on seller item page",
+  "deliveryPolicy": "same-day is conditional; order cutoff and region/venue exclusion must be confirmed with seller; no fixed national cutoff",
+  "businessTruths": [
+    "fwith.co.kr buyer-order endpoint",
+    "shop phone 1844-0644",
+    "real product image/SKU links"
+  ],
+  "unverified": [
+    "2026 읍면동 inventory complete",
+    "every locality same-day availability",
+    "24-hour cutoff",
+    "fixed final national price",
+    "physical branches in all areas"
+  ]
+}

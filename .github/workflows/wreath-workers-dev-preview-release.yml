@@ -1,0 +1,94 @@
+name: Wreath isolated noindex preview
+on:
+  push:
+    branches: [feature/v52-wreath-region]
+    paths: ['.github/workflows/wreath-workers-dev-preview-release.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Require existing credentials and strictly isolated noindex Worker
+        run: |
+          python - <<'PY'
+          import json,os
+          from pathlib import Path
+          c=json.loads(Path('sites/wreath-region/wrangler.json').read_text())
+          assert c['name']=='sfv52-wreath-preview' and c['workers_dev'] is True
+          assert c['vars']['WREATH_PUBLIC']=='0' and not c.get('routes') and not c.get('route')
+          assert os.environ.get('CLOUDFLARE_API_TOKEN') and os.environ.get('CLOUDFLARE_ACCOUNT_ID'), 'Missing existing deploy credentials'
+          print('ISOLATED_PREVIEW_GATE_PASS')
+          PY
+      - name: Seller price and image SHA fail-closed gate
+        run: |
+          python -m unittest discover -s tests -p 'test_wreath_seller_live.py' -v
+          python -m scripts.qa_wreath_seller_live
+      - name: Full noindex build and QA (existing V5 rules)
+        run: |
+          python -m scripts.build_wreath_region
+          python -m scripts.qa_wreath_region
+          node --test tests/wreath-worker.test.mjs
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path('dist/wreath-region')
+          m=json.loads(Path('reports/wreath-region/manifest.json').read_text())
+          assert m['mode']=='preview' and m['pageCount']==10336
+          assert len(list(p.rglob('*.html')))==10337
+          assert not (p/'sitemap.xml').exists()
+          assert (p/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
+          PY
+      - name: Deploy to isolated workers.dev only
+        run: |
+          npx --yes wrangler@4.148.0 deploy --config sites/wreath-region/wrangler.json 2>&1 | tee /tmp/wreath-deploy.log
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          matches=re.findall(r'https://[\w.-]+\.workers\.dev',Path('/tmp/wreath-deploy.log').read_text())
+          if not matches:raise SystemExit('NO_PREVIEW_URL')
+          Path('/tmp/wreath-origin').write_text(matches[-1])
+          print('PREVIEW_URL='+matches[-1])
+          PY
+      - name: Verify real HTTPS preview HTML assets 404 and noindex
+        run: |
+          python - <<'PY'
+          import json,urllib.request,urllib.error
+          from pathlib import Path
+          origin=Path('/tmp/wreath-origin').read_text().strip()
+          pages=json.loads(Path('reports/wreath-region/manifest.json').read_text())['pages']
+          routes=['/','/assets/wreath.css',next(x for x in pages if x.endswith('-same-day.html')),next(x for x in pages if x.endswith('-flower-shop.html')),'/robots.txt','/sitemap.xml','/random-missing-wreath-test.html']
+          results=[]
+          for path in routes:
+              try:
+                  with urllib.request.urlopen(origin+path,timeout=30) as res:
+                      status=res.status;headers=res.headers;body=res.read()
+              except urllib.error.HTTPError as e:
+                  status=e.code;headers=e.headers;body=e.read()
+              expected=404 if path in routes[-2:] else 200
+              assert status==expected,(path,status)
+              assert 'noindex' in headers.get('X-Robots-Tag','').lower(),(path,headers)
+              if path=='/':assert b'noindex,nofollow' in body and b'rel="canonical"' not in body
+              if path=='/robots.txt':assert b'Disallow: /' in body
+              if path=='/assets/wreath.css':assert 'text/css' in headers.get('Content-Type','')
+              results.append({'route':path,'status':status,'noindex':True})
+          result={'origin':origin,'passed':True,'routes':results}
+          Path('reports/wreath-preview-http.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          print(json.dumps(result))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wreath-preview-http-readback
+          path: reports/wreath-preview-http.json
+          if-no-files-found: warn

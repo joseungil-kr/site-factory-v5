@@ -1,0 +1,57 @@
+name: Wreath V5-2 regional representative preview QA
+on:
+  push:
+    branches: [feature/v52-wreath-region]
+    paths:
+      - 'sites/wreath-region/**'
+      - 'scripts/*wreath_region.py'
+      - 'tests/test_wreath_region.py'
+      - 'tests/wreath-worker.test.mjs'
+      - '.github/workflows/wreath-region-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Verify site plan, regional inventory and photos/ordering source constraints
+        run: |
+          python -m v5 plan-check --site wreath-region
+          python -m unittest discover -s tests -p 'test_wreath_region.py' -v
+          node --test tests/wreath-worker.test.mjs
+      - name: Build six representative localities with both search intents (noindex only)
+        run: |
+          python -m scripts.build_wreath_region --sample
+          python -m scripts.qa_wreath_region --sample
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          report=json.loads(Path('reports/wreath-region/audit.json').read_text())
+          manifest=json.loads(Path('reports/wreath-region/manifest.json').read_text())
+          assert report['passes'] and report['errorsTotal']==0,report
+          assert report['similarity']['passes']
+          assert manifest['regionRows']==6 and manifest['articleCount']==12
+          assert not (Path('dist/wreath-region')/'sitemap.xml').exists()
+          for fname in ('index.html','404.html'):
+              txt=(Path('dist/wreath-region')/fname).read_text()
+              assert '<meta name="robots" content="noindex,nofollow">' in txt
+              assert 'rel="canonical"' not in txt
+          print('WREATH_REPRESENTATIVE_NO_INDEX_QA_PASS',{'urls':manifest['pageCount'],'regions':6,'topics':2})
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wreath-region-6-locality-representative-noindex
+          path: |
+            dist/wreath-region/
+            reports/wreath-region/manifest.json
+            reports/wreath-region/audit.json
+            reports/wreath-region/similarity.json
+          if-no-files-found: error
+          retention-days: 14
