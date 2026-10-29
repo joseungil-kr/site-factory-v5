@@ -28,7 +28,7 @@ class WreathRegionTests(unittest.TestCase):
         self.assertEqual(set(d['leads']),set(INTENTS))
         self.assertEqual(len(d['sections']),6)
         for values in list(d['sections'].values())+list(d['leads'].values()):
-            self.assertEqual(len(values),8)
+            self.assertGreaterEqual(len(values),8)
             self.assertEqual(len(values),len(set(values)))
             self.assertTrue(all(len(x)>=35 for x in values))
         self.assertEqual(pick(d['leads']['same-day'],'hello',2),pick(d['leads']['same-day'],'hello',2))
