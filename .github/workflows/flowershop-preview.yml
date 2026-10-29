@@ -4,6 +4,9 @@ on:
     paths:
       - 'sites/flowershop-nalmada/**'
       - 'v5/**'
+      - 'data/regions/flowershop_official_codes_20261022.zip'
+      - 'scripts/flowershop_regions.py'
+      - 'tests/test_flowershop_products.py'
       - '.github/workflows/flowershop-preview.yml'
   workflow_dispatch:
 permissions:
@@ -19,6 +22,22 @@ jobs:
           python-version: '3.12'
       - name: Unit tests
         run: python -m unittest discover -s tests -v
+      - name: Inspect nationwide V4 official code snapshot
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          from hashlib import sha256
+          p=Path('data/regions/flowershop_official_codes_20261022.zip')
+          data=p.read_bytes()
+          assert sha256(data).hexdigest()=='44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd'
+          with ZipFile(p) as z:
+              print('ZIP entries:',[(x.filename,x.file_size) for x in z.infolist()])
+              for x in z.infolist():
+                  if not x.is_dir() and x.file_size and x.file_size < 3000000:
+                      sample=z.read(x)[:1800].decode('cp949',errors='replace')
+                      print('TEXT SAMPLE:',x.filename,repr(sample[:900]))
+          PY
       - name: Build flowershop preview
         run: python -m v5 build --site flowershop-nalmada --mode preview
       - name: Audit preview
