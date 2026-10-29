@@ -45,7 +45,8 @@ jobs:
                   score=len(sets[i]&sets[j])/len(sets[i]|sets[j])
                   if score>worst[0]: worst=(score,blocks[i]['id'],blocks[j]['id'])
           assert worst[0]<0.49, f'seed pool 5-gram overlap above threshold: {worst}'
-          assert not any(re.search(r'60\s*[~–-]\s*70\s*%',x['copy']) for x in blocks)
+          assert any(('매출총이익률' in x['copy'] and '재료비' in x['copy'] and '순이익률' in x['copy']) for x in blocks)
+          assert not any(re.search(r'월\s*\d+\s*만\s*원|초도비용\s*[=:]?\s*\d+|최소\s*구매.{0,15}\d+',x['copy']) for x in blocks)
           assert not any('1주일이면' in x['copy'] for x in blocks)
           print(json.dumps({'site':'winterbbang','approved':False,'pagesGenerated':0,
                             'seedBlocks':len(blocks),'faqs':len(faqs),
