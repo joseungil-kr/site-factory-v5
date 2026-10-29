@@ -54,7 +54,7 @@ def build():
     links=''.join(f'<li><a href="/halls/{s}">{escape(f[1])} 빠른 장례식화환 주문방법</a> — {escape(f[2])}</li>' for f,s in zip(FACILITIES,slugs))
     (OUT/'index.html').write_text(layout('장례식장별 빠른 장례식화환 주문방법','<h1>장례식장별 빠른 장례식화환 주문방법</h1><p>대표 3개 시설 시안입니다. 실시간 운영·빈소 정보는 확인되지 않았습니다.</p><ul>'+links+'</ul><p><a href="tel:18440644">주문 상담 1844-0644</a></p>','장례식장 목록'),encoding='utf-8')
     (OUT/'404.html').write_text(layout('페이지 없음','<h1>페이지를 찾을 수 없습니다</h1><a href="/">홈으로</a>',''),encoding='utf-8')
-    (OUT/'robots.txt').write_text('User-agent: *\\nDisallow: /\\n',encoding='utf-8')
+    (OUT/'robots.txt').write_text('User-agent: *\nDisallow: /\n',encoding='utf-8')
     (OUT/'manifest.json').write_text(json.dumps({'preview':True,'facilitySourceRepo':'joseungil-kr/site-factory-v4','facilitySourceBranch':'feature/funeralflower-mini','facilityBlobSHA':'b950e7bf2cde7b247447fbe670c976363e4e1a7e','sourceCount':1080,'sampleCount':3,'facilityCurrentOperation':'unverified','pages':['/']+['/halls/'+s for s in slugs]},ensure_ascii=False,indent=2),encoding='utf-8')
     assert len(slugs)==3 and all((OUT/'halls'/s).is_file() for s in slugs)
     assert all('noindex,nofollow' in (OUT/'halls'/s).read_text() for s in slugs)
