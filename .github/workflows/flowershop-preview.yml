@@ -37,6 +37,16 @@ jobs:
                   if not x.is_dir() and x.file_size and x.file_size < 3000000:
                       sample=z.read(x)[:1800].decode('cp949',errors='replace')
                       print('TEXT SAMPLE:',x.filename,repr(sample[:900]))
+              import csv
+              from collections import Counter
+              text=z.read(z.namelist()[0]).decode('cp949')
+              rows=list(csv.DictReader(text.splitlines(),delimiter='\t'))
+              active=[r for r in rows if r['폐지여부']=='존재']
+              lower=[r for r in active if r['법정동코드'].endswith('00')
+                  and len(r['법정동명'].split())>=2
+                  and r['법정동명'].split()[-1].endswith(('동','읍','면','가','로'))]
+              provinces=Counter(r['법정동명'].split()[0] for r in lower)
+              print('NATIONWIDE_REGION_COUNT',len(rows),len(active),len(lower),sorted(provinces.items()))
           PY
       - name: Build flowershop preview
         run: python -m v5 build --site flowershop-nalmada --mode preview
