@@ -23,13 +23,17 @@ def get(url,limit=6_000_000,headers=None):
 
 def ensure_no_prior_receipt():
     current=os.environ.get("GITHUB_RUN_ID","")
-    status,_,body=get("https://api.github.com/repos/"+REPO+"/actions/workflows/v5-officeplant-public-release.yml/runs?per_page=50",limit=1_500_000,headers={"Accept":"application/vnd.github+json"})
+    github_token=os.environ.get("GITHUB_TOKEN","")
+    if not github_token:
+        raise RuntimeError("GitHub read-only workflow token absent; cannot inspect previous IndexNow receipts")
+    auth={"Accept":"application/vnd.github+json","Authorization":"Bearer "+github_token}
+    status,_,body=get("https://api.github.com/repos/"+REPO+"/actions/workflows/v5-officeplant-public-release.yml/runs?per_page=50",limit=1_500_000,headers=auth)
     if status!=200:raise RuntimeError("Cannot read public release history; fail closed before IndexNow")
     runs=json.loads(body).get("workflow_runs",[])
     for run in runs:
         if str(run.get("id"))==current:continue
         run_id=run.get("id")
-        status,_,body=get("https://api.github.com/repos/"+REPO+"/actions/runs/"+str(run_id)+"/artifacts?per_page=100",limit=1_500_000,headers={"Accept":"application/vnd.github+json"})
+        status,_,body=get("https://api.github.com/repos/"+REPO+"/actions/runs/"+str(run_id)+"/artifacts?per_page=100",limit=1_500_000,headers=auth)
         if status!=200:raise RuntimeError("Cannot inspect prior release receipts; fail closed")
         artifacts=json.loads(body).get("artifacts",[])
         if any(a.get("name","").startswith("officeplant-indexnow-receipt-") and not a.get("expired") for a in artifacts):
