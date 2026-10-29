@@ -1,0 +1,64 @@
+name: Wreath public canonical and sitemap release candidate QA (no deployment)
+on:
+  push:
+    branches: [feature/v52-wreath-region]
+    paths: ['.github/workflows/wreath-public-candidate.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: db49f670e6f051e824f4811db91e265367dfba75
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Pin source and independently build public candidate
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = 'db49f670e6f051e824f4811db91e265367dfba75'
+          python -m v5 plan-check --site wreath-region
+          python -m scripts.build_wreath_region --public
+          python -m scripts.qa_wreath_region
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          root=Path('dist/wreath-region')
+          m=json.loads(Path('reports/wreath-region/manifest.json').read_text())
+          assert m['mode']=='public-candidate' and m['sample'] is False
+          assert m['pageCount']==10336 and m['articleCount']==10068
+          assert len(list(root.rglob('*.html')))==10337
+          assert not (root/'robots.txt').read_text().find('Disallow: /')>=0
+          assert 'Sitemap: https://wreath.nalmada.net/sitemap.xml' in (root/'robots.txt').read_text()
+          ns={'s':'http://www.sitemaps.org/schemas/sitemap/0.9'}
+          urls=[x.text for x in ET.parse(root/'sitemap.xml').findall('.//s:loc',ns)]
+          assert len(urls)==10336 and len(set(urls))==10336
+          assert all(x.startswith('https://wreath.nalmada.net/') for x in urls)
+          assert not any('/404.html' in x for x in urls)
+          for path in ('index.html',next(p for p in m['pages'] if p.endswith('-same-day.html')),next(p for p in m['pages'] if p.endswith('-flower-shop.html'))):
+            t=(root/path).read_text()
+            assert '<meta name="robots" content="index,follow">' in t
+            assert 'rel="canonical" href="https://wreath.nalmada.net'+('/' if path=='index.html' else '/'+path)+'"' in t
+          cfg=json.loads(Path('sites/wreath-region/wrangler.public-candidate.json').read_text())
+          assert cfg['name']=='sfv52-wreath-public-candidate' and cfg['workers_dev'] is True
+          assert cfg['vars']=={'WREATH_PUBLIC':'1'}
+          assert not any(k in cfg for k in ('route','routes','zone_id','custom_domains','triggers'))
+          print('WREATH_PUBLIC_CANDIDATE_PASS',json.dumps({'sourceSHA':'db49f670e6f051e824f4811db91e265367dfba75','pages':len(urls),'unique':len(set(urls)),'canonicalSamples':3,'indexable':True,'deploy':False}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wreath-public-candidate-no-deploy
+          path: |
+            dist/wreath-region/
+            reports/wreath-region/manifest.json
+            reports/wreath-region/audit.json
+            reports/wreath-region/similarity.json
+            sites/wreath-region/wrangler.public-candidate.json
+          if-no-files-found: error
+          retention-days: 30
