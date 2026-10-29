@@ -6,6 +6,8 @@ from __future__ import annotations
 import argparse
 import html
 import json
+import hashlib
+import shutil
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -49,6 +51,39 @@ def image(filename, alt, eager=False):
     priority = ' fetchpriority="high"' if eager else ""
     return (f'<img src="{ASSET}/{esc(filename)}" alt="{esc(alt)}" '
             f'loading="{loading}" decoding="async"{priority} width="1200" height="840">')
+
+def copy_verified_assets(output_dir):
+    """Bundle the five already-committed WebP assets, checking manifest hashes.
+
+    No image generation, network calls or upload happens here. This function
+    fails closed if any of the exact GitHub-tracked bytes differ.
+    """
+    manifest = ROOT / "docs/site-plans/winterbbang/images-manifest.json"
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    expected_names = {name for name, _ in IMAGES}
+    assets = data.get("assets", [])
+    if {item.get("filename") for item in assets} != expected_names or len(assets) != 5:
+        raise ValueError("Exactly the approved five image assets are required")
+    dest = output_dir / "assets" / "images"
+    dest.mkdir(parents=True, exist_ok=True)
+    receipt = []
+    for item in assets:
+        filename = item["filename"]
+        source = ROOT / "assets" / "library" / "winterbbang" / filename
+        content = source.read_bytes()
+        if content[:4] != b"RIFF" or content[8:12] != b"WEBP":
+            raise ValueError("Invalid WebP image: " + filename)
+        digest = hashlib.sha256(content).hexdigest()
+        if digest != item["sha256"] or len(content) != item["bytes"]:
+            raise ValueError("Asset SHA256/size mismatch: " + filename)
+        destination = dest / filename
+        if source.resolve() != destination.resolve():
+            shutil.copyfile(source, destination)
+        if hashlib.sha256(destination.read_bytes()).hexdigest() != digest:
+            raise ValueError("Preview asset copy readback failed: " + filename)
+        receipt.append({"filename": filename, "sha256": digest, "bytes": len(content)})
+    return receipt
+
 
 def load_pool(path):
     data = json.loads(path.read_text(encoding="utf-8"))
@@ -108,9 +143,11 @@ def main():
     pages += [(r["slug"] + ".html", render(pool, r)) for r in REGIONS[:args.regions]]
     for filename, content in pages:
         (out / filename).write_text(content, encoding="utf-8")
+    assets = copy_verified_assets(out)
     report = {"site":"winterbbang","pages":len(pages),"regionalPages":len(pages)-1,
               "robots":"noindex,nofollow","phone":PHONE,"copyPoolBlocks":len(pool),
-              "imagesReferenced":[x[0] for x in IMAGES],"output":str(out)}
+              "imagesReferenced":[x[0] for x in IMAGES],"imagesVerified":assets,
+              "output":str(out)}
     (out / "render-report.json").write_text(json.dumps(report, ensure_ascii=False, indent=2)+"\n", encoding="utf-8")
     print(json.dumps(report, ensure_ascii=False))
 
