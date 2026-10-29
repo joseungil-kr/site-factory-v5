@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "siteId": "winterbbang",
+  "approved": false,
+  "approvalState": "PREFLIGHT_DRAFT_ONLY",
+  "domain": "https://winterbbang.nalmada.com",
+  "brand": "백세푸드",
+  "businessModel": "B2B winter snack shop-in-shop/startup consultations, equipment rental and recurring ingredients supply; independent agency/dealership inquiry",
+  "serviceScope": {
+    "region": "서울특별시·경기도 (SEO landing); 전국 식자재/판매점/대리점 상담",
+    "granularity": "시·군·구, 읍·면·동은 확인된 명칭과 지역별 콘텐츠 근거가 있는 경우에 한해 발행",
+    "facilities": "기존 카페·무인카페·과일/야채 가게·분식점·꽈배기 가게·전통차집 및 적법한 야외 판매 장소",
+    "historicalCandidateCount": {
+      "seoul": 467,
+      "gyeonggi": 736,
+      "total": 1203,
+      "source": "site-factory-v5 feature/v52-wreath-region sites/wreath-region/regions.json (historical 2025 source, lower-level 2026 status not verified)"
+    }
+  },
+  "pageTypes": [
+    "home",
+    "region-startup",
+    "region-shop-in-shop",
+    "menu-startup",
+    "store-type-shop-in-shop",
+    "ingredients-supply",
+    "startup-cost-and-unit-economics",
+    "legal-and-location-checklist",
+    "contact"
+  ],
+  "targetPageCount": null,
+  "targetPolicy": "지역 커버리지와 실제 의도/콘텐츠 고유성 검증 후 산정. 1,203은 과거 지역명 후보이지 승인된 제작 목표나 최신 행정구역 수가 아님.",
+  "titlePattern": "{지역명} 붕어빵 창업·샵인샵 상담 | 백세푸드 (메뉴별 독립 의도 존재 시 {지역명} 계란빵 창업 등으로 분리)",
+  "urlPattern": "/지역계층/창업주제/ — 실제 구현은 V5 검증된 지역 정적 생성기 분리 활용; 충돌/중복 URL 검사",
+  "keywordGroups": {
+    "primary": [
+      "{지역명} 붕어빵 창업",
+      "{지역명} 붕어빵 샵인샵",
+      "{지역명} 붕어빵 반죽 납품"
+    ],
+    "conditional": [
+      "{지역명} 잉어빵 창업",
+      "{지역명} 계란빵 창업",
+      "{지역명} 십원빵 창업"
+    ],
+    "secondary": [
+      "소자본 겨울장사",
+      "기존 카페 메뉴 추가",
+      "붕어빵 팥소 공급",
+      "붕어빵 슈크림 공급",
+      "매장 앞 붕어빵 판매",
+      "붕어빵 기계 대여",
+      "판매점 대리점 모집"
+    ]
+  },
+  "copyPoolPlan": {
+    "industry": "겨울 간식 창업 및 식자재 공급",
+    "source": "독립 창작 문장; 사업자 제공사항 + snack.baeksefood.com/support/ 및 관련 2026-10 확인 자료; 유사문서 문장 복제 금지",
+    "sentenceTarget": 60,
+    "seedPoolPath": "docs/site-plans/winterbbang/copy-pool.seed.json",
+    "localEvidenceRequired": true,
+    "shopTypeSpecific": true,
+    "claimedMarginAndLeadTimeOnlyAfterConfirmation": true
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-jaccard",
+    "thresholdExclusive": 0.49,
+    "sampleFraction": 0.01,
+    "seed": 20261029,
+    "population": "본문 상업 문단 (지역명·링크·공통 헤더·푸터 제외), 의미상 중복 별도 검수"
+  },
+  "conversion": {
+    "mode": "전화 창업상담 및 납품/대리점 문의",
+    "phone": "031-407-0103",
+    "phoneHref": "tel:0314070103",
+    "contactTitle": "백세푸드 분식창업 담당자",
+    "orderUrl": null,
+    "leadForm": "개인정보/동의 검토 완료 전 신규 폼 수집 금지"
+  },
+  "images": {
+    "source": "기존 백세 분식 보유 실제 장비/제품 이미지 확인 요청, 제3자 사진 및 AI 이미지를 실증 자료로 쓰지 않음",
+    "approved": false,
+    "visualSlots": [
+      "shop-in-shop",
+      "equipment",
+      "ingredients",
+      "menu",
+      "setup"
+    ],
+    "mobileDesktopQA": [
+      390,
+      1440
+    ]
+  },
+  "publishPolicy": {
+    "mode": "draft; no build/public/IndexNow until plan approved and material/menu/claims confirmed",
+    "indexNow": "disabled until live HTTP and key verification",
+    "dns": "no DNS/auth/access changes without approval",
+    "noindexPreview": true
+  },
+  "sources": [
+    {
+      "url": "https://snack.baeksefood.com/support/",
+      "kind": "business_site",
+      "checkedOn": "2026-10-29"
+    },
+    {
+      "url": "https://snack.baeksefood.com/startup-stories/shop-in-shop/",
+      "kind": "business_site",
+      "checkedOn": "2026-10-29"
+    },
+    {
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=14600000021&HighCtgCD=A09006&tp_seq=02",
+      "kind": "official",
+      "checkedOn": "2026-10-29"
+    }
+  ],
+  "openQuestions": [
+    "기존 본사 월 식자재 최소 구매 100만원 정책이 winterbbang에도 적용되는가?",
+    "초도비용 0~100만원의 포함/제외 내역과 보증금/반환 조건은?",
+    "마진율 60~70%의 계산식·판매 단가·포장/연료/손실 포함 여부는?",
+    "일주일 준비 가능은 장소/인허가 완료 후부터인가?",
+    "계란빵/십원빵/잉어빵 장비 및 반죽·부재료 공급이 실제로 준비됐는가?",
+    "고객에게 보여줄 실물 제품·장비 사진 사용 권한이 있는가?"
+  ],
+  "notes": "AGENTS.md + SITE_CREATION_PROTOCOL.md preflight. `approved=false` deliberately blocks actual build; do not silently set true. Existing V4/V5 workers remain untouched."
+}
