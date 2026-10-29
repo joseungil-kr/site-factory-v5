@@ -15,9 +15,14 @@
     "url": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40856942135",
     "worker": "sfv54-winterbbang-preview",
     "workersDevUrl": "https://sfv54-winterbbang-preview.joseungil.workers.dev",
-    "customDomainAttached": false,
+    "customDomainAttached": true,
     "dnsChanged": false,
-    "indexNowSent": false
+    "indexNowSent": false,
+    "customDomainUrl": "https://winterbbang.nalmada.net/",
+    "dnsChangeMeaning": "No manual DNS API call; Cloudflare Custom Domain attachment automatically manages the record and certificate.",
+    "domainAttachWorkflowCommit": "39716c0884366d32fa1489c9f555b0e347734f3a",
+    "domainAttachRunId": 40867847521,
+    "domainAttachUrl": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40867847521"
   },
   "build": {
     "count": 1804,
@@ -125,5 +130,55 @@
     "Current candidate name ledger is V4 2026-10-12 mixed legal/admin name inventory and not independently verified as complete current official dong list",
     "Generated locality narratives use deterministic topic combinations and are not supported by 1,732 distinct verified local business facts; do not claim SEO quality or ranking guarantee",
     "noindex preview was deliberately used until substantive uniqueness and custom domain gates pass"
-  ]
+  ],
+  "domainAttachment": {
+    "performedAt": "2026-10-29 20:46 KST (recorded GitHub Actions UTC 11:46)",
+    "host": "winterbbang.nalmada.net",
+    "boundService": "sfv54-winterbbang-preview",
+    "method": "Cloudflare Workers Custom Domain PUT (exact hostname only) via existing V4 GitHub Actions secrets and account verification",
+    "accountOwnershipProof": "V4 flower-a/b original domain mappings verified in same account; nalmada.net active exact zone account",
+    "customDomainWriteCount": 1,
+    "manualDnsWrites": false,
+    "routeWrites": false,
+    "workerDeploys": false,
+    "indexNow": false,
+    "previousCustomDomains": 87,
+    "afterCustomDomains": 88,
+    "otherDomainMappingsUnchanged": true,
+    "existingWorkerVerified": true,
+    "noindex": true,
+    "success": true,
+    "initialHttpsDnsPropagation": "First attempt failed DNS resolution, second HTTPS readback passed",
+    "httpChecks": [
+      {
+        "path": "/",
+        "status": 200
+      },
+      {
+        "path": "/r/f41a39a96e8d.html",
+        "status": 200
+      },
+      {
+        "path": "/r/68a35ef70403.html",
+        "status": 200
+      },
+      {
+        "path": "/assets/images/hero.webp",
+        "status": 200,
+        "sha256": "9ece3fbcfe2c973e74e814a2beee1a3c57f2b4bb105aa1e9f8f04477844adc41"
+      },
+      {
+        "path": "/robots.txt",
+        "status": 200,
+        "robotsDisallow": true
+      },
+      {
+        "path": "/winterbbang-absent-20261029.html",
+        "status": 404
+      }
+    ],
+    "contentReleaseSha": "da457ae5a6a3b667ac27505143fe353ddbb0b771",
+    "actionUrl": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40867847521",
+    "limitations": "Site remains noindex; page corpus copy audits and locality factual uniqueness still required prior to search release. DNS and Routes GET 403 in preflight, but Cloudflare exact domain bind succeeded with expected Worker and HTTPS readback."
+  }
 }
