@@ -2,6 +2,10 @@
   "source": "site-factory-v5 안산시 기존 검증 지역 원장; 전국 동 목록 확장 전 대표본",
   "regions": [
     {
+      "name": "전국",
+      "level": "nation"
+    },
+    {
       "name": "경기도 안산시",
       "code": "4127000000",
       "level": "municipality"
