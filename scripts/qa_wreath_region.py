@@ -116,6 +116,9 @@ def main():
             elif link.startswith('https://fwith.co.kr/shop/item.php?it_id='):
                 counts['externalProductLinks']+=1
                 if re.search(r'(?i)(recipient|name|phone|address|ribbon|message)=',link):errors.append('PII in URL '+rel)
+            elif link.startswith('#'):
+                if 'id="'+link[1:]+'"' not in raw:errors.append('broken page anchor '+rel+' '+link)
+                counts['internalLinks']+=1
             elif link.startswith('/'):
                 target='index.html' if link.split('#')[0]=='/' else unquote(link.split('#')[0]).lstrip('/')
                 if target and target not in actual and target!='assets/wreath.css':errors.append('broken local link '+rel+' -> '+link)
