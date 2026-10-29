@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: 4144a62ad4fa559a4d138c7e3bd1a26ed62d5c6f
+          ref: 3498445e61bff36bfa0162227dd08d1f28d58e76
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
       - uses: actions/setup-node@v4
@@ -21,7 +21,8 @@ jobs:
       - name: Pin source and independently build public candidate
         run: |
           set -euo pipefail
-          test "$(git rev-parse HEAD)" = '4144a62ad4fa559a4d138c7e3bd1a26ed62d5c6f'
+          test "$(git rev-parse HEAD)" = '3498445e61bff36bfa0162227dd08d1f28d58e76'
+          python -m unittest discover -s tests -p 'test_wreath_public_paths.py' -v
           python -m v5 plan-check --site wreath-region
           python -m scripts.build_wreath_region --public
           python -m scripts.qa_wreath_region
@@ -41,15 +42,17 @@ jobs:
           assert len(urls)==10336 and len(set(urls))==10336
           assert all(x.startswith('https://wreath.nalmada.net/') for x in urls)
           assert not any('/404.html' in x for x in urls)
-          for path in ('index.html',next(p for p in m['pages'] if p.endswith('-same-day.html')),next(p for p in m['pages'] if p.endswith('-flower-shop.html'))):
-            t=(root/path).read_text()
+          from scripts.wreath_public_paths import output_relative_path, canonical_url
+          for url_path in ('/',next(p for p in m['pages'] if p.endswith('-same-day.html')),next(p for p in m['pages'] if p.endswith('-flower-shop.html'))):
+            rel='index.html' if url_path=='/' else output_relative_path(url_path)
+            t=(root/rel).read_text()
             assert '<meta name="robots" content="index,follow">' in t
-            assert 'rel="canonical" href="https://wreath.nalmada.net'+('/' if path=='index.html' else '/'+path)+'"' in t
+            assert 'rel="canonical" href="'+canonical_url('https://wreath.nalmada.net',url_path)+'"' in t
           cfg=json.loads(Path('sites/wreath-region/wrangler.public-candidate.json').read_text())
           assert cfg['name']=='sfv52-wreath-public-candidate' and cfg['workers_dev'] is True
           assert cfg['vars']=={'WREATH_PUBLIC':'1'}
           assert not any(k in cfg for k in ('route','routes','zone_id','custom_domains','triggers'))
-          print('WREATH_PUBLIC_CANDIDATE_PASS',json.dumps({'sourceSHA':'4144a62ad4fa559a4d138c7e3bd1a26ed62d5c6f','pages':len(urls),'unique':len(set(urls)),'canonicalSamples':3,'indexable':True,'deploy':False}))
+          print('WREATH_PUBLIC_CANDIDATE_PASS',json.dumps({'sourceSHA':'3498445e61bff36bfa0162227dd08d1f28d58e76','pages':len(urls),'unique':len(set(urls)),'canonicalSamples':3,'indexable':True,'deploy':False}))
           PY
       - uses: actions/upload-artifact@v4
         with:
