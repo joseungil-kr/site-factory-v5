@@ -29,7 +29,7 @@ CSS = """
 .fs-products-group{margin:0 0 32px}
 .fs-products-group>h3{font-size:21px;margin:0 0 3px;color:#184b39}
 .fs-products-group>p{margin:0 0 14px;color:#687c70;font-size:14px}
-.fs-product-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:17px}
+.fs-product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
 .fs-product{border:1px solid #e3eae4;border-radius:17px;overflow:hidden;background:#fff;box-shadow:0 6px 24px rgba(23,65,42,.045)}
 .fs-product-image{display:block;aspect-ratio:1/1;overflow:hidden;background:#edf1eb}
 .fs-product-image img{display:block;width:100%;height:100%;object-fit:cover}
