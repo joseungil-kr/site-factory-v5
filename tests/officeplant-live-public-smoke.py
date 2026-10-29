@@ -36,7 +36,10 @@ def main():
         assert status==200 and "noindex" not in headers.get("X-Robots-Tag","").lower()
         assert '<meta name="robots" content="index,follow">' in html
         assert '<link rel="canonical" href="'+origin+path+'">' in html
-        assert 'name="naver-site-verification"' not in html
+        if path == "/":
+            assert html.count('<meta name="naver-site-verification" content="a421d53d29070054a8681a2c99312aef9b9b4e80">') == 1
+        else:
+            assert 'name="naver-site-verification"' not in html
         checks.append("indexable "+path)
     status,headers,body=get(origin+"/not-a-real-officeplant-path")
     assert status==404 and "noindex" in headers.get("X-Robots-Tag","").lower()
