@@ -1,0 +1,59 @@
+name: Winterbbang renderer and regional preview QA
+on:
+  pull_request:
+    paths:
+      - 'scripts/winterbbang_render.py'
+      - 'docs/site-plans/winterbbang/copy-pool.seed.json'
+      - 'preview/winterbbang/**'
+      - '.github/workflows/winterbbang-render-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  render-and-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Python syntax check
+        run: python -m py_compile scripts/winterbbang_render.py
+      - name: Render seven noindex pages
+        run: python scripts/winterbbang_render.py --output-dir "$RUNNER_TEMP/winterbbang-rendered" --regions 6
+      - name: Validate generated and committed HTML
+        run: |
+          python - <<'PY'
+          import json, os, re
+          from pathlib import Path
+          root=Path('.')
+          committed=root/'preview/winterbbang'
+          generated=Path(os.environ['RUNNER_TEMP'])/'winterbbang-rendered'
+          html_names=sorted(p.name for p in committed.glob('*.html'))
+          generated_names=sorted(p.name for p in generated.glob('*.html'))
+          assert len(html_names)==7, f'expected 7 committed HTML files, got {html_names}'
+          assert html_names==generated_names, (html_names,generated_names)
+          titles=[]
+          forbidden=re.compile(r'초도비용\s*0|월\s*100\s*만\s*원|최소\s*구매.{0,15}\d+')
+          for folder in (committed,generated):
+              for name in sorted(p.name for p in folder.glob('*.html')):
+                  text=(folder/name).read_text(encoding='utf-8')
+                  title=re.search(r'<title>(.*?)</title>',text,re.S)
+                  assert title, f'missing title: {folder/name}'
+                  if folder==committed: titles.append(title.group(1))
+                  assert 'noindex,nofollow' in text, f'preview not protected: {folder/name}'
+                  assert 'tel:0314070103' in text and '031-407-0103' in text, f'phone CTA missing: {folder/name}'
+                  assert '매출총이익률' in text and '재료비' in text and '순이익률' in text, f'margin meaning missing: {folder/name}'
+                  assert not re.search(r'<link[^>]+rel=["\\']canonical',text,re.I), f'preview must not set canonical: {folder/name}'
+                  assert not forbidden.search(text), f'commercial terms leaked: {folder/name}'
+                  for image in ('hero.webp','shop-in-shop.webp','menu.webp','street.webp','ingredients.webp'):
+                      assert f'/assets/images/{image}' in text, f'{image} missing: {folder/name}'
+          assert len(set(titles))==7, 'duplicate titles among committed preview pages'
+          assets=root/'assets/library/winterbbang'
+          missing=[name for name in ('hero.webp','shop-in-shop.webp','menu.webp','street.webp','ingredients.webp') if not (assets/name).is_file()]
+          report={'committedHtml':len(html_names),'generatedHtml':len(generated_names),'uniqueTitles':len(set(titles)),
+                  'robots':'noindex,nofollow','missingBinaryAssets':missing,
+                  'assetStatus':'PENDING_BINARY_UPLOAD' if missing else 'PRESENT'}
+          print(json.dumps(report,ensure_ascii=False))
+          PY
