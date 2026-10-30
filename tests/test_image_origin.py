@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 import tempfile
 import unittest
 from pathlib import Path
@@ -96,6 +97,27 @@ class ImageSourcePolicyTests(unittest.TestCase):
         self.assertTrue(gate.validate_one(r,self.root))
         r["generatedAt"]="2026-10-30T08:50:00Z"
         self.assertEqual(gate.validate_one(r,self.root),[])
+
+    def test_new_site_reusing_old_unknown_image_fails_even_without_binary_change(self):
+        site=self.root/"sites/future-site"
+        site.mkdir(parents=True)
+        (site/"site.json").write_text(json.dumps({
+            "id":"future-site","imageLibrary":"unit","imagePool":["test.webp"]}),encoding="utf-8")
+        refs=gate.referenced_site_images("future-site",self.root)
+        self.assertEqual(refs,{self.path})
+        changed=["sites/future-site/site.json"]
+        result=gate.check_changed_site_dependencies(changed,{},self.root)
+        self.assertTrue(any("without verified origin" in e for e in result["errors"]))
+        allowed=gate.check_changed_site_dependencies(changed,{self.path:self.generated()},self.root)
+        self.assertEqual(allowed["errors"],[])
+
+    def test_explicit_release_asset_manifest_rejects_missing_origin(self):
+        manifest=self.root/"release-assets.json"
+        manifest.write_text(json.dumps({"assets":[self.path]}),encoding="utf-8")
+        failed=gate.check_explicit_release_assets(manifest,{},self.root)
+        self.assertTrue(any("no approved provenance" in e for e in failed))
+        passed=gate.check_explicit_release_assets(manifest,{self.path:self.generated()},self.root)
+        self.assertEqual(passed,[])
 
 if __name__=="__main__":
     unittest.main()
