@@ -61,7 +61,8 @@ class TodayflowerPilotTest(unittest.TestCase):
         self.assertEqual(len(legal),30)
         self.assertEqual(len({r["code"] for r in legal}),30)
         self.assertEqual(len({r["name"] for r in legal}),30)
-        self.assertEqual(len(regions["regions"]),5070)
+        self.assertEqual(len(regions["regions"]),33)  # committed 33-row input ledger
+        self.assertEqual(len(self.d["regions"]["regions"]),5070)  # runtime expanded inventory
         self.assertEqual(len(self.pages),33)
         by_name={r["name"]:r for r in regions["regions"]}
         for row in legal:
