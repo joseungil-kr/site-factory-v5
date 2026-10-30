@@ -1,0 +1,18 @@
+{
+  "name": "sfv52-wreathprice-preview",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-21",
+  "workers_dev": true,
+  "preview_urls": false,
+  "keep_vars": false,
+  "vars": {
+    "WREATHPRICE_PUBLIC": "0"
+  },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "html_handling": "none",
+    "not_found_handling": "404-page",
+    "run_worker_first": true
+  }
+}
