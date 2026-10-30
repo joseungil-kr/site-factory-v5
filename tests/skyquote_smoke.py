@@ -27,7 +27,9 @@ for name in pages:
     assert raw.count('AI 생성 설명 이미지')==5
     assert raw.count('loading="lazy"')==5
     assert '스카이차 견적, 최저가 비교 전 확인사항 | 바른견적스카이' in raw
-    assert '최저가를 보장' not in raw or '최저가를 보장하지' in raw
+    assert '업계 최저가를 주장하지 않습니다' in raw, f'Missing truthful price-comparison disclosure: {name}'
+    for unsupported_claim in ('업계 최저가 보장','무조건 최저가','최저가를 보장합니다','타사보다 무조건 저렴'):
+        assert unsupported_claim not in raw, (name, unsupported_claim)
     assert '<meta name="robots" content="noindex,nofollow">' in raw
     assert 'href="tel:01053221952"' in raw
     for image in manifest['assets']:
