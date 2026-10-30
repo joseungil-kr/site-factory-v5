@@ -1,0 +1,175 @@
+{
+  "schemaVersion": 1,
+  "sourceRepository": "joseungil-kr/site-factory-v4",
+  "sourceFile": "data/regions/master.json",
+  "sourceBlobSha": "13d43fc3f2492b29b1680858235fe0ac0cd10580",
+  "officialDownloadURL": "https://www.code.go.kr/etc/codeFullDown.do",
+  "officialSourcePage": "https://www.code.go.kr/stdcode/regCodeL.do",
+  "officialArchiveSHA256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
+  "retrievedOn": "2026-10-22",
+  "scope": "2026-10-22 cached active higher-level legal-region names only, not live delivery coverage or confirmed current lower-level localities",
+  "officialOverall": {
+    "province": 16,
+    "municipality": 229,
+    "ward": 39
+  },
+  "historicalWreathScope": {
+    "localities": 5034,
+    "parentMatches": 3596,
+    "unmatched": 1438,
+    "source": "sites/wreath-region/regions.json",
+    "notEquivalentToServiceCoverage": true
+  },
+  "representativeAlreadyCovered": [
+    "4127000000",
+    "4127100000"
+  ],
+  "expandEntries": [
+    {
+      "code": "4111000000",
+      "name": "수원시",
+      "fullName": "경기도 수원시",
+      "level": "municipality",
+      "parent": "4100000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8231
+    },
+    {
+      "code": "4111100000",
+      "name": "장안구",
+      "fullName": "경기도 수원시 장안구",
+      "level": "ward",
+      "parent": "4111000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8296
+    },
+    {
+      "code": "4111300000",
+      "name": "권선구",
+      "fullName": "경기도 수원시 권선구",
+      "level": "ward",
+      "parent": "4111000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8343
+    },
+    {
+      "code": "4111500000",
+      "name": "팔달구",
+      "fullName": "경기도 수원시 팔달구",
+      "level": "ward",
+      "parent": "4111000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8390
+    },
+    {
+      "code": "4111700000",
+      "name": "영통구",
+      "fullName": "경기도 수원시 영통구",
+      "level": "ward",
+      "parent": "4111000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8432
+    },
+    {
+      "code": "4113000000",
+      "name": "성남시",
+      "fullName": "경기도 성남시",
+      "level": "municipality",
+      "parent": "4100000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8440
+    },
+    {
+      "code": "4113100000",
+      "name": "수정구",
+      "fullName": "경기도 성남시 수정구",
+      "level": "ward",
+      "parent": "4113000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8499
+    },
+    {
+      "code": "4113300000",
+      "name": "중원구",
+      "fullName": "경기도 성남시 중원구",
+      "level": "ward",
+      "parent": "4113000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8517
+    },
+    {
+      "code": "4113500000",
+      "name": "분당구",
+      "fullName": "경기도 성남시 분당구",
+      "level": "ward",
+      "parent": "4113000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8546
+    },
+    {
+      "code": "4117000000",
+      "name": "안양시",
+      "fullName": "경기도 안양시",
+      "level": "municipality",
+      "parent": "4100000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8600
+    },
+    {
+      "code": "4117100000",
+      "name": "만안구",
+      "fullName": "경기도 안양시 만안구",
+      "level": "ward",
+      "parent": "4117000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8623
+    },
+    {
+      "code": "4117300000",
+      "name": "동안구",
+      "fullName": "경기도 안양시 동안구",
+      "level": "ward",
+      "parent": "4117000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8627
+    },
+    {
+      "code": "4121000000",
+      "name": "광명시",
+      "fullName": "경기도 광명시",
+      "level": "municipality",
+      "parent": "4100000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 8778
+    },
+    {
+      "code": "4127300000",
+      "name": "단원구",
+      "fullName": "경기도 안산시 단원구",
+      "level": "ward",
+      "parent": "4127000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 9077
+    },
+    {
+      "code": "4139000000",
+      "name": "시흥시",
+      "fullName": "경기도 시흥시",
+      "level": "municipality",
+      "parent": "4100000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 9394
+    },
+    {
+      "code": "4141000000",
+      "name": "군포시",
+      "fullName": "경기도 군포시",
+      "level": "municipality",
+      "parent": "4100000000",
+      "sourceStatus": "존재",
+      "sourceRecord": 9432
+    }
+  ],
+  "excludedRepresentativeCount": 2,
+  "deliveryConfirmed": false
+}
