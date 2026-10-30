@@ -31,7 +31,7 @@ PROMISES=re.compile(
     r"무조건\s*당일배송|당일배송\s*보장|최저가\s*보장"
     r"|배송비\s*무료\s*확정|전국\s*3시간\s*이내"
 )
-SAMPLES=(1,2,3,4,28,29,33,34,35,100,730,2500,4060,5070)
+SAMPLES=(1,2,3,4,28,29,33,34,35,100,403,405,730,2500,4060,5071)
 
 
 class TodayflowerNationalTest(unittest.TestCase):
@@ -47,7 +47,8 @@ class TodayflowerNationalTest(unittest.TestCase):
         self.assertEqual(len(self.original),33)
         self.assertEqual(len(self.pages),5070)
         self.assertEqual(len(self.regions),5070)
-        self.assertEqual([p["number"] for p in self.pages],list(range(1,5071)))
+        self.assertEqual([p["number"] for p in self.pages],[*range(1,404),*range(405,5072)])
+        self.assertNotIn(404,{p["number"] for p in self.pages})
         self.assertEqual(self.pages[:33],self.original)
         self.assertEqual(national.EXPECTED_DONG_COUNT,5067)
         archive=ROOT/national.ARCHIVE
@@ -56,6 +57,8 @@ class TodayflowerNationalTest(unittest.TestCase):
         self.assertEqual(len(legal),5067)
         self.assertEqual(len({code for code,_ in legal}),5067)
         self.assertEqual(len(self.pages[33:]),5037)
+        self.assertEqual(self.pages[369]["number"],370)
+        self.assertEqual(self.pages[369+34]["number"],405)
         original_codes={row["code"] for row in self.regions[:33] if row.get("level")=="legal-dong"}
         self.assertEqual(len(original_codes),30)
         self.assertEqual(len(set(self.regions[i]["name"] for i in range(5070))),5070)
@@ -121,7 +124,7 @@ class TodayflowerNationalTest(unittest.TestCase):
                 count+=1
         self.assertEqual(count,1275)
         for n in SAMPLES:
-            p=self.pages[n-1]
+            p=next(p for p in self.pages if p["number"]==n)
             html=(markup.home if n==1 else markup.detail)(
                 self.d["site"],p,self.pages,self.d["products"],self.d["links"])
             self.assertIn('<meta name="robots" content="noindex,nofollow">',html)
