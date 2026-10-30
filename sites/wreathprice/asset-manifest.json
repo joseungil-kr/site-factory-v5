@@ -1,0 +1,43 @@
+{
+  "source": "OpenAI ImageGen, single collage split into five WebP files",
+  "origin": "2026-10-30",
+  "usage": "illustrative; not actual product or delivery photos",
+  "fileStorage": "complete local preview ZIP; not yet committed as binary to GitHub",
+  "files": [
+    {
+      "path": "assets/funeral-wreath.webp",
+      "bytes": 32046,
+      "width": 1024,
+      "height": 296,
+      "sha256": "8c0b0bd09573945b3f22d185ca2a51811c2656d8f91811e5c6d9ee3a7c536a18"
+    },
+    {
+      "path": "assets/celebration-wreath.webp",
+      "bytes": 35530,
+      "width": 1024,
+      "height": 310,
+      "sha256": "6454b92000273d6c4f6ad9972ed6781cbab8128a2d962d54908e6adeb7a54666"
+    },
+    {
+      "path": "assets/flower-detail.webp",
+      "bytes": 43882,
+      "width": 1024,
+      "height": 302,
+      "sha256": "8b86ab10742ef77b8df113cf786d3ba34c55f0be925b3408d7857f6f9f35e91b"
+    },
+    {
+      "path": "assets/ribbon-guide.webp",
+      "bytes": 34570,
+      "width": 1024,
+      "height": 292,
+      "sha256": "d177a3a409ff546be9308bffcb1d376169cd6948bfc298a25b43b09d658d6e86"
+    },
+    {
+      "path": "assets/florist-preparation.webp",
+      "bytes": 43702,
+      "width": 1024,
+      "height": 310,
+      "sha256": "2c1bc9438bf25d5e0fecf608ab9eff8b049cda8ccff133e11745abae6908c335"
+    }
+  ]
+}
