@@ -1,0 +1,214 @@
+{
+  "sourceLedger": "data/regions/seoul_gyeonggi_current_dong.json",
+  "sourceBlobSha": "6de6e5751b26a13a2132238f13633df3de0cd2aa",
+  "sourceAsOf": "2026-10-12",
+  "providerSource": "https://www.skycar1day.com/areas/",
+  "serviceClaims": "operator-reported administrative directory, not independent guarantee of dispatch/price",
+  "targetRegion": "경기도 안산시",
+  "administrativeLabels": 22,
+  "originalThreePages": [
+    "index.html",
+    "danwon.html",
+    "gojan.html"
+  ],
+  "regions": [
+    {
+      "district": "단원구",
+      "dong": "고잔동",
+      "slug": "ansan/danwon-01.html",
+      "focus": "건물 앞 정차 위치와 플랫폼이 닿을 수평거리를 분리해 묻습니다.",
+      "example": "승강 공간을 좁게 잡는 경우와 작업 반경을 넓게 잡는 경우를 따로 가정해 작업 가능 조건을 확인합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "단원구",
+      "dong": "대부동",
+      "slug": "ansan/danwon-02.html",
+      "focus": "출발지에서 현장까지 이동거리와 회차 비용을 기본료와 구분합니다.",
+      "example": "왕복 이동·작업 대기·실제 현장 시간 중 무엇이 시간 요금에 들어가는지 확인합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "단원구",
+      "dong": "백운동",
+      "slug": "ansan/danwon-03.html",
+      "focus": "작업 높이를 층수로만 쓰지 않고 실제 지면에서 작업점까지의 수치를 요구합니다.",
+      "example": "건물 전면 작업과 측면 작업의 도달거리 차이를 상담 단계에서 비교합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "단원구",
+      "dong": "신길동",
+      "slug": "ansan/danwon-04.html",
+      "focus": "장비 배치 후 보행자와 차량 통행을 분리할 수 있는지 질문합니다.",
+      "example": "차도 점유가 필요한 상황이라면 허가·유도 인원과 시간 비용을 별도 항목으로 확인합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "단원구",
+      "dong": "와동",
+      "slug": "ansan/danwon-05.html",
+      "focus": "주택가 작업을 가정할 때 골목 진입 폭과 회전 가능 공간을 먼저 측정합니다.",
+      "example": "차량 길이와 아웃트리거 전개 폭을 함께 문의하고 장비 적합성은 현장 확인으로 결정합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "단원구",
+      "dong": "원곡동",
+      "slug": "ansan/danwon-06.html",
+      "focus": "상가 외부 작업이라면 간판 위치뿐 아니라 주변 보행 동선과 작업 구획을 확인합니다.",
+      "example": "상업시설 영업시간을 피해야 하는 상황에서 대기료와 야간 할증 기준을 함께 비교합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "단원구",
+      "dong": "중앙동",
+      "slug": "ansan/danwon-07.html",
+      "focus": "방문객 이동이 많은 현장을 가정해 작업시간 분할 가능성과 통제 범위를 점검합니다.",
+      "example": "짧은 작업이라도 최소 사용시간이 청구되는지, 준비·철수 시간을 포함하는지 확인합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "단원구",
+      "dong": "초지동",
+      "slug": "ansan/danwon-08.html",
+      "focus": "높은 작업점을 가정하되 차량 톤수나 도달 높이를 지명만으로 정하지 않습니다.",
+      "example": "외벽 보수와 자재 작업에서 하중·탑승 인원·도달거리 차이를 별도로 비교합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "단원구",
+      "dong": "호수동",
+      "slug": "ansan/danwon-09.html",
+      "focus": "차량 주차 가능 면적과 지지대 설치면의 경사·지반을 먼저 확인합니다.",
+      "example": "보행 구역과 차량 통행 구역이 맞닿을 수 있는 현장에서는 안전 구획 비용을 문의합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "반월동",
+      "slug": "ansan/sangnok-10.html",
+      "focus": "건축물 외벽과 시설물 점검을 구분해 플랫폼에서 필요한 공구·자재 중량을 적습니다.",
+      "example": "연속 작업과 구간별 이동 작업의 대기·재배치 비용이 같은지 비교합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "본오1동",
+      "slug": "ansan/sangnok-11.html",
+      "focus": "현장 사진에서 전면 도로 폭과 실제 작업점의 위치를 따로 표시하도록 안내합니다.",
+      "example": "작업 종료 예상이 불확실할 때 초과시간 요금과 하루 요금의 차이를 질문합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "본오2동",
+      "slug": "ansan/sangnok-12.html",
+      "focus": "간판 교체와 외벽 청소처럼 작업 형태가 다른 두 경우를 분리해 문의합니다.",
+      "example": "원하는 시작 시각과 사전 장비 설치 시간이 겹치는지 확인하고 총 작업시간을 맞춥니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "본오3동",
+      "slug": "ansan/sangnok-13.html",
+      "focus": "스카이차와 작업자 이동 동선이 겹치지 않도록 현장 통제 조건을 상담합니다.",
+      "example": "주말이나 휴일 가능 여부를 가정하지 말고 별도 할증표와 실제 가능 일정을 확인합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "부곡동",
+      "slug": "ansan/sangnok-14.html",
+      "focus": "현장에 있는 가로수·전선·차양 등 수평 도달을 막는 요인을 먼저 알려줍니다.",
+      "example": "차량이 가까이 못 들어가는 가정에서는 장비의 최대 높이보다 실제 도달거리가 중요합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "사동",
+      "slug": "ansan/sangnok-15.html",
+      "focus": "동일 건물에서 여러 면을 작업하는 경우 정차 위치를 몇 번 옮겨야 하는지 계산합니다.",
+      "example": "정차 위치 변경이 기본료에 포함되는지 별도 청구인지 견적서에 명확히 씁니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "사이동",
+      "slug": "ansan/sangnok-16.html",
+      "focus": "현장 바닥이 평탄한 경우와 경사 있는 경우를 구별해 아웃트리거 설치 조건을 확인합니다.",
+      "example": "지반 강도나 지지대 설치 불확실성을 사진만으로 안전하다고 단정하지 않습니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "성포동",
+      "slug": "ansan/sangnok-17.html",
+      "focus": "중층 건물 작업을 가정해 외벽 간격과 필요한 작업대 길이를 물어봅니다.",
+      "example": "반일 요금과 시간제 요금의 최소 청구 조건을 총액 기준으로 비교합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "안산동",
+      "slug": "ansan/sangnok-18.html",
+      "focus": "도시 외곽 현장을 가정해 장비 출발지와 진입 경로를 먼저 공유하도록 안내합니다.",
+      "example": "이동비·귀환 비용·현장 대기료가 각각 어떻게 계산되는지 같은 기준으로 비교합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "월피동",
+      "slug": "ansan/sangnok-19.html",
+      "focus": "상가와 주택이 맞닿는 현장을 가정하면 작업 구획과 보행자 유도 계획을 먼저 살핍니다.",
+      "example": "작업 소요시간 외의 도로 통제·주차 허가가 별도 견적 항목인지 확인합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "이동",
+      "slug": "ansan/sangnok-20.html",
+      "focus": "작업점까지 지상 거리와 실제 고도, 자재 무게를 별도 입력값으로 준비합니다.",
+      "example": "하나의 작업에 장비를 두 번 배치해야 할 경우 재배치·대기 비용을 구분합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "일동",
+      "slug": "ansan/sangnok-21.html",
+      "focus": "짧은 외벽 점검과 장시간 보수 작업의 시간 단위를 구분해 상담합니다.",
+      "example": "기본 작업시간을 넘었을 때 분·시간 단위 추가요금이 무엇인지 확인합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    },
+    {
+      "district": "상록구",
+      "dong": "해양동",
+      "slug": "ansan/sangnok-22.html",
+      "focus": "건물 앞 정차 허용 공간과 필요 작업거리부터 확인하고 장비를 추정하지 않습니다.",
+      "example": "시설 안내나 관리실과 조율할 시간이 필요하면 대기료 시작 시점을 질문합니다.",
+      "scope": "site operator directory and V5 source ledger intersection",
+      "source": "https://www.skycar1day.com/areas/"
+    }
+  ]
+}
