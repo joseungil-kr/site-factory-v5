@@ -59,6 +59,10 @@ def main():
                         robots: document.querySelector('meta[name="robots"]')?.content,
                         h1: document.querySelectorAll('h1').length,
                         links: document.querySelectorAll('a[href^="/industry/"]').length,
+                        navigation: [...document.querySelectorAll('.nav a')].map(x => {
+                          const r = x.getBoundingClientRect();
+                          return {left: r.left, right: r.right, height: r.height};
+                        }),
                         forbiddenExamples: ['*.leak119.net', '*.skycar24hr.com',
                             'leak119.nalmada.net'].filter(s => document.body.textContent.includes(s))
                     })""")
@@ -71,6 +75,10 @@ def main():
                     assert metrics["hasPhone"] and metrics["hasFooter"], (label, uri, "contact missing")
                     assert metrics["robots"] == "noindex,nofollow,noarchive", (label, uri, "noindex")
                     assert metrics["h1"] == 1 and not metrics["forbiddenExamples"], (label, uri, "copy")
+                    assert len(metrics["navigation"]) == 5, (label, uri, "nav count")
+                    assert all(link["left"] >= -1 and link["right"] <= width + 1
+                               and link["height"] >= 25 for link in metrics["navigation"]), (
+                        label, uri, "clipped header navigation", metrics["navigation"])
                     screenshot = OUT / f"{label}-{name}.png"
                     page.screenshot(path=str(screenshot), full_page=True, animations="disabled")
                     findings.append({"device": label, "path": uri,
