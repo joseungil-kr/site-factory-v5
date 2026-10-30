@@ -1,0 +1,36 @@
+{
+  "site": "skyquote",
+  "status": "awaiting binary raster assets in GitHub",
+  "generatedAt": "2026-10-30",
+  "imageType": "image/webp",
+  "aiIllustrative": true,
+  "source": "AI generated user task: five-panel Korean truck aerial lift collage cropped into five distinct semantic panels",
+  "assets": [
+    {
+      "path": "sites/skyquote/assets/city-crane.webp",
+      "sha256": "61c1194d304282b515e95a4865e3a200090e6ab31ea2d12f1aec0f58a8c37b0a",
+      "alt": "한국 도시 스카이차와 안전통제 전경"
+    },
+    {
+      "path": "sites/skyquote/assets/facade-safety.webp",
+      "sha256": "4b5d4bc7087e0518f1e44235b974ec27f1bff44c2594335654973be83d04b061",
+      "alt": "외벽 작업대와 안전 구획 설명"
+    },
+    {
+      "path": "sites/skyquote/assets/sign-work.webp",
+      "sha256": "1bc6a88974b174c6ec8b80bd4d67bf1e60ddc08adb7641e931c95c12e094ee7a",
+      "alt": "간판 주변 작업 안전 설명"
+    },
+    {
+      "path": "sites/skyquote/assets/work-height.webp",
+      "sha256": "9012086eaaa9d5d1cb16ddf5ea240fc5ef753a98da46a1a514bd4629e521c5dd",
+      "alt": "장비 높이·수평 도달거리 설명"
+    },
+    {
+      "path": "sites/skyquote/assets/outrigger-access.webp",
+      "sha256": "e57ee92490598b83592865218c1c94e4f957f97ad1dab2cf8a6669e086e00c36",
+      "alt": "차량 지지대·지반 확인 설명"
+    }
+  ],
+  "assertNoPublishUntilVerified": true
+}
