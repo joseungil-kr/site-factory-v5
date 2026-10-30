@@ -60,7 +60,10 @@ class VerifiedRegionExpansionTest(unittest.TestCase):
             titles.append(''.join(scan.titles))
         self.assertEqual(len(set(titles)),19)
     def test_not_just_name_substitution(self):
-        self.assertEqual(len({(x['focus'],tuple(x['comparedSKUs'])) for x in self.report['records']}),16)
+        self.assertEqual(len({tuple(x['comparedSKUs']) for x in self.report['records']}),1)
+        self.assertEqual(self.report['distinctComparisonSets'],1)
+        self.assertEqual(self.report['contentUniquenessClaim'],False)
+        self.assertEqual(self.report['editorialFocusCount'],16)
         self.assertEqual(len({x['htmlSHA256'] for x in self.report['records']}),16)
         for row in self.report['records']:
             html=(self.root/row['url'].lstrip('/')).read_text()
@@ -68,5 +71,12 @@ class VerifiedRegionExpansionTest(unittest.TestCase):
             self.assertIn(format(row['referenceSpread'],','),html)
             self.assertIn('확인되지 않았습니다',html)
             self.assertIn('AI로 생성한',html)
+            self.assertIn('동일 용도 근조 3단 화환 기준가 비교',html)
+            self.assertIn('용도와 형태가 다른 상품 안내',html)
+            self.assertNotIn('municipality',html)
+            self.assertNotIn('ward 등급',html)
+            self.assertNotIn('가장 높은 B205은',html)
+            self.assertNotIn(row['officialCode']+'에 대응',html)
+            self.assertIn('배송 가능 여부',html)
 
 if __name__=='__main__':unittest.main(verbosity=2)
