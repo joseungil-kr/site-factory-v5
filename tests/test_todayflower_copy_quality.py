@@ -91,7 +91,7 @@ class TodayflowerWholeCopyAudit(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.site_data = read_site(SITE)
-        cls.pages = cls.site_data["pages"]
+        cls.pages = cls.site_data["pages"][:33]  # original verified 33 only; other test audits national pages
         cls.site = cls.site_data["site"]
 
     def test_33_pages_all_text_fields_have_complete_korean_sentences(self):
@@ -257,7 +257,7 @@ class TodayflowerWholeCopyAudit(unittest.TestCase):
             "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd")
         self.assertEqual(len(evidence["legalDongs"]), 30)
         self.assertIn("2026-10-22", evidence["source"])
-        self.assertEqual(len(self.site_data["regions"]["regions"]), 33)
+        self.assertEqual(len(self.site_data["regions"]["regions"]), 5070)
 
 
 if __name__ == "__main__":
