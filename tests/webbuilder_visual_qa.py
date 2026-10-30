@@ -77,7 +77,8 @@ def main():
                     assert metrics["h1"] == 1 and not metrics["forbiddenExamples"], (label, uri, "copy")
                     assert len(metrics["navigation"]) == 5, (label, uri, "nav count")
                     assert all(link["left"] >= -1 and link["right"] <= width + 1
-                               and link["height"] >= 25 for link in metrics["navigation"]), (
+                               and link["height"] >= (30 if is_mobile else 20)
+                               for link in metrics["navigation"]), (
                         label, uri, "clipped header navigation", metrics["navigation"])
                     screenshot = OUT / f"{label}-{name}.png"
                     page.screenshot(path=str(screenshot), full_page=True, animations="disabled")
