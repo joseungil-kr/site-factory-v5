@@ -34,6 +34,10 @@ jobs:
               assert 'noindex,nofollow' in html and 'rel="canonical"' not in html
               assert html.count('src="/assets/images/')==7
               assert 'fwith.co.kr/shop/item.php?it_id=' in html
+          for filename in ('index.html','2.html','3.html'):
+              html=(root/filename).read_text(encoding='utf-8')
+              assert html.count('width="1448" height="1086"') == 5
+              assert 'width:96px' not in html and 'width="96"' not in html
           assert not (root/'sitemap.xml').exists()
           assert (root/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
           print('TODAYFLOWER_3PAGE_NO_INDEX_QA_PASS')
@@ -75,10 +79,35 @@ jobs:
                               i.decode().then(()=>({sku:i.alt,src:i.src,ok:i.naturalWidth>0})).catch(()=>({sku:i.alt,src:i.src,ok:false})),
                               new Promise(resolve=>setTimeout(()=>resolve({sku:i.alt,src:i.src,ok:false,timeout:true}),9000))
                             ])));}""")
+                          # Original five WebPs: inspect actual browser dimensions and CSS box, not HTML attributes alone.
+                          measurements=page.locator('.tf-story-item img').evaluate_all("""
+                          async imgs => {
+                            return Promise.all(imgs.map(async img => {
+                              const requestedLoading=img.getAttribute('loading');
+                              img.loading='eager';
+                              await img.decode();
+                              const r=img.getBoundingClientRect();
+                              return {file:img.getAttribute('src').split('/').pop(),naturalWidth:img.naturalWidth,
+                                naturalHeight:img.naturalHeight,displayWidth:Math.round(r.width),
+                                displayHeight:Math.round(r.height),right:Math.round(r.right),
+                                loading:requestedLoading,alt:img.alt};
+                            }));
+                          }
+                          """)
+                          assert len(measurements)==5,(width,route,'wrong image count')
+                          for im in measurements:
+                              assert (im['naturalWidth'],im['naturalHeight'])==(1448,1086),(width,route,im)
+                              assert im['displayWidth']>=240,(width,route,im)
+                              assert im['right']<=width+1,(width,route,im)
+                              assert im['loading']=='lazy' and 'AI 연출 이미지' in im['alt']
+                          grid_cols=page.locator('.tf-story-grid').evaluate(
+                            "e => getComputedStyle(e).gridTemplateColumns.split(' ').filter(Boolean).length")
+                          assert grid_cols==(1 if width==390 else 6),(width,route,grid_cols)
                           page.screenshot(path=str(screenshots/(name+'-'+str(width)+'.png')),full_page=True)
                           results.append({'route':route,'width':width,'status':200,'editorialImages':7,'generatedAIImages':5,
                                           'noHorizontalOverflow':True,'sellerPhotoLoaded':sum(s['ok'] for s in seller),
-                                          'sellerPhotoCount':len(seller),'sellerPhotos':seller})
+                                          'sellerPhotoCount':len(seller),'sellerPhotos':seller,
+                                          'imageGridColumns':grid_cols,'largeAIImages':measurements})
                           page.close()
                       context.close()
                   browser.close()
@@ -86,6 +115,7 @@ jobs:
               process.terminate();process.wait(timeout=5)
           (screenshots.parent/'browser-qa.json').write_text(json.dumps(results,indent=2)+'\n')
           (screenshots.parent/'seller-image-qa.json').write_text(json.dumps([{'route':r['route'],'width':r['width'],'loaded':r['sellerPhotoLoaded'],'total':r['sellerPhotoCount']} for r in results],indent=2)+'\n')
+          (screenshots.parent/'large-image-qa.json').write_text(json.dumps([{'route':r['route'],'width':r['width'],'gridColumns':r['imageGridColumns'],'images':r['largeAIImages'],'horizontalOverflow':not r['noHorizontalOverflow']} for r in results],ensure_ascii=False,indent=2)+'\n')
           print('TODAYFLOWER_SIX_LOCAL_BROWSER_SCREENSHOTS_PASS',len(results))
           PY
       - uses: actions/upload-artifact@v4
@@ -98,6 +128,7 @@ jobs:
             reports/todayflower-nalmada/manifest.json
             reports/todayflower-nalmada/browser-qa.json
             reports/todayflower-nalmada/seller-image-qa.json
+            reports/todayflower-nalmada/large-image-qa.json
             reports/todayflower-nalmada/screenshots/
           if-no-files-found: warn
           retention-days: 14
