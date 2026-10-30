@@ -211,15 +211,21 @@ def _make_page(code,name,number):
            f"{focus} 상품 종류와 접수 시점에 따라 가능한 시간은 달라질 수 있으므로 오늘 도착을 보장하지 않습니다.")
     area=(f"{label}의 법정동 코드는 {code}이며 출처는 2026년 10월 22일 고정 자료입니다. "
           "이 코드는 배송을 보장하거나 현재의 행정동 구역·판매처 배송 범위를 증명하지 않습니다.")
+    # Distinct independently seeded, relevant customer decision points:
+    # never pad uniqueness with fake local shops, delivery times or testimonials.
     sections=[
         {"heading":intent+" 목적과 상품 선택",
-         "paragraph":focus+" "+products+" "+_pick(CHOICE,seed+":choice")},
+         "paragraph":focus+" "+products+" "+_pick(CHOICE,seed+":choice")
+            +" "+_pick(CHECKOUT,seed+":opening-condition")},
         {"heading":"실제 수령주소와 담당자 확인",
-         "paragraph":_pick(ADDRESS,seed+":address")+" "+area},
+         "paragraph":_pick(ADDRESS,seed+":address")+" "+area
+            +" "+_pick(ADDRESS,seed+":alternative-address")},
         {"heading":"꽃다발·화분·축하·근조화환 주문 기준",
-         "paragraph":_pick(CHOICE,seed+":product")+" "+_pick(ADDRESS,seed+":method")},
+         "paragraph":_pick(CHOICE,seed+":product")+" "+_pick(ADDRESS,seed+":method")
+            +" "+_pick(CHOICE,seed+":second-choice")},
         {"heading":"당일 수령 가능 여부·마감·최종 비용",
-         "paragraph":_pick(CHECKOUT,seed+":checkout")+" "+_pick(CHECKOUT,seed+":after")},
+         "paragraph":_pick(CHECKOUT,seed+":checkout")+" "+_pick(CHECKOUT,seed+":after")
+            +" "+_pick(CHECKOUT,seed+":final-condition")},
     ]
     faqs=[
         {"q":f"{label}에서 "+q1,
