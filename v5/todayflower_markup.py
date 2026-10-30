@@ -196,7 +196,9 @@ def _body(site,page,pages,products,links):
     if len(pages)<=50:
         suggested=[p for p in pages if p["number"]!=page["number"]]
     else:
-        index=page["number"]-1
+        # The reserved /404.html must stay an actual HTTP 404 document:
+        # page numbering jumps from 403 to 405 for this site only.
+        index=page["number"]-1 if page["number"]<404 else page["number"]-2
         positions={0,1,2,3}
         positions.update(range(max(0,index-2),min(len(pages),index+3)))
         # Include a few useful adjacent legal-code entries without pretending
@@ -211,9 +213,9 @@ def _body(site,page,pages,products,links):
         # Indexed by contiguous page numbers; avoid sorting 5,070 pages for
         # every generated HTML document. Other site renderers are unchanged.
         current=page["number"]
-        last=len(pages)
-        start=max(1,min(current-3,last-6))
-        numbers=range(start,min(last+1,start+7))
+        index=current-1 if current<404 else current-2
+        start=max(0,min(index-3,len(pages)-7))
+        numbers=(pages[i]["number"] for i in range(start,min(len(pages),start+7)))
         nav=''.join(
             ('<span aria-current="page" class="active">'+str(n)+'</span>')
             if n==current else
