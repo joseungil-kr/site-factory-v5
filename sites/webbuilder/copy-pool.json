@@ -1,7 +1,7 @@
 {
   "version": 1,
   "source": "Original Korean B2B copy for webbuilder.nalmada.net, authored 2026-10-30",
-  "status": "Monthly KRW1000/page; minimum 10 pages KRW10000/month; provider-owned nalmada.net subdomain included (not customer domain registration); hosting included. VAT, term, edits and cancellation pending; noindex preview only",
+  "status": "Minimum 10 pages × KRW1000/page/month. Provider purchases or operates a growing pool of industry parent domains, assigning a client-specific subdomain; costs and hosting included. *.leak119.net and *.skycar24hr.com are proposed examples (not verified owned). Noindex preview. Contract details pending.",
   "restrictedClaims": [
     "전국 최저가",
     "국내 최저가 보장",
@@ -15,7 +15,7 @@
     "동네에서 서비스를 찾는 고객에게, 사업주님의 일을 설명하는 별도의 웹문서가 필요합니다. 누수부터 세차까지 업종에 맞는 홈페이지 구성을 제안합니다.",
     "블로그 게시물 하나로 모두 설명하기 어려운 서비스를, 소비자가 확인하기 쉬운 독립 주소와 명확한 상담 안내로 정리합니다.",
     "지역 키워드와 업종 서비스를 연결하는 홈페이지. 목표는 검색어를 반복하는 것이 아니라 고객이 전화하기 전에 알아야 할 답을 담는 것입니다.",
-    "월 10,000원부터 시작하는 홈페이지 제작. 최소 10페이지, 페이지당 월 1,000원에 고객 전용 nalmada.net 서브도메인과 서버 운영을 포함합니다. 실제 업종 정보는 사업자의 제공 자료로 검증합니다.",
+    "최소 10페이지 월 10,000원부터, 페이지당 월 1,000원으로 업종별 검색 홈페이지를 제작합니다. 인터피아드가 확보·운영하는 업종별 도메인에 고객 전용 주소를 제공하며 기본 서버비를 포함합니다.",
     "필요한 페이지부터 시작하세요. 한 업종 안에서도 증상, 작업 유형, 방문 조건이 다르면 각각 다른 질문에 답하는 문서를 만들 수 있습니다.",
     "동 이름이 들어간 페이지라도 모두 같은 내용이면 가치가 없습니다. 각 지역에서 실제 제공하는 서비스 범위를 반영해 읽을 이유가 있는 페이지를 만듭니다.",
     "홈페이지 제작의 출발점은 예쁜 화면만이 아닙니다. 사업주가 실제 제공하는 서비스, 고객의 검색 이유, 통화 연결 경로가 함께 맞아야 합니다.",
@@ -37,7 +37,7 @@
     "블로그, 플레이스, 홈페이지는 역할이 다릅니다. 홈페이지는 사업 내용을 일관되게 보관하는 자체 채널로 운영하면서 다른 채널과 연결합니다.",
     "사실이 아닌 후기, 가짜 지역 사무실 주소, 없는 장비나 면허를 만들지 않습니다. 검색용 페이지라도 실제 사업을 정확하게 설명해야 합니다.",
     "직접 운영하시는 사이트와 도메인은 계약 조건에 따라 관리 범위를 정합니다. 유지와 수정 책임도 납품 전 문서로 확인하는 것이 좋습니다.",
-    "최소 10페이지 월 10,000원부터. 20페이지 월 20,000원, 30페이지 월 30,000원이며 홈페이지 제작과 고객 전용 nalmada.net 서브도메인·서버 운영이 포함됩니다. 부가세·계약기간·수정 범위는 계약 전에 확인합니다."
+    "최소 10페이지 월 10,000원부터, 20페이지는 월 20,000원입니다. 고객별 업종에 맞춰 운영사가 확보한 도메인의 전용 서브도메인과 서버비를 기본 이용료에 포함합니다. 부가세·계약기간·수정 범위는 계약 전에 안내합니다."
   ],
   "localStrategyVariants": [
     "지역명만 바꾼 문서는 품질에 불리할 수 있습니다. 실제 방문 가능 지역과 고객이 묻는 문제 유형을 확인해 문서에 반영합니다.",
@@ -229,16 +229,20 @@
       "a": "아니요. 검색 반영과 순위는 네이버·구글 등 검색엔진이 결정합니다. 인터피아드는 검색엔진이 이해하기 쉬운 제목, 본문, 연결 구조와 모바일 사용성을 설계하지만 특정 순위를 보장하지 않습니다."
     },
     {
-      "q": "페이지당 1,000원은 월 이용료인가요?",
-      "a": "네. 1페이지당 월 1,000원이며 최소 10페이지부터 신청 가능합니다. 기본 월 이용료는 10페이지 × 1,000원 = 월 10,000원부터입니다. 기본 홈페이지 제작, 고객별 전용 서브도메인, 서버 운영이 포함됩니다. 부가세·계약기간·수정 범위는 계약 전에 안내합니다."
+      "q": "최소 신청 수량과 월 이용료는 얼마인가요?",
+      "a": "최소 10페이지부터 제작합니다. 페이지당 월 이용료는 1,000원이므로 10페이지는 월 10,000원, 20페이지는 월 20,000원입니다. 기본 홈페이지 제작, 업종별 고객 전용 홈페이지 주소 제공, 서버 운영 비용을 포함합니다. 부가세·계약기간·수정 범위는 계약 전에 안내합니다."
     },
     {
       "q": "20~30페이지면 월 2만~3만원인가요?",
-      "a": "맞습니다. 20페이지는 월 20,000원, 30페이지는 월 30,000원이며 최소 계약은 10페이지(월 10,000원)입니다. 다만 시마다 동 개수가 다르고 유용하게 제작할 페이지 수가 다르므로 특정 시 전체 동을 일률적으로 월 2만~3만원에 제공한다는 뜻은 아닙니다."
+      "a": "네. 페이지당 월 1,000원 기준 20페이지는 월 20,000원, 30페이지는 월 30,000원입니다. 최소 계약은 10페이지(월 10,000원)부터입니다. 다만 시마다 동 수와 실제 작성할 수 있는 내용이 달라 모든 시의 동 전체가 반드시 월 2만~3만원이라는 뜻은 아닙니다."
     },
     {
-      "q": "도메인은 어떤 주소를 제공하고, 서버비가 포함되나요?",
-      "a": "별도의 독립 도메인을 구매하지 않아도 됩니다. 인터피아드가 운영하는 nalmada.net에서 고객별 전용 서브도메인(예: leak119.nalmada.net)을 배정하는 방식이며, 서버 운영비는 월 이용료에 포함됩니다. 예시는 실제로 배정되거나 개설됐다는 뜻이 아닙니다. 고객은 nalmada.net 최상위 도메인의 소유권이나 개별 .com/.kr 등록권을 취득하는 것이 아니며, 사용기간·해지 후 주소 처리 및 콘텐츠 소유 조건은 계약 전 안내합니다."
+      "q": "홈페이지에 제공되는 도메인은 어떻게 정하나요?",
+      "a": "인터피아드가 보유하거나 업종에 맞춰 새로 구매하는 도메인 아래 고객별 서브도메인을 배정하는 방식입니다. 누수 분야는 *.leak119.net, 스카이차 분야는 *.skycar24hr.com 같은 업종별 주소를 예시로 검토하며, leak119.nalmada.net 역시 예시 주소입니다. 실제 구매·배정·접속 확인된 주소라는 의미는 아닙니다. 기본 도메인 확보·운영과 서버 비용은 월 이용료에 포함되지만 최상위 도메인 소유권을 고객에게 이전하는 상품은 아닙니다. 계약 종료 시 URL 유지와 콘텐츠 이전 조건은 별도 안내합니다."
+    },
+    {
+      "q": "개별 .com이나 .kr 도메인을 직접 구매해야 하나요?",
+      "a": "별도로 구매하실 필요는 없습니다. 인터피아드가 업종별로 관리하는 도메인에서 고객의 개별 서브도메인을 제공합니다. 독립 도메인을 고객 이름으로 직접 등록하거나 소유권 이전을 요구하는 경우는 기본 상품과 다른 범위이므로 별도 협의가 필요합니다."
     },
     {
       "q": "동 이름만 바꿔서 여러 페이지를 만들 수 있나요?",
@@ -353,9 +357,9 @@
   ],
   "pricingFact": {
     "monthlyFeePerPageKRW": 1000,
-    "domainRegistrationIncluded": false,
+    "domainRegistrationIncluded": true,
     "hostingIncluded": true,
-    "annualRenewalPolicy": "Parent domain operator-managed; per-customer registration/renewal not applicable; use/cancellation conditions pending",
+    "annualRenewalPolicy": "Provider-level domain registration/renewal cost managed by Interpiad as agreed within contract; URL continuity after termination and exact terms pending",
     "vat": "UNCONFIRMED",
     "monthlyExamples": [
       {
@@ -384,9 +388,17 @@
     "domainIncluded": true,
     "providerOwnedSubdomainIncluded": true,
     "customerDomainPurchaseRequired": false,
-    "rootDomain": "nalmada.net",
+    "rootDomain": "variable, per-industry verified provider domain",
     "exampleHost": "leak119.nalmada.net",
     "exampleHostAssigned": false,
-    "customerOwnsRootDomain": false
+    "customerOwnsRootDomain": false,
+    "domainProcurementIncluded": true,
+    "customerDomainRegistrationIncluded": false,
+    "providerOwnedIndustryDomainPool": true,
+    "additionalCandidateRoots": [
+      "leak119.net",
+      "skycar24hr.com"
+    ],
+    "candidateRootsPurchased": false
   }
 }
