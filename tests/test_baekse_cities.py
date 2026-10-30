@@ -40,7 +40,7 @@ class BaekseCityTests(unittest.TestCase):
         details=[b.city_menu_path(c,key) for c in cities for key in b.MENUS]
         self.assertEqual(len(set(paths)),85)
         self.assertEqual(len(set(details)),340)
-        self.assertEqual(len(set(paths+details+b.MENUS.keys())),429)
+        self.assertEqual(len(set(paths+details+list(b.MENUS))),429)
         self.assertTrue(all(path.endswith(".html") for path in paths+details))
 
     def test_preview_is_noindex_and_business_accurate(self):
