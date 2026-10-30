@@ -154,7 +154,7 @@ def layout(title: str, description: str, body: str, active: str = "") -> str:
         '<a class="header-phone" href="tel:' + TEL + '">상담 ' + PHONE + '</a>'
         '</div></header><main id="main">' + body + '</main>'
         '<section class="bottom-cta"><div class="container bottom-cta-inner">'
-        '<div><span class="eyebrow">한 장부터, 필요한 정보부터</span>'
+        '<div><span class="eyebrow">최소 10페이지부터, 필요한 정보부터</span>'
         '<h2>우리 업종의 검색 홈페이지를 설계해보세요.</h2>'
         '<p>실제 서비스와 가능한 지역을 알려주시면 문서 구성을 함께 검토합니다.</p></div>'
         + illustration("mobile-contact.svg", "모바일 전화 상담을 나타내는 원본 일러스트", "bottom-illustration") +
