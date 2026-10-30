@@ -35,6 +35,14 @@ BAD_PROMISES = re.compile(
 )
 FRAGMENT_END = re.compile(r"(?:는 경우|하려는 상황|하려는 주문)\.$")
 
+# Intent-quality guard: delivery/pricing/address terms must not be treated as a flower SKU category.
+CONTEXT_AS_PRODUCT = re.compile(
+    r"관련 꽃을 주문하실 계획|관련 꽃을 오늘 받을 수|"
+    r"상황에서 꽃 종류와 상품을 어떻게 비교|"
+    r"관련 주문은 실제 수령 일정|에 관한 선택이라면 필수 조건"
+)
+
+
 
 def fields(page):
     yield "title", page["title"]
@@ -123,12 +131,58 @@ class TodayflowerWholeCopyAudit(unittest.TestCase):
                 with self.subTest(page=p["number"],text=text[:48]):
                     self.assertNotRegex(text,BAD_PARTICLES)
                     self.assertNotRegex(text,BAD_PROMISES)
+                    self.assertNotRegex(text,CONTEXT_AS_PRODUCT)
                     self.assertNotIn("화분와",text)
                     self.assertNotIn("화분를",text)
                     self.assertNotIn("화환와",text)
                     self.assertNotIn("꽃다발와",text)
                     self.assertNotIn("화정동라는",text)
         # Raw source metadata remains historical: not an official government refresh.
+
+    def test_order_and_delivery_context_are_not_product_purposes(self):
+        # Sections and first three reviewed pages remain unchanged; only the
+        # first sentence of each new intro and the first two FAQs are edited.
+        self.assertEqual(len(self.pages),33)
+        for page in self.pages:
+            for name,value in fields(page):
+                with self.subTest(page=page["number"],field=name):
+                    self.assertNotRegex(value,CONTEXT_AS_PRODUCT)
+                    self.assertNotRegex(value,r"동로(?=\\s|[,.!?]|$)")
+            if page["number"]<=3:
+                continue
+            for i in (0,1):
+                self.assertNotIn("관련 꽃",page["faq"][i]["q"])
+                self.assertNotIn("관련 주문",page["faq"][i]["a"])
+            self.assertNotIn("관련 꽃",page["intro"])
+
+        # Assertions protect the exact semantic failure reported by the user.
+        checks={
+            4:("주소","꽃다발","동과 건물 주소","수령"),
+            7:("공동","상품","주소","상품번호"),
+            15:("여러","SKU","주문","SKU"),
+            16:("급한","상품","주소","품목"),
+            20:("온라인","상품","주소","상품번호"),
+            21:("꽃병","꽃병","보관","꽃병"),
+            22:("개업","화분","담당자","화분"),
+            24:("리본","리본","화환","리본"),
+            25:("꽃","꽃","상품","꽃"),
+            26:("사무실","꽃다발","수령","사무실"),
+            28:("수령자가 부재","수령자가","대리 수령자","대리 수령자"),
+            29:("추가배송비","결제금액","추가요금","배송비"),
+            30:("배송","상품","배송지","배송지"),
+            31:("추가배송비","꽃다발","추가배송비","SKU"),
+            32:("근조화환","발인","발인","발인"),
+        }
+        for number,(q1,q2,a1,a2) in checks.items():
+            p=self.pages[number-1]
+            with self.subTest(page=number):
+                self.assertIn(q1,p["faq"][0]["q"])
+                self.assertIn(q2,p["faq"][1]["q"])
+                self.assertIn(a1,p["faq"][0]["a"])
+                self.assertIn(a2,p["faq"][1]["a"])
+        self.assertIn("도로명",self.pages[3]["intro"])
+        self.assertIn("자리에 없다면",self.pages[27]["intro"])
+        self.assertIn("추가배송비",self.pages[28]["intro"])
 
     def test_no_repeated_full_paragraphs_across_33_pages(self):
         seen = {}
