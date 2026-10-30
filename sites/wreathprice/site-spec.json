@@ -1,0 +1,96 @@
+{
+  "siteId": "wreathprice",
+  "status": "3-page noindex pilot, no deployment",
+  "brand": "알뜰화환",
+  "domainCandidate": "wreathprice.nalmada.net",
+  "intent": "{지역명} 화환 가격",
+  "regions": [
+    {
+      "label": "안산시",
+      "level": "city",
+      "path": "ansan/index.html"
+    },
+    {
+      "label": "안산시 상록구",
+      "level": "district",
+      "path": "ansan/sangnok/index.html"
+    },
+    {
+      "label": "안산시 상록구 본오동",
+      "level": "neighborhood",
+      "path": "ansan/sangnok/bono/index.html"
+    }
+  ],
+  "sourceSite": "fwith.co.kr",
+  "catalog": [
+    {
+      "sku": "B201",
+      "kind": "근조",
+      "name": "근조 3단 화환",
+      "referenceKRW": 59000,
+      "verifiedOn": "2026-10-22",
+      "source": "site-factory-v4/data/funeral-products/CATALOGUE.json",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B201",
+      "deliveryFee": "unverified, check checkout",
+      "ribbonFee": "unverified, check checkout"
+    },
+    {
+      "sku": "B203",
+      "kind": "근조",
+      "name": "근조 고급 3단 화환",
+      "referenceKRW": 79000,
+      "verifiedOn": "2026-10-22",
+      "source": "site-factory-v4/data/funeral-products/CATALOGUE.json",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B203",
+      "deliveryFee": "unverified, check checkout",
+      "ribbonFee": "unverified, check checkout"
+    },
+    {
+      "sku": "B205",
+      "kind": "근조",
+      "name": "근조 특대 3단 화환",
+      "referenceKRW": 109000,
+      "verifiedOn": "2026-10-22",
+      "source": "site-factory-v4/data/funeral-products/CATALOGUE.json",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B205",
+      "deliveryFee": "unverified, check checkout",
+      "ribbonFee": "unverified, check checkout"
+    },
+    {
+      "sku": "C205",
+      "kind": "축하",
+      "name": "축하 특특대 3단 화환",
+      "referenceKRW": 149000,
+      "verifiedOn": "2026-10-30",
+      "source": "https://fwith.co.kr/shop/item.php?it_id=C205",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=C205",
+      "deliveryFee": "unverified, check checkout",
+      "ribbonFee": "unverified, check checkout"
+    },
+    {
+      "sku": "C030",
+      "kind": "축하",
+      "name": "축하 2단 오브제",
+      "referenceKRW": 200000,
+      "verifiedOn": "2026-10-30",
+      "source": "https://fwith.co.kr/shop/item.php?it_id=C030",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=C030",
+      "deliveryFee": "unverified, check checkout",
+      "ribbonFee": "unverified, check checkout"
+    }
+  ],
+  "images": [
+    "funeral-wreath.webp",
+    "celebration-wreath.webp",
+    "flower-detail.webp",
+    "ribbon-guide.webp",
+    "florist-preparation.webp"
+  ],
+  "claimsPolicy": {
+    "bestPrice": false,
+    "freeNationwideDelivery": false,
+    "guaranteedDelivery": false,
+    "realProofPhotos": false
+  },
+  "deployment": "blocked pending binary assets upload, browser QA, domain conflict read and parent review"
+}
