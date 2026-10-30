@@ -34,3 +34,12 @@
 
 ## 이전 담당 미완 작업
 기존 `feature/v52-wreath-region`의 네이버 인증 복구/기존 인계 상태는 이번 작업과 무관하게 그대로 보존. 이 브랜치에서 운영 원장이나 기존 Worker를 수정하지 않음.
+
+## 2026-10-30 후속 검증 기록
+- `build.py` 35행의 리터럴 `\\n`을 실제 줄바꿈으로 수정, 원격 readback 확인. GitHub 소스 기준 문법 검증 Actions 결과는 별도 확보 필요.
+- 기존 ZIP 21파일/1,967,704바이트, SHA-256 `d67e2d3b4d0ee1e8f0fc289330e933e04f2914db1ba4a264e3c09027cccae119` 재확인. 5개 WebP 모두 너비 1024px이며 ZIP 실파일 SHA는 `image-manifest.json`에 저장.
+- ZIP 내부 대표 3개 HTML 각각 이미지 5개와 fwith 주문 링크 5개 확인. Python 내장 HTTP 서버에서 3 HTML/5 WebP/robots 총 9개 경로 HTTP 200 확인.
+- 모바일 Chromium `set_content`에서 실제 WebP data URL을 eager 전환하여 이미지 5/5 로딩, 390px 가로 넘침 없음. localhost 직접 browser.goto는 `net::ERR_BLOCKED_BY_ADMINISTRATOR`.
+- `test_pilot.py`, 격리 `worker.js`, `wrangler.preview.json`, `wreathprice-preview-qa.yml` 준비. 사이트 전용 Actions 통과/Cloudflare 배포는 아직 확인하지 않음.
+- **원격 실이미지 업로드 미완료:** GitHub `fetch_file`에서 `sites/wreathprice/assets/funeral-wreath.webp`는 404. `mcp__GitHub__create_file`은 UTF-8 텍스트 전용, `mcp__GitHub__create_blob`은 base64 콘텐츠 인자만 받으며 현재 컨테이너 경로를 직접 업로드하는 도구 인자가 없음. 이 차단이 해소되기 전 미리보기 배포 금지.
+- 기존 Wreath 운영/인증, 타 사이트, DNS, 보안 권한은 변경 없음.
