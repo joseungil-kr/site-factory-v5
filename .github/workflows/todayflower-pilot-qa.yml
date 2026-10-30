@@ -1,4 +1,4 @@
-name: Todayflower 3-page isolated noindex pilot QA
+name: Todayflower Ansan 33-page isolated noindex QA
 on:
   push:
     branches: [site/todayflower-nalmada-pilot-20261030]
@@ -21,28 +21,40 @@ jobs:
         run: |
           python -m unittest discover -s tests -p test_todayflower_pilot.py -v
           python -m v5 plan-check --site todayflower-nalmada
-      - name: Reuse V5 preview engine and audit for 3 pages only
+      - name: Reuse V5 engine for approved Ansan 33-page noindex build
         run: |
           python -m v5 build --site todayflower-nalmada --mode preview
           python -m v5 audit --site todayflower-nalmada
           python - <<'PY'
           from pathlib import Path
           root=Path('dist/todayflower-nalmada')
-          assert len(list(root.glob('*.html')))==4
-          for p in ('index.html','2.html','3.html'):
+          assert len(list(root.glob('*.html')))==34
+          for p in (['index.html']+[f'{n}.html' for n in range(2,34)]):
               html=(root/p).read_text(encoding='utf-8')
               assert 'noindex,nofollow' in html and 'rel="canonical"' not in html
               assert html.count('src="/assets/images/')==7
               assert 'fwith.co.kr/shop/item.php?it_id=' in html
-          for filename in ('index.html','2.html','3.html'):
+          for filename in (['index.html']+[f'{n}.html' for n in range(2,34)]):
               html=(root/filename).read_text(encoding='utf-8')
               assert html.count('width="1448" height="1086"') == 5
               assert 'width:96px' not in html and 'width="96"' not in html
+          import json
+          manifest=json.loads(Path('reports/todayflower-nalmada/manifest.json').read_text())
+          audit=json.loads(Path('reports/todayflower-nalmada/audit.json').read_text())
+          assert manifest['pageCount']==33 and manifest['mode']=='preview'
+          assert manifest['assetFileCount']==50
+          assert audit['similarityPopulation']==33 and audit['similarityPairs']==528
+          assert audit['similarityMode']=='complete' and audit['maxBodyChar5gramJaccard']<0.49
+          assert audit['errors']==[],audit['errors']
+          frozen={'1':'d953d6d3bb9656d38a40b96d72f6f143b7798458584480d47671d06b3426cf46',
+                  '2':'0a009dbb94464ed4a947caa5e57d208cc9730db190192f38a6554f63a7502838',
+                  '3':'a91608f863010dae2cc634125c1f2d8103adaa4a0ffc42a52b8d35e1ba24fb8e'}
+          assert all(manifest['contentHashes'][num]==sha for num,sha in frozen.items())
           assert not (root/'sitemap.xml').exists()
           assert (root/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
-          print('TODAYFLOWER_3PAGE_NO_INDEX_QA_PASS')
+          print('TODAYFLOWER_ANSAN_33PAGE_NO_INDEX_QA_PASS')
           PY
-      - name: Screenshot only the 3 pilot pages at 390 and 1440 pixels
+      - name: Inspect 3 pilot plus 3 new pages on 390 and 1440 pixels
         run: |
           python -m pip install --disable-pip-version-check playwright==1.56.0
           python -m playwright install --with-deps chromium
@@ -61,7 +73,7 @@ jobs:
                   browser=p.chromium.launch(headless=True)
                   for width in (390,1440):
                       context=browser.new_context(viewport={'width':width,'height':900})
-                      for route,name in (('/','city'),('/2.html','ward'),('/3.html','dong')):
+                      for route,name in (('/','city'),('/2.html','danwon-ward'),('/3.html','gojan-dong'),('/4.html','sangnok-ward'),('/5.html','il-dong'),('/33.html','last-legal-dong')):
                           page=context.new_page()
                           response=page.goto('http://127.0.0.1:8133'+route,wait_until='domcontentloaded',timeout=30000)
                           page.locator('.tf-layout').wait_for()
@@ -118,12 +130,12 @@ jobs:
           (screenshots.parent/'browser-qa.json').write_text(json.dumps(results,indent=2)+'\n')
           (screenshots.parent/'seller-image-qa.json').write_text(json.dumps([{'route':r['route'],'width':r['width'],'loaded':r['sellerPhotoLoaded'],'total':r['sellerPhotoCount']} for r in results],indent=2)+'\n')
           (screenshots.parent/'large-image-qa.json').write_text(json.dumps([{'route':r['route'],'width':r['width'],'gridColumns':r['imageGridColumns'],'images':r['largeAIImages'],'horizontalOverflow':not r['noHorizontalOverflow']} for r in results],ensure_ascii=False,indent=2)+'\n')
-          print('TODAYFLOWER_SIX_LOCAL_BROWSER_SCREENSHOTS_PASS',len(results))
+          print('TODAYFLOWER_TWELVE_LOCAL_BROWSER_SCREENSHOTS_PASS',len(results))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: todayflower-3page-noindex-pilot-${{ github.sha }}
+          name: todayflower-ansan33-noindex-${{ github.sha }}
           path: |
             dist/todayflower-nalmada/
             reports/todayflower-nalmada/audit.json
