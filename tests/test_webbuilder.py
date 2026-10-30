@@ -129,6 +129,8 @@ class WebbuilderPreviewTest(unittest.TestCase):
         self.assertIn("도메인을 확보하고 관리해 드립니다", pricing)
         self.assertIn("도메인을 확보하고 관리해 드립니다", faq)
         for html_page in self.html:
+            self.assertNotIn("한 장부터, 필요한 정보부터", html_page.read_text(encoding="utf-8"))
+        for html_page in self.html:
             visible = html_page.read_text(encoding="utf-8")
             for internal in ("*.leak119.net", "*.skycar24hr.com",
                              "leak119.nalmada.net", "구매·배정 전",
