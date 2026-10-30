@@ -10,7 +10,8 @@
 
 | 파일 | 내용 |
 | --- | --- |
-| site-spec.json | V5 필수 기획·승인 게이트, 가격/도메인 검토 상태 |
+| site-spec.json | V5 기획 원장: 월 1,000원/페이지, 최소 10페이지, 다중 업종 도메인 모델 |
+| domain-policy.json | 고객별 서브도메인 배정, 업종별 도메인 후보·검증·라우팅 정책 |
 | keyword-pool.json | 38개 업종, 10개 홈페이지 제작 의뢰 템플릿, 업종별 3개 소비자 검색 키워드 구조. 총 494개 후보 |
 | copy-pool.json | 업종별 고유 문구 50개와 공통 변주·FAQ·CTA를 포함한 원본 문구/문단 128개 |
 | site.css | 독립 반응형 웹 디자인, 외부 폰트·CDN·추적 호출 없음 |
@@ -56,36 +57,44 @@ python -m http.server 8000 --directory dist/webbuilder
 - 제목 14개 고유성, 내부 링크, 사업자 푸터·전화, noindex, sitemap 미생성을 검증한다.
 - GitHub Actions webbuilder-preview.yml는 미리보기와 검수 결과를 일시 보관하며 Cloudflare 배포 작업을 포함하지 않는다.
 
-## 가격 정책 확정: 페이지당 월 1,000원
+## 확정된 상품과 업종별 맞춤 도메인 운영 정책
 
-2026-10-30 사용자가 **1페이지당 1,000원은 월 이용료**라고 명시적으로 확인했다.
-원래 서비스 제안에 포함된 **기본 홈페이지 제작, 도메인 구입비, 서버비 포함**도 기본 상품 조건으로 기록한다.
-최초 1회 비용으로 잘못 설명하지 않는다.
+- **최소 계약 10페이지** × 페이지당 월 **1,000원** = **월 10,000원부터**.
+- 월 이용료에 기본 홈페이지 제작·운영사가 확보/구매하는 업종별 상위 도메인 사용·고객 전용 서브도메인 배정·서버 호스팅을 포함한다.
+- 고객이 최상위 도메인을 직접 구입·소유하는 형태가 아님. 인터피아드가 다수의 업종별 도메인을 확보하고 고객별 서브도메인을 발급한다.
+- `nalmada.net`은 가능한 하나의 상위 도메인일 뿐이며, **업종 도메인을 nalmada.net으로 제한하지 않는다**.
+- 시 전체 동을 무조건 20~30페이지로 발행한다고 보장하지 않는다. 관련성·실제 제공지역·독립적 소비자 효용을 우선한다.
 
-| 페이지 수 | 기본 월 이용료 |
+| 페이지 | 월 이용료 |
 | ---: | ---: |
-| 10 | 10,000원 |
+| 10 | 10,000원 (최소) |
 | 20 | 20,000원 |
 | 30 | 30,000원 |
 | 50 | 50,000원 |
 | 100 | 100,000원 |
 
-단가는 월 이용료이며, 20~30페이지에 대한 월 2~3만원 산식은 확인되었다.
-**다만 시마다 동 개수가 다르므로 '시 전체 모든 동 월 2~3만원'은 보장할 수 없다.**
-무의미한 지역명 자동 치환 및 실체 없는 지역 사업자 페이지를 양산하지 않는다.
+### 업종 맞춤 도메인 예시 (실제 구매·배정 검증 전)
 
-### 아직 미확정인 세부 계약 조건
-- 최소 계약 페이지 수 및 계약 기간
-- 부가세 포함 여부
-- 도메인 등록 가능한 종류, 연간 갱신과 이전·소유권
-- 운영 가능한 서버 사용량, 유지보수·수정 횟수 및 해지 조건
+| 업종/용도 | 주소 패턴 | 검증 상태 |
+| --- | --- | --- |
+| 공통·기존 운영 도메인 예시 | `leak119.nalmada.net` | 사용자 예시, 고객에게 배정된 주소 아님 |
+| 누수·배관 | `*.leak119.net` | 새로 확보할 업종 도메인 후보, 구매 미검증 |
+| 스카이차 | `*.skycar24hr.com` | 새로 확보할 업종 도메인 후보, 구매 미검증 |
+| 다른 업종 | `{고객명}.{해당 업종별 운영사 도메인}` | 수요·상표·소유권·DNS 확인 후 확장 |
 
-기본 요금은 확인되었으나 완전한 계약 조항은 위 내용이 미확정이므로 `pricing.baseOfferConfirmed=true`,
-`pricing.fullContractTermsConfirmed=false`로 구분했다.
-**실제 가입·결제 및 운영 배포는 위 조건과 브라우저 화면 검증, Cloudflare 호스트 충돌 검사 후 별도 진행한다.**
+기존에 실소유한 상위 도메인과 향후 신규 구매하는 도메인을 구분하고, 구매·배정·HTTPS/SSL·검색 공개를 각각 검증한다. 구체적 후보 원장과 라우팅 제한은 `sites/webbuilder/domain-policy.json`을 참조한다.
 
-'전국 최저가'는 동일 제공 조건의 가격 비교 근거가 없으므로 사용하지 않고,
-검색 상위노출 보장도 하지 않는다. 고객사 페이지는 실제 사업을 설명하는 유용한 독립 문서로 제한한다.
+Cloudflare 공식 문서상 Workers **Custom Domain은 wildcard hostname 등록을 지원하지 않는다**. 여러 업종·고객 서브도메인 공유 운영에서는, 이용 중인 Zone에 맞는 wildcard proxied DNS와 wildcard Worker Routes / 독립 바인딩을 구분하여 사용하고 운영 충돌·SSL·현재 활성 버전을 읽기 전용 확인해야 한다. DNS/Zone에 대한 실제 변경은 별도 승인 없이 진행하지 않는다.
+
+### 미확정 조건 / 공개 차단
+- 부가세 포함 여부, 계약 기간과 해지 처리
+- 홈페이지 문서·원본의 소유 및 이전 조건
+- 월별 수정/관리 횟수, 장애대응과 도메인 이용 중지 시 URL 처리
+- 신규 업종별 도메인 구매 금액과 실제 확보 여부, Cloudflare Zone 및 Route/SSL 상태
+
+`pricing.baseOfferConfirmed=true`이지만 `pricing.fullContractTermsConfirmed=false`; PR은 noindex 미리보기 전용이다. 계약이 확정되기 전 유료 청구나 운영 배포 금지.
+
+동일 조건의 경쟁가격 조사가 없으므로 '전국 최저가'와 검색 순위 보장은 주장하지 않는다.
 
 ## 안전 격리 및 재사용
 
@@ -102,4 +111,7 @@ python -m http.server 8000 --directory dist/webbuilder
 - 네이버 SEO: https://searchadvisor.naver.com/guide/report-seo
 - Google 검색 스팸 정책: https://developers.google.com/search/docs/essentials/spam-policies?hl=ko
 - Cloudflare Static Assets 요금과 제한: https://developers.cloudflare.com/workers/static-assets/billing-and-limitations/
+- Cloudflare wildcard DNS: https://developers.cloudflare.com/dns/manage-dns-records/reference/wildcard-dns-records/
+- Cloudflare Custom Domain은 wildcard 불가: https://developers.cloudflare.com/workers/configuration/routing/custom-domains/
+- Cloudflare wildcard Route: https://developers.cloudflare.com/workers/configuration/routing/routes/
 - GitHub 비교: MadhavShankar/pseo-engine (MIT, JS, Stars1, 최근 push 2026-08), m0ntydad0n/pseo-engine-oss (Apache-2.0, Python, Stars4, 최근 push 2026-07), esaHak/prSeoAstro (MIT, TypeScript, Stars0, 최근 push 2026-01). 해외 소규모 오픈소스는 운영성 검증이 부족하고 별도 프레임워크·서비스 의존성이 증가하므로, V5 일부 재사용을 선택했다.
