@@ -32,7 +32,8 @@ def build():
     notes=["AI 안내 이미지: 실판매 상품 사양 아님","AI 안내 이미지: 납품 사진 아님",
            "AI 이미지: 실제 꽃의 수량·품종 보장 아님","AI 이미지: 리본 비용·문구 포함 여부 별도 확인",
            "AI 이미지: 실제 포장·배송 사례 아님"]
-    heights={"funeral-wreath.webp":296,"celebration-wreath.webp":310,"flower-detail.webp":302,"ribbon-guide.webp":292,"florist-preparation.webp":310}\n    photos="".join('<figure class="card"><img src="/assets/'+name+'" width="1024" height="'+str(heights[name])+'" loading="lazy" decoding="async" alt="'+escape(title+' — '+note)+'"><figcaption><strong>'+title+'</strong><p class="muted">'+note+'</p></figcaption></figure>'
+    heights={"funeral-wreath.webp":296,"celebration-wreath.webp":310,"flower-detail.webp":302,"ribbon-guide.webp":292,"florist-preparation.webp":310}
+    photos="".join('<figure class="card"><img src="/assets/'+name+'" width="1024" height="'+str(heights[name])+'" loading="lazy" decoding="async" alt="'+escape(title+' — '+note)+'"><figcaption><strong>'+title+'</strong><p class="muted">'+note+'</p></figcaption></figure>'
         for name,title,note in zip(ASSETS,titles,notes))
     nav=" | ".join('<a href="/'+item["path"]+'">'+escape(item["label"])+'</a>' for item in SPEC["regions"])
     for region in SPEC["regions"]:
