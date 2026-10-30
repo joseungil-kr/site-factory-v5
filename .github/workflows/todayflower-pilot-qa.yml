@@ -70,6 +70,19 @@ jobs:
               article=(root/f'{n}.html').read_text(encoding='utf-8')
               assert '을(를)' not in article,(n,'unnatural placeholder particle')
               assert '무조건 당일배송' not in article and '최저가 보장' not in article
+          semantic_bans=(
+              '관련 꽃을 주문하실 계획',
+              '관련 꽃을 오늘 받을 수',
+              '상황에서 꽃 종류와 상품을 어떻게 비교',
+              '관련 주문은 실제 수령 일정',
+              '에 관한 선택이라면 필수 조건'
+          )
+          for file in (['index.html']+[f'{n}.html' for n in range(2,34)]):
+              rendered=(root/file).read_text(encoding='utf-8')
+              assert all(term not in rendered for term in semantic_bans),('UNNATURAL_SEMANTIC_TEMPLATE',file)
+          for file,word in (('4.html','정확한 구·동'),('28.html','수령자 부재 시'),('29.html','추가배송비·최종 결제금액')):
+              assert word in (root/file).read_text(encoding='utf-8'),('SEMANTIC_CONTEXT_MISSING',file,word)
+          print('TODAYFLOWER_33PAGE_INTENT_NOT_PRODUCT_QA_PASS')
           assert not (root/'sitemap.xml').exists()
           assert (root/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
           copy_quality={
@@ -82,6 +95,8 @@ jobs:
               'identicalParagraphBlocks':0,
               'regionLedger':'V4 official ZIP pinned 2026-10-22, NOT a new official registry query',
               'originalPilotContentHashUnchanged':True,
+              'semanticIntentChecks':'33 rendered HTML pages and 16 scenario-specific title/heading cases',
+              'forbiddenMetaProductTemplatesFound':0,
               'completePairComparisons':audit['similarityPairs'],
               'maxBodyChar5gramJaccard':audit['maxBodyChar5gramJaccard'],
               'seoAuditErrors':audit['errors'],
@@ -112,7 +127,7 @@ jobs:
                   browser=p.chromium.launch(headless=True)
                   for width in (390,1440):
                       context=browser.new_context(viewport={'width':width,'height':900})
-                      for route,name in (('/','city'),('/2.html','danwon-ward'),('/3.html','gojan-dong'),('/4.html','sangnok-ward'),('/5.html','il-dong'),('/33.html','last-legal-dong')):
+                      for route,name in (('/','city'),('/2.html','danwon-ward'),('/3.html','gojan-dong'),('/4.html','sangnok-ward'),('/5.html','il-dong'),('/28.html','receiver-absent'),('/29.html','shipping-fee'),('/33.html','last-legal-dong')):
                           page=context.new_page()
                           response=page.goto('http://127.0.0.1:8133'+route,wait_until='domcontentloaded',timeout=30000)
                           page.locator('.tf-layout').wait_for()
@@ -171,7 +186,7 @@ jobs:
           (screenshots.parent/'browser-qa.json').write_text(json.dumps(results,indent=2)+'\n')
           (screenshots.parent/'seller-image-qa.json').write_text(json.dumps([{'route':r['route'],'width':r['width'],'loaded':r['sellerPhotoLoaded'],'total':r['sellerPhotoCount']} for r in results],indent=2)+'\n')
           (screenshots.parent/'large-image-qa.json').write_text(json.dumps([{'route':r['route'],'width':r['width'],'gridColumns':r['imageGridColumns'],'images':r['largeAIImages'],'horizontalOverflow':not r['noHorizontalOverflow']} for r in results],ensure_ascii=False,indent=2)+'\n')
-          print('TODAYFLOWER_TWELVE_LOCAL_BROWSER_SCREENSHOTS_PASS',len(results))
+          print('TODAYFLOWER_SIXTEEN_LOCAL_BROWSER_SCREENSHOTS_PASS',len(results))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
