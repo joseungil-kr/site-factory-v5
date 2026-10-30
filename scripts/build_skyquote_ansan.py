@@ -13,7 +13,7 @@ def main():
     base=importlib.util.module_from_spec(spec);spec.loader.exec_module(base)
     source=ROOT/'data/regions/seoul_gyeonggi_current_dong.json'
     b=source.read_bytes()
-    gitblob=hashlib.sha1(b'blob '+str(len(b)).encode()+b'\\0'+b).hexdigest()
+    gitblob=hashlib.sha1(b'blob '+str(len(b)).encode()+b'\0'+b).hexdigest()
     scope=json.loads((SITE/'ansan-expansion-scope.json').read_text(encoding='utf-8'))
     assert gitblob==scope['sourceBlobSha'], 'Source region ledger changed; stop instead of generating guessed places'
     ledger=json.loads(b.decode('utf-8'))
