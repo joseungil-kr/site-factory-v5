@@ -48,17 +48,37 @@ def require_source() -> tuple[dict, dict, dict]:
             and pricing["headlinePriceKRW"] == 1000
             and pricing["domainRegistrationIncluded"] is True
             and pricing["domainIncluded"] is True
+            and pricing["minimumPages"] == 10
+            and pricing["minimumMonthlyKRW"] == 10000
+            and pricing["providerOwnedSubdomainIncluded"] is True
+            and pricing["providerPurchasedIndustryDomainCostsIncluded"] is True
+            and pricing["customerDomainRegistrationIncluded"] is False
             and pricing["hostingIncluded"] is True
             and pricing["creationIncluded"] is True
             and pricing["baseOfferConfirmed"] is True
             and pricing["fullContractTermsConfirmed"] is False):
-        raise ValueError("Monthly base offer drift: expected 1,000 KRW/page with domain purchase and server costs included")
+        raise ValueError("Monthly base offer drift: expected 1,000 KRW/page with provider-operated industry domain pool and hosting included")
     if (pool["pricingFact"]["monthlyFeePerPageKRW"] != pricing["headlinePriceKRW"]
             or pool["pricingFact"]["domainRegistrationIncluded"] is not True
             or pool["pricingFact"]["hostingIncluded"] is not True
+            or pool["pricingFact"]["minimumPages"] != 10
+            or pool["pricingFact"]["minimumMonthlyKRW"] != 10000
+            or pool["pricingFact"]["providerOwnedIndustryDomainPool"] is not True
+            or pool["pricingFact"]["candidateRootsPurchased"] is not False
             or [(x["pages"], x["amountKRW"]) for x in pool["pricingFact"]["monthlyExamples"]]
             != [(10, 10000), (20, 20000), (30, 30000), (50, 50000), (100, 100000)]):
         raise ValueError("Monthly price examples and contract facts drift")
+    domain_policy = load("domain-policy.json")
+    if (spec["domainProvision"]["type"] != "provider-managed-multi-domain-pool"
+            or spec["domainProvision"]["rootDomainWhitelistFixed"] is not False
+            or spec["domainProvision"]["domainRegistrationOrPurchaseExecuted"] is not False
+            or domain_policy["offer"]["minPages"] != 10
+            or domain_policy["publication"]["domainPurchaseApproved"] is not False):
+        raise ValueError("Industry root domain policy drift")
+    roots = {x["root"]: x["status"] for x in domain_policy["domainInventory"]}
+    if (roots.get("leak119.net") != "candidate_example_not_purchased_or_verified"
+            or roots.get("skycar24hr.com") != "candidate_example_not_purchased_or_verified"):
+        raise ValueError("Unverified domain examples cannot be claimed as owned")
     if len(keywords["industries"]) < 30:
         raise ValueError("Insufficient candidate keyword sectors")
     launch = [x for x in keywords["industries"] if x["launch"]]
@@ -185,22 +205,22 @@ def render_home(keywords: dict, pool: dict) -> str:
         '<div class="hero-copy">' + kicker("동네 검색을 이해하는 홈페이지 제작") +
         '<h1>업종별 검색 홈페이지,<br><em>페이지당 월 1,000원부터.</em></h1>'
         '<p class="hero-lead">누수탐지, 하수구막힘, 이삿짐, 출장세차까지. '
-        '지역 서비스업의 실제 업무를 설명하고 고객의 문의로 연결되는 홈페이지를 설계합니다. 기본 제작비·도메인 구입비·서버비를 포함합니다.</p>'
+        '지역 서비스업의 실제 업무를 설명하고 고객의 문의로 연결되는 홈페이지를 설계합니다. 최소 10페이지 월 10,000원부터, 기본 제작·업종별 맞춤 주소·서버비를 포함합니다.</p>'
         '<div class="hero-actions">' + cta("제작 비용 상담하기") +
         secondary("업종별 구성 보기", "/#industries") + '</div>'
         '<div class="hero-note"><span>●</span> 검색엔진 노출·순위는 보장하지 않습니다. '
         '서비스 범위와 문서 품질을 먼저 확인합니다.</div></div>'
         '<div class="hero-art" aria-label="지역 검색용 페이지 구성 예시">'
         '<div class="browser-top"><span></span><span></span><span></span><b>지역 서비스 검색 페이지</b></div>'
-        '<div class="browser-body"><span class="browser-pill">업종 × 지역 × 상담 의도</span>'
+        '<div class="browser-body"><span class="browser-pill">운영사 업종별 맞춤 도메인 · 고객 전용 주소</span>'
         '<h2>고객이 찾는 순간,<br>정확한 안내가 보이도록.</h2>'
-        '<p>실제 서비스 · 방문 가능 지역 · 연락 방법</p>'
+        '<p>도메인 예시: *.leak119.net · *.skycar24hr.com (구매·배정 전)</p>'
         '<div class="query-list">' + examples + '</div>'
         '<div class="browser-footer"><span>고유 제목과 본문</span><span>모바일 전화 연결</span></div>'
         '</div></div></div></section>'
         '<section class="stats-strip"><div class="container strip-grid">'
-        '<div><strong>월 1,000원부터</strong><span>페이지당 · 도메인·서버비 포함</span></div>'
-        '<div><strong>10개 업종</strong><span>우선 제작 상담 분야</span></div>'
+        '<div><strong>월 10,000원부터</strong><span>최소 10페이지 · 페이지당 월 1,000원</span></div>'
+        '<div><strong>업종별 도메인</strong><span>운영사 보유·신규 구매 도메인 활용</span></div>'
         '<div><strong>지역 맞춤</strong><span>실제 서비스 범위에 맞춰 구성</span></div>'
         '</div></section>'
         '<section id="industries" class="section"><div class="container">'
@@ -224,10 +244,10 @@ def render_home(keywords: dict, pool: dict) -> str:
         '</div><div class="step-grid">' + steps + '</div></div></section>'
         '<section class="section section-muted"><div class="container pricing-grid">'
         '<div><span class="eyebrow">월 이용료 안내</span><h2>페이지 수만큼<br>월 이용료를 계산하세요.</h2>'
-        '<p>페이지당 월 1,000원이며 기본 홈페이지 제작비, 도메인 구입비, 서버비를 포함합니다. 최소 수량·부가세·도메인 갱신·유지보수·해지 조건은 계약 전에 확인합니다.</p>'
+        '<p>최소 10페이지 월 10,000원부터입니다. 페이지당 월 1,000원으로 기본 제작과 업종별 고객 전용 서브도메인·서버비를 포함합니다. 부가세·계약기간·유지보수·해지 조건은 계약 전에 확인합니다.</p>'
         + secondary("가격과 포함 범위", "/guide/pricing/") + '</div>'
         '<div class="price-panel">' + monthly_price_rows(pool, limit=3) +
-        '<p class="price-footnote">월 이용료 산식 기준입니다. 실제 가능한 지역과 페이지 수는 별도 확인하며, 부가세·최소 수량·갱신·수정 범위 등 세부 계약 조건은 상담 시 안내합니다.</p></div>'
+        '<p class="price-footnote">10페이지가 최소 계약 수량입니다. 주소는 운영사 업종별 도메인에서 고객별로 배정하며 부가세·계약기간·수정·해지 조건은 사전 안내합니다.</p></div>'
         '</div></section>'
         '<section class="section"><div class="container"><div class="section-heading">'
         '<span class="eyebrow">자주 묻는 질문</span><h2>제작 전에 알아둘 내용</h2></div>'
@@ -260,7 +280,7 @@ def render_sector(item: dict, data: dict, pool: dict) -> str:
         + kicker("업종별 지역검색 홈페이지 제작") +
         '<h1>' + escape(data["title"]) + '<br><em>페이지당 월 1,000원부터.</em></h1>'
         '<p class="sub-lead">' + escape(data["intro"]) + '</p>'
-        '<p class="small-note">기본 홈페이지 제작·도메인 구입비·서버비 포함. 세부 이용 조건은 상담 시 확인합니다.</p><div class="hero-actions">'
+        '<p class="small-note">최소 10페이지 월 10,000원부터 · 업종별 맞춤 서브도메인·서버비 포함. 계약 조건은 상담 시 확인합니다.</p><div class="hero-actions">'
         + cta(item["label"] + " 홈페이지 상담") + secondary("전체 업종 보기", "/#industries") +
         '</div></div></section>'
         '<section class="section"><div class="container article-layout">'
@@ -286,21 +306,21 @@ def render_sector(item: dict, data: dict, pool: dict) -> str:
 def render_pricing(pool: dict) -> str:
     body = (
         '<section class="sub-hero"><div class="container narrow">' + kicker("제작 비용 안내") +
-        '<h1>페이지당 월 1,000원부터,<br><em>도메인·서버비 포함.</em></h1>'
-        '<p class="sub-lead">홈페이지 제작비와 도메인 구입비·서버비를 포함하는 월 이용료 상품입니다. 실제 서비스 범위와 상담에 도움이 되는 문서부터 설계합니다.</p>'
+        '<h1>최소 10페이지, 월 10,000원부터.<br><em>업종별 맞춤 주소·서버비 포함.</em></h1>'
+        '<p class="sub-lead">페이지당 월 1,000원으로 최소 10페이지부터 제작합니다. 운영사가 업종별 도메인을 보유하거나 새로 구매하여 고객별 서브도메인을 제공하고 기본 제작·서버비를 포함합니다.</p>'
         '</div></section><section class="section"><div class="container narrow">'
         '<div class="price-panel full"><h2>페이지 수에 따른 월 이용료</h2>' + monthly_price_rows(pool) +
-        '<p class="price-footnote">1페이지당 월 1,000원 기준입니다. 기본 제작비·도메인 구입비·서버비를 포함합니다. 최소 수량, 부가세, 계약기간, 도메인 종류·갱신, 수정·해지 조건은 계약 전에 안내합니다.</p></div>'
+        '<p class="price-footnote">1페이지당 월 1,000원 기준입니다. 기본 제작·업종별 맞춤 주소·서버비를 포함합니다. 최소 10페이지, 부가세, 계약기간, 도메인 종류·갱신, 수정·해지 조건은 계약 전에 안내합니다.</p></div>'
         '<div class="article-section"><h2>한 도시의 모든 동도 같은 금액인가요?</h2>'
         + paragraph("시마다 동 개수는 서로 다릅니다. 20~30페이지를 이용하는 경우 월 2만~3만원이지만, 해당 시 전체 동을 반드시 같은 월 이용료로 구성할 수 있다는 뜻은 아닙니다. 실제 서비스 가능 지역과 페이지 구성을 확인해 필요한 수를 산정합니다.")
         + '</div><div class="article-section"><h2>도메인·서버 운영은 어떻게 하나요?</h2>'
-        + paragraph("기본 월 이용료에 도메인 구입비와 서버 운영비를 포함합니다. 다만 제공 도메인의 종류와 갱신 기간, 소유권·이전·해지 조건, 서버 사용량 및 수정 범위는 계약 전에 명확히 안내합니다.")
+        + paragraph("인터피아드가 업종별로 도메인을 보유하거나 새로 구매한 뒤 고객별 서브도메인을 배정합니다. 누수업종은 *.leak119.net, 스카이차업종은 *.skycar24hr.com 형태가 예시이며 leak119.nalmada.net도 기존 설명용 예시입니다. 신규 업종 도메인은 실제 구매·연결되었다는 뜻이 아닙니다. 고객은 상위 도메인의 소유권을 취득하지 않습니다.")
         + '</div><div class="article-section"><h2>제작단가가 낮을 수 있는 이유</h2>'
         + paragraph(pool["offerVariants"][0]) + paragraph(pool["offerVariants"][1]) +
         '</div></div></section>'
     )
-    return layout("홈페이지 제작 페이지당 월 1,000원부터 비용 안내 | 인터피아드",
-                  "업종별 홈페이지 페이지당 월 1,000원, 도메인 구입비와 서버비 포함. 10~100페이지 월 이용료 및 계약 조건을 안내합니다.",
+    return layout("홈페이지 최소 10페이지 월 10,000원부터 비용 안내 | 인터피아드",
+                  "업종별 홈페이지 페이지당 월 1,000원, 업종별 맞춤 주소와 서버비 포함. 10~100페이지 월 이용료 및 계약 조건을 안내합니다.",
                   body, "pricing")
 
 
@@ -338,7 +358,7 @@ def render_faq(pool: dict) -> str:
         '<div class="faq-list">' + faq + '</div></div></section>'
     )
     return layout("홈페이지 제작·SEO 자주 묻는 질문 | 인터피아드",
-                  "페이지당 월 1,000원 이용료, 도메인·서버비 포함, 지역별 홈페이지와 검색 노출에 대한 질문을 안내합니다.",
+                  "페이지당 월 1,000원 이용료, 업종별 주소·서버비 포함, 지역별 홈페이지와 검색 노출에 대한 질문을 안내합니다.",
                   body, "faq")
 
 
@@ -444,7 +464,9 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
             "narrativeMaxChar5GramJaccard": round(max_pair[0], 6),
             "maxPair": [max_pair[1], max_pair[2]],
             "pricingApproved": False, "baseOfferApproved": True, "billingCycle": "monthly",
-            "domainAndHostingIncluded": True, "fullContractTermsConfirmed": False,
+            "minimumPages": 10, "minimumMonthlyKRW": 10000,
+            "domainAndHostingIncluded": True, "domainModel": "provider-managed-multi-industry-domains",
+            "candidateIndustryDomainsPurchased": False, "fullContractTermsConfirmed": False,
             "domainDeployed": False, "indexNowSubmitted": False}
 
 
@@ -483,8 +505,14 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT) -> dict:
         if (f'{example["pages"]}페이지 × 월 1,000원' not in text
                 or f'월 {example["amountKRW"]:,}원' not in text):
             raise ValueError("Missing or incorrect monthly pricing for "+str(example["pages"]))
-    if '페이지당 월 1,000원부터' not in (out / "index.html").read_text(encoding="utf-8"):
-        raise ValueError("Monthly fee not visible on homepage")
+    home = (out / "index.html").read_text(encoding="utf-8")
+    guide = (out / "guide" / "pricing" / "index.html").read_text(encoding="utf-8")
+    if ('페이지당 월 1,000원부터' not in home
+            or '최소 10페이지 월 10,000원' not in home
+            or '*.leak119.net' not in home
+            or '*.skycar24hr.com' not in home
+            or 'leak119.nalmada.net도 기존 설명용 예시' not in guide):
+        raise ValueError("Monthly minimum or multi-domain examples missing")
     qa["keywordCandidates"] = export_keywords(keywords, report / "keyword-candidates.csv")
     qa["launchIndustries"] = len(sectors)
     qa["researchIndustries"] = len(keywords["industries"]) - len(sectors)
