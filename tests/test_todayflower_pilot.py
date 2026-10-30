@@ -1,6 +1,6 @@
 """Narrow pilot QA: excludes V4, Flowershop and every other site."""
 import unittest
-from v5.config import read_site
+from v5.config import read_site, ROOT
 from v5.site_plan import check_site
 from v5 import markup
 from v5.audit import similarity
@@ -46,8 +46,16 @@ class TodayflowerPilotTest(unittest.TestCase):
                     "https://fwith.co.kr/data/item/flower379/"+p["sku"]+"/"
                 ))
 
-    def test_five_local_editorial_images_and_real_shop_links_each(self):
-        self.assertEqual(len(self.site["imagePool"]), 5)
+    def test_ten_editorial_images_including_five_created_webps_each(self):
+        self.assertEqual(len(self.site["imagePool"]), 10)
+        generated=self.site["imagePool"][5:]
+        self.assertEqual(generated,[
+            "gift-bouquet.webp","opening-plant.webp","celebration-wreath.webp",
+            "condolence-wreath.webp","flower-wrapping.webp"
+        ])
+        for name in generated:
+            payload=(ROOT/"assets/library/todayflower"/name).read_bytes()
+            self.assertTrue(payload.startswith(b"RIFF") and payload[8:12]==b"WEBP")
         for page in self.pages:
             with self.subTest(page=page["number"]):
                 html=(markup.home if page["number"]==1 else markup.detail)(
@@ -56,7 +64,9 @@ class TodayflowerPilotTest(unittest.TestCase):
                 self.assertIn('<meta name="robots" content="noindex,nofollow">',html)
                 self.assertNotIn('rel="canonical"',html)
                 self.assertEqual(html.count('<h1>'),1)
-                self.assertEqual(html.count('src="/assets/images/'),5)
+                self.assertEqual(html.count('src="/assets/images/'),10)
+                for name in generated:
+                    self.assertEqual(html.count('src="/assets/images/'+name+'"'),1)
                 self.assertIn("AI 연출 이미지",html)
                 self.assertEqual(visible_copy_errors(html),[])
                 self.assertIn('href="tel:18440644"',html)
