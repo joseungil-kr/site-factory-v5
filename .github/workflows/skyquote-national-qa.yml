@@ -1,0 +1,37 @@
+name: Skyquote nationwide region noindex build QA
+on:
+  push:
+    branches: [feature/v5-skyquote-three-samples]
+    paths:
+      - 'sites/skyquote/nationwide-district-source.json'
+      - 'scripts/build_skyquote_national.py'
+      - 'tests/skyquote_national_smoke.py'
+      - '.github/workflows/skyquote-national-qa.yml'
+  pull_request:
+    paths:
+      - 'sites/skyquote/nationwide-district-source.json'
+      - 'scripts/build_skyquote_national.py'
+      - 'tests/skyquote_national_smoke.py'
+      - '.github/workflows/skyquote-national-qa.yml'
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Build 268 noindex regional information guides and assert image hashes and links
+        run: |
+          python -m py_compile scripts/build_skyquote_national.py tests/skyquote_national_smoke.py
+          python scripts/build_skyquote_national.py
+          python tests/skyquote_national_smoke.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: skyquote-national-noindex-268-${{ github.sha }}
+          path: dist/skyquote-national-preview/
+          retention-days: 14
+          if-no-files-found: warn
