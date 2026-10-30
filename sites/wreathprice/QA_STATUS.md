@@ -84,3 +84,7 @@
 - V4 [run 41095222881](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41095222881) 성공, artifact `12995952552`. 수정 전 Worker 100% version `e8bbac15-aec5-4d90-bf58-18669346af20` 대조 → 새 version `7be165ca-d1dc-4d20-9226-5ae0ea6bbc5a` 배포. 정확한 소스 `d23a603f74290f245bda613271bf2ac6d2bc94ac`.
 - 실제 `https://sfv52-wreathprice-preview.joseungil.workers.dev`: HTML 286/286 HTTP200, HTML/헤더 noindex, home 직접 지역링크 최소16개/허브 282개 신규 링크, 페이지마다 WebP 5/상품 상세 링크5, 원래 WebP 5장 원격 SHA256 일치, robots Disallow HTTP200, sitemap/없는 페이지 HTTP404. worker preview에는 **canonical 없음**(public canonical 주장 금지). 롤백 실행 없음.
 - 미완: 신규 운영 도메인 `wreathprice.nalmada.net`은 연결·검증 대상 아님. DNS/Custom Domain/권한/Secret/소유확인·Google/Naver·IndexNow/공개 index 변경 전혀 없음. 현재 실제 지역별 배송 가능·추가 배송비 미확인 유지.
+
+## 전국 미리보기 모바일·PC 실제 화면 최종 검증
+- [V4 run 41095998098](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41095998098) 성공, artifact `12995957893`(스크린샷 12장). Chromium 실제 HTTP 탐색: 1440×900 PC 및 390×844 모바일 × 안산시 홈, 전국지역 허브, 수원시, 서울특별시, 부산광역시, 안산 단원구 = **12개 화면**. 모두 HTTP 200, 390px/1440px 가로 넘침 0, 페이지당 WebP 5/5 로드 성공(이미지 없는 목록 허브 제외), HTML noindex 통과.
+- 주의: 자동화 화면 검증·스크린샷 저장 성공이며 화면 디자인을 사람이 주관적으로 검수한 증거는 아님. 검색엔진 공개 운영은 미승인 상태이고, 현 Workers 미리보기는 noindex 상태를 유지함.
