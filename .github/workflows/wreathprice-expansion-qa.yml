@@ -38,7 +38,7 @@ jobs:
           assert j['verifiedDeliveryAreas']==0 and not j['publicDeployment']
           assert len(list(p.rglob('*.html')))==19
           assert not (p/'sitemap.xml').exists()
-          print('WREATHPRICE_NO_INDEX_EXPANSION_QA_PASS',{'officialCodes':16,'noindexPages':19,'realWebp':5,'editorialPairs':j['uniqueEditorialFocusPairs']})
+          print('WREATHPRICE_NO_INDEX_EXPANSION_QA_PASS',{'officialCodes':16,'noindexPages':19,'realWebp':5,'editorialFocuses':j['editorialFocusCount']})
           PY
       - uses: actions/upload-artifact@v4
         with:
