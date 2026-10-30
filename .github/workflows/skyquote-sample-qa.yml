@@ -7,6 +7,12 @@ on:
       - 'scripts/build_skyquote.py'
       - 'tests/skyquote_smoke.py'
       - '.github/workflows/skyquote-sample-qa.yml'
+  pull_request:
+    paths:
+      - 'sites/skyquote/**'
+      - 'scripts/build_skyquote.py'
+      - 'tests/skyquote_smoke.py'
+      - '.github/workflows/skyquote-sample-qa.yml'
 permissions:
   contents: read
 jobs:
