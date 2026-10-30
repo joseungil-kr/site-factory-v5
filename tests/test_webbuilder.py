@@ -15,10 +15,10 @@ class WebbuilderPreviewTest(unittest.TestCase):
     def test_preflight_and_counts(self):
         from v5.site_plan import check_site
         self.assertTrue(check_site("webbuilder")["ready"])
-        self.assertEqual(self.qa["pages"], 14)
-        self.assertEqual(self.qa["launchIndustries"], 10)
-        self.assertEqual(self.qa["researchIndustries"], 28)
-        self.assertEqual(len(self.html), 15)
+        self.assertEqual(self.qa["pages"], 42)
+        self.assertEqual(self.qa["launchIndustries"], 38)
+        self.assertEqual(self.qa["researchIndustries"], 0)
+        self.assertEqual(len(self.html), 43)
 
     def test_same_phone_and_footer_every_page(self):
         for path in self.html:
@@ -46,9 +46,9 @@ class WebbuilderPreviewTest(unittest.TestCase):
                 self.assertNotIn(token, text, (path, token))
 
     def test_industry_distinctness(self):
-        self.assertEqual(self.qa["narrativePairsChecked"], 45)
+        self.assertEqual(self.qa["narrativePairsChecked"], 703)
         self.assertLess(self.qa["narrativeMaxChar5GramJaccard"], .49)
-        self.assertEqual(self.qa["titleUnique"], 14)
+        self.assertEqual(self.qa["titleUnique"], 42)
 
     def test_links_and_copy(self):
         self.assertGreater(self.qa["linksChecked"], 100)
@@ -63,7 +63,7 @@ class WebbuilderPreviewTest(unittest.TestCase):
         self.assertEqual(len(rows), 494)
         self.assertEqual(sum(x["type"] == "buyer" for x in rows), 380)
         self.assertEqual(sum(x["type"] == "customer_example" for x in rows), 114)
-        self.assertTrue(all(x["priority"] in ("launch", "research_only") for x in rows))
+        self.assertTrue(all(x["priority"] == "launch" for x in rows))
         self.assertTrue(all("{동}" not in x["keyword"] for x in rows if x["type"] == "buyer"))
 
     def test_monthly_pricing_and_inclusions_confirmed_without_assuming_contract(self):
@@ -141,6 +141,54 @@ class WebbuilderPreviewTest(unittest.TestCase):
             self.assertNotIn(stale, home + pricing + faq)
         for path in self.out.rglob("industry/*/index.html"):
             self.assertIn("페이지당 월 1,000원부터", path.read_text(encoding="utf-8"))
+
+    def test_industry_extension_originality_and_preservation(self):
+        source = load("copy-pool.json")["industry"]
+        a = load("industry-expansion-a.json")["industry"]
+        b = load("industry-expansion-b.json")["industry"]
+        self.assertEqual(len(source), 10)
+        self.assertEqual(len(a), 14)
+        self.assertEqual(len(b), 14)
+        self.assertEqual(len(set(source) | set(a) | set(b)), 38)
+        self.assertEqual(self.qa["extensionIndustries"], 28)
+        self.assertEqual(self.qa["originalIndustriesPreserved"], 10)
+        for ident, article in {**a, **b}.items():
+            with self.subTest(industry=ident):
+                narrative = "".join(article[k] for k in
+                     ("intro", "problem", "structure", "conversion", "difference"))
+                self.assertGreaterEqual(len(narrative), 360)
+                self.assertEqual(len(article["checklist"]), 4)
+                self.assertNotIn("추가 수요/실제 업종 자료 검증 후", narrative)
+                self.assertIn("홈페이지", article["title"])
+
+    def test_original_svg_illustrations_integrity(self):
+        from xml.etree import ElementTree
+        src = ROOT / "sites" / "webbuilder" / "illustrations"
+        dest = self.out / "assets" / "images"
+        names = {"webbuilder-hero.svg", "industry-services.svg", "local-search.svg",
+                 "managed-domain.svg", "mobile-contact.svg"}
+        self.assertEqual({x.name for x in dest.glob("*.svg")}, names)
+        self.assertEqual(self.qa["imageFiles"], 5)
+        self.assertGreater(self.qa["imageReferences"], 50)
+        combined = "\n".join(x.read_text(encoding="utf-8") for x in self.html)
+        for name in names:
+            with self.subTest(asset=name):
+                self.assertEqual((src / name).read_bytes(), (dest / name).read_bytes())
+                root = ElementTree.fromstring((dest / name).read_bytes())
+                self.assertEqual(root.tag, "{http://www.w3.org/2000/svg}svg")
+                self.assertGreaterEqual(int(root.get("width", "0")), 768)
+                self.assertIn("/assets/images/" + name, combined)
+
+    def test_all_38_sectors_are_discoverable_and_related(self):
+        home = (self.out / "index.html").read_text(encoding="utf-8")
+        self.assertEqual(home.count('class="industry-card"'), 38)
+        self.assertEqual(home.count('class="industry-group"'), 7)
+        for id in ("waterproof", "skycar", "watertank", "quick", "doorlock"):
+            self.assertIn('/industry/' + id + '/', home)
+            doc = (self.out / "industry" / id / "index.html").read_text(encoding="utf-8")
+            self.assertIn('class="related-links"', doc)
+            self.assertIn("페이지당 월 1,000원부터", doc)
+        self.assertIn("webbuilder-hero.svg", home)
 
     def test_industry_source_is_not_customer_fake_service_ad(self):
         names = [x["id"] for x in load("keyword-pool.json")["industries"] if x["launch"]]
