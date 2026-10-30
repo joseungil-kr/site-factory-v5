@@ -15,10 +15,10 @@ for item in manifest['assets']:
     digest=hashlib.sha256(raw).hexdigest()
     assert digest==item['sha256'],f'WebP hash mismatch: {p} {digest} != {item["sha256"]}'
     with Image.open(p) as im:
-        assert im.format=='WEBP' and im.size==(768,640),(p,im.format,im.size)
+        assert im.format=='WEBP' and im.size==(1536,1024),(p,im.format,im.size)
     target=OUT/'assets'/p.name
     assert target.read_bytes()==raw,f'Generated asset differs: {p.name}'
-    print('IMAGE_ASSET_PASS',p.name,'768x640',len(raw),digest)
+    print('IMAGE_ASSET_PASS',p.name,'1536x1024',len(raw),digest)
 pages=['index.html','danwon.html','gojan.html']
 for name in pages:
     path=OUT/name

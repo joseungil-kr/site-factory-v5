@@ -58,7 +58,7 @@ jobs:
                           img=page.locator('img').nth(index)
                           img.scroll_into_view_if_needed(timeout=10000)
                           img.evaluate("""e=>new Promise((resolve,reject)=>{if(e.complete&&e.naturalWidth>0)return resolve();const timer=setTimeout(()=>reject(new Error('Image timeout')),15000);e.addEventListener('load',()=>{clearTimeout(timer);resolve()},{once:true});e.addEventListener('error',()=>{clearTimeout(timer);reject(new Error('Image failed'))},{once:true});if(e.loading==='lazy')e.loading='eager';})""",timeout=20000)
-                          assert img.evaluate('(e)=>e.complete&&e.naturalWidth===768&&e.naturalHeight===640')
+                          assert img.evaluate('(e)=>e.complete&&e.naturalWidth===1536&&e.naturalHeight===1024')
                       assert page.evaluate('document.documentElement.scrollWidth <= window.innerWidth+1'),(path,width)
                       assert page.locator('a[href="tel:01053221952"]').count()>=1
                       assert page.locator('meta[name="robots"]').get_attribute('content')=='noindex,nofollow'
