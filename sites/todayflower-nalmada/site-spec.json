@@ -49,9 +49,9 @@
     "mode": "direct SKU links to seller + phone"
   },
   "images": {
-    "source": "Five independent ImageGen-produced WebP topic illustrations + five V5 high-resolution florist WebP images; seller product photos only from fwith.co.kr",
+    "source": "Five original ImageGen 1448x1086 scenes stored as large WebPs; five reusable V5 editorial assets in imagePool; seller product images loaded separately from fwith.co.kr",
     "approved": false,
-    "visualReview": "required 390px and 1440px",
+    "visualReview": "Require actual 390px and 1440px Chromium screenshots and naturalWidth/display-box QA before public publish",
     "aiGeneratedWebP": [
       "gift-bouquet.webp",
       "opening-plant.webp",
@@ -59,15 +59,73 @@
       "condolence-wreath.webp",
       "flower-wrapping.webp"
     ],
-    "countPerPage": 10,
+    "countPerPage": 7,
     "aiEditorialCountPerPage": 5,
-    "artifactCommit": "5aacf131f7e5f89203f85aa689ead71abf9485d5"
+    "otherLocalEditorialCountPerPage": 2,
+    "libraryAssetCount": 10,
+    "remoteSellerCardImagesPerPage": {
+      "1": 8,
+      "2": 7,
+      "3": 6
+    },
+    "originalWidth": 1448,
+    "originalHeight": 1086,
+    "cssLayout": "3+2 centered at desktop, 2 columns tablet, single full-width column mobile; image width 100% with aspect ratio 4:3",
+    "fixedThumbnailPixelsRemoved": true,
+    "generatorPolicy": "AI-generated scenes are editorial only; seller product photographs and fulfillment evidence must not be invented; no other sites affected",
+    "provenance": [
+      {
+        "path": "assets/library/todayflower/gift-bouquet.webp",
+        "gitBlobSHA1": "8f5ba2ca41b69aa792994a13ab652ae81cf0e182",
+        "bytes": 167766,
+        "width": 1448,
+        "height": 1086,
+        "generatedSource": "ImageGen",
+        "generationId": "26550f12-66b8-40a8-8428-f465be36f1fd"
+      },
+      {
+        "path": "assets/library/todayflower/opening-plant.webp",
+        "gitBlobSHA1": "01ee6245cb69ca69625c111243055f2d034846d4",
+        "bytes": 140286,
+        "width": 1448,
+        "height": 1086,
+        "generatedSource": "ImageGen",
+        "generationId": "6abee055-7283-4000-b51f-a8869dfe7404"
+      },
+      {
+        "path": "assets/library/todayflower/celebration-wreath.webp",
+        "gitBlobSHA1": "d54ef1dc3cb09e5d974810f6607cd18521e12b91",
+        "bytes": 272178,
+        "width": 1448,
+        "height": 1086,
+        "generatedSource": "ImageGen",
+        "generationId": "619454de-2836-4d4a-9e3d-ff63ba039b8e"
+      },
+      {
+        "path": "assets/library/todayflower/condolence-wreath.webp",
+        "gitBlobSHA1": "4fe700902582071e03bad8f06c73646b7a875cf6",
+        "bytes": 149518,
+        "width": 1448,
+        "height": 1086,
+        "generatedSource": "ImageGen",
+        "generationId": "e5e06b17-5dbd-41ae-913a-1e433ab9ff54"
+      },
+      {
+        "path": "assets/library/todayflower/flower-wrapping.webp",
+        "gitBlobSHA1": "82a5ddbf3fcb61de5e99fe3262359bdd0f310d5a",
+        "bytes": 135190,
+        "width": 1448,
+        "height": 1086,
+        "generatedSource": "ImageGen",
+        "generationId": "52a4819a-658d-4420-bc36-a2f98de84dd7"
+      }
+    ]
   },
   "publishPolicy": {
     "mode": "preview-noindex",
     "indexNow": false,
     "production": false,
-    "requires": "Browser review of ten editorial images including five distinct AI-made WebPs, seller original image live HTTP, static noindex, parent acceptance, domain collision check"
+    "requires": "Narrow 3-page noindex QA; high-resolution AI WebP dimension and browser display validation; seller images and direct order links preserved; parent approval before DNS/index"
   },
   "rollout": {
     "phase": "3-page-pilot",
