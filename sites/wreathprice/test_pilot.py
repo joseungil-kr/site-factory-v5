@@ -31,6 +31,6 @@ class PilotQA(unittest.TestCase):
             self.assertIn('noindex,nofollow',data)
             self.assertEqual(data.count('shop/item.php?it_id='),5)
         self.assertFalse((out/'sitemap.xml').exists())
-        self.assertEqual((out/'robots.txt').read_text(),'User-agent: *\\nDisallow: /\\n')
+        self.assertEqual((out/'robots.txt').read_text(),chr(10).join(['User-agent: *','Disallow: /','']))
 
 if __name__=='__main__':unittest.main()
