@@ -39,6 +39,16 @@
 - 지역 확장은 V4 공식 코드 상위 지역 원장을 근거로 검증 범위를 한정하여 noindex 단계부터 수행.
 - 기존 Wreath 네이버 인증 후속 상황과 IndexNow 접수는 별도 작업으로 보존하고 이번 프로젝트에서 변경하지 않음.
 
+
+## 공식 상위 행정구역 원장 대조 및 1차 지역 확장 (2026-10-30)
+- V4 원장: `joseungil-kr/site-factory-v4/data/regions/master.json`, Blob `13d43fc3f2492b29b1680858235fe0ac0cd10580`. 원 출처 `https://www.code.go.kr/stdcode/regCodeL.do`, 공식 코드 전체 다운로드 `https://www.code.go.kr/etc/codeFullDown.do`, 수집일 2026-10-22, 원본 ZIP SHA-256 `44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd`. 상위 지역 284건(시·도 16 / 시·군·구 229 / 일반구 39), 법정동 코드 `존재` 기준; 원본 적용일 `sourceEffectiveDate`는 미확인. 법정동 코드 최신성 및 개별 배송 가능성은 이 자료만으로 확정할 수 없음.
+- 기존 Wreath 별도 보조 원장 `sites/wreath-region/regions.json`: 5,034개 하위 지역명(2025년 출처), 상위명 3,596건 일치·1,438건 미일치. 화분 전용 1,732건 수치를 신규 화환 가격 지역 근거로 사용하지 않음.
+- `verified-regions.json`: 공식 원장으로 확인된 경기권 18개 상위지역 중 기존 시·구 대표 2개를 제외한 **추가 16개**만 추려 원장 코드·부모코드·출처행까지 고정.
+- `expand.py`: 기존 `build.py`의 3페이지/실제 이미지 자산을 재사용하여 **독립 `dist-expansion/`에 16개 추가 noindex 문서, 총 19개**를 생성. 서비스 지역 16개가 확인됐다는 뜻이 아님(배송 확인 지역 0).
+- 고유 내용은 코드/행정계층 정보 외에 16개의 편집 주제와 각각 다른 실제 SKU 3개 비교·가격 차이·주문 검증 절차를 넣음. 지명만 바꾼 허위 배송 정보, 가짜 매장/리뷰, 최저가·배송 확약 없음. 다만 공통 가격표·사진·FAQ 재사용 구조이므로 검색 색인용 고유 품질이 별도로 검증되었다는 주장은 하지 않음.
+- <https://github.com/joseungil-kr/site-factory-v5/actions/runs/41031299548> (성공): Python syntax, 5개 WebP 실제 해시/치수, 대표 3페이지 및 확장 16페이지의 테스트 3+3개 통과. 산출물 artifact `12966760028`. Sitemap 없음 / noindex 유지 / 공개 배포하지 않음.
+- 이미지 출처: `image-provenance.json`에 기존 대화에서 생성된 원본 PNG의 SHA-256, generation ID, 크롭 좌표와 WebP 인코딩을 기록. 원본 PNG에서 5개 WebP를 바이트 단위로 재현하여 일치 확인. 원본 PNG를 GitHub에 추가하지 않았으며, 원본 접근 불가 환경에서는 해당 연결을 별도 재검증할 수 없다는 제한을 유지.
+
 ## 공식 자료 및 시장 비교
 - https://fwith.co.kr/shop/item.php?it_id=B201
 - https://fwith.co.kr/shop/item.php?it_id=B203
