@@ -1,0 +1,34 @@
+name: Site Factory image-origin provenance gate
+on:
+  pull_request:
+    paths:
+      - 'assets/library/**'
+      - 'sites/**'
+      - 'site/**'
+      - 'docs/image-governance/**'
+      - 'docs/IMAGE_SOURCE_POLICY_20261030.md'
+      - 'scripts/check_image_origin.py'
+      - 'tests/test_image_origin.py'
+      - '.github/workflows/image-origin-gate.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  image-origin:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests: generated tool evidence, exact user permission, no hotlinks
+        run: python -m unittest discover -s tests -p 'test_image_origin.py' -v
+      - name: Verify registered image hashes, audit legacy without altering them
+        run: python -m scripts.check_image_origin --legacy-audit
+      - name: Fail-closed newly added or modified images lacking exact provenance
+        run: |
+          git fetch origin main:refs/remotes/origin/main
+          python -m scripts.check_image_origin --changed-base origin/main --legacy-audit
