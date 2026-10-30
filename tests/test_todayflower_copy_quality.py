@@ -7,7 +7,7 @@ not local fulfillment certainty or independently sourced regional features.
 from __future__ import annotations
 
 from collections import Counter
-from html import escape
+from html.parser import HTMLParser
 import json
 import re
 import unittest
@@ -38,6 +38,9 @@ FRAGMENT_END = re.compile(r"(?:는 경우|하려는 상황|하려는 주문)\.$"
 
 def fields(page):
     yield "title", page["title"]
+    yield "topic", page["topic"]
+    yield "heroTag", page["heroTag"]
+    yield "sectionLead", page["sectionLead"]
     yield "intro", page["intro"]
     for i, section in enumerate(page["sections"], 1):
         yield f"section{i}:heading", section["heading"]
@@ -53,6 +56,27 @@ def body_blocks(page):
         *((f"section{i}", s["paragraph"]) for i, s in enumerate(page["sections"], 1)),
         *((f"faq{i}", f["a"]) for i, f in enumerate(page["faq"], 1)),
     ]
+
+
+class VisibleParts(HTMLParser):
+    """Inspect visitor-visible HTML, not only page.json data fields."""
+    def __init__(self):
+        super().__init__(convert_charrefs=True)
+        self.skip = 0
+        self.parts = []
+    def handle_starttag(self, tag, attrs):
+        if tag in ("script","style","noscript","template"):
+            self.skip += 1
+        if not self.skip:
+            for key,value in attrs:
+                if key in ("alt","title","aria-label","placeholder") and value:
+                    self.parts.append(value)
+    def handle_endtag(self, tag):
+        if tag in ("script","style","noscript","template") and self.skip:
+            self.skip -= 1
+    def handle_data(self, data):
+        if not self.skip and data.strip():
+            self.parts.append(data.strip())
 
 
 class TodayflowerWholeCopyAudit(unittest.TestCase):
@@ -85,7 +109,26 @@ class TodayflowerWholeCopyAudit(unittest.TestCase):
                         self.assertTrue(value.endswith("."), value)
                         for sentence in re.split(r"(?<=[.!?])\s+", value):
                             self.assertGreaterEqual(len(sentence), 12, (page["number"], field, sentence))
-        self.assertEqual(total, 33 * (1 + 1 + 4*2 + 3*2))
+        self.assertEqual(total, 33 * (4 + 4*2 + 3*2))
+
+    def test_all_33_rendered_html_visible_strings_not_only_article_bodies(self):
+        for p in self.pages:
+            html = (markup.home if p["number"]==1 else markup.detail)(
+                self.site,p,self.pages,self.site_data["products"],self.site_data["links"]
+            )
+            parse=VisibleParts()
+            parse.feed(html)
+            self.assertGreater(len(parse.parts),40,p["number"])
+            for text in parse.parts:
+                with self.subTest(page=p["number"],text=text[:48]):
+                    self.assertNotRegex(text,BAD_PARTICLES)
+                    self.assertNotRegex(text,BAD_PROMISES)
+                    self.assertNotIn("화분와",text)
+                    self.assertNotIn("화분를",text)
+                    self.assertNotIn("화환와",text)
+                    self.assertNotIn("꽃다발와",text)
+                    self.assertNotIn("화정동라는",text)
+        # Raw source metadata remains historical: not an official government refresh.
 
     def test_no_repeated_full_paragraphs_across_33_pages(self):
         seen = {}
