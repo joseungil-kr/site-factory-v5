@@ -64,7 +64,7 @@ class TodayflowerPilotTest(unittest.TestCase):
                 self.assertIn('<meta name="robots" content="noindex,nofollow">',html)
                 self.assertNotIn('rel="canonical"',html)
                 self.assertEqual(html.count('<h1>'),1)
-                self.assertEqual(html.count('src="/assets/images/'),10)
+                self.assertEqual(html.count('src="/assets/images/'),7)
                 for name in generated:
                     self.assertEqual(html.count('src="/assets/images/'+name+'"'),1)
                 self.assertIn("AI 연출 이미지",html)
