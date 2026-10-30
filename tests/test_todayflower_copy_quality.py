@@ -147,7 +147,7 @@ class TodayflowerWholeCopyAudit(unittest.TestCase):
             for name,value in fields(page):
                 with self.subTest(page=page["number"],field=name):
                     self.assertNotRegex(value,CONTEXT_AS_PRODUCT)
-                    self.assertNotRegex(value,r"동로(?=\\s|[,.!?]|$)")
+                    self.assertNotRegex(value,r"동로(?=\s|[,.!?]|$)")
             if page["number"]<=3:
                 continue
             for i in (0,1):
@@ -162,14 +162,14 @@ class TodayflowerWholeCopyAudit(unittest.TestCase):
             15:("여러","여러 건","주문","SKU"),
             16:("급한","상품","주소","꽃다발"),
             20:("온라인","상품","주소","상품번호"),
-            21:("꽃다발","꽃병","보관","꽃병"),
+            21:("꽃다발","꽃병","수령 후","꽃병"),
             22:("개업","화분","담당자","화분"),
             24:("리본","리본","화환","리본"),
             25:("꽃","꽃","상품","꽃"),
             26:("사무실","꽃다발","수령","사무실"),
             28:("수령자가 부재","수령자가","대리 수령자","대리 수령자"),
             29:("추가배송비","결제금액","추가요금","배송비"),
-            30:("수령 주소","상품","배송지","배송지"),
+            30:("수령 주소","상품","배송지","배송 경로"),
             31:("추가배송비","꽃다발","SKU","표시가"),
             32:("근조화환","발인","발인","발인"),
         }
@@ -183,6 +183,32 @@ class TodayflowerWholeCopyAudit(unittest.TestCase):
         self.assertIn("도로명",self.pages[3]["intro"])
         self.assertIn("자리에 없다면",self.pages[27]["intro"])
         self.assertIn("추가배송비",self.pages[28]["intro"])
+        meta_headers={
+            4:("상세주소 확인","정확한 구·동"),
+            7:("공동 주문","공동 주문 시"),
+            13:("학교·연구실 수령","학교·연구실로 꽃을 보낼"),
+            15:("여러 주문","여러 주문의 배송지"),
+            16:("급한 꽃 주문","오늘 꽃 주문 상담"),
+            20:("온라인 상품 선택","온라인에서 고른 상품"),
+            21:("꽃다발 보관","꽃다발 보관"),
+            22:("개업 전 수령","개업 전 수령 시각"),
+            24:("화환 리본","화환 리본"),
+            25:("꽃 종류·색감","꽃 구성·색상"),
+            26:("사무실 주소","사무실 인계"),
+            28:("수령자 부재 시 인도","수령자 부재 시 대리"),
+            29:("추가배송비·최종 결제금액","상품별 배송비"),
+            30:("배송 가능 시간·수령지","배송 가능 여부"),
+            31:("대부 지역 꽃 선물","대부 지역 수령지"),
+            32:("조문 일정 변경·근조화환","조문 일정·빈소"),
+        }
+        for number,(title,h2) in meta_headers.items():
+            page=self.pages[number-1]
+            with self.subTest(page=number):
+                self.assertIn(title,page["title"])
+                self.assertIn(h2,page["sections"][0]["heading"])
+                self.assertNotIn("선택·수령·주문 안내",page["title"])
+                self.assertNotIn("에 맞는 상품과 수령 조건 정하기",page["sections"][0]["heading"])
+
 
     def test_no_repeated_full_paragraphs_across_33_pages(self):
         seen = {}
