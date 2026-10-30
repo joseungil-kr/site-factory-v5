@@ -5,6 +5,7 @@ on:
       - 'sites/baekse/**'
       - 'scripts/build_baekse_cities.py'
       - 'scripts/prepare_baekse_public.py'
+      - 'scripts/baekse_cf_release.py'
       - 'tests/baekse-public-worker.test.mjs'
       - '.github/workflows/baekse-public-430-qa.yml'
   workflow_dispatch:
@@ -24,6 +25,7 @@ jobs:
         run: |
           python -m v5 plan-check --site baekse
           python -m unittest discover -s tests -p 'test_baekse_cities.py' -v
+          python -m py_compile scripts/baekse_cf_release.py
           node --test tests/baekse-public-worker.test.mjs
       - name: Rebuild all 430 pages with exact image assets, unique titles and sampled similarity
         run: |
