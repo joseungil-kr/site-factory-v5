@@ -1,0 +1,239 @@
+{
+  "siteId": "winterbbang",
+  "date": "2026-10-29",
+  "status": "ISOLATED_PREVIEW_DEPLOYED_NO_INDEX",
+  "source": {
+    "repository": "joseungil-kr/site-factory-v5",
+    "branch": "feature/v54-winterbbang-preflight-20261029",
+    "sha": "da457ae5a6a3b667ac27505143fe353ddbb0b771"
+  },
+  "deploy": {
+    "repository": "joseungil-kr/site-factory-v4",
+    "branch": "ops/v5-isolated-staging-20261024",
+    "workflowCommit": "ef87c6a70093faed60a8a631b61dbfa795f50ce9",
+    "runId": 40856942135,
+    "url": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40856942135",
+    "worker": "sfv54-winterbbang-preview",
+    "workersDevUrl": "https://sfv54-winterbbang-preview.joseungil.workers.dev",
+    "customDomainAttached": true,
+    "dnsChanged": false,
+    "indexNowSent": false,
+    "customDomainUrl": "https://winterbbang.nalmada.net/",
+    "dnsChangeMeaning": "No manual DNS API call; Cloudflare Custom Domain attachment automatically manages the record and certificate.",
+    "domainAttachWorkflowCommit": "39716c0884366d32fa1489c9f555b0e347734f3a",
+    "domainAttachRunId": 40867847521,
+    "domainAttachUrl": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40867847521"
+  },
+  "build": {
+    "count": 1804,
+    "locality": 1732,
+    "seoul": 807,
+    "gyeonggi": 925,
+    "provinceHubs": 2,
+    "districtHubs": 69,
+    "home": 1,
+    "contentBlocks": 160,
+    "originalSeed": 64,
+    "extension": 96,
+    "verifiedWebp": 5,
+    "uploadedStaticFiles": 1811,
+    "robots": "Disallow: /",
+    "pageRobots": "noindex,nofollow",
+    "httpRobots": "noindex, nofollow, noarchive",
+    "sitemapPresent": false
+  },
+  "quality": {
+    "v5RunId": 40856561757,
+    "url": "https://github.com/joseungil-kr/site-factory-v5/actions/runs/40856561757",
+    "unitTests": 5,
+    "sampleSize": 18,
+    "population": 1732,
+    "char5JaccardComparisons": 31158,
+    "maxJaccard": 0.363946,
+    "thresholdExclusive": 0.49,
+    "violations": 0,
+    "exactDuplicateNarratives": 0,
+    "internalBrokenLinks": 0,
+    "note": "Narrative lexical similarity sample vs all; not proof of substantive local uniqueness or ranking"
+  },
+  "liveHttp": {
+    "source": "V4 Actions 40856942135; actual urllib HTTPS GET",
+    "checks": [
+      [
+        "/",
+        200
+      ],
+      [
+        "/r/35af20163539.html",
+        200
+      ],
+      [
+        "/r/098a152b200f.html",
+        200
+      ],
+      [
+        "/r/a63c9f7d8150.html",
+        200
+      ],
+      [
+        "/d/2e8dfcbf4e4b.html",
+        200
+      ],
+      [
+        "/assets/images/hero.webp",
+        200
+      ],
+      [
+        "/robots.txt",
+        200
+      ],
+      [
+        "/this-absent-route-20261029.html",
+        404
+      ]
+    ],
+    "allResponsesNoindex": true,
+    "phoneHref": "tel:0314070103",
+    "heroImageSignature": "RIFF/WEBP",
+    "namedLocalityReadOnlyQA": {
+      "runId": 40857452014,
+      "url": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40857452014",
+      "status": "SUCCESS",
+      "sixNamedLocalityUrls200": true,
+      "allFiveWebpHttp200Sha256Match": true,
+      "noindexHeaders": true,
+      "specificLocalities": [
+        "서울특별시 강남구 역삼동",
+        "서울특별시 마포구 서교동",
+        "경기도 안산시 상록구 본오동",
+        "경기도 수원시 팔달구 인계동",
+        "경기도 성남시 분당구 야탑동",
+        "경기도 고양시 일산동구 정발산동"
+      ],
+      "readOnly": true
+    }
+  },
+  "domainPreflight": {
+    "runId": 40856725727,
+    "nalmadaNetZoneActive": true,
+    "customDomainRead": 200,
+    "bindingMatches": 0,
+    "workerInventoryRead": 200,
+    "priorWorkerAbsent": true,
+    "dnsRead": 403,
+    "routesRead": 403,
+    "safeToAttach": false,
+    "conclusion": "Independent preview safe; cannot attach custom domain without full DNS and Worker route collision visibility"
+  },
+  "limitations": [
+    "SEO custom-domain release and sitemap/IndexNow not yet performed",
+    "Current candidate name ledger is V4 2026-10-12 mixed legal/admin name inventory and not independently verified as complete current official dong list",
+    "Generated locality narratives use deterministic topic combinations and are not supported by 1,732 distinct verified local business facts; do not claim SEO quality or ranking guarantee",
+    "noindex preview was deliberately used until substantive uniqueness and custom domain gates pass"
+  ],
+  "domainAttachment": {
+    "performedAt": "2026-10-29 20:46 KST (recorded GitHub Actions UTC 11:46)",
+    "host": "winterbbang.nalmada.net",
+    "boundService": "sfv54-winterbbang-preview",
+    "method": "Cloudflare Workers Custom Domain PUT (exact hostname only) via existing V4 GitHub Actions secrets and account verification",
+    "accountOwnershipProof": "V4 flower-a/b original domain mappings verified in same account; nalmada.net active exact zone account",
+    "customDomainWriteCount": 1,
+    "manualDnsWrites": false,
+    "routeWrites": false,
+    "workerDeploys": false,
+    "indexNow": false,
+    "previousCustomDomains": 87,
+    "afterCustomDomains": 88,
+    "otherDomainMappingsUnchanged": true,
+    "existingWorkerVerified": true,
+    "noindex": true,
+    "success": true,
+    "initialHttpsDnsPropagation": "First attempt failed DNS resolution, second HTTPS readback passed",
+    "httpChecks": [
+      {
+        "path": "/",
+        "status": 200
+      },
+      {
+        "path": "/r/f41a39a96e8d.html",
+        "status": 200
+      },
+      {
+        "path": "/r/68a35ef70403.html",
+        "status": 200
+      },
+      {
+        "path": "/assets/images/hero.webp",
+        "status": 200,
+        "sha256": "9ece3fbcfe2c973e74e814a2beee1a3c57f2b4bb105aa1e9f8f04477844adc41"
+      },
+      {
+        "path": "/robots.txt",
+        "status": 200,
+        "robotsDisallow": true
+      },
+      {
+        "path": "/winterbbang-absent-20261029.html",
+        "status": 404
+      }
+    ],
+    "contentReleaseSha": "da457ae5a6a3b667ac27505143fe353ddbb0b771",
+    "actionUrl": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40867847521",
+    "limitations": "Site remains noindex; page corpus copy audits and locality factual uniqueness still required prior to search release. DNS and Routes GET 403 in preflight, but Cloudflare exact domain bind succeeded with expected Worker and HTTPS readback.",
+    "independentReadOnlyVerification": {
+      "runId": 40868333991,
+      "url": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40868333991",
+      "method": "GET_ONLY_NO_MUTATION",
+      "samples": [
+        "/",
+        "/r/f41a39a96e8d.html",
+        "/r/70bc4aaed6dc.html",
+        "/r/68a35ef70403.html",
+        "/r/e913c1706ebf.html",
+        "/r/d7b714416837.html",
+        "/r/49e71f228c93.html"
+      ],
+      "htmlHTTP200": 7,
+      "WebpHTTP200Sha256Matches": 5,
+      "httpNoindexAll": true,
+      "robotsDisallow": true,
+      "nonexistent404": true,
+      "privateContractConditionsAbsent": true,
+      "telephonyCTA": "tel:0314070103",
+      "marginDisclaimer": "매출총이익률 60~70% = 판매가격 minus ingredient costs; not net profit",
+      "status": "SUCCESS"
+    }
+  },
+  "naverOwnershipVerificationDeployment": {
+    "sourceFileCommit": "3434a0e447d3d35c08c3db911cf88a327b103335",
+    "sourceFilePath": "sites/winterbbang/naverf6f2cf7c98cc3b3483ccc524379d2605.html",
+    "sourceFileBlobSha": "84855151737b83be21ea2fbe1f595c682723267a",
+    "body": "naver-site-verification: naverf6f2cf7c98cc3b3483ccc524379d2605.html",
+    "bytes": 67,
+    "endsWithNewline": false,
+    "sha256": "3071b0e2e48ae7fcb8e5db95489a612eab7d01dcd6d1c2b33724121366b07ab3",
+    "deploymentWorkflowCommit": "a4e0db55769f68d3d18d709ce59a1e4521316ea2",
+    "deploymentRunId": 40905015383,
+    "deploymentRunUrl": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40905015383",
+    "activeVersionBefore": "f990ffd4-e391-435e-9ebc-3232e83f5d79",
+    "activeVersionAfter": "c3438c1a-89ff-4ffa-bd85-88c7fa5c1151",
+    "predeployUrlStatus": 404,
+    "liveUrl": "https://winterbbang.nalmada.net/naverf6f2cf7c98cc3b3483ccc524379d2605.html",
+    "liveUrlStatus": 200,
+    "liveBodyExact": true,
+    "liveBytes": 67,
+    "liveSha256": "3071b0e2e48ae7fcb8e5db95489a612eab7d01dcd6d1c2b33724121366b07ab3",
+    "newlineAdded": false,
+    "excludedFromContentCount": true,
+    "excludedFromSitemap": true,
+    "sitemapUrlCount": 1804,
+    "contentPageCount": 1804,
+    "existingIndexNowKey": "2a73e0239c3bcec564b34d6386cc622c",
+    "indexNowKeyPreserved": true,
+    "images5Preserved": true,
+    "workersDevPreviewNoindexPreserved": true,
+    "existingDomainBindingsUnchanged": true,
+    "indexNowSubmitted": false,
+    "status": "SUCCESS"
+  }
+}

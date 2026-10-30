@@ -1,0 +1,154 @@
+{
+  "version": 1,
+  "siteId": "winterbbang",
+  "approved": false,
+  "approvalState": "PREFLIGHT_DRAFT_ONLY",
+  "domain": null,
+  "brand": "백세푸드",
+  "businessModel": "백세푸드 4종 겨울 간식 창업·샵인샵·노점형 판매 상담, 전국 판매점/대리점 및 식자재 공급 문의",
+  "serviceScope": {
+    "region": "서울특별시·경기도 (SEO landing); 전국 식자재/판매점/대리점 상담",
+    "granularity": "시·군·구, 읍·면·동은 확인된 명칭과 지역별 콘텐츠 근거가 있는 경우에 한해 발행",
+    "facilities": "기존 카페·무인카페·과일/야채 가게·분식점·꽈배기 가게·전통차집 및 적법한 야외 판매 장소",
+    "historicalCandidateCount": {
+      "seoul": 467,
+      "gyeonggi": 736,
+      "total": 1203,
+      "source": "site-factory-v5 feature/v52-wreath-region sites/wreath-region/regions.json (historical 2025 source, lower-level 2026 status not verified)"
+    }
+  },
+  "pageTypes": [
+    "home",
+    "region-startup",
+    "region-shop-in-shop",
+    "menu-startup",
+    "store-type-shop-in-shop",
+    "ingredients-supply",
+    "startup-consultation-and-gross-margin-guide",
+    "legal-and-location-checklist",
+    "contact"
+  ],
+  "targetPageCount": null,
+  "targetPolicy": "지역 커버리지와 실제 의도/콘텐츠 고유성 검증 후 산정. 1,203은 과거 지역명 후보이지 승인된 제작 목표나 최신 행정구역 수가 아님.",
+  "titlePattern": "{지역명} 붕어빵 창업·샵인샵 상담 | 백세푸드 (메뉴별 독립 의도 존재 시 {지역명} 계란빵 창업 등으로 분리)",
+  "urlPattern": "/지역계층/창업주제/ — 실제 구현은 V5 검증된 지역 정적 생성기 분리 활용; 충돌/중복 URL 검사",
+  "keywordGroups": {
+    "primary": [
+      "{지역명} 붕어빵 창업",
+      "{지역명} 붕어빵 샵인샵",
+      "{지역명} 붕어빵 반죽 납품"
+    ],
+    "conditional": [
+      "{지역명} 잉어빵 창업",
+      "{지역명} 계란빵 창업",
+      "{지역명} 십원빵 창업"
+    ],
+    "secondary": [
+      "소자본 겨울장사",
+      "기존 카페 메뉴 추가",
+      "붕어빵 팥소 공급",
+      "붕어빵 슈크림 공급",
+      "매장 앞 붕어빵 판매",
+      "판매점 대리점 모집"
+    ]
+  },
+  "copyPoolPlan": {
+    "industry": "겨울 간식 창업 및 식자재 공급",
+    "source": "사업자 직접 확인한 4종 공급과 매출총이익 기준; 일반 운영 문단은 자체 창작. 거래 세부 조건은 공개 원장에 기록하지 않음",
+    "sentenceTarget": 60,
+    "seedPoolPath": "docs/site-plans/winterbbang/copy-pool.seed.json",
+    "localEvidenceRequired": true,
+    "shopTypeSpecific": true,
+    "confirmedMarginBasis": "판매가에서 재료비만 차감한 매출총이익률; 인건비·시설비·전기료·카드수수료 등 제외",
+    "leadTimeRule": "일주일 준비는 적용 범위 검증 전 확정·보장 금지"
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-jaccard",
+    "thresholdExclusive": 0.49,
+    "sampleFraction": 0.01,
+    "seed": 20261029,
+    "population": "본문 상업 문단 (지역명·링크·공통 헤더·푸터 제외), 의미상 중복 별도 검수"
+  },
+  "conversion": {
+    "mode": "전화 창업상담 및 납품/대리점 문의",
+    "phone": "031-407-0103",
+    "phoneHref": "tel:0314070103",
+    "contactTitle": "백세푸드 분식창업 담당자",
+    "orderUrl": null,
+    "leadForm": "개인정보/동의 검토 완료 전 신규 폼 수집 금지"
+  },
+  "images": {
+    "source": "AI 생성형 이미지: 모든 지역/메뉴 페이지에 동일한 5종 공용 사진풍 이미지 사용 (실제 매장/제품/납품 실적 사진 주장 금지)",
+    "approved": false,
+    "reference": "2026-10-29 사용자 직접 이미지 제작 지시",
+    "assetPaths": [
+      "assets/library/winterbbang/hero.webp",
+      "assets/library/winterbbang/shop-in-shop.webp",
+      "assets/library/winterbbang/menu.webp",
+      "assets/library/winterbbang/street.webp",
+      "assets/library/winterbbang/ingredients.webp"
+    ],
+    "visualSlots": [
+      "HERO_WIDE",
+      "SHOP_IN_SHOP",
+      "MENU_LINEUP",
+      "STREET_STALL",
+      "INGREDIENTS_SUPPLY"
+    ],
+    "mobileDesktopQA": [
+      390,
+      1440
+    ],
+    "sourceNotActual": "generated, illustrative; neither real franchisee installations nor delivery records"
+  },
+  "publishPolicy": {
+    "mode": "draft; no build/public/IndexNow until plan approved and material/menu/claims confirmed",
+    "indexNow": "disabled until live HTTP and key verification",
+    "dns": "no DNS/auth/access changes without approval",
+    "noindexPreview": true
+  },
+  "sources": [
+    {
+      "url": "https://snack.baeksefood.com/support/",
+      "kind": "business_site",
+      "checkedOn": "2026-10-29"
+    },
+    {
+      "url": "https://snack.baeksefood.com/startup-stories/shop-in-shop/",
+      "kind": "business_site",
+      "checkedOn": "2026-10-29"
+    },
+    {
+      "url": "https://www.gov.kr/mw/AA020InfoCappView.do?CappBizCD=14600000021&HighCtgCD=A09006&tp_seq=02",
+      "kind": "official",
+      "checkedOn": "2026-10-29"
+    }
+  ],
+  "openQuestions": [
+    "1주일 준비의 적용 범위(장소·신고 준비 완료 후인지) 확인",
+    "매출총이익률 공개 문구에 사용할 대표 제품별 실제 판매가·재료비 산정 사례 확보",
+    "생성형 이미지 5개 파일 제작 후 픽셀·실제 페이지 반응형 QA"
+  ],
+  "notes": "AGENTS.md / SITE_CREATION_PROTOCOL.md 준수. 도메인 후보는 nalmada.net과 nalmada.com 모두 소유·충돌 검증 전이며 미확정. site-spec 승인 전 build/public/indexnow 금지. 공개 GitHub 원장에는 거래 세부조건의 개별 수치/구성을 저장하지 않음. 기존 V4/V5 Worker와 DNS 유지.",
+  "publicContentPolicy": {
+    "hideCommercialTerms": true,
+    "hideNumbersOrBreakdownOfEntryPackages": true,
+    "feesAndSupportDetailsVia": "전화 문의: 031-407-0103",
+    "grossMargin": "사용자 제공 예상 매출총이익률 60~70%; 판매가-재료비 기준; 그 밖의 비용과 순이익은 포함하지 않음",
+    "grossMarginDisclaimer": "판매가와 재료 사용량·손실에 따라 달라질 수 있으며 순이익 또는 실적 보장이 아님",
+    "menuSupport": [
+      "붕어빵",
+      "잉어빵",
+      "계란빵",
+      "십원빵"
+    ],
+    "menuSupportProof": "사용자 2026-10-29 확인: 4종 모두 공급 지원 가능",
+    "photos": "AI 생성 이미지 사용, 실제 매장/납품사진으로 오인 금지",
+    "doNotPublishCommercialTerms": true
+  },
+  "domainCandidates": [
+    "https://winterbbang.nalmada.net",
+    "https://winterbbang.nalmada.com"
+  ],
+  "domainStatus": "UNCONFIRMED; no DNS/Cloudflare binding changes or assumptions"
+}
