@@ -13,7 +13,7 @@
 - Python HTTP 서버: 3 HTML + 5 WebP + robots.txt 모두 HTTP 200. 세 HTML 모두 `noindex,nofollow`, Sitemap 없음.
 - Playwright Chromium 직접 localhost 접속: `net::ERR_BLOCKED_BY_ADMINISTRATOR` (환경 접근 제한); **실제 HTTP 브라우저 탐색 완료로 주장하지 않음**.
 - 보완 렌더링: 동일한 로컬 HTML/CSS/실제 WebP를 data: URL로 불러와 Chromium set_content로 1440×900, 390×844 렌더링 검수. 두 크기 모두 5/5 이미지 로딩, 가로 overflow 0. 스크린샷 별도 ZIP 포함.
-- 운영 preview URL: **없음**. GH 바이너리 업로드는 아직 미완료이므로 운영 또는 미리보기 배포 금지.\n- 로컬 ZIP SHA-256: `3845d7c158880b1aadbb1fd9283a358cc4b76fdd679402bf9c934ea818fe7a88`, 2,040,555 bytes, 26개 파일. 이미지 5종 WebP 원본 및 build 산출 포함.
+- 운영 preview URL: **없음**. GH 바이너리 업로드는 아직 미완료이므로 운영 또는 미리보기 배포 금지.\n- 로컬 ZIP SHA-256: `d67e2d3b4d0ee1e8f0fc289330e933e04f2914db1ba4a264e3c09027cccae119`, 1,967,704 bytes, 21개 파일. 이미지 5종 WebP 원본 및 build 산출 포함.
 
 ## 타 프로젝트 조사와 재사용 판단
 - 내부 `joseungil-kr/site-factory-v5`: 이미 검증된 Python 정적 페이지·QA·Workers 배포 구조. **구조 일부 재사용이 최경제적**, 신규 Astro/Shopify 스택 추가 도입 불필요.
