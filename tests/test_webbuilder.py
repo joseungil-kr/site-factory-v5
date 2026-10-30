@@ -76,14 +76,33 @@ class WebbuilderPreviewTest(unittest.TestCase):
         self.assertTrue(price["domainIncluded"])
         self.assertTrue(price["domainRegistrationIncluded"])
         self.assertTrue(price["hostingIncluded"])
+        self.assertEqual(price["minimumPages"], 10)
+        self.assertEqual(price["minimumMonthlyKRW"], 10000)
+        self.assertTrue(price["providerOwnedSubdomainIncluded"])
+        self.assertTrue(price["providerPurchasedIndustryDomainCostsIncluded"])
+        self.assertFalse(price["customerDomainRegistrationIncluded"])
         self.assertFalse(price["fullContractTermsConfirmed"])
-        for field in ("minimumPages", "vat", "contractTerm", "domainRenewalPolicy",
-                      "domainTypeLimit", "maintenanceEdits"):
+        for field in ("vat", "contractTerm", "maintenanceEdits"):
             self.assertEqual(price[field], "UNCONFIRMED", field)
+        dp = load("domain-policy.json")
+        self.assertEqual(dp["offer"]["minPages"], 10)
+        self.assertEqual(dp["offer"]["minMonthlyKRW"], 10000)
+        self.assertTrue(dp["expansionPolicy"]["rootDomains"].startswith("add as many"))
+        self.assertFalse(spec["domainProvision"]["rootDomainWhitelistFixed"])
+        self.assertFalse(spec["domainProvision"]["domainRegistrationOrPurchaseExecuted"])
+        self.assertEqual(spec["domainProvision"]["type"], "provider-managed-multi-domain-pool")
+        roots = {x["root"]:x["status"] for x in dp["domainInventory"]}
+        self.assertIn("nalmada.net", roots)
+        self.assertEqual(roots["leak119.net"], "candidate_example_not_purchased_or_verified")
+        self.assertEqual(roots["skycar24hr.com"], "candidate_example_not_purchased_or_verified")
         self.assertEqual(self.qa["billingCycle"], "monthly")
         self.assertTrue(self.qa["baseOfferApproved"])
         self.assertTrue(self.qa["domainAndHostingIncluded"])
         self.assertFalse(self.qa["pricingApproved"])
+        self.assertEqual(self.qa["minimumPages"], 10)
+        self.assertEqual(self.qa["minimumMonthlyKRW"], 10000)
+        self.assertEqual(self.qa["domainModel"], "provider-managed-multi-industry-domains")
+        self.assertFalse(self.qa["candidateIndustryDomainsPurchased"])
         self.assertFalse(self.qa["fullContractTermsConfirmed"])
         self.assertFalse(spec["publishPolicy"]["production"])
         self.assertFalse(spec["publishPolicy"]["indexNow"])
@@ -94,7 +113,10 @@ class WebbuilderPreviewTest(unittest.TestCase):
         pricing = (self.out / "guide/pricing/index.html").read_text(encoding="utf-8")
         faq = (self.out / "guide/faq/index.html").read_text(encoding="utf-8")
         self.assertIn("페이지당 월 1,000원부터", home)
-        self.assertIn("도메인 구입비", home)
+        self.assertIn("월 10,000원", home)
+        self.assertIn("최소 10페이지", home)
+        self.assertIn("*.leak119.net", home)
+        self.assertIn("*.skycar24hr.com", home)
         self.assertIn("서버비", home)
         self.assertIn("월 이용료", pricing)
         for pages in (10, 20, 30, 50, 100):
@@ -104,9 +126,14 @@ class WebbuilderPreviewTest(unittest.TestCase):
         self.assertIn("월 20,000원", home)
         self.assertIn("월 30,000원", home)
         self.assertIn("월 1,000원", faq)
+        self.assertIn("최소 10페이지", faq)
+        self.assertIn("운영사가", pricing + faq)
+        self.assertIn("leak119.nalmada.net", pricing + faq)
+        self.assertIn("skycar24hr.com", pricing + faq)
         for stale in ("월 청구액 또는 일회비용으로 확정된 금액이 아닙니다",
                       "1회비와 월 요금 구분", "실제 과금주기",
-                      "과금 주기, 도메인·호스팅 포함 범위"):
+                      "과금 주기, 도메인·호스팅 포함 범위",
+                      "최소 수량·부가세", "도메인 구입비·서버비 포함"):
             self.assertNotIn(stale, home + pricing + faq)
         for path in self.out.rglob("industry/*/index.html"):
             self.assertIn("페이지당 월 1,000원부터", path.read_text(encoding="utf-8"))
