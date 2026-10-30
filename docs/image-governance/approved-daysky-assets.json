@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "site": "daysky",
+  "permissionScope": "only skycar1day.com exact source photos as specified; no extension to other hosts",
+  "permissionQuote": "skycar1day.com 사진은 사용자가 명시 허가했으므로 사용 가능하며 이 이유로 재생성할 필요 없습니다.",
+  "permissionSource": "User message 2026-10-30 in Site Factory conversation",
+  "sourceAuditFile": "docs/DAYSKY_PHOTO_PROVENANCE.json",
+  "records": [
+    {
+      "sourceType": "USER_APPROVED_EXTERNAL",
+      "assetPath": "assets/library/daysky/skycar-hero.webp",
+      "assetRole": "approved_worksite_illustration",
+      "originalURL": "https://skycar1day.com/images/yjsky_02.jpg",
+      "originalSha256": "96d39b89a3c41f1175cd8adadb054c73c619baf873ccdc1d2784007bef98ecf6",
+      "finalSha256": "b8ca62cc58c46e6d192b74f5e3c7b3390ae3662b319152728b39f6bbee535729",
+      "permission": {
+        "userQuote": "skycar1day.com 사진은 사용자가 명시 허가했으므로 사용 가능하며 이 이유로 재생성할 필요 없습니다.",
+        "scopeHostname": "skycar1day.com",
+        "issuedOn": "2026-10-30",
+        "exactAsset": true
+      },
+      "transformations": [
+        {
+          "operation": "crop",
+          "cropTopFraction": 0.4
+        },
+        {
+          "operation": "encode",
+          "format": "WEBP",
+          "documentedIn": "docs/DAYSKY_PHOTO_PROVENANCE.json"
+        }
+      ],
+      "toolGenerated": false,
+      "isActualBusinessDeliveryProof": false,
+      "depictedFactRole": "approved_external_photo_not_independent_proof_of_service_delivery"
+    },
+    {
+      "sourceType": "USER_APPROVED_EXTERNAL",
+      "assetPath": "assets/library/daysky/skycar-facade.webp",
+      "assetRole": "approved_worksite_illustration",
+      "originalURL": "https://skycar1day.com/images/yjsky_01.jpg",
+      "originalSha256": "02cbe6dc46bcc19bb1dda60016392268342ee7fc62df22ae04cad7fdbdc98445",
+      "finalSha256": "6671cd2a0067d42b36cdf379ea163f964db2afae9c28fc050856e03c7d53c0d0",
+      "permission": {
+        "userQuote": "skycar1day.com 사진은 사용자가 명시 허가했으므로 사용 가능하며 이 이유로 재생성할 필요 없습니다.",
+        "scopeHostname": "skycar1day.com",
+        "issuedOn": "2026-10-30",
+        "exactAsset": true
+      },
+      "transformations": [
+        {
+          "operation": "crop",
+          "cropTopFraction": 0.28
+        },
+        {
+          "operation": "encode",
+          "format": "WEBP",
+          "documentedIn": "docs/DAYSKY_PHOTO_PROVENANCE.json"
+        }
+      ],
+      "toolGenerated": false,
+      "isActualBusinessDeliveryProof": false,
+      "depictedFactRole": "approved_external_photo_not_independent_proof_of_service_delivery"
+    },
+    {
+      "sourceType": "USER_APPROVED_EXTERNAL",
+      "assetPath": "assets/library/daysky/skycar-truck.webp",
+      "assetRole": "approved_worksite_illustration",
+      "originalURL": "https://skycar1day.com/images/yjsky_02.jpg",
+      "originalSha256": "96d39b89a3c41f1175cd8adadb054c73c619baf873ccdc1d2784007bef98ecf6",
+      "finalSha256": "1d1a9cbd4989a0699a5f47d921640942210672ae447467b79fe57dbaf8b651fd",
+      "permission": {
+        "userQuote": "skycar1day.com 사진은 사용자가 명시 허가했으므로 사용 가능하며 이 이유로 재생성할 필요 없습니다.",
+        "scopeHostname": "skycar1day.com",
+        "issuedOn": "2026-10-30",
+        "exactAsset": true
+      },
+      "transformations": [
+        {
+          "operation": "crop",
+          "cropTopFraction": 0.42
+        },
+        {
+          "operation": "encode",
+          "format": "WEBP",
+          "documentedIn": "docs/DAYSKY_PHOTO_PROVENANCE.json"
+        }
+      ],
+      "toolGenerated": false,
+      "isActualBusinessDeliveryProof": false,
+      "depictedFactRole": "approved_external_photo_not_independent_proof_of_service_delivery"
+    }
+  ]
+}
