@@ -62,3 +62,12 @@
 - **이미지 출처 체인:** 대화의 AI 이미지 생성 기록 gen ID `15f669dd-7ef4-46ee-9a3a-56e90f900200`, 원 PNG `a_vertical_collage_strip_style_photo_composite_sho.png` SHA-256 `db9ebc5272573c3ec97b5aeefe43fee8f37dfcc99b6f6d5d554a34361f43c3d1`, 1024×1536, 2,536,172바이트. 기획상 5개 세로 구획을 좌표 `image-provenance.json`대로 Crop + Pillow WebP quality80/method6로 재인코딩해 원 ZIP WebP **5개 바이트 전부 정확히 일치**함을 직접 확인. 원 PNG는 GitHub에는 없음; 원본 부재 상황의 독립 재현 제한은 공개적으로 남김.
 - **배포 상태:** 기존 검증된 3페이지 noindex `workers.dev` 미리보기는 그대로 유지. 신규 16개는 GitHub Actions artifact에만 생성했으며 Cloudflare 재배포·커스텀 도메인/DNS/인증 변경·IndexNow POST·공개 index 전환 없음.
 - **기존 기록과의 구분:** 문서 상단 '원격 실이미지 업로드 미완료' 및 'preview URL 없음'은 과거 시점의 작업 로그이며 현재 상태는 run 41018200247/41019185898의 성공 기록이 우선함.
+
+## 2026-10-30 19페이지 고객 문구 교정 및 noindex 실제 배포 검증 (최신 정정)
+- **문구 오류:** 기존 16페이지의 '수원시은 municipality 등급', '장안구은 ward 등급', '가장 높은 B205은' 등의 표현을 제거. 법정동 코드/내부 enum은 고객 본문에서 제외하고 원장/QA에서만 보존. 모든 지역의 배송 가능·배송료·리본 포함 여부는 **미확인**; 실제 확인된 배송 가능 지역은 0.
+- **비교 구조:** 기존 초안의 5종 중 3개 `combinations(5,3)`은 정확히 10종의 상품 조합, 16개 지역 출력 중 6개가 반복됨. '16개 독립 가격 비교 조합' 또는 '16개 고유 지역 콘텐츠'라는 주장은 취소. 수정본은 *근조 3단 상품끼리* B201/B203/B205 가격을 비교하는 공통 1종으로 명시하고 축하 C205/오브제 C030는 별도 상품 유형 소개. 비교 본문 및 FAQ 재사용 사실도 별도로 기록.
+- **수정 테스트:** [V5 run 41035612269](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41035612269) success. 대표 3페이지 테스트 3개 + 확장 16페이지 검증 테스트 3개, 이미지 5개 해시/치수, 가격링크 수, noindex/robots, 문구 회귀 테스트 통과.
+- **현재 Worker:** [V4 run 41035787113](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41035787113) success. 배포 전 현행 활성 버전 `dab3c828-4662-4228-a4b9-21fec3334e14` 및 기존 도메인 미연결 대조 통과. 동일 noindex Worker에 새 버전 `e8bbac15-aec5-4d90-bf58-18669346af20` 실제 배포, 롤백 불필요. 단정 가능한 검증은 HTTP 기반이며 시각적 픽셀 렌더/스크린샷 검수와 혼동하지 않음.
+- **실제 원격 응답:** 19/19 HTML HTTP200, 전체 페이지 noindex 헤더/HTML meta, 각 페이지 AI WebP 5개 및 fwith 상품 링크 5개, 실제 이미지 5종 HTTP200/전체 SHA 일치, robots Disallow HTTP200, Sitemap/누락 경로 HTTP404. 영수증 artifact `12968555792` (run 41035787113).
+- **원장 시점:** 출처 V4 `data/regions/master.json` 2026-10-22 확인, 현재 상태에 대한 2026-10-30 재수집 아님. 법적 원본 적용일은 미확인. 지역별 실제 사양/배송 조건 조사 없이 고유 지역 콘텐츠를 주장하지 않음.
+- **변경 범위:** 수정 확장 소스와 격리 noindex Worker뿐. 이미지·실상품 링크·기존 3페이지 보존. Custom Domain/DNS, Secret, 인증/권한, 운영 색인, IndexNow 전송 변경 없음.
