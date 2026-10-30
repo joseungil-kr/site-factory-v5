@@ -71,6 +71,8 @@ jobs:
                           assert page.locator('img[src^="/assets/images/"]').count()==7
                           assert page.locator('.tf-story-item img').count()==5
                           assert page.evaluate('document.documentElement.scrollWidth<=window.innerWidth+1')
+                          original_lazy=page.locator('.tf-story-item img').evaluate_all("(imgs)=>imgs.map(i=>i.getAttribute('loading'))")
+                          assert original_lazy==['lazy']*5,(width,route,'original source must use lazy loading')
                           local=page.locator('img[src^="/assets/images/"]')
                           assert local.evaluate_all('(imgs)=>{imgs.forEach(i=>i.loading="eager"); return Promise.all(imgs.map(i=>i.decode().then(()=>true).catch(()=>false))).then(a=>a.every(Boolean));}')
                           seller=page.locator('.tf-product img').evaluate_all("""
@@ -99,7 +101,7 @@ jobs:
                               assert (im['naturalWidth'],im['naturalHeight'])==(1448,1086),(width,route,im)
                               assert im['displayWidth']>=240,(width,route,im)
                               assert im['right']<=width+1,(width,route,im)
-                              assert im['loading']=='lazy' and 'AI 연출 이미지' in im['alt']
+                              assert 'AI 연출 이미지' in im['alt']
                           grid_cols=page.locator('.tf-story-grid').evaluate(
                             "e => getComputedStyle(e).gridTemplateColumns.split(' ').filter(Boolean).length")
                           assert grid_cols==(1 if width==390 else 6),(width,route,grid_cols)
