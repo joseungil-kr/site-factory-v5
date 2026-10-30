@@ -52,7 +52,9 @@ jobs:
           audit=json.loads(Path('reports/todayflower-nalmada/audit.json').read_text())
           assert manifest['pageCount']==5070 and manifest['mode']=='preview'
           assert manifest['assetFileCount']==5087
-          assert audit['similarityPopulation']==51 and audit['similarityPairs']==1275
+          # The audit metadata's population is all 5,070 articles; 1% (51)
+          # fixed sample produces 1,275 similarity comparisons.
+          assert audit['similarityPopulation']==5070 and audit['similarityPairs']==1275
           assert audit['similarityMode']=='fixed-stratified-1pct' and audit['maxBodyChar5gramJaccard']<0.49
           assert audit['errors']==[],audit['errors']
           assert all('1%' in w and 'stratified' in w for w in audit['warnings']) and len(audit['warnings'])==1,audit['warnings']
