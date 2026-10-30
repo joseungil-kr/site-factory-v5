@@ -53,9 +53,29 @@ class TodayflowerPilotTest(unittest.TestCase):
             "gift-bouquet.webp","opening-plant.webp","celebration-wreath.webp",
             "condolence-wreath.webp","flower-wrapping.webp"
         ])
+        import hashlib
+        import json
+        spec=json.loads((ROOT/"sites/todayflower-nalmada/site-spec.json").read_text(encoding="utf-8"))
+        image_meta=spec["images"]
+        self.assertEqual(image_meta["countPerPage"],7)
+        self.assertEqual(image_meta["aiEditorialCountPerPage"],5)
+        self.assertEqual(image_meta["otherLocalEditorialCountPerPage"],2)
+        self.assertEqual(image_meta["libraryAssetCount"],10)
+        self.assertEqual(self.site["todayflowerPilot"]["editorialImages"],7)
+        proof={v["path"].rsplit("/",1)[-1]:v for v in image_meta["provenance"]}
         for name in generated:
             payload=(ROOT/"assets/library/todayflower"/name).read_bytes()
-            self.assertTrue(payload.startswith(b"RIFF") and payload[8:12]==b"WEBP")
+            self.assertEqual(payload[:4],b"RIFF")
+            self.assertEqual(payload[8:12],b"WEBP")
+            self.assertEqual(payload[12:16],b"VP8 ")
+            self.assertEqual(payload[23:26],b"\x9d\x01\x2a")
+            original_width=int.from_bytes(payload[26:28],"little")&0x3fff
+            original_height=int.from_bytes(payload[28:30],"little")&0x3fff
+            self.assertEqual((original_width,original_height),(1448,1086),name)
+            self.assertGreaterEqual(original_width,768)
+            self.assertEqual(proof[name]["bytes"],len(payload))
+            objhash=hashlib.sha1(b"blob "+str(len(payload)).encode()+b"\x00"+payload).hexdigest()
+            self.assertEqual(objhash,proof[name]["gitBlobSHA1"])
         for page in self.pages:
             with self.subTest(page=page["number"]):
                 html=(markup.home if page["number"]==1 else markup.detail)(
@@ -67,6 +87,11 @@ class TodayflowerPilotTest(unittest.TestCase):
                 self.assertEqual(html.count('src="/assets/images/'),7)
                 for name in generated:
                     self.assertEqual(html.count('src="/assets/images/'+name+'"'),1)
+                self.assertEqual(html.count('width="1448" height="1086"'),5)
+                self.assertNotIn('width="96" height="141"',html)
+                self.assertNotIn('width:96px',html)
+                self.assertIn("grid-template-columns:repeat(6,minmax(0,1fr))",html)
+                self.assertIn("grid-template-columns:minmax(0,1fr)",html)
                 self.assertIn("AI 연출 이미지",html)
                 self.assertEqual(visible_copy_errors(html),[])
                 self.assertIn('href="tel:18440644"',html)
