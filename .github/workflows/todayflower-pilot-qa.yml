@@ -118,6 +118,8 @@ jobs:
                           page.locator('.tf-layout').wait_for()
                           assert response and response.status==200
                           assert page.locator('h1').count()==1
+                          assert page.locator('.tf-hero h1').evaluate(
+                              "e => getComputedStyle(e).wordBreak") == 'keep-all'
                           assert page.locator('a[href^="tel:"]').count()>=1
                           assert page.locator('img[src^="/assets/images/"]').count()==7
                           assert page.locator('.tf-story-item img').count()==5
