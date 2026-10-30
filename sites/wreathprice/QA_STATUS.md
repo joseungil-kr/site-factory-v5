@@ -53,3 +53,12 @@
 - **영수증:** run 41019185898 artifact 12960339636 (`wreathprice-preview-final.json` 및 응답 진단).
 - **도메인:** `wreathprice.nalmada.net` DNS/Custom Domain 연결하지 않음. Workers Custom Domain에서는 충돌 검증 당시 해당 호스트 바인딩 없음; DNS/Routes 별도 읽기 상태는 미확인.
 - 실제 운영/공개색인/Google/Naver/IndexNow, 인증·Secret·권한 변경 없음. 본 시안은 부모 화면 검수 후에만 다음 범위를 결정한다.
+
+## 2026-10-30 공식 코드 대조 및 noindex 확장 실행 증거
+- **실제 성공:** [run 41031299548](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41031299548), artifact `12966760028`, Workflow SHA `2c8d268f4ce91c7c95ac7edd9d6b2691603fbf73`. 3개 대표 + 16개 증분 = 19개 noindex HTML, 실제 이미지 5장 공용 재사용, 6개 단위 테스트(대표 3 + 확장 3), Python 컴파일 통과.
+- **공식 자료:** V4 `data/regions/master.json` Blob `13d43fc3f2492b29b1680858235fe0ac0cd10580`, 2026-10-22 확보. 시·도 16 + 시·군·구 229 + 일반구 39 = 총 284 **상위 법정동 코드**. 2026-10-30 실시간 원본 최신 여부 및 하위 읍면동 유효성은 추가 검증되지 않음. 기존 Wreath 5,034개 중 상위명 불일치 1,438건은 확장에 사용하지 않음.
+- **확장 대상:** `verified-regions.json` 경기 18개 코드 중 이미 대표 페이지가 있는 안산시/상록구 코드를 제외한 16개. 기록하는 근거는 지명·코드·상위 계층뿐이며 **판매자 배송 서비스 가용성 검증 건수 0**. 주문자 위치별 가격/배송 확약 불가.
+- **고유 내용 검사:** 별도 가격 비교 초점·상품 3개 SKU 선택 조합 16가지, 모두 서로 다른 HTML 해시/제목. 실제 판매처 기준가와 가격 차이만 계산, 배송비·리본비 미확인은 유지. 공통 제품 표/FAQ/AI 시각 자산은 공용이며 검색 엔진 품질 우위가 입증됐다는 결론은 아님.
+- **이미지 출처 체인:** 대화의 AI 이미지 생성 기록 gen ID `15f669dd-7ef4-46ee-9a3a-56e90f900200`, 원 PNG `a_vertical_collage_strip_style_photo_composite_sho.png` SHA-256 `db9ebc5272573c3ec97b5aeefe43fee8f37dfcc99b6f6d5d554a34361f43c3d1`, 1024×1536, 2,536,172바이트. 기획상 5개 세로 구획을 좌표 `image-provenance.json`대로 Crop + Pillow WebP quality80/method6로 재인코딩해 원 ZIP WebP **5개 바이트 전부 정확히 일치**함을 직접 확인. 원 PNG는 GitHub에는 없음; 원본 부재 상황의 독립 재현 제한은 공개적으로 남김.
+- **배포 상태:** 기존 검증된 3페이지 noindex `workers.dev` 미리보기는 그대로 유지. 신규 16개는 GitHub Actions artifact에만 생성했으며 Cloudflare 재배포·커스텀 도메인/DNS/인증 변경·IndexNow POST·공개 index 전환 없음.
+- **기존 기록과의 구분:** 문서 상단 '원격 실이미지 업로드 미완료' 및 'preview URL 없음'은 과거 시점의 작업 로그이며 현재 상태는 run 41018200247/41019185898의 성공 기록이 우선함.
