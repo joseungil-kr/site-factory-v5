@@ -33,7 +33,7 @@
     "enabled": false
   },
   "staticAssetSoftLimit": 18000,
-  "source": "V4 2026-10-22 official region, V5 2026-10-12 current-dong, 2026-10-30 original fwith.co.kr seller products, generated AI image set; delivery cutoff not guaranteed",
+  "source": "V4 2026-10-22 official legal region snapshot (30 Ansan legal-dongs derived from Flowershop 12874109256 + 2 V4 official wards) + V4 nationwide seller delivery business statement 2026-10-21; 2026-10-30 SKU prices pinned, not guaranteed current",
   "indexNow": {
     "enabled": false,
     "key": null
@@ -54,7 +54,7 @@
   ],
   "todayflowerPilot": {
     "enabled": true,
-    "regionCount": 3,
+    "regionCount": 33,
     "regionalScope": "Ansan city, Danwon ward, Gojan current-dong; no nationwide publishing approval",
     "editorialImages": 7,
     "productKinds": [
@@ -76,6 +76,13 @@
     "otherLocalEditorialImagesPerPage": 2,
     "imageLibraryFileCount": 10,
     "responsiveImageLayout": "desktop 3+2, tablet 2, mobile full width",
-    "highResolutionImageSize": "1448x1086"
+    "highResolutionImageSize": "1448x1086",
+    "pilotPagesPreserved": 3,
+    "addedPages": 30,
+    "legalDongCount": 30,
+    "wardCount": 2,
+    "currentIndexing": "noindex",
+    "regionalEvidence": "sites/todayflower-nalmada/ansan-legal-regions-evidence.json",
+    "deliveryScopeNote": "Nationwide partner delivery is user-reported from V4; no legal-dong same-day service availability independently verified"
   }
 }
