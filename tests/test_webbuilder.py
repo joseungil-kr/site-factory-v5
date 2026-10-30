@@ -115,8 +115,7 @@ class WebbuilderPreviewTest(unittest.TestCase):
         self.assertIn("페이지당 월 1,000원부터", home)
         self.assertIn("월 10,000원", home)
         self.assertIn("최소 10페이지", home)
-        self.assertIn("*.leak119.net", home)
-        self.assertIn("*.skycar24hr.com", home)
+        self.assertIn("업종별 도메인 확보·관리", home)
         self.assertIn("서버비", home)
         self.assertIn("월 이용료", pricing)
         for pages in (10, 20, 30, 50, 100):
@@ -127,9 +126,14 @@ class WebbuilderPreviewTest(unittest.TestCase):
         self.assertIn("월 30,000원", home)
         self.assertIn("월 1,000원", faq)
         self.assertIn("최소 10페이지", faq)
-        self.assertIn("운영사가", pricing + faq)
-        self.assertIn("leak119.nalmada.net", pricing + faq)
-        self.assertIn("skycar24hr.com", pricing + faq)
+        self.assertIn("도메인을 확보하고 관리해 드립니다", pricing)
+        self.assertIn("도메인을 확보하고 관리해 드립니다", faq)
+        for html_page in self.html:
+            visible = html_page.read_text(encoding="utf-8")
+            for internal in ("*.leak119.net", "*.skycar24hr.com",
+                             "leak119.nalmada.net", "구매·배정 전",
+                             "미배정", "Cloudflare", "worker.preview.js"):
+                self.assertNotIn(internal, visible, (html_page, internal))
         for stale in ("월 청구액 또는 일회비용으로 확정된 금액이 아닙니다",
                       "1회비와 월 요금 구분", "실제 과금주기",
                       "과금 주기, 도메인·호스팅 포함 범위",
