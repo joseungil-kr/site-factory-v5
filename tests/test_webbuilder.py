@@ -190,6 +190,16 @@ class WebbuilderPreviewTest(unittest.TestCase):
             self.assertIn("페이지당 월 1,000원부터", doc)
         self.assertIn("webbuilder-hero.svg", home)
 
+    def test_original_body_paragraph_is_not_repeated_as_hero(self):
+        corpus = {**load("copy-pool.json")["industry"],
+                  **load("industry-expansion-a.json")["industry"],
+                  **load("industry-expansion-b.json")["industry"]}
+        for ident, article in corpus.items():
+            with self.subTest(industry=ident):
+                page = (self.out / "industry" / ident / "index.html").read_text(encoding="utf-8")
+                self.assertEqual(page.count(article["intro"][:35]), 1,
+                                 "Full section introduction must appear exactly once")
+
     def test_industry_source_is_not_customer_fake_service_ad(self):
         names = [x["id"] for x in load("keyword-pool.json")["industries"] if x["launch"]]
         self.assertEqual(len(names), len(set(names)))
