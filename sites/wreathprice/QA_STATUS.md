@@ -71,3 +71,8 @@
 - **실제 원격 응답:** 19/19 HTML HTTP200, 전체 페이지 noindex 헤더/HTML meta, 각 페이지 AI WebP 5개 및 fwith 상품 링크 5개, 실제 이미지 5종 HTTP200/전체 SHA 일치, robots Disallow HTTP200, Sitemap/누락 경로 HTTP404. 영수증 artifact `12968555792` (run 41035787113).
 - **원장 시점:** 출처 V4 `data/regions/master.json` 2026-10-22 확인, 현재 상태에 대한 2026-10-30 재수집 아님. 법적 원본 적용일은 미확인. 지역별 실제 사양/배송 조건 조사 없이 고유 지역 콘텐츠를 주장하지 않음.
 - **변경 범위:** 수정 확장 소스와 격리 noindex Worker뿐. 이미지·실상품 링크·기존 3페이지 보존. Custom Domain/DNS, Secret, 인증/권한, 운영 색인, IndexNow 전송 변경 없음.
+
+## 2026-10-30 수정본 브라우저 실제 렌더·스크린샷 증거
+- **읽기 전용 렌더 QA:** [V4 run 41036075172](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41036075172) 성공, screenshot artifact `12967189850` (데스크톱 1440×900, 모바일 390×844, 총 8장).
+- 실제 workers.dev URL에서 Chromium Playwright로 안산시 대표·수원시·수원시 장안구·안산시 단원구 각 2개 뷰포트를 탐색하고 HTTP200/실이미지 5장 전부 naturalWidth>0/가로 오버플로 없음/HTML noindex를 검증. 조사 오류 및 내부 enum이 고객 본문에 재출현하지 않는지도 검사.
+- 이 테스트는 실제 브라우저 렌더링과 스크린샷 생성을 검증하며 사람이 각 픽셀·시각 디자인 완성도를 별도 검수했다는 주장으로 확대하지 않음.
