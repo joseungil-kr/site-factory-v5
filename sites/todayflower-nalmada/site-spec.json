@@ -49,16 +49,25 @@
     "mode": "direct SKU links to seller + phone"
   },
   "images": {
-    "source": "Existing V5 reusable WebP editorial image library; five newly generated floral compositions kept as independent source artifact for final asset substitution",
+    "source": "Five independent ImageGen-produced WebP topic illustrations + five V5 high-resolution florist WebP images; seller product photos only from fwith.co.kr",
     "approved": false,
-    "countPerPage": 5,
-    "productionPhotos": "seller SKU links only; editorial images never represented as delivery evidence"
+    "visualReview": "required 390px and 1440px",
+    "aiGeneratedWebP": [
+      "gift-bouquet.webp",
+      "opening-plant.webp",
+      "celebration-wreath.webp",
+      "condolence-wreath.webp",
+      "flower-wrapping.webp"
+    ],
+    "countPerPage": 10,
+    "aiEditorialCountPerPage": 5,
+    "artifactCommit": "5aacf131f7e5f89203f85aa689ead71abf9485d5"
   },
   "publishPolicy": {
     "mode": "preview-noindex",
     "indexNow": false,
     "production": false,
-    "requires": "five individual new WebP assets in repository, local browser QA, site-specific noindex staging receipt, parent review, DNS collision check"
+    "requires": "Browser review of ten editorial images including five distinct AI-made WebPs, seller original image live HTTP, static noindex, parent acceptance, domain collision check"
   },
   "rollout": {
     "phase": "3-page-pilot",
