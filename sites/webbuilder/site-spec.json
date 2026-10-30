@@ -2,8 +2,8 @@
   "version": 1,
   "siteId": "webbuilder",
   "approved": true,
-  "approvalScope": "KEYWORD_RESEARCH_AND_NOINDEX_PREVIEW_ONLY; pricing cadence, minimum quantity, VAT, inclusions and live domain release require explicit confirmation",
-  "approvalEvidence": "2026-10-30 user requested webbuilder.nalmada.net site, keyword pool, sector pages, 1,000 KRW/page ad, Interpiad footer and phone",
+  "approvalScope": "KEYWORD_RESEARCH_AND_NOINDEX_PREVIEW_ONLY; user confirmed monthly per-page fee and included domain purchase+hosting; min quantity, VAT, domain type/renewal, edits and release conditions require explicit confirmation",
+  "approvalEvidence": "2026-10-30 user requested webbuilder.nalmada.net site, keyword pool, sector pages, 1,000 KRW/page ad, Interpiad footer and phone; 2026-10-30 user explicitly confirmed 1,000 KRW per page is MONTHLY",
   "domain": "https://webbuilder.nalmada.net",
   "brand": "인터피아드",
   "businessModel": "B2B local-service SEO landing-page production; phone inquiry only",
@@ -20,7 +20,7 @@
     "seo-and-pricing-faq"
   ],
   "targetPageCount": 14,
-  "titlePattern": "{업종} 홈페이지 제작 1페이지 1,000원부터 | 인터피아드",
+  "titlePattern": "{업종} 홈페이지 제작 페이지당 월 1,000원부터 | 인터피아드",
   "urlPattern": "/, /industry/{slug}/, /guide/pricing/, /guide/process/, /guide/faq/",
   "keywordGroups": {
     "primary": [
@@ -70,15 +70,23 @@
   },
   "pricing": {
     "headlinePriceKRW": 1000,
-    "unit": "per-page",
-    "billingCycle": "UNCONFIRMED",
+    "unit": "KRW per page per month",
+    "billingCycle": "monthly",
     "minimumPages": "UNCONFIRMED",
-    "domainIncluded": "USER_REQUESTED_NOT_YET_CONTRACT_DEFINED",
-    "hostingIncluded": "USER_REQUESTED_NOT_YET_CONTRACT_DEFINED",
+    "domainIncluded": true,
+    "hostingIncluded": true,
     "vat": "UNCONFIRMED",
-    "monthlyIllustration": "20-30 pages at 1000 KRW/page; billed monthly only if billingCycle monthly is confirmed",
+    "monthlyIllustration": "20 pages × KRW 1,000/page/month = KRW 20,000/month; 30 pages = KRW 30,000/month. City-wide coverage not implied.",
     "prohibitSuperlative": "전국 최저가 비교 근거 확보 전 사용 금지",
-    "searchRankGuarantee": false
+    "searchRankGuarantee": false,
+    "creationIncluded": true,
+    "domainRegistrationIncluded": true,
+    "domainRenewalPolicy": "UNCONFIRMED",
+    "domainTypeLimit": "UNCONFIRMED",
+    "contractTerm": "UNCONFIRMED",
+    "maintenanceEdits": "UNCONFIRMED",
+    "baseOfferConfirmed": true,
+    "fullContractTermsConfirmed": false
   },
   "publishPolicy": {
     "mode": "preview-noindex",
@@ -87,7 +95,7 @@
     "workersDevNoindex": true,
     "dnsChanges": false,
     "customDomainAttach": false,
-    "requires": "pricing contract, full consumer-facing terms, image/UI QA, Cloudflare exact hostname inventory, user release approval and live HTTP verification"
+    "requires": "minimum page count, VAT, domain category/annual renewal, modification scope, termination and ownership terms, full consumer-facing terms, image/UI QA, exact hostname inventory, release approval and live HTTP verification"
   },
   "footer": {
     "businessName": "인터피아드",
