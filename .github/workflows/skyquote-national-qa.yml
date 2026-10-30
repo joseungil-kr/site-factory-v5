@@ -28,10 +28,53 @@ jobs:
           python -m py_compile scripts/build_skyquote_national.py tests/skyquote_national_smoke.py
           python scripts/build_skyquote_national.py
           python tests/skyquote_national_smoke.py
+      - name: Render representative original and nationwide pages at mobile and desktop
+        run: |
+          python -m pip install playwright==1.56.0
+          python -m playwright install --with-deps chromium
+          python - <<'PY'
+          from pathlib import Path
+          from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
+          import threading
+          from playwright.sync_api import sync_playwright
+          root=Path('dist/skyquote-national-preview').resolve()
+          class Handler(SimpleHTTPRequestHandler):
+              def __init__(self,*a,**kw):super().__init__(*a,directory=str(root),**kw)
+          server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
+          threading.Thread(target=server.serve_forever,daemon=True).start()
+          origin='http://127.0.0.1:'+str(server.server_port)
+          paths=['/','/ansan/danwon-02.html','/national/index.html','/national/kr13d01.html','/national/kr04.html']
+          with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True)
+              for width in (390,1440):
+                  for route in paths:
+                      page=browser.new_page(viewport={'width':width,'height':900})
+                      response=page.goto(origin+route,wait_until='networkidle',timeout=30000)
+                      assert response and response.status==200,(route,width)
+                      assert page.locator('meta[name="robots"]').get_attribute('content')=='noindex,nofollow',(route,width)
+                      images=page.locator('img')
+                      assert images.count()==5,(route,width)
+                      for i in range(5):
+                          el=images.nth(i);el.scroll_into_view_if_needed()
+                          el.evaluate("e => {e.loading='eager'}")
+                          el.wait_for(state='visible',timeout=15000)
+                          assert el.evaluate("e => e.complete && e.naturalWidth===1536 && e.naturalHeight===1024"),(route,i)
+                      assert page.evaluate('document.documentElement.scrollWidth<=window.innerWidth+1'),(route,width)
+                      dest=Path('reports/skyquote-national')/(route.strip('/').replace('/','-') or 'ansan-home')
+                      dest.parent.mkdir(parents=True,exist_ok=True)
+                      page.screenshot(path=str(dest)+'.'+str(width)+'.png',full_page=True)
+                      print('SKYQUOTE_NATIONAL_BROWSER_PASS',route,width,'images=5','overflow=false')
+                      page.close()
+              browser.close()
+          server.shutdown()
+          print('SKYQUOTE_NATIONAL_BROWSER_QA_PASS 10screens')
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: skyquote-national-noindex-268-${{ github.sha }}
-          path: dist/skyquote-national-preview/
+          path: |
+            dist/skyquote-national-preview/
+            reports/skyquote-national/
           retention-days: 14
           if-no-files-found: warn
