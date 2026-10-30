@@ -58,6 +58,8 @@ jobs:
                   assert body not in seen,(page['number'],'identical paragraph')
                   seen.add(body)
           assert len(seen)==264,(len(seen),'unique paragraphs')
+          visible_field_count=sum(5+2*len(p['sections'])+2*len(p['faq']) for p in paragraphs)
+          assert visible_field_count==627,visible_field_count
           print('TODAYFLOWER_33_PAGE_264_BLOCK_GRAMMAR_DUPLICATE_GATE_PASS')
           frozen={'1':'d953d6d3bb9656d38a40b96d72f6f143b7798458584480d47671d06b3426cf46',
                   '2':'0a009dbb94464ed4a947caa5e57d208cc9730db190192f38a6554f63a7502838',
@@ -74,7 +76,7 @@ jobs:
               'site':'todayflower-nalmada',
               'scope':'Ansan 33 pages with 3 preserved pilots and 30 edited regional guides',
               'fullVisibleTextCheck':True,
-              'visiblePageFieldsChecked':627,
+              'visiblePageFieldsChecked':visible_field_count,
               'allRenderedHTMLVisibleTextChecked':33,
               'paragraphBlocksCompared':264,
               'identicalParagraphBlocks':0,
