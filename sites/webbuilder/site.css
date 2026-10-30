@@ -15,3 +15,19 @@
 @media(max-width:760px){.container{width:min(100% - 32px,1180px)}.header-inner{flex-wrap:wrap;gap:12px;padding:13px 0;min-height:auto}.brand{font-size:1.16rem}.brand-mark{width:37px;height:37px}.header-phone{margin-left:auto}.nav{width:100%;order:3;margin:0;gap:18px;overflow-x:auto;padding:10px 0 2px}.hero-grid,.feature-grid,.pricing-grid,.article-layout{grid-template-columns:1fr}.hero-grid{padding-top:48px;padding-bottom:55px}.hero-art{transform:none}.hero-copy h1{font-size:2.6rem}.section{padding:65px 0}.industry-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.step-grid{grid-template-columns:1fr}.stats-strip .strip-grid{gap:10px}.strip-grid>div{padding:0 5px}.strip-grid strong{font-size:1.05rem}.strip-grid span{font-size:.68rem}.article-aside{position:static}.bottom-cta-inner{flex-direction:column;align-items:flex-start}.footer-inner{flex-direction:column}.sub-hero{padding:50px 0}.sub-hero h1{font-size:2.15rem}.feature-grid,.pricing-grid{gap:24px}}
 @media(max-width:470px){.hero-copy h1{font-size:2.2rem}.hero-lead{font-size:.97rem}.hero-actions{flex-direction:column;align-items:stretch}.industry-grid{grid-template-columns:1fr}.industry-card{min-height:120px}.browser-body{padding:22px 18px}.browser-body h2{font-size:1.5rem}.strip-grid{grid-template-columns:1fr!important;gap:15px!important}.strip-grid>div{padding:0!important;border:0!important}.price-panel{padding:14px}.price-row{padding:14px 8px}.price-row strong{font-size:1.16rem}.bottom-cta h2{font-size:1.45rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.industry-card,.btn{transition:none}}
+
+
+/* Worker5 additional 28 industry pages: category groups, illustrations and related B2B links. */
+.hero-illustration{display:block;width:100%;height:auto;aspect-ratio:1200/760;object-fit:cover}
+.industry-categories{display:grid;gap:46px}
+.industry-group-heading{display:flex;align-items:center;gap:15px;margin:0 0 17px;font-size:1.33rem;font-weight:800;letter-spacing:-.035em}
+.industry-group-heading span{display:inline-flex;padding:3px 10px;border-radius:30px;background:#eaf4f9;color:#557b97;font-size:.75rem;font-weight:770;letter-spacing:0}
+.feature-illustration{display:block;width:100%;max-height:200px;object-fit:contain;border-radius:12px;margin-bottom:17px}
+.aside-illustration{display:block;width:100%;max-height:154px;object-fit:contain;margin:15px 0 20px;border-radius:12px}
+.price-illustration{display:block;width:100%;max-height:210px;object-fit:contain;margin:22px 0 8px;border-radius:14px}
+.bottom-illustration{width:105px;height:96px;object-fit:contain;flex:none;opacity:.94;border-radius:16px}
+.related-section{background:#f4f8fd;border-top:1px solid #dfebf5}
+.related-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:23px}
+.related-links a{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:18px 14px;border-radius:12px;background:#fff;border:1px solid #d7e5f1;color:#25436c;font-weight:730;line-height:1.45}
+.related-links a:hover{border-color:#5879cb;box-shadow:0 9px 20px #21386210}
+@media(max-width:760px){.related-links{grid-template-columns:1fr}.industry-categories{gap:30px}.industry-group-heading{font-size:1.17rem;flex-wrap:wrap}.bottom-illustration{display:none}.feature-illustration{max-height:165px}}
