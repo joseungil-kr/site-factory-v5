@@ -2,8 +2,8 @@
   "version": 1,
   "siteId": "webbuilder",
   "approved": true,
-  "approvalScope": "KEYWORD_RESEARCH_AND_NOINDEX_PREVIEW_ONLY; user confirmed monthly per-page fee and included domain purchase+hosting; min quantity, VAT, domain type/renewal, edits and release conditions require explicit confirmation",
-  "approvalEvidence": "2026-10-30 user requested webbuilder.nalmada.net site, keyword pool, sector pages, 1,000 KRW/page ad, Interpiad footer and phone; 2026-10-30 user explicitly confirmed 1,000 KRW per page is MONTHLY",
+  "approvalScope": "CONTENT_AND_NOINDEX_PREVIEW_ONLY; user confirmed KRW1000/page/month, minimum 10 pages, allocation of business-owned nalmada.net subdomain, server included. VAT, edits, term, cancellation and live domain release remain unconfirmed.",
+  "approvalEvidence": "2026-10-30 user requested webbuilder.nalmada.net site, keyword pool, sector pages, 1,000 KRW/page ad, Interpiad footer and phone; 2026-10-30 user explicitly confirmed 1,000 KRW per page is MONTHLY; 2026-10-30 user clarified provider-owned nalmada.net subdomain (e.g. leak119.nalmada.net), minimum 10 pages",
   "domain": "https://webbuilder.nalmada.net",
   "brand": "인터피아드",
   "businessModel": "B2B local-service SEO landing-page production; phone inquiry only",
@@ -72,21 +72,23 @@
     "headlinePriceKRW": 1000,
     "unit": "KRW per page per month",
     "billingCycle": "monthly",
-    "minimumPages": "UNCONFIRMED",
+    "minimumPages": 10,
     "domainIncluded": true,
     "hostingIncluded": true,
     "vat": "UNCONFIRMED",
-    "monthlyIllustration": "20 pages × KRW 1,000/page/month = KRW 20,000/month; 30 pages = KRW 30,000/month. City-wide coverage not implied.",
+    "monthlyIllustration": "minimum 10 pages = KRW 10000/month; 20 pages = 20000/month; 30 pages = 30000/month; city-wide coverage not implied",
     "prohibitSuperlative": "전국 최저가 비교 근거 확보 전 사용 금지",
     "searchRankGuarantee": false,
     "creationIncluded": true,
-    "domainRegistrationIncluded": true,
-    "domainRenewalPolicy": "UNCONFIRMED",
-    "domainTypeLimit": "UNCONFIRMED",
+    "domainRegistrationIncluded": false,
+    "domainRenewalPolicy": "parent nalmada.net domain operated by Interpiad; customer receives subdomain assignment, not domain registration or transfer; termination/continuity terms pending",
+    "domainTypeLimit": "provider-owned *.nalmada.net subdomain only; no standalone customer-registered domain",
     "contractTerm": "UNCONFIRMED",
     "maintenanceEdits": "UNCONFIRMED",
     "baseOfferConfirmed": true,
-    "fullContractTermsConfirmed": false
+    "fullContractTermsConfirmed": false,
+    "minimumMonthlyKRW": 10000,
+    "providerOwnedSubdomainIncluded": true
   },
   "publishPolicy": {
     "mode": "preview-noindex",
@@ -95,11 +97,34 @@
     "workersDevNoindex": true,
     "dnsChanges": false,
     "customDomainAttach": false,
-    "requires": "minimum page count, VAT, domain category/annual renewal, modification scope, termination and ownership terms, full consumer-facing terms, image/UI QA, exact hostname inventory, release approval and live HTTP verification"
+    "requires": "VAT, contract duration, domain/URL retention after cancellation, customer data ownership and edit scope, screenshot/mobile QA, Cloudflare exact hostname/route preflight and explicit release approval"
   },
   "footer": {
     "businessName": "인터피아드",
     "url": "https://interpiad.com",
     "phone": "010-2490-0555"
+  },
+  "domainProvision": {
+    "type": "provider-managed-subdomain",
+    "rootDomain": "nalmada.net",
+    "customerHostPattern": "{customer-slug}.nalmada.net",
+    "exampleHost": "leak119.nalmada.net",
+    "exampleOnly": true,
+    "customerRegistersOwnDomain": false,
+    "customerOwnsRootDomain": false,
+    "customerReceivesExclusiveHost": "subject to collision checks and actual assignment; not yet provisioned",
+    "namingPolicy": "unique provider-assigned slug, availability check and account-level hostname/route preflight required",
+    "parentDomainOwner": "Interpiad/operator (user-provided)",
+    "hostingIncluded": true,
+    "independentCustomerDomainPurchaseIncluded": false,
+    "operationalProvisioning": false,
+    "sslAndHttpUnverified": true,
+    "contractIssuesPending": [
+      "subdomain-use duration",
+      "tenant migration/cancellation",
+      "VAT",
+      "support/edits",
+      "customer content ownership"
+    ]
   }
 }
