@@ -1,6 +1,6 @@
 {
   "name": "sfv52-wreathprice-preview",
-  "main": "worker.js",
+  "main": "worker.nationwide.js",
   "compatibility_date": "2026-10-21",
   "workers_dev": true,
   "preview_urls": false,
