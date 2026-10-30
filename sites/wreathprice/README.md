@@ -70,3 +70,5 @@
 - **V4 미리보기 배포 및 운영 URL 검증:** [run 41035787113](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41035787113) 성공. Worker `sfv52-wreathprice-preview`, 활성 배포버전 `e8bbac15-aec5-4d90-bf58-18669346af20`, 소스 SHA `9c27e766d47cf10ab32cbe84a0855cf5f1f0f142`. 19페이지 모두 HTTP200 및 noindex, WebP 5개 HTTP200/원장 해시 일치, robots Disallow, Sitemap 404 및 누락 페이지 404. 영수증 artifact `12968555792`. 새 도메인/DNS/인증/Secret/권한, public index 전환 없음.
 - **실제 미리보기:** https://sfv52-wreathprice-preview.joseungil.workers.dev/region/4111000000.html
 - **원장 확인 시점:** 2026-10-22 다운로드한 법정동 코드 상위 행정구역 자료; 원본의 법적 적용일(`sourceEffectiveDate`)은 미확인. 오늘 행정구역 재조회나 지역 배송 실측으로 오인시키지 않음.
+
+- **브라우저 실렌더 검증:** [V4 run 41036075172](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41036075172) 성공. 기존 preview URL에서 안산·수원·장안구·단원구 × 데스크톱/모바일 = 8개 Chromium screenshot 생성, 실제 WebP 5/5 로딩·수평 넘침 없음·잘못된 문구 없음. Artifact `12967189850`.
