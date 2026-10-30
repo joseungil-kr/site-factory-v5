@@ -58,11 +58,14 @@ STYLE = r"""
 .tf-order{margin:35px 0;padding:26px;background:linear-gradient(110deg,#e6f4e9,#fff0e9);border-radius:19px}
 .tf-order h2{margin:0 0 9px;font-size:23px}.tf-order p{font-size:14px;color:#597466;margin:0 0 16px}
 
-.tf-story-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
-.tf-story-item{background:#f7f9f4;border:1px solid #e3eae0;border-radius:12px;padding:12px;text-align:center;min-width:0}
-.tf-story-item img{display:block;width:96px;height:141px;object-fit:cover;border-radius:9px;margin:0 auto 10px}
-.tf-story-item figcaption{font-size:12px;color:#486c57;font-weight:750}
-@media(max-width:740px){.tf-story-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tf-story-item{padding:12px}.tf-story-item img{max-width:96px;height:141px}.tf-story-item figcaption{font-size:12px;white-space:nowrap;overflow-wrap:normal}}
+.tf-story-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:18px;align-items:start}
+.tf-story-item{grid-column:span 2;min-width:0;margin:0;background:#f7f9f4;border:1px solid #e3eae0;border-radius:15px;padding:14px;display:flex;flex-direction:column;gap:11px}
+.tf-story-item:nth-child(4){grid-column:2 / span 2}
+.tf-story-item:nth-child(5){grid-column:4 / span 2}
+.tf-story-item img{display:block;width:100%;height:auto;aspect-ratio:4 / 3;object-fit:cover;border-radius:10px}
+.tf-story-item figcaption{font-size:15px;line-height:1.5;color:#486c57;font-weight:750;white-space:normal;overflow-wrap:anywhere}
+@media(max-width:980px){.tf-story-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.tf-story-item,.tf-story-item:nth-child(4),.tf-story-item:nth-child(5){grid-column:auto}}
+@media(max-width:740px){.tf-story-grid{grid-template-columns:minmax(0,1fr);gap:15px}.tf-story-item{padding:12px}.tf-story-item img{width:100%;height:auto}.tf-story-item figcaption{font-size:14px}}
 @media(max-width:950px){.tf-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tf-hero-grid{gap:21px}}
 @media(max-width:740px){.tf-shell{padding-inline:16px}.tf-hero{padding:29px 0}.tf-hero-grid,.tf-check-grid{grid-template-columns:1fr}
 .tf-hero h1{font-size:36px}.tf-lead{font-size:15px}.tf-hero-photo{height:270px}.tf-choose{grid-template-columns:1fr;gap:12px}
@@ -83,7 +86,7 @@ def _h(value):
 
 def _img(path, alt, css_class="", loading="lazy", priority=False):
     attrs = ' fetchpriority="high"' if priority else ""
-    dimensions = 'width="96" height="141"' if path in GENERATED_FILES else 'width="600" height="860"'
+    dimensions = 'width="1448" height="1086"' if path in GENERATED_FILES else 'width="600" height="860"'
     return (f'<img class="{_h(css_class)}" src="/assets/images/{_h(path)}"'
             f' alt="{_h(alt)}" {dimensions} loading="{loading}"'
             ' decoding="async"' + attrs + '>')
