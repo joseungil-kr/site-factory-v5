@@ -2,8 +2,8 @@
   "version": 1,
   "siteId": "webbuilder",
   "approved": true,
-  "approvalScope": "CONTENT_AND_NOINDEX_PREVIEW_ONLY; user confirmed KRW1000/page/month, minimum 10 pages, allocation of business-owned nalmada.net subdomain, server included. VAT, edits, term, cancellation and live domain release remain unconfirmed.",
-  "approvalEvidence": "2026-10-30 user requested webbuilder.nalmada.net site, keyword pool, sector pages, 1,000 KRW/page ad, Interpiad footer and phone; 2026-10-30 user explicitly confirmed 1,000 KRW per page is MONTHLY; 2026-10-30 user clarified provider-owned nalmada.net subdomain (e.g. leak119.nalmada.net), minimum 10 pages",
+  "approvalScope": "KEYWORD_RESEARCH_AND_NOINDEX_PREVIEW_ONLY; monthly KRW1000/page and 10-page minimum confirmed, provider may purchase/use multiple industry-specific parent domains and assign customer subdomains; VAT, contract and production release remain gated",
+  "approvalEvidence": "2026-10-30 user requested webbuilder.nalmada.net site, keyword pool, sector pages, 1,000 KRW/page ad, Interpiad footer and phone; 2026-10-30 user explicitly confirmed 1,000 KRW per page is MONTHLY; 2026-10-30 user clarified provider-owned nalmada.net subdomain (e.g. leak119.nalmada.net), minimum 10 pages; 2026-10-30 user clarified domain pool is NOT limited to nalmada.net: provider will purchase industry domains, e.g. *.leak119.net for leak services and *.skycar24hr.com for skycar",
   "domain": "https://webbuilder.nalmada.net",
   "brand": "인터피아드",
   "businessModel": "B2B local-service SEO landing-page production; phone inquiry only",
@@ -80,15 +80,17 @@
     "prohibitSuperlative": "전국 최저가 비교 근거 확보 전 사용 금지",
     "searchRankGuarantee": false,
     "creationIncluded": true,
-    "domainRegistrationIncluded": false,
-    "domainRenewalPolicy": "parent nalmada.net domain operated by Interpiad; customer receives subdomain assignment, not domain registration or transfer; termination/continuity terms pending",
-    "domainTypeLimit": "provider-owned *.nalmada.net subdomain only; no standalone customer-registered domain",
+    "domainRegistrationIncluded": true,
+    "domainRenewalPolicy": "Provider operates parent zone and funds domain costs during the agreed service, while duration, cancellation and root-domain ownership terms must be explained before sale",
+    "domainTypeLimit": "Provider-owned or provider-purchased domain pool, selected by industry; never restricted to *.nalmada.net",
     "contractTerm": "UNCONFIRMED",
     "maintenanceEdits": "UNCONFIRMED",
     "baseOfferConfirmed": true,
     "fullContractTermsConfirmed": false,
     "minimumMonthlyKRW": 10000,
-    "providerOwnedSubdomainIncluded": true
+    "providerOwnedSubdomainIncluded": true,
+    "providerPurchasedIndustryDomainCostsIncluded": true,
+    "customerDomainRegistrationIncluded": false
   },
   "publishPolicy": {
     "mode": "preview-noindex",
@@ -97,7 +99,7 @@
     "workersDevNoindex": true,
     "dnsChanges": false,
     "customDomainAttach": false,
-    "requires": "VAT, contract duration, domain/URL retention after cancellation, customer data ownership and edit scope, screenshot/mobile QA, Cloudflare exact hostname/route preflight and explicit release approval"
+    "requires": "VAT, contract term, cancellation and domain continuity, customer content ownership, scope of edits, approved industry domain procurement and zone inventory, Cloudflare wildcard route/DNS/certificate tests, 390/1440 visual QA and explicit release approval"
   },
   "footer": {
     "businessName": "인터피아드",
@@ -105,26 +107,33 @@
     "phone": "010-2490-0555"
   },
   "domainProvision": {
-    "type": "provider-managed-subdomain",
-    "rootDomain": "nalmada.net",
-    "customerHostPattern": "{customer-slug}.nalmada.net",
-    "exampleHost": "leak119.nalmada.net",
-    "exampleOnly": true,
-    "customerRegistersOwnDomain": false,
-    "customerOwnsRootDomain": false,
-    "customerReceivesExclusiveHost": "subject to collision checks and actual assignment; not yet provisioned",
-    "namingPolicy": "unique provider-assigned slug, availability check and account-level hostname/route preflight required",
-    "parentDomainOwner": "Interpiad/operator (user-provided)",
-    "hostingIncluded": true,
-    "independentCustomerDomainPurchaseIncluded": false,
-    "operationalProvisioning": false,
+    "type": "provider-managed-multi-domain-pool",
+    "rootDomainWhitelistFixed": false,
+    "allowedHostPattern": "{customer-slug}.{verified-provider-managed-root-domain}",
+    "customerAssignedSubdomain": true,
+    "customerOwnsParentDomain": false,
+    "customerPurchasesApex": false,
+    "monthlyPriceIncludesDomainProcurementAndHosting": true,
+    "domainsSource": "sites/webbuilder/domain-policy.json",
+    "sampleHost": "leak119.nalmada.net",
+    "sampleHostOnly": true,
+    "candidateExamples": [
+      "*.nalmada.net",
+      "*.leak119.net",
+      "*.skycar24hr.com"
+    ],
+    "domainRegistrationOrPurchaseExecuted": false,
+    "providerMayAcquireNewIndustryRoots": true,
+    "actualDomainInventoryVerificationRequired": true,
+    "customerHostAllocationExecuted": false,
     "sslAndHttpUnverified": true,
-    "contractIssuesPending": [
-      "subdomain-use duration",
-      "tenant migration/cancellation",
+    "attachPolicy": "Require verified operator ownership, active Cloudflare zone, certificate coverage, exact hostname collision and zone route checks; no wildcard Custom Domain assumption",
+    "pendingContract": [
       "VAT",
-      "support/edits",
-      "customer content ownership"
+      "term",
+      "termination/domain continuity",
+      "customer source ownership",
+      "edits/maintenance"
     ]
   }
 }
