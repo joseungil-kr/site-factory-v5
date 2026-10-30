@@ -1,0 +1,77 @@
+{
+  "status": "Source image generated in this conversation and output bytes independently compared to the five ZIP WebP assets. Source PNG remains a conversation artifact, not checked into GitHub.",
+  "tool": "OpenAI image generation tool",
+  "generationId": "15f669dd-7ef4-46ee-9a3a-56e90f900200",
+  "generatedImageFilename": "a_vertical_collage_strip_style_photo_composite_sho.png",
+  "generatedPNGSize": {
+    "width": 1024,
+    "height": 1536
+  },
+  "generatedPNGFileBytes": 2536172,
+  "generatedPNG_SHA256": "db9ebc5272573c3ec97b5aeefe43fee8f37dfcc99b6f6d5d554a34361f43c3d1",
+  "reproductionMethod": "Open generated PNG with Pillow in RGB mode, crop x0=0,x1=1024 and y0..y1 per entry, encode WebP quality=80,method=6; byte-for-byte equality established for every ZIP original asset",
+  "reproductionVerifiedOn": "2026-10-30",
+  "assets": [
+    {
+      "file": "sites/wreathprice/assets/funeral-wreath.webp",
+      "crop": [
+        0,
+        0,
+        1024,
+        296
+      ],
+      "sha256": "8c0b0bd09573945b3f22d185ca2a51811c2656d8f91811e5c6d9ee3a7c536a18",
+      "byteExactReproduction": true
+    },
+    {
+      "file": "sites/wreathprice/assets/celebration-wreath.webp",
+      "crop": [
+        0,
+        304,
+        1024,
+        614
+      ],
+      "sha256": "6454b92000273d6c4f6ad9972ed6781cbab8128a2d962d54908e6adeb7a54666",
+      "byteExactReproduction": true
+    },
+    {
+      "file": "sites/wreathprice/assets/flower-detail.webp",
+      "crop": [
+        0,
+        620,
+        1024,
+        922
+      ],
+      "sha256": "8b86ab10742ef77b8df113cf786d3ba34c55f0be925b3408d7857f6f9f35e91b",
+      "byteExactReproduction": true
+    },
+    {
+      "file": "sites/wreathprice/assets/ribbon-guide.webp",
+      "crop": [
+        0,
+        928,
+        1024,
+        1220
+      ],
+      "sha256": "d177a3a409ff546be9308bffcb1d376169cd6948bfc298a25b43b09d658d6e86",
+      "byteExactReproduction": true
+    },
+    {
+      "file": "sites/wreathprice/assets/florist-preparation.webp",
+      "crop": [
+        0,
+        1226,
+        1024,
+        1536
+      ],
+      "sha256": "2c1bc9438bf25d5e0fecf608ab9eff8b049cda8ccff133e11745abae6908c335",
+      "byteExactReproduction": true
+    }
+  ],
+  "limitations": [
+    "The generation input and original tool output are recorded in this conversation; the image file is not a permanent GitHub source asset.",
+    "No person, facility, seller product, actual delivery or floral arrangement depicted is presented as documentary evidence.",
+    "Independent future reproduction requires access to the original PNG; manifest and crop recipe do not themselves supply that PNG.",
+    "No further model seed or undisclosed edit history is asserted."
+  ]
+}
