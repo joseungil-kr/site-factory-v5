@@ -136,6 +136,14 @@ class TodayflowerNationalTest(unittest.TestCase):
             self.assertEqual(html.count('<h1>'),1)
             self.assertNotRegex(html,BAD_SEMANTICS)
             self.assertNotRegex(html,PROMISES)
+            for fragment in ("choices","products","order"):
+                self.assertIn('href="#'+fragment+'"',html)
+                self.assertIn('id="'+fragment+'"',html)
+            self.assertIn('>꽃 종류</a>',html)
+            self.assertIn('>실상품·가격</a>',html)
+            self.assertIn('>주문 상담</a>',html)
+            self.assertNotIn('<a href="/2.html">단원구</a>',html)
+            self.assertNotIn('<a href="/3.html">고잔동</a>',html)
             self.assertLess(html.count('class="tf-related"'),2)
             if n>33:
                 self.assertIn(p["region"],html)
