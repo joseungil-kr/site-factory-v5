@@ -6,7 +6,7 @@
 - `todayflower.nalmada.net` 후보 도메인 연결 없음. `workers.dev` noindex 유지. 실제 판매처 사진은 `fwith.co.kr` 원본 경로를 따로 사용하고, 생성 이미지는 실납품 증거가 아닌 연출 이미지임을 계속 표시함.
 
 ## 원격 5종 원본 파일
-WebP 각 파일은 원래 ImageGen 생성 결과가 1448×1086px인 것을 변환했으며 **이전 96×141px 파일을 단순 확대하지 않았음**. 생성 원본 참조(gen_id)와 각 Git blob SHA는 `sites/todayflower-nalmada/site-spec.json`의 `images.provenance`에 보존.
+WebP 각 파일은 원래 생성 당시 ImageGen 기록(생성 이미지의 개별 gen_id)에 해당하는 1448×1086px 이미지 파일로부터 변환한 것으로 기록되어 있으며 **이전 96×141px 파일을 단순 확대하지 않았음**. 생성 원본 참조(gen_id)와 각 Git blob SHA는 `sites/todayflower-nalmada/site-spec.json`의 `images.provenance`에 보존.
 
 | 파일 (공통 `assets/library/todayflower/`) | 원본 및 원격 WebP 해상도 | 원격 바이트 | Git blob SHA |
 |---|---|---:|---|
@@ -43,3 +43,8 @@ WebP 각 파일은 원래 ImageGen 생성 결과가 1448×1086px인 것을 변�
 
 ## 후속
 부모가 최신 미리보기의 실제 시각 품질을 수락한 다음, 공개 도메인/검색 등록/전국 확장은 별도의 검토·승인 범위로 유지한다.
+
+## 생성 출처 기록과 독립 확인의 구분
+- **생성 출처 기록**: 이미지 생성 당시 메타데이터에 남은 gen_id와 로컬 파일 사용 기록. 부모는 접근 제약으로 생성 원본을 직접 열람하지 못했으므로 생성 실행 자체를 부모가 확인했다고 표시하지 않는다.
+- **독립 확인**: GitHub blob SHA 및 WebP VP8 1448×1086 치수, SHA 고정 이미지 아티팩트, 실제 Chromium 390px/1440px의 표시 너비 및 11건 noindex HTTP 원본 대조.
+- 이번 안산시 33페이지 확장에서도 10개의 기존 이미지 파일을 재사용한다. 새 원본을 다시 생성·열람하거나 접근 제한을 우회하지 않는다. 실제 추가 지역 콘텐츠 검수는 최신 [README](README.md)를 따른다.
