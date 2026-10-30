@@ -73,12 +73,12 @@
     "usage": "common 5 image paths shared between all pages"
   },
   "publishPolicy": {
-    "mode": "N O I N D E X _ P R E V I E W _ O N L Y",
-    "indexNow": false,
+    "mode": "FULL_430_PUBLIC_AFTER_EXACT_REMOTE_QA",
+    "indexNow": true,
     "workersDevNoindex": true,
-    "customDomainNotAttached": true,
+    "customDomainNotAttached": "PENDING_REMOTE_ATTACH",
     "noExistingSitesTouched": true,
-    "productionReleaseGate": "only after actual asset readback, visual QA, domain conflict check and exact existing Worker routing verification"
+    "productionReleaseGate": "V5 430 all-URL QA, 5 exact WebPs, preflight verified original V4 account and new Worker, standalone new Worker deployment, custom domain exact-host HTTPS readback, preview noindex, one POST of exact sitemap URLs after key HTTP 200"
   },
   "offerings": {
     "verifiedByOfficialWebsite": [
@@ -101,5 +101,11 @@
       "AI 이미지를 실매장 실적 사진으로 표현",
       "군·구·동·읍·면을 별도 랜딩 URL로 생성"
     ]
+  },
+  "releaseAuthorization": {
+    "source": "User 2026-10-30 explicit instruction: commit, deploy, IndexNow",
+    "requested": true,
+    "approvedPageCount": 430,
+    "scope": "only baekse.nalmada.net, brand Baeksefood, 85 city names and four recipe transfer menus"
   }
 }
