@@ -7,19 +7,21 @@
   "brand": "오늘꽃배달",
   "businessModel": "seller-product-discovery",
   "serviceScope": {
-    "region": "안산시 시·구·동 대표본",
-    "granularity": "municipality/ward/current-dong",
+    "region": "경기도 안산시",
+    "granularity": "city:1, official ward:2, pinned 2026-10-22 active legal-dong:30",
     "facilities": null,
-    "coverageClaim": "Not an area-by-area same-day delivery guarantee"
+    "geographicEvidence": "ansan-legal-regions-evidence.json",
+    "deliveryEvidence": "site-factory-v4/site/data/service-facts.json user reported national fulfillment",
+    "deliveryLimitation": "No validated same-day delivery/cutoff/price/availability for each address or SKU"
   },
   "pageTypes": [
-    "시 단위 당일 꽃배달",
-    "구 단위 개업·행사 꽃배달",
-    "동 단위 정확한 수령 안내"
+    "안산시 전체 당일 꽃배달 선택 안내",
+    "일반구별 주문·수령 안내",
+    "법정동별 상황·용도별 주문 조건 가이드"
   ],
-  "targetPageCount": 3,
+  "targetPageCount": 33,
   "titlePattern": "{지역명} 꽃배달 당일배송, 꽃다발·화분·화환 주문 안내 | 오늘꽃배달",
-  "urlPattern": "/ , /2.html , /3.html (pilot stable numbering)",
+  "urlPattern": "/ (city) /2.html (Danwon ward) /3.html (Gojan legal-dong), /4.html (Sangnok ward), /5.html .. /33.html legal-dong, immutable pilot numbers",
   "keywordGroups": {
     "primary": [
       "{지역명} 꽃배달 당일배송"
@@ -32,16 +34,19 @@
     ]
   },
   "copyPoolPlan": {
-    "industry": "꽃다발·화분·화환 당일 주문",
-    "source": "V4 decision-copy principle plus authored local intent-specific text and fwith.co.kr seller facts",
-    "sentenceTarget": 120
+    "industry": "꽃다발·개업화분·축하화환·근조화환·당일배송 수령 상담",
+    "source": "Preserved 3 human-reviewed pilot bodies + 30 distinct buyer scenarios, logistics/checklist variants, official 30 Ansan legal-dong code inventory; no invented neighborhood facilities, guaranteed cutoff or free delivery",
+    "sentenceTarget": 220,
+    "regionDifferentiation": "content theme and order situation differ by URL, not location-only substitution; location names not treated as evidence of local demand or business density"
   },
   "similarityAudit": {
     "metric": "char-5gram-jaccard",
     "thresholdExclusive": 0.49,
     "sampleFraction": 1,
     "seed": 20261030,
-    "manualSemanticReview": true
+    "manualSemanticReview": true,
+    "expectedPopulation": 33,
+    "expectedPairs": 528
   },
   "conversion": {
     "phone": "1844-0644",
@@ -125,11 +130,14 @@
     "mode": "preview-noindex",
     "indexNow": false,
     "production": false,
-    "requires": "Narrow 3-page noindex QA; high-resolution AI WebP dimension and browser display validation; seller images and direct order links preserved; parent approval before DNS/index"
+    "domainConnected": false,
+    "requires": "parent editorial/semantic review of all 30 new pages, per-address seller delivery validation, local QA and live noindex review before any expansion beyond Ansan; no DNS/ownership/secret changes"
   },
   "rollout": {
-    "phase": "3-page-pilot",
+    "phase": "ansan-33-page-bounded-noindex",
+    "originalPilot": 3,
+    "added": 30,
     "nationwideExpansionApproved": false,
-    "regionMaster": "V4 official legal region master and V5 current-dong"
+    "regionalSource": "2026-10-22 official snapshot code derived from existing validated Flowershop artifact; 1732 V5 candidate dong names not used"
   }
 }
