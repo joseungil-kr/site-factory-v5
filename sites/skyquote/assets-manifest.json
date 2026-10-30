@@ -1,6 +1,6 @@
 {
   "site": "skyquote",
-  "status": "awaiting binary raster assets in GitHub",
+  "status": "reviewed ZIP available locally; GitHub binary upload pending; fail closed",
   "generatedAt": "2026-10-30",
   "imageType": "image/webp",
   "aiIllustrative": true,
@@ -8,29 +8,45 @@
   "assets": [
     {
       "path": "sites/skyquote/assets/city-crane.webp",
-      "sha256": "61c1194d304282b515e95a4865e3a200090e6ab31ea2d12f1aec0f58a8c37b0a",
-      "alt": "한국 도시 스카이차와 안전통제 전경"
+      "sha256": "d413a782c3fa696d8e9b1003f1c5e6a94cea465e3f0650a8092e11e44a921be0",
+      "alt": "한국 도시 스카이차와 안전통제 전경",
+      "width": 768,
+      "height": 640,
+      "source": "1920-plus-pixel AI original composite direct 768px crop (no upscaling)"
     },
     {
       "path": "sites/skyquote/assets/facade-safety.webp",
-      "sha256": "4b5d4bc7087e0518f1e44235b974ec27f1bff44c2594335654973be83d04b061",
-      "alt": "외벽 작업대와 안전 구획 설명"
+      "sha256": "29aa6a390fe78d4f696fe7cb8c9870229165357f11bf9ceda7edf62df46dbfa5",
+      "alt": "외벽 작업대와 안전 구획 설명",
+      "width": 768,
+      "height": 640,
+      "source": "1920-plus-pixel AI original composite direct 768px crop (no upscaling)"
     },
     {
       "path": "sites/skyquote/assets/sign-work.webp",
-      "sha256": "1bc6a88974b174c6ec8b80bd4d67bf1e60ddc08adb7641e931c95c12e094ee7a",
-      "alt": "간판 주변 작업 안전 설명"
+      "sha256": "aa37b4836165457aff0e115c746275fd38b1d200014f00ea0ba248bab8d55bd9",
+      "alt": "간판 주변 작업 안전 설명",
+      "width": 768,
+      "height": 640,
+      "source": "1920-plus-pixel AI original composite direct 768px crop (no upscaling)"
     },
     {
       "path": "sites/skyquote/assets/work-height.webp",
-      "sha256": "9012086eaaa9d5d1cb16ddf5ea240fc5ef753a98da46a1a514bd4629e521c5dd",
-      "alt": "장비 높이·수평 도달거리 설명"
+      "sha256": "d3899035b0b1ca27379a7e21445711e7bcc330fe6bb2603e0328ab755ae36731",
+      "alt": "장비 높이·수평 도달거리 설명",
+      "width": 768,
+      "height": 640,
+      "source": "1920-plus-pixel AI original composite direct 768px crop (no upscaling)"
     },
     {
       "path": "sites/skyquote/assets/outrigger-access.webp",
-      "sha256": "e57ee92490598b83592865218c1c94e4f957f97ad1dab2cf8a6669e086e00c36",
-      "alt": "차량 지지대·지반 확인 설명"
+      "sha256": "7e1e5b0c258b78b57fb4c6797a5be60c918c57b21f30ba2bb444f6c34305e564",
+      "alt": "차량 지지대·지반 확인 설명",
+      "width": 768,
+      "height": 640,
+      "source": "1920-plus-pixel AI original composite direct 768px crop (no upscaling)"
     }
   ],
-  "assertNoPublishUntilVerified": true
+  "assertNoPublishUntilVerified": true,
+  "originalAssetSource": "Original generated panoramic PNG width 1983px; recomposed into five 768x640 direct crops; no newly generated image"
 }
