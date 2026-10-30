@@ -109,7 +109,7 @@ class TodayflowerWholeCopyAudit(unittest.TestCase):
                         self.assertTrue(value.endswith("."), value)
                         for sentence in re.split(r"(?<=[.!?])\s+", value):
                             self.assertGreaterEqual(len(sentence), 12, (page["number"], field, sentence))
-        self.assertEqual(total, 33 * (4 + 4*2 + 3*2))
+        self.assertEqual(total, 33 * (5 + 4*2 + 3*2))  # 19 fields/page = 627
 
     def test_all_33_rendered_html_visible_strings_not_only_article_bodies(self):
         for p in self.pages:
