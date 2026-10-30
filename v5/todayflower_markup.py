@@ -33,7 +33,7 @@ STYLE = r"""
 .tf-section-desc{color:#687d6f;font-size:15px;margin:0}
 .tf-choose{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .tf-choose-card{background:#fff;border:1px solid #e0e9df;border-radius:17px;overflow:hidden}
-.tf-choose-card img{height:200px;border-radius:0}.tf-choose-card-body{padding:18px}
+.tf-choose-card img{height:200px;border-radius:0}.tf-choose-card-body{padding:25px}
 .tf-choose-card h3{font-size:20px;margin:0 0 8px}.tf-choose-card p{font-size:13px;color:#61776a;margin:0;line-height:1.75}
 .tf-articles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
 .tf-articles .article-content{display:contents}.tf-articles .document-section{margin:0;border:1px solid #e2e9e2;background:#fff;border-radius:15px;padding:23px}
@@ -62,11 +62,11 @@ STYLE = r"""
 .tf-story-item{background:#f7f9f4;border:1px solid #e3eae0;border-radius:12px;padding:12px;text-align:center;min-width:0}
 .tf-story-item img{display:block;width:96px;height:141px;object-fit:cover;border-radius:9px;margin:0 auto 10px}
 .tf-story-item figcaption{font-size:12px;color:#486c57;font-weight:750}
-@media(max-width:740px){.tf-story-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.tf-story-item{padding:8px}.tf-story-item img{max-width:100%;height:auto;aspect-ratio:96/141}}
+@media(max-width:740px){.tf-story-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.tf-story-item{padding:12px}.tf-story-item img{max-width:96px;height:141px}.tf-story-item figcaption{font-size:12px;white-space:nowrap;overflow-wrap:normal}}
 @media(max-width:950px){.tf-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tf-hero-grid{gap:21px}}
 @media(max-width:740px){.tf-shell{padding-inline:16px}.tf-hero{padding:29px 0}.tf-hero-grid,.tf-check-grid{grid-template-columns:1fr}
 .tf-hero h1{font-size:36px}.tf-lead{font-size:15px}.tf-hero-photo{height:270px}.tf-choose{grid-template-columns:1fr;gap:12px}
-.tf-choose-card{display:grid;grid-template-columns:36% 64%;align-items:stretch}.tf-choose-card img{height:100%;min-height:155px}
+.tf-choose-card{display:block}.tf-choose-card img{display:none}
 .tf-choose-card-body{padding:16px}.tf-articles{grid-template-columns:1fr}.tf-product-grid{gap:9px}
 .tf-product-copy{padding:11px}.tf-product h4{font-size:14px}.tf-product-price{font-size:18px}
 .tf-pack-photo{height:245px}.tf-related{grid-template-columns:1fr}.tf-section{padding-block:30px}}
@@ -113,10 +113,9 @@ def _choices(site):
         ("축하·근조화환","행사장 반입·장례식장 빈소명과 리본 문구를 구분해 준비하세요.",site["imagePool"][3])
     )
     result=[]
-    for title,desc,pic in rows:
-        result.append('<article class="tf-choose-card"><figure class="tf-figure">'
-                      +_img(pic,title+" 선택을 설명하는 AI 연출 이미지")
-                      +'</figure><div class="tf-choose-card-body"><h3>'+_h(title)+'</h3>'
+    for title,desc,_pic in rows:
+        result.append('<article class="tf-choose-card">'
+                      '<div class="tf-choose-card-body"><h3>'+_h(title)+'</h3>'
                       '<p>'+_h(desc)+'</p></div></article>')
     return '<div class="tf-choose">'+"".join(result)+'</div>'
 
