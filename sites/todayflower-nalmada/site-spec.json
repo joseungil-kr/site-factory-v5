@@ -21,7 +21,7 @@
   ],
   "targetPageCount": 5070,
   "titlePattern": "{지역명} 꽃배달 당일배송, 꽃다발·화분·화환 주문 안내 | 오늘꽃배달",
-  "urlPattern": "/; /2.html ~ /33.html kept; /34.html ~ /5070.html pinned code order; no new DNS",
+  "urlPattern": "/ (home); /2.html.. /33.html preserved; /34.html.. /403.html, /404.html reserved real error, /405.html.. /5071.html nationwide pinned legal-code articles",
   "keywordGroups": {
     "primary": [
       "{지역명} 꽃배달 당일배송"
@@ -141,6 +141,8 @@
     "additionalPages": 5037,
     "totalPages": 5070,
     "publicReleaseApproved": false,
-    "publicHostnameConnection": "not yet verified; no DNS or ownership change permitted in this task"
+    "publicHostnameConnection": "not yet verified; no DNS or ownership change permitted in this task",
+    "numbering": "5070 content pages, 1..403 + 405..5071, reserve /404.html as error",
+    "lastContentPath": "/5071.html"
   }
 }
