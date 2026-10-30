@@ -32,7 +32,7 @@ jobs:
           for p in ('index.html','2.html','3.html'):
               html=(root/p).read_text(encoding='utf-8')
               assert 'noindex,nofollow' in html and 'rel="canonical"' not in html
-              assert html.count('src="/assets/images/')==10
+              assert html.count('src="/assets/images/')==7
               assert 'fwith.co.kr/shop/item.php?it_id=' in html
           assert not (root/'sitemap.xml').exists()
           assert (root/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
@@ -64,19 +64,28 @@ jobs:
                           assert response and response.status==200
                           assert page.locator('h1').count()==1
                           assert page.locator('a[href^="tel:"]').count()>=1
-                          assert page.locator('img[src^="/assets/images/"]').count()==10
+                          assert page.locator('img[src^="/assets/images/"]').count()==7
                           assert page.locator('.tf-story-item img').count()==5
                           assert page.evaluate('document.documentElement.scrollWidth<=window.innerWidth+1')
                           local=page.locator('img[src^="/assets/images/"]')
                           assert local.evaluate_all('(imgs)=>{imgs.forEach(i=>i.loading="eager"); return Promise.all(imgs.map(i=>i.decode().then(()=>true).catch(()=>false))).then(a=>a.every(Boolean));}')
+                          seller=page.locator('.tf-product img').evaluate_all("""
+                            (imgs)=>{imgs.forEach(i=>i.loading='eager');
+                            return Promise.all(imgs.map(i=>Promise.race([
+                              i.decode().then(()=>({sku:i.alt,src:i.src,ok:i.naturalWidth>0})).catch(()=>({sku:i.alt,src:i.src,ok:false})),
+                              new Promise(resolve=>setTimeout(()=>resolve({sku:i.alt,src:i.src,ok:false,timeout:true}),9000))
+                            ])));}""")
                           page.screenshot(path=str(screenshots/(name+'-'+str(width)+'.png')),full_page=True)
-                          results.append({'route':route,'width':width,'status':200,'editorialImages':10,'generatedAIImages':5,'noHorizontalOverflow':True})
+                          results.append({'route':route,'width':width,'status':200,'editorialImages':7,'generatedAIImages':5,
+                                          'noHorizontalOverflow':True,'sellerPhotoLoaded':sum(s['ok'] for s in seller),
+                                          'sellerPhotoCount':len(seller),'sellerPhotos':seller})
                           page.close()
                       context.close()
                   browser.close()
           finally:
               process.terminate();process.wait(timeout=5)
           (screenshots.parent/'browser-qa.json').write_text(json.dumps(results,indent=2)+'\n')
+          (screenshots.parent/'seller-image-qa.json').write_text(json.dumps([{'route':r['route'],'width':r['width'],'loaded':r['sellerPhotoLoaded'],'total':r['sellerPhotoCount']} for r in results],indent=2)+'\n')
           print('TODAYFLOWER_SIX_LOCAL_BROWSER_SCREENSHOTS_PASS',len(results))
           PY
       - uses: actions/upload-artifact@v4
@@ -88,6 +97,7 @@ jobs:
             reports/todayflower-nalmada/audit.json
             reports/todayflower-nalmada/manifest.json
             reports/todayflower-nalmada/browser-qa.json
+            reports/todayflower-nalmada/seller-image-qa.json
             reports/todayflower-nalmada/screenshots/
           if-no-files-found: warn
           retention-days: 14
