@@ -14,7 +14,7 @@ class TodayflowerPilotTest(unittest.TestCase):
     def setUpClass(cls):
         cls.d = read_site(SITE)
         cls.site = cls.d["site"]
-        cls.pages = cls.d["pages"]
+        cls.pages = cls.d["pages"][:33]  # preserve reviewed Ansan pilot while national pages extend
         cls.products = cls.d["products"]
         cls.catalog = {p["sku"]: p for p in cls.products}
 
@@ -30,7 +30,7 @@ class TodayflowerPilotTest(unittest.TestCase):
             "경기도 안산시", "경기도 안산시 단원구",
             "경기도 안산시 단원구 고잔동"
         ])
-        self.assertEqual(self.site["todayflowerPilot"]["regionCount"],33)
+        self.assertEqual(self.site["todayflowerPilot"]["regionCount"],5070)
         self.assertTrue(self.site["todayflowerPilot"]["previewOnly"])
 
     def test_original_three_reviewed_content_hashes_are_unchanged(self):
@@ -54,14 +54,14 @@ class TodayflowerPilotTest(unittest.TestCase):
         data=json.loads((root/"ansan-legal-regions-evidence.json").read_text(encoding="utf-8"))
         regions=json.loads((root/"regions.json").read_text(encoding="utf-8"))
         spec=json.loads((root/"site-spec.json").read_text(encoding="utf-8"))
-        self.assertEqual(spec["targetPageCount"],33)
+        self.assertEqual(spec["targetPageCount"],5070)
         self.assertEqual(data["archiveHash"],
             "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd")
         legal=data["legalDongs"]
         self.assertEqual(len(legal),30)
         self.assertEqual(len({r["code"] for r in legal}),30)
         self.assertEqual(len({r["name"] for r in legal}),30)
-        self.assertEqual(len(regions["regions"]),33)
+        self.assertEqual(len(regions["regions"]),5070)
         self.assertEqual(len(self.pages),33)
         by_name={r["name"]:r for r in regions["regions"]}
         for row in legal:
@@ -70,7 +70,7 @@ class TodayflowerPilotTest(unittest.TestCase):
         self.assertEqual(by_name["경기도 안산시 단원구 고잔동"]["code"],"4127310100")
         self.assertEqual(by_name["경기도 안산시 상록구"]["code"],"4127100000")
         actual={p["region"] for p in self.pages}
-        self.assertEqual(actual,set(by_name))
+        self.assertEqual(actual,{r["name"] for r in regions["regions"][:33]})
         self.assertEqual(len(self.pages[3:]),30)
 
     def test_seller_products_all_four_intents(self):
