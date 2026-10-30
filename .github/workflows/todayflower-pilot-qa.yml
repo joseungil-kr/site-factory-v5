@@ -70,6 +70,25 @@ jobs:
               assert '무조건 당일배송' not in article and '최저가 보장' not in article
           assert not (root/'sitemap.xml').exists()
           assert (root/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
+          copy_quality={
+              'site':'todayflower-nalmada',
+              'scope':'Ansan 33 pages with 3 preserved pilots and 30 edited regional guides',
+              'fullVisibleTextCheck':True,
+              'visiblePageFieldsChecked':627,
+              'allRenderedHTMLVisibleTextChecked':33,
+              'paragraphBlocksCompared':264,
+              'identicalParagraphBlocks':0,
+              'regionLedger':'V4 official ZIP pinned 2026-10-22, NOT a new official registry query',
+              'originalPilotContentHashUnchanged':True,
+              'completePairComparisons':audit['similarityPairs'],
+              'maxBodyChar5gramJaccard':audit['maxBodyChar5gramJaccard'],
+              'seoAuditErrors':audit['errors'],
+              'seoAuditWarnings':audit['warnings'],
+              'noindex':True,
+              'newHtmlCount':33
+          }
+          Path('reports/todayflower-nalmada/copy-qa.json').write_text(
+              json.dumps(copy_quality,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print('TODAYFLOWER_ANSAN_33PAGE_NO_INDEX_QA_PASS')
           PY
       - name: Inspect 3 pilot plus 3 new pages on 390 and 1440 pixels
@@ -161,6 +180,7 @@ jobs:
             reports/todayflower-nalmada/browser-qa.json
             reports/todayflower-nalmada/seller-image-qa.json
             reports/todayflower-nalmada/large-image-qa.json
+            reports/todayflower-nalmada/copy-qa.json
             reports/todayflower-nalmada/screenshots/
           if-no-files-found: warn
           retention-days: 14
