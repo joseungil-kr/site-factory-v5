@@ -9,13 +9,18 @@
   "keyword": "꽃배달 당일배송",
   "region": "안산시",
   "theme": "modern",
-  "imageLibrary": "promotion-plant",
+  "imageLibrary": "todayflower",
   "imagePool": [
     "hero-florist.webp",
     "atelier-florist.webp",
     "moment-blooms.webp",
     "moment-leaves.webp",
-    "moment-flowers.webp"
+    "moment-flowers.webp",
+    "gift-bouquet.webp",
+    "opening-plant.webp",
+    "celebration-wreath.webp",
+    "condolence-wreath.webp",
+    "flower-wrapping.webp"
   ],
   "orderBaseUrl": "https://fwith.co.kr",
   "publishEnabled": false,
@@ -28,7 +33,7 @@
     "enabled": false
   },
   "staticAssetSoftLimit": 18000,
-  "source": "V5 2026-10-12 Seoul/Gyeonggi current dong + V4 2026-10-22 region master + 2026-10-30 original fwith.co.kr product page read; delivery time/cutoff not guaranteed",
+  "source": "V4 2026-10-22 official region, V5 2026-10-12 current-dong, 2026-10-30 original fwith.co.kr seller products, generated AI image set; delivery cutoff not guaranteed",
   "indexNow": {
     "enabled": false,
     "key": null
@@ -51,13 +56,20 @@
     "enabled": true,
     "regionCount": 3,
     "regionalScope": "Ansan city, Danwon ward, Gojan current-dong; no nationwide publishing approval",
-    "editorialImages": 5,
+    "editorialImages": 10,
     "productKinds": [
       "bouquet",
       "plant",
       "celebration",
       "condolence"
     ],
-    "previewOnly": true
+    "previewOnly": true,
+    "generatedImages": [
+      "gift-bouquet.webp",
+      "opening-plant.webp",
+      "celebration-wreath.webp",
+      "condolence-wreath.webp",
+      "flower-wrapping.webp"
+    ]
   }
 }
