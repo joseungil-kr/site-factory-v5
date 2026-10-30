@@ -156,11 +156,108 @@ def scan_hotlinks(changed:list[str],root=ROOT)->list[str]:
                 break
     return errors
 
+def referenced_site_images(site_id:str,root=ROOT)->set[str]:
+    """Find image dependencies for a newly changed V5 site, even if assets
+    themselves were committed long ago. This prevents 'reusing' unknown
+    historical images from bypassing the new-image-only change scanner.
+    """
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,63}",site_id):
+        raise ValueError("Unsafe site ID in image dependency audit")
+    folder=root/"sites"/site_id
+    paths=set()
+    def load_optional(name:str):
+        p=folder/name
+        return json.loads(p.read_text(encoding="utf-8")) if p.is_file() else None
+    site=load_optional("site.json")
+    if isinstance(site,dict):
+        image_library=site.get("imageLibrary")
+        image_pool=site.get("imagePool",[])
+        if image_pool:
+            if not image_library or not isinstance(image_pool,list):
+                raise ValueError("site.json imagePool must have imageLibrary: "+site_id)
+            for name in image_pool:
+                if not isinstance(name,str) or "/" in name or "\\" in name:
+                    raise ValueError("Unsafe V5 imagePool filename: "+str(name))
+                paths.add(normalize_asset_path("assets/library/"+image_library+"/"+name))
+    spec=load_optional("site-spec.json")
+    if isinstance(spec,dict):
+        imgs=spec.get("images",{})
+        if isinstance(imgs,dict):
+            for name in imgs.get("assetPaths",[]):
+                paths.add(normalize_asset_path(name))
+            repo_path=imgs.get("repoPath")
+            if repo_path and imgs.get("names"):
+                for name in imgs["names"]:
+                    if not isinstance(name,str) or "/" in name or "\\" in name:
+                        raise ValueError("Unsafe V5 image filename: "+str(name))
+                    paths.add(normalize_asset_path(repo_path.rstrip("/")+"/"+name))
+    manifest=load_optional("images-manifest.json")
+    if isinstance(manifest,dict):
+        for record in manifest.get("assets",[]):
+            name=record.get("assetPath") or record.get("path")
+            if name:
+                paths.add(normalize_asset_path(name))
+    historical=root/"docs/site-plans"/site_id/"images-manifest.json"
+    if historical.is_file():
+        for record in json.loads(historical.read_text(encoding="utf-8")).get("assets",[]):
+            name=record.get("assetPath") or record.get("path")
+            if name:
+                paths.add(normalize_asset_path(name))
+    return paths
+
+def check_changed_site_dependencies(changes:list[str],records:dict,root=ROOT):
+    site_ids=sorted({name.split("/")[1] for name in changes
+                     if name.startswith("sites/") and len(name.split("/"))>=3})
+    errors=[]
+    paths=set()
+    for site_id in site_ids:
+        try:
+            references=referenced_site_images(site_id,root)
+        except (ValueError,TypeError,KeyError) as exc:
+            errors.append("Cannot safely identify image references in site "+site_id+": "+str(exc))
+            continue
+        paths.update(references)
+    for path in sorted(paths):
+        record=records.get(path)
+        if record is None:
+            errors.append("New/changed site refers to an existing asset without verified origin: "+path)
+            continue
+        errors.extend(validate_one(record,root))
+    return {"changedSites":site_ids,"referencedImages":sorted(paths),
+            "verified":len(paths) if not errors else 0,"errors":errors}
+
+def check_explicit_release_assets(manifest_file:Path,records:dict,root=ROOT):
+    """Release workflows can require an explicit full asset list, including
+    unchanged images from legacy directories.
+    """
+    doc=json.loads(manifest_file.read_text(encoding="utf-8"))
+    names=doc.get("assets") if isinstance(doc,dict) else doc
+    if not isinstance(names,list) or not names:
+        return ["Release assets manifest must contain a nonempty asset path list"]
+    errors=[]
+    for name in names:
+        if not isinstance(name,str):
+            errors.append("Invalid release image asset path value")
+            continue
+        try:
+            path=normalize_asset_path(name)
+        except ValueError as e:
+            errors.append(str(e))
+            continue
+        rec=records.get(path)
+        if rec is None:
+            errors.append("Release asset has no approved provenance: "+path)
+        else:
+            errors.extend(validate_one(rec,root))
+    return errors
+
 def validate_changed_images(base_ref:str,root=ROOT):
     records=load_registered(root)
     changes=changed_files(base_ref,root)
     assets=[x for x in changes if x.startswith("assets/library/") and Path(x).suffix.lower() in IMAGE_SUFFIXES]
     errors=scan_hotlinks(changes,root)
+    deps=check_changed_site_dependencies(changes,records,root)
+    errors.extend(deps["errors"])
     accepted=[]
     for path in assets:
         record=records.get(path)
@@ -171,8 +268,8 @@ def validate_changed_images(base_ref:str,root=ROOT):
         if violations:errors.extend(violations)
         else:accepted.append(path)
     return {"changedFiles":len(changes),"newOrChangedImages":len(assets),
-            "provenanceApprovedImages":accepted,"errors":errors,
-            "pass":not errors,"existingLegacyFilesUnchanged":True}
+            "provenanceApprovedImages":accepted,"siteDependencies":deps,
+            "errors":errors,"pass":not errors,"existingLegacyFilesUnchanged":True}
 
 def audit_legacy(root=ROOT):
     inventory=json.loads((root/"docs/image-governance/legacy-inventory-20261030.json").read_text(encoding="utf-8"))
@@ -192,6 +289,8 @@ def cli():
     p.add_argument("--changed-base",default=None,
                    help="Git base ref for NEW/CHANGED file enforcement; e.g. origin/main")
     p.add_argument("--legacy-audit",action="store_true")
+    p.add_argument("--release-assets-manifest",default=None,
+                   help="Full exact public image dependency list, including unchanged existing images")
     args=p.parse_args()
     errors=[]
     records=load_registered(ROOT)
@@ -202,6 +301,10 @@ def cli():
         changed=validate_changed_images(args.changed_base,ROOT)
         result["changed"]=changed
         errors.extend(changed["errors"])
+    if args.release_assets_manifest:
+        release_errors=check_explicit_release_assets(Path(args.release_assets_manifest),records,ROOT)
+        result["releaseImageDependencyErrors"]=release_errors
+        errors.extend(release_errors)
     if args.legacy_audit:
         result["legacy"]=audit_legacy(ROOT)
     result["pass"]=not errors
