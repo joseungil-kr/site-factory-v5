@@ -57,6 +57,12 @@ STYLE = r"""
 .tf-related a{border:1px solid #cfdfd3;background:#f4f8f3;border-radius:14px;padding:19px;color:#246149;text-decoration:none;font-weight:800}
 .tf-order{margin:35px 0;padding:26px;background:linear-gradient(110deg,#e6f4e9,#fff0e9);border-radius:19px}
 .tf-order h2{margin:0 0 9px;font-size:23px}.tf-order p{font-size:14px;color:#597466;margin:0 0 16px}
+
+.tf-story-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:13px}
+.tf-story-item{background:#f7f9f4;border:1px solid #e3eae0;border-radius:12px;padding:12px;text-align:center;min-width:0}
+.tf-story-item img{display:block;width:96px;height:141px;object-fit:cover;border-radius:9px;margin:0 auto 10px}
+.tf-story-item figcaption{font-size:12px;color:#486c57;font-weight:750}
+@media(max-width:740px){.tf-story-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.tf-story-item{padding:8px}.tf-story-item img{max-width:100%;height:auto;aspect-ratio:96/141}}
 @media(max-width:950px){.tf-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tf-hero-grid{gap:21px}}
 @media(max-width:740px){.tf-shell{padding-inline:16px}.tf-hero{padding:29px 0}.tf-hero-grid,.tf-check-grid{grid-template-columns:1fr}
 .tf-hero h1{font-size:36px}.tf-lead{font-size:15px}.tf-hero-photo{height:270px}.tf-choose{grid-template-columns:1fr;gap:12px}
@@ -67,13 +73,19 @@ STYLE = r"""
 @media(max-width:390px){.tf-hero h1{font-size:31px}.tf-choose-card h3{font-size:17px}.tf-product a{font-size:11px}}
 """
 
+GENERATED_FILES = frozenset({
+    "gift-bouquet.webp", "opening-plant.webp", "celebration-wreath.webp",
+    "condolence-wreath.webp", "flower-wrapping.webp"
+})
+
 def _h(value):
     return base.h(value)
 
 def _img(path, alt, css_class="", loading="lazy", priority=False):
     attrs = ' fetchpriority="high"' if priority else ""
+    dimensions = 'width="96" height="141"' if path in GENERATED_FILES else 'width="600" height="860"'
     return (f'<img class="{_h(css_class)}" src="/assets/images/{_h(path)}"'
-            f' alt="{_h(alt)}" width="600" height="860" loading="{loading}"'
+            f' alt="{_h(alt)}" {dimensions} loading="{loading}"'
             ' decoding="async"' + attrs + '>')
 
 def _head(site,page):
@@ -132,10 +144,28 @@ def _product_cards(products,selected):
                         '<div class="tf-product-grid">'+"".join(cards)+'</div></div>')
     return "".join(sections)
 
+def _story(site):
+    """Five newly generated, locally bundled AI-topic images; not item photos."""
+    captions=(
+        ("gift-bouquet.webp", "꽃다발 선물", "분홍 꽃다발을 표현한 AI 연출 이미지"),
+        ("opening-plant.webp", "개업화분", "실내 식물 화분을 표현한 AI 연출 이미지"),
+        ("celebration-wreath.webp", "축하화환", "축하 꽃장식을 표현한 AI 연출 이미지"),
+        ("condolence-wreath.webp", "근조화환", "흰 조의 꽃장식을 표현한 AI 연출 이미지"),
+        ("flower-wrapping.webp", "꽃 포장", "꽃다발 포장 과정을 표현한 AI 연출 이미지"),
+    )
+    assert set(p for p,_,_ in captions) <= set(site["imagePool"])
+    items=[]
+    for photo,label,alt in captions:
+        items.append('<figure class="tf-story-item">'
+                     +_img(photo,alt,loading="lazy")
+                     +'<figcaption>'+_h(label)+'</figcaption></figure>')
+    return '<div class="tf-story-grid">'+"".join(items)+'</div>'
+
 def _body(site,page,pages,products,links):
     snippet='<div class="tf-layout">'+_hero(site,page)+'<main id="main" class="tf-shell">'
     snippet+='<section class="tf-section" id="choices"><header class="tf-section-head"><h2>꽃다발·화분·화환, 용도에 맞게 선택</h2>'
     snippet+='<p class="tf-section-desc">'+_h(page["sectionLead"])+'</p></header>'+_choices(site)+'</section>'
+    snippet+='<section class="tf-section"><header class="tf-section-head"><h2>꽃 선물을 준비하는 다섯 장면</h2><p class="tf-section-desc">AI 생성 연출 이미지로 용도를 살펴보세요. 실제 판매 상품 사진이나 배송완료 사진은 아닙니다.</p></header>'+_story(site)+'</section>'
     snippet+='<section class="tf-section"><header class="tf-section-head"><h2>지역과 상황에 맞는 주문 판단</h2></header>'
     snippet+='<div class="tf-articles">'+base.article_body(page)+'</div></section>'
     snippet+='<section class="tf-section" id="products"><header class="tf-section-head"><h2>확인된 실제 꽃 상품·가격</h2>'
