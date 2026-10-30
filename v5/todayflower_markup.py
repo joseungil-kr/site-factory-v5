@@ -21,7 +21,7 @@ STYLE = r"""
 .tf-hero{background:linear-gradient(108deg,#f9f7f1 12%,#e8f3e9 95%);padding:46px 0 38px}
 .tf-hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:42px;align-items:center}
 .tf-kicker{display:block;font-size:12px;color:#568575;font-weight:800;letter-spacing:.12em}
-.tf-hero h1{font-size:clamp(33px,4.2vw,56px);line-height:1.25;letter-spacing:-.052em;margin:14px 0 18px;color:#174636}
+.tf-hero h1{font-size:clamp(32px,3.35vw,46px);line-height:1.27;letter-spacing:-.046em;word-break:keep-all;overflow-wrap:break-word;margin:14px 0 18px;color:#174636}
 .tf-lead{font-size:17px;line-height:1.9;color:#445f53;max-width:600px}
 .tf-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:21px}
 .tf-action{background:#206b54;color:#fff!important;font-weight:800;text-decoration:none;border-radius:11px;padding:12px 19px}
