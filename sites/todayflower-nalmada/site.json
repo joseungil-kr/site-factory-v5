@@ -40,16 +40,8 @@
   },
   "navigation": [
     {
-      "label": "안산시",
+      "label": "전국 안내",
       "href": "/"
-    },
-    {
-      "label": "단원구",
-      "href": "/2.html"
-    },
-    {
-      "label": "고잔동",
-      "href": "/3.html"
     }
   ],
   "todayflowerPilot": {
