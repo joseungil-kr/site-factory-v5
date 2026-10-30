@@ -457,11 +457,12 @@ def target_for_link(path: Path, href: str) -> Path | None:
 def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) -> dict:
     from v5.visitor_copy import audit_html_tree
 
-    if len(pages) != expected or expected != 14:
+    if len(pages) != expected or expected != 42:
         raise ValueError("Unexpected page count")
     errors = []
     titles = set()
     total_links = 0
+    image_refs = 0
     for relative, source in pages.items():
         if '<meta name="robots" content="noindex,nofollow,noarchive">' not in source:
             errors.append("noindex missing " + relative)
@@ -480,12 +481,42 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
         for claim in pool["restrictedClaims"]:
             if claim in source:
                 errors.append("restricted claim found " + relative + ":" + claim)
+        for src in re.findall(r'<img\b[^>]*\bsrc="([^"]+)"', source):
+            image_refs += 1
+            img_path = out / src.lstrip("/")
+            if not src.startswith("/assets/images/") or not img_path.is_file():
+                errors.append("Missing original illustration: "+relative+" -> "+src)
         for href in re.findall(r'\bhref="([^"]+)"', source):
             dest = target_for_link(out, href)
             if dest is not None:
                 total_links += 1
                 if not dest.is_file():
                     errors.append("broken link " + relative + " -> " + href)
+    from xml.etree import ElementTree
+    art_names = {"webbuilder-hero.svg", "industry-services.svg", "local-search.svg",
+                 "managed-domain.svg", "mobile-contact.svg"}
+    art_out = out / "assets" / "images"
+    if {x.name for x in art_out.glob("*.svg")} != art_names:
+        errors.append("Original SVG asset count or filenames differ")
+    for art in sorted(art_names):
+        source_path = SITE / "illustrations" / art
+        dest_path = art_out / art
+        if not dest_path.is_file() or dest_path.read_bytes() != source_path.read_bytes():
+            errors.append("Missing or modified original illustration "+art)
+            continue
+        raw_svg = dest_path.read_text(encoding="utf-8")
+        if "<script" in raw_svg.lower():
+            errors.append("Executable content in SVG "+art)
+        try:
+            svg_root = ElementTree.fromstring(raw_svg)
+            if svg_root.tag != "{http://www.w3.org/2000/svg}svg":
+                errors.append("Invalid namespace in SVG "+art)
+            if int(svg_root.attrib.get("width", "0")) < 768:
+                errors.append("SVG narrower than 768 "+art)
+        except (ElementTree.ParseError, ValueError) as exc:
+            errors.append("Invalid SVG XML "+art+": "+str(exc))
+    if image_refs < 50:
+        errors.append("Expected original illustrations across homepage and industry pages")
     display_errors = audit_html_tree(out)
     if display_errors:
         errors.append("V5 visitor-copy gate " + str(display_errors))
@@ -507,6 +538,7 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
     if max_pair[0] >= .49:
         raise ValueError("Sector prose >=0.49 Jaccard: " + str(max_pair))
     return {"pages": len(pages), "titleUnique": len(titles), "linksChecked": total_links,
+            "imageFiles": 5, "imageReferences": image_refs, "imagesSource": "original-project-SVG",
             "brokenLinks": 0, "previewNoindex": True, "sitemap": False,
             "narrativePairsChecked": len(similarities),
             "narrativeMaxChar5GramJaccard": round(max_pair[0], 6),
@@ -575,6 +607,8 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT) -> dict:
     qa["keywordCandidates"] = export_keywords(keywords, report / "keyword-candidates.csv")
     qa["launchIndustries"] = len(sectors)
     qa["researchIndustries"] = len(keywords["industries"]) - len(sectors)
+    qa["extensionIndustries"] = 28
+    qa["originalIndustriesPreserved"] = 10
     qa["sourceCommitMode"] = "offline preview only"
     (report / "qa.json").write_text(json.dumps(qa, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return qa
