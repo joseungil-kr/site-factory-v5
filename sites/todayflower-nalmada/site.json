@@ -7,7 +7,7 @@
   "locale": "ko-KR",
   "phone": "1844-0644",
   "keyword": "꽃배달 당일배송",
-  "region": "안산시",
+  "region": "전국",
   "theme": "modern",
   "imageLibrary": "todayflower",
   "imagePool": [
@@ -33,7 +33,7 @@
     "enabled": false
   },
   "staticAssetSoftLimit": 18000,
-  "source": "V4 2026-10-22 official legal region snapshot (30 Ansan legal-dongs derived from Flowershop 12874109256 + 2 V4 official wards) + V4 nationwide seller delivery business statement 2026-10-21; 2026-10-30 SKU prices pinned, not guaranteed current",
+  "source": "National legal-dong historical archive checksum-pinned 2026-10-22, no fresh legal/delivery re-verification; seller product conditions and time must be reconfirmed",
   "indexNow": {
     "enabled": false,
     "key": null
@@ -54,8 +54,8 @@
   ],
   "todayflowerPilot": {
     "enabled": true,
-    "regionCount": 33,
-    "regionalScope": "Ansan city, Danwon ward, Gojan current-dong; no nationwide publishing approval",
+    "regionCount": 5070,
+    "regionalScope": "Nationwide 2026-10-22 legal-dong archive, not admin-dong or guaranteed delivery",
     "editorialImages": 7,
     "productKinds": [
       "bouquet",
@@ -78,11 +78,26 @@
     "responsiveImageLayout": "desktop 3+2, tablet 2, mobile full width",
     "highResolutionImageSize": "1448x1086",
     "pilotPagesPreserved": 3,
-    "addedPages": 30,
+    "addedPages": 5037,
     "legalDongCount": 30,
     "wardCount": 2,
     "currentIndexing": "noindex",
     "regionalEvidence": "sites/todayflower-nalmada/ansan-legal-regions-evidence.json",
-    "deliveryScopeNote": "Nationwide partner delivery is user-reported from V4; no legal-dong same-day service availability independently verified"
+    "deliveryScopeNote": "Nationwide partner delivery is user-reported from V4; no legal-dong same-day service availability independently verified",
+    "originalReviewedPages": 33,
+    "nationwideLegalDongCount": 5067
+  },
+  "todayflowerNational": {
+    "enabled": true,
+    "sourceZip": "data/regions/todayflower_official_codes_20261022.zip",
+    "archiveSHA256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
+    "expectedLegalDongCount": 5067,
+    "expectedAdditionalPages": 5037,
+    "expectedPageCount": 5070,
+    "existingReviewedPages": 33,
+    "previewOnly": true,
+    "sourceAsOf": "2026-10-22",
+    "serviceAvailability": "unverified per address",
+    "verifiedRegionCoverageOnly": true
   }
 }
