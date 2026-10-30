@@ -15,7 +15,7 @@
     {
       "district": "단원구",
       "dong": "고잔동",
-      "slug": "ansan/danwon-01.html",
+      "slug": "gojan.html",
       "focus": "건물 앞 정차 위치와 플랫폼이 닿을 수평거리를 분리해 묻습니다.",
       "example": "승강 공간을 좁게 잡는 경우와 작업 반경을 넓게 잡는 경우를 따로 가정해 작업 가능 조건을 확인합니다.",
       "scope": "site operator directory and V5 source ledger intersection",
