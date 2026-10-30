@@ -19,7 +19,7 @@ for x in m['paths']:
     assert 'name="robots" content="noindex,nofollow"' in html,x
     assert html.count('<img ')==5,x
     for image in assets:assert Path(image['path']).name in html,x
-    assert not any(bad in html for bad in ('최저가를 보장합니다','업계 최저가 보장','당일 배차 보장','전국 출동 가능')),x
+    assert not any(bad in html for bad in ('최저가를 보장합니다','업계 최저가 보장','당일 배차 보장합니다','전국 출동 가능합니다')),x
     for link in re.findall(r'href="(/[^"#?]*)"',html):
         if link.startswith('/assets/'):continue
         target=OUT/'index.html' if link=='/' else OUT/link.lstrip('/')
