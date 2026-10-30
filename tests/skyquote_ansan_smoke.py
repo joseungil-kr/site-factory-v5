@@ -43,4 +43,18 @@ assert len({p['focus'] for p in scope['regions']})==22
 assert len({p['example'] for p in scope['regions']})==22
 assert all((OUT/p['slug']).is_file() for p in scope['regions'])
 assert len(set(all_paths))==25
+# Every newly generated dong page must have one detailed focus block, not a
+# verbatim copy in the intro; and comparison sections may not imply field surveys.
+for place in scope['regions']:
+    if place['slug']=='gojan.html':
+        continue  # Original parent-reviewed sample is deliberately preserved.
+    raw=(OUT/place['slug']).read_text(encoding='utf-8')
+    assert raw.count(place['focus'])==1,(place['slug'],'repeated focus')
+    assert raw.count(place['example'])==1,(place['slug'],'repeated example')
+    assert '두 작업 상황을 동일 견적으로 취급하지 않는 이유' not in raw,place['slug']
+    assert '견적 요청 전에 확인할 구체적인 질문' in raw
+    assert '비용 차이를 만들 수 있는 현장 조건' in raw
+    assert '실제 환경을 조사한 결과가 아닌 견적용 가정' in raw
+    assert '동일한 작업 정보와 포함 비용을 먼저 정리해 비교하세요' in raw
+print('SKYQUOTE_ANSAN_REPETITION_AND_ASSUMPTION_QA_PASS pages=21 focus_once=true example_once=true')
 print('SKYQUOTE_ANSAN_25_PAGE_QA_PASS pages=25 original=3 added=22 images_per_page=5 links=valid noindex=true')
