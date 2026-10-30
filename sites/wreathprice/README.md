@@ -1,6 +1,6 @@
 # 알뜰화환 — 지역 화환 가격 비교 (V5 작업자2 독립 프로젝트)
 
-현재 상태(2026-10-30): **대표 시안 3페이지 / GitHub 실이미지 5장 검수 / 격리된 workers.dev noindex 미리보기 검증 성공. 커스텀 도메인 공개 배포 없음.** 도메인 후보: `wreathprice.nalmada.net` (DNS/충돌 사전 확인 전 연결 금지).
+현재 상태(2026-10-31 KST): **전국 상위 행정구역 284개 목록 / 신규 지역 282페이지 + 기존 3페이지 + 지역 목록 허브 1페이지 = 총 286 HTML. 기존 workers.dev에 noindex 배포·실제 HTTP 검증 성공. 커스텀 도메인·공개 index 연결 없음.** 도메인 후보: `wreathprice.nalmada.net` (DNS/충돌 사전 확인 전 연결 금지).
 
 ## 독립성과 포지셔닝
 - 기존 `sites/wreath-region`, Wallsky, 꽃배달 운영 사이트, Secrets, 인증 파일, IndexNow 접수 상태 변경 금지
@@ -72,3 +72,13 @@
 - **원장 확인 시점:** 2026-10-22 다운로드한 법정동 코드 상위 행정구역 자료; 원본의 법적 적용일(`sourceEffectiveDate`)은 미확인. 오늘 행정구역 재조회나 지역 배송 실측으로 오인시키지 않음.
 
 - **브라우저 실렌더 검증:** [V4 run 41036075172](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41036075172) 성공. 기존 preview URL에서 안산·수원·장안구·단원구 × 데스크톱/모바일 = 8개 Chromium screenshot 생성, 실제 WebP 5/5 로딩·수평 넘침 없음·잘못된 문구 없음. Artifact `12967189850`.
+
+## 2026-10-31 전국 상위 행정구역 확장 (최신)
+- **원장 출처/범위:** V4 `data/regions/master.json` blob `13d43fc3f2492b29b1680858235fe0ac0cd10580`, 2026-10-22 확보 자료. `verified-regions-nationwide.json`에 284개 상위 행정구역(시·도 16, 시군구 229, 일반구 39) 정확히 고정. 원 출처의 실제 적용일은 미확인; 읍면동 전체 또는 배송 가능 범위 자료가 아님.
+- **중복 배제:** 기존 안산시/상록구 2개 상위 코드 제외 후 신규 282개. 기존 본오동까지 대표 3페이지 + 282 + 전국목록 허브 = **총 286개 HTML**.
+- **엔진:** 기존 `build.py`, `expand.py`와 이미지 5개, 가격·문의·실상품 링크를 재사용하는 `expand_nationwide.py`. 16개의 공통 편집 주제를 순환하고 근조 3단 SKU 비교는 공통 1종임. 지역명과 해시 차이는 독립적인 고유 콘텐츠 품질의 근거가 **아님**.
+- **링크:** 기본 홈 `/ansan/`은 최초 16개 신규 페이지 및 전국목록 `/regions/`로 연결됨. 허브는 284개 상위 코드 각각의 문서로 연결하며 기존 2개는 대표 URL로 이동. 모든 내부 링크 대상·중복 코드 검사 완료.
+- **빌드 QA:** [V5 run 41094905895](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41094905895) success, artifact `12996141154`. HTML 286개, 이미지5 실제 SHA/치수, 284코드 중복0, 내부링크·noindex·원장 비교 통과.
+- **기존 Worker에 noindex 배포:** [V4 run 41095222881](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41095222881) success, artifact `12995952552`. Worker `sfv52-wreathprice-preview` 버전 `7be165ca-d1dc-4d20-9226-5ae0ea6bbc5a`, V5 배포 소스 `d23a603f74290f245bda613271bf2ac6d2bc94ac`. 실제 HTML **286/286 HTTP200**, X-Robots-Tag 및 meta noindex, 상품 링크/이미지 5개, WebP 원격 바이트 해시, robots Disallow, sitemap/없는 페이지 404, canonical 없음 검증. 사용 도메인은 기존 `*.workers.dev`만 해당. 롤백 불필요.
+- **가용성:** 실제 배송 가능 지역 확인 0건, 배송 추가금·리본 비용 미확인; 상품 표시는 실거래 총액이 아님. 전국 모든 지역에 배송된다고 주장하거나 최저가, 지점명, 후기 조작 없음.
+- **비공개/공개 구분:** 신규 `wreathprice.nalmada.net` 도메인/DNS/소유확인/Secret·권한 변경 없음, 공개 index 미전환. 공개 URL의 자기 canonical·index sitemap은 커스텀 도메인 승인 및 배송 가용성 검증 후 별도 단계.
