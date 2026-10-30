@@ -66,13 +66,50 @@ class WebbuilderPreviewTest(unittest.TestCase):
         self.assertTrue(all(x["priority"] in ("launch", "research_only") for x in rows))
         self.assertTrue(all("{동}" not in x["keyword"] for x in rows if x["type"] == "buyer"))
 
-    def test_commercial_terms_not_assumed(self):
+    def test_monthly_pricing_and_inclusions_confirmed_without_assuming_contract(self):
         spec = load("site-spec.json")
-        self.assertEqual(spec["pricing"]["billingCycle"], "UNCONFIRMED")
+        price = spec["pricing"]
+        self.assertEqual(price["headlinePriceKRW"], 1000)
+        self.assertEqual(price["billingCycle"], "monthly")
+        self.assertTrue(price["baseOfferConfirmed"])
+        self.assertTrue(price["creationIncluded"])
+        self.assertTrue(price["domainIncluded"])
+        self.assertTrue(price["domainRegistrationIncluded"])
+        self.assertTrue(price["hostingIncluded"])
+        self.assertFalse(price["fullContractTermsConfirmed"])
+        for field in ("minimumPages", "vat", "contractTerm", "domainRenewalPolicy",
+                      "domainTypeLimit", "maintenanceEdits"):
+            self.assertEqual(price[field], "UNCONFIRMED", field)
+        self.assertEqual(self.qa["billingCycle"], "monthly")
+        self.assertTrue(self.qa["baseOfferApproved"])
+        self.assertTrue(self.qa["domainAndHostingIncluded"])
+        self.assertFalse(self.qa["pricingApproved"])
+        self.assertFalse(self.qa["fullContractTermsConfirmed"])
         self.assertFalse(spec["publishPolicy"]["production"])
         self.assertFalse(spec["publishPolicy"]["indexNow"])
         self.assertFalse(self.qa["domainDeployed"])
-        self.assertFalse(self.qa["pricingApproved"])
+
+    def test_monthly_rate_and_examples_are_visible_without_stale_disclaimers(self):
+        home = (self.out / "index.html").read_text(encoding="utf-8")
+        pricing = (self.out / "guide/pricing/index.html").read_text(encoding="utf-8")
+        faq = (self.out / "guide/faq/index.html").read_text(encoding="utf-8")
+        self.assertIn("페이지당 월 1,000원부터", home)
+        self.assertIn("도메인 구입비", home)
+        self.assertIn("서버비", home)
+        self.assertIn("월 이용료", pricing)
+        for pages in (10, 20, 30, 50, 100):
+            amount = pages * 1000
+            self.assertIn(f"{pages}페이지 × 월 1,000원", pricing)
+            self.assertIn(f"월 {amount:,}원", pricing)
+        self.assertIn("월 20,000원", home)
+        self.assertIn("월 30,000원", home)
+        self.assertIn("월 1,000원", faq)
+        for stale in ("월 청구액 또는 일회비용으로 확정된 금액이 아닙니다",
+                      "1회비와 월 요금 구분", "실제 과금주기",
+                      "과금 주기, 도메인·호스팅 포함 범위"):
+            self.assertNotIn(stale, home + pricing + faq)
+        for path in self.out.rglob("industry/*/index.html"):
+            self.assertIn("페이지당 월 1,000원부터", path.read_text(encoding="utf-8"))
 
     def test_industry_source_is_not_customer_fake_service_ad(self):
         names = [x["id"] for x in load("keyword-pool.json")["industries"] if x["launch"]]
