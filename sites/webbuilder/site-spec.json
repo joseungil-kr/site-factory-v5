@@ -1,0 +1,97 @@
+{
+  "version": 1,
+  "siteId": "webbuilder",
+  "approved": true,
+  "approvalScope": "KEYWORD_RESEARCH_AND_NOINDEX_PREVIEW_ONLY; pricing cadence, minimum quantity, VAT, inclusions and live domain release require explicit confirmation",
+  "approvalEvidence": "2026-10-30 user requested webbuilder.nalmada.net site, keyword pool, sector pages, 1,000 KRW/page ad, Interpiad footer and phone",
+  "domain": "https://webbuilder.nalmada.net",
+  "brand": "인터피아드",
+  "businessModel": "B2B local-service SEO landing-page production; phone inquiry only",
+  "serviceScope": {
+    "region": "대한민국",
+    "granularity": "업종별 제작 의뢰 페이지; 고객의 동 단위 검색어는 설명용 예시",
+    "facilities": "none; no claims of real service providers in sample locations"
+  },
+  "pageTypes": [
+    "homepage",
+    "industry-solution x10",
+    "pricing-guide",
+    "production-process",
+    "seo-and-pricing-faq"
+  ],
+  "targetPageCount": 14,
+  "titlePattern": "{업종} 홈페이지 제작 1페이지 1,000원부터 | 인터피아드",
+  "urlPattern": "/, /industry/{slug}/, /guide/pricing/, /guide/process/, /guide/faq/",
+  "keywordGroups": {
+    "primary": [
+      "누수업체 홈페이지 제작",
+      "하수구막힘 홈페이지 제작",
+      "이삿짐 업체 홈페이지 제작",
+      "소형화물 홈페이지 제작",
+      "출장세차 홈페이지 제작",
+      "세탁조청소 홈페이지 제작",
+      "건조기청소 홈페이지 제작",
+      "빈집청소 홈페이지 제작",
+      "사무실청소 홈페이지 제작",
+      "새벽세차 홈페이지 제작"
+    ],
+    "secondary": [
+      "업종별 저렴한 홈페이지 제작",
+      "지역검색용 랜딩페이지 제작",
+      "소상공인 웹문서 SEO",
+      "동별 서비스업 홈페이지",
+      "지역 서비스 문의 페이지"
+    ]
+  },
+  "copyPoolPlan": {
+    "industry": "소상공인 로컬서비스 B2B 홈페이지 제작",
+    "source": "user offer + Interpiad public service listing + independently written sector-specific original copy",
+    "sentenceTarget": 100,
+    "sourceOfTruth": "sites/webbuilder/copy-pool.json",
+    "noLocationImpersonation": true
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-jaccard",
+    "thresholdExclusive": 0.49,
+    "sampleFraction": 1,
+    "seed": 20261030,
+    "scope": "all ten launch sector pages; compare unique sector narrative (exclude shared nav, footer and generic CTA)",
+    "noManufacturedLocationPages": true
+  },
+  "conversion": {
+    "phone": "010-2490-0555",
+    "orderUrl": null,
+    "mode": "tel link and official Interpiad site link, no personal data collected"
+  },
+  "images": {
+    "source": "CSS interface illustrations only; no fictitious customer worksite photographs",
+    "approved": false,
+    "publicVisualReviewRequired": true
+  },
+  "pricing": {
+    "headlinePriceKRW": 1000,
+    "unit": "per-page",
+    "billingCycle": "UNCONFIRMED",
+    "minimumPages": "UNCONFIRMED",
+    "domainIncluded": "USER_REQUESTED_NOT_YET_CONTRACT_DEFINED",
+    "hostingIncluded": "USER_REQUESTED_NOT_YET_CONTRACT_DEFINED",
+    "vat": "UNCONFIRMED",
+    "monthlyIllustration": "20-30 pages at 1000 KRW/page; billed monthly only if billingCycle monthly is confirmed",
+    "prohibitSuperlative": "전국 최저가 비교 근거 확보 전 사용 금지",
+    "searchRankGuarantee": false
+  },
+  "publishPolicy": {
+    "mode": "preview-noindex",
+    "production": false,
+    "indexNow": false,
+    "workersDevNoindex": true,
+    "dnsChanges": false,
+    "customDomainAttach": false,
+    "requires": "pricing contract, full consumer-facing terms, image/UI QA, Cloudflare exact hostname inventory, user release approval and live HTTP verification"
+  },
+  "footer": {
+    "businessName": "인터피아드",
+    "url": "https://interpiad.com",
+    "phone": "010-2490-0555"
+  }
+}
