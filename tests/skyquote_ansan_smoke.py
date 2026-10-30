@@ -30,7 +30,7 @@ for p in OUT.rglob('*.html'):
     assert t.count('<img ')==5 and t.count('AI 생성 설명 이미지')==5,p
     assert 'name="robots" content="noindex,nofollow"' in t,p
     assert 'href="tel:01053221952"' in t,p
-    assert '최저가를 보장하지' in t and '업계 최저가를 주장하지 않습니다' in t,p
+    assert '업계 최저가를 주장하지 않습니다' in t and '실제 비교 가능한 견적이 없으므로 보장하지 않으며' in t,p
     for banned in ('업계 최저가 보장','무조건 최저가','최저가를 보장합니다','타사보다 무조건 저렴','지점 운영','시공 완료 사례'):
         assert banned not in t,(p,banned)
     for img in images:assert '/assets/'+Path(img['path']).name in t
