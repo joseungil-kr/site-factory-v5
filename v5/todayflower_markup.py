@@ -191,12 +191,38 @@ def _body(site,page,pages,products,links):
     snippet+='<section class="tf-section tf-faq"><header class="tf-section-head"><h2>지역 꽃배달 FAQ</h2></header>'
     snippet+=base.faq_markup(page)+'</section>'
     snippet+='<section class="tf-section"><header class="tf-section-head"><h2>다른 지역 주문 안내</h2></header><nav class="tf-related" aria-label="지역별 관련 글">'
-    snippet+=''.join('<a href="'+_h(base.url_path(p["number"]))+'">'+_h(p["region"])+' 꽃배달 확인</a>' for p in pages if p["number"]!=page["number"])
+    # The 33-page pilot showed every other link; nationwide pages must not
+    # produce 5,000 sibling links per document (millions of duplicate links).
+    if len(pages)<=50:
+        suggested=[p for p in pages if p["number"]!=page["number"]]
+    else:
+        index=page["number"]-1
+        positions={0,1,2,3}
+        positions.update(range(max(0,index-2),min(len(pages),index+3)))
+        # Include a few useful adjacent legal-code entries without pretending
+        # any particular street, venue or local florist has been verified.
+        suggested=[pages[i] for i in sorted(positions) if i!=index][:8]
+    snippet+=''.join('<a href="'+_h(base.url_path(p["number"]))+'">'+_h(p["region"])+' 꽃배달 확인</a>' for p in suggested)
     snippet+='</nav></section>'
     snippet+='<section class="tf-order"><h2>상품번호·배송지를 준비해 상담하세요</h2><p>실제 주문과 결제는 꽃이랑 판매처에서 진행됩니다. 1844-0644로 당일 가능 여부를 확인하세요.</p>'
     snippet+='<div class="tf-actions"><a class="tf-action" href="tel:18440644">전화 상담</a>'
     snippet+='<a class="tf-action secondary" href="https://fwith.co.kr" target="_blank" rel="noopener noreferrer">꽃이랑 상품 전체 보기</a></div></section>'
-    snippet+=base.render_pagination(pages,page["number"])+'</main></div>'
+    if len(pages)>100:
+        # Indexed by contiguous page numbers; avoid sorting 5,070 pages for
+        # every generated HTML document. Other site renderers are unchanged.
+        current=page["number"]
+        last=len(pages)
+        start=max(1,min(current-3,last-6))
+        numbers=range(start,min(last+1,start+7))
+        nav=''.join(
+            ('<span aria-current="page" class="active">'+str(n)+'</span>')
+            if n==current else
+            ('<a href="'+_h(base.url_path(n))+'" aria-label="'+str(n)+'번 페이지">'+str(n)+'</a>')
+            for n in numbers)
+        snippet+='<nav class="pagination" aria-label="다른 글 페이지">'+nav+'</nav>'
+    else:
+        snippet+=base.render_pagination(pages,page["number"])
+    snippet+='</main></div>'
     return snippet
 
 def home(site,page,pages,products,links):
