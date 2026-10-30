@@ -192,6 +192,9 @@ def article_body(page):
 
 
 def home(site,page,pages,products,links):
+    if site.get("id") == "todayflower-nalmada":
+        from . import todayflower_markup
+        return todayflower_markup.home(site,page,pages,products,links)
     """Free-form marketing index with the exact saved document content retained."""
     share='/assets/images/'+site['imagePool'][0]
     title=page['title'];region=site['region'];keyword=site['keyword']
@@ -244,6 +247,9 @@ def home(site,page,pages,products,links):
 
 
 def detail(site,page,pages,products,links):
+    if site.get("id") == "todayflower-nalmada":
+        from . import todayflower_markup
+        return todayflower_markup.detail(site,page,pages,products,links)
     share='/assets/images/'+site['imagePool'][(page['number']-1)%len(site['imagePool'])]
     body=(head(site,page['title'],page['intro'],url_path(page['number']),share)+header(site)+
         '<main id="main" class="container document-page">'
