@@ -22,6 +22,7 @@ jobs:
           python -m unittest discover -s tests -p test_todayflower_pilot.py -v
           python -m unittest discover -s tests -p test_todayflower_copy_quality.py -v
           python -m py_compile v5/todayflower_regions.py v5/todayflower_markup.py tests/test_todayflower_national.py
+          # Nationwide copy pool includes independent order/recipient/fee variants; exact-body hashes are tested below.
           python -m unittest discover -s tests -p test_todayflower_national.py -v
           python -m v5 plan-check --site todayflower-nalmada
       - name: Reuse V5 engine for 5070 national legal-region noindex pages
