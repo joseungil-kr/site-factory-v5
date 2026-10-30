@@ -286,8 +286,14 @@ def attach():
     raise RuntimeError("Bound domain but HTTPS validation failed: "+str(last))
 
 def indexnow(endpoint:str):
-    prior=json.loads(ATTACHED.read_text(encoding="utf-8"))
-    assert prior["attachmentStatus"]=="PUBLIC_430_LIVE_VERIFIED"
+    # A fresh GitHub Actions runner must independently re-prove the ownership
+    # and current bound Worker: never rely on a receipt from a previous runner.
+    existing=domains()
+    proof(existing)
+    exact=[x for x in existing if x.get("hostname")==HOST]
+    assert len(exact)==1 and exact[0].get("service")==WORKER, "Baekse host is not bound to the expected Worker"
+    assert len([s for s in scripts() if s.get("id")==WORKER])==1
+    assert zones().get("name")=="nalmada.net"
     live=verify_public()
     urls=live["sitemapURLs"]
     assert len(urls)==430 and all(url.startswith(ORIGIN+"/") for url in urls)
