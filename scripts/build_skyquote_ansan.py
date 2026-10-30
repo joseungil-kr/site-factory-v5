@@ -39,9 +39,16 @@ def main():
         district,dong=place['district'],place['dong']
         region='안산시 '+district+' '+dong
         # Reuse the existing template, but add independent useful Q&A and conditional scenarios.
-        html=base.render(place['slug'],region,place['focus'])
-        unique=section('이 지역 문의에서 먼저 분명히 할 조건',place['focus'])
-        unique+=section('두 작업 상황을 동일 견적으로 취급하지 않는 이유',place['example'])
+        # The intro describes the decision task; the detailed section turns focus into
+        # an actionable request. Neither one claims observed neighbourhood conditions.
+        intro='현장 위치만으로 금액을 판단할 수 없습니다. 동일한 작업 정보와 포함 비용을 먼저 정리해 비교하세요.'
+        html=base.render(place['slug'],region,intro)
+        unique=section('견적 요청 전에 확인할 구체적인 질문',
+            '다음 조건이 실제 현장에 해당하는지 확인한 뒤 업체에 문의하세요. '+place['focus']+
+            ' 비교할 견적서마다 작업 시간·차량 사양·이동비 포함 여부를 같은 기준으로 적었나요?')
+        unique+=section('비용 차이를 만들 수 있는 현장 조건',
+            '아래 내용은 '+region+'의 실제 환경을 조사한 결과가 아닌 견적용 가정입니다. '+place['example']+
+            ' 현장 사진과 작업 계획을 전달해 해당 조건이 맞는지 먼저 확인하세요.')
         questions=[
           '장비를 이동 없이 고정하는 한 장소 작업과 여러 위치를 옮기는 작업은 총 대기시간과 이동비가 달라질 수 있습니다. 업체별 재배치 비용 포함 여부를 체크합니다.',
           '시간제와 반일·하루 견적의 기준 시각이 다른 경우가 있으므로, 준비·안전점검·철수 시간이 청구시간에 들어가는지 적어 두세요.',
