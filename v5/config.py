@@ -67,6 +67,11 @@ def read_site(site_id: str):
     if site.get('regionalScale',{}).get('enabled',False):
         from .region_pages import expand
         pages,regions=expand(site,pages,regions,ROOT)
+    if site.get('todayflowerNational',{}).get('enabled',False):
+        if site_id != 'todayflower-nalmada':
+            raise ConfigError('Todayflower legal-code expansion cannot affect other sites')
+        from .todayflower_regions import expand as expand_todayflower
+        pages,regions=expand_todayflower(site,pages,regions,ROOT)
     if site['id'] != site_id:
         raise ConfigError('Site id mismatch')
     verification=site.get('naverSiteVerification')
