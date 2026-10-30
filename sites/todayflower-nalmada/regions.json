@@ -1,24 +1,208 @@
 {
-  "source": "V4 official active region master retrieved 2026-10-22 and V5 pinned Seoul/Gyeonggi current-dong names as of 2026-10-12",
-  "asOf": "2026-10-12",
+  "source": "V4 2026-10-22 official city/ward legal codes + Ansan 30 legal-dong codes cross-read from Flowershop pinned artifact",
+  "sourceSha256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
+  "asOf": "2026-10-22",
+  "scopeNote": "Legal 30 codes, not V5 44 candidate current-dong names, not proof of same-day availability",
   "regions": [
     {
       "name": "경기도 안산시",
       "code": "4127000000",
       "level": "municipality",
-      "evidence": "V4 master.json"
+      "evidence": "V4 master 2026-10-22"
     },
     {
       "name": "경기도 안산시 단원구",
       "code": "4127300000",
       "level": "ward",
-      "evidence": "V4 master.json"
+      "evidence": "V4 master 2026-10-22"
     },
     {
+      "name": "경기도 안산시 상록구",
+      "code": "4127100000",
+      "level": "ward",
+      "evidence": "V4 master 2026-10-22"
+    },
+    {
+      "code": "4127110100",
+      "name": "경기도 안산시 상록구 일동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127110200",
+      "name": "경기도 안산시 상록구 이동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127110300",
+      "name": "경기도 안산시 상록구 사동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127110400",
+      "name": "경기도 안산시 상록구 본오동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127110500",
+      "name": "경기도 안산시 상록구 팔곡이동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127110600",
+      "name": "경기도 안산시 상록구 양상동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127110700",
+      "name": "경기도 안산시 상록구 부곡동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127110800",
+      "name": "경기도 안산시 상록구 성포동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127110900",
+      "name": "경기도 안산시 상록구 월피동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127111000",
+      "name": "경기도 안산시 상록구 팔곡일동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127111100",
+      "name": "경기도 안산시 상록구 건건동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127111200",
+      "name": "경기도 안산시 상록구 사사동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127111300",
+      "name": "경기도 안산시 상록구 수암동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127111400",
+      "name": "경기도 안산시 상록구 장상동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127111500",
+      "name": "경기도 안산시 상록구 장하동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127310100",
       "name": "경기도 안산시 단원구 고잔동",
-      "code": null,
-      "level": "current-dong",
-      "evidence": "V5 data/regions/seoul_gyeonggi_current_dong.json: 경기도 안산시 단원구 + 고잔동"
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127310200",
+      "name": "경기도 안산시 단원구 와동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127310300",
+      "name": "경기도 안산시 단원구 신길동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127310400",
+      "name": "경기도 안산시 단원구 성곡동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127310500",
+      "name": "경기도 안산시 단원구 원시동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127310600",
+      "name": "경기도 안산시 단원구 목내동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127310700",
+      "name": "경기도 안산시 단원구 초지동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127310800",
+      "name": "경기도 안산시 단원구 원곡동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127310900",
+      "name": "경기도 안산시 단원구 선부동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127311000",
+      "name": "경기도 안산시 단원구 대부동동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127311100",
+      "name": "경기도 안산시 단원구 대부북동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127311200",
+      "name": "경기도 안산시 단원구 대부남동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127311300",
+      "name": "경기도 안산시 단원구 선감동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127311400",
+      "name": "경기도 안산시 단원구 풍도동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
+    },
+    {
+      "code": "4127311500",
+      "name": "경기도 안산시 단원구 화정동",
+      "level": "legal-dong",
+      "evidence": "V4 official legal ZIP 2026-10-22 -> pinned Flowershop page id and title"
     }
-  ]
+  ],
+  "legalDongCount": 30,
+  "expectedPageCount": 33
 }
