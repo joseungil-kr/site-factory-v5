@@ -4,7 +4,7 @@
 - 원본 운영: https://fwith.co.kr
 - 신규 도메인 **후보**: https://todayflower.nalmada.net (DNS/Worker/소유확인 미변경)
 - 별도 브랜치 `site/todayflower-nalmada-pilot-20261030`; Flowershop·Signsky·V4 운영본 변경 금지
-- 승인된 1차 납품: 안산시(/), 안산시 단원구(/2.html), 단원구 고잔동(/3.html) 3개 대표 페이지
+- 승인·검수된 1차 납품은 안산시(/), 단원구(/2.html), 고잔동(/3.html) 3개 대표 페이지이며 변경 금지. 2026-10-30 후속 범위는 안산시 상록구와 공식 법정동 29개를 추가해 총33개 noindex 문서
 - 검색 차단: `preview` robots Disallow, meta noindex, canonical/sitemap 없음. IndexNow 꺼짐.
 
 ## 근거
@@ -26,11 +26,11 @@
 - 카드는 판매처 SKU/사진 URL/2026-10-30 표시가/개별 상품 직접 주문 버튼
 - 화면의 5장 편집 이미지와 판매처 상품 사진을 구분하며, AI 이미지를 배송 실적처럼 말하지 않음
 - 본문용 새 AI 생성 장면 5종: 꽃다발·개업화분·축하화환·근조화환·포장 장면. 고유 장면을 공용 이미지 풀로 재사용
-- 2026-10-30 새로 생성한 5개의 WebP를 Git blob과 이미지 경로로 고정했고, 고해상도 기존 V5 WebP 5장과 함께 사용. 새 이미지 5장은 각 96×141px의 작은 주제 카드이며 큰 히어로와 상품 사진으로 확대 사용하지 않음. 실제 파일 HTTP·PC/모바일 시각검사는 별도 확인. AI 연출 이미지는 실제 납품 증거 아님.
+- 2026-10-30 ImageGen 생성 기록을 가진 AI 연출 이미지 5종을 독립 1448×1086 WebP로 교체하고 로컬 원본 파일/원격 Git blob 해시를 검사했다. 부모가 생성 원본을 직접 열람하지 못했으므로 생성 과정은 기록된 메타데이터, WebP 원격 바이트·치수·모바일/PC 렌더링 검수는 독립 확인으로 구분한다. 데스크톱 3+2·모바일 1열, 실제 표시 332/330px이며 판매 상품 사진·납품 실적과 혼동 금지.
 
 ## 다음 게이트
 `python -m v5 plan-check --site todayflower-nalmada`
 `python -m unittest discover -s tests -p test_todayflower_pilot.py -v`
 `python -m v5 build --site todayflower-nalmada --mode preview`
 `python -m v5 audit --site todayflower-nalmada`
-생성물에서 3 HTML+404, 5 편집 콘텐츠 이미지/페이지, 상품카드·링크/가격, HTML noindex·robots Disallow, 모바일 390/PC 1440 실화면 검수. 그 후 별도 noindex preview Worker와 부모 검수.
+생성물에서 33 HTML+404, 5 편집 콘텐츠 이미지/페이지, 상품카드·링크/가격, HTML noindex·robots Disallow, 모바일 390/PC 1440 실화면 검수. 그 후 별도 noindex preview Worker와 부모 검수.
