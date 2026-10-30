@@ -25,11 +25,53 @@ class TodayflowerPilotTest(unittest.TestCase):
         self.assertFalse(self.site["publishEnabled"])
         self.assertFalse(self.site["indexNow"]["enabled"])
         self.assertFalse(self.site["analytics"]["enabled"])
-        self.assertEqual([p["number"] for p in self.pages], [1,2,3])
-        self.assertEqual([p["region"] for p in self.pages], [
+        self.assertEqual([p["number"] for p in self.pages], list(range(1,34)))
+        self.assertEqual([p["region"] for p in self.pages[:3]], [
             "경기도 안산시", "경기도 안산시 단원구",
             "경기도 안산시 단원구 고잔동"
         ])
+        self.assertEqual(self.site["todayflowerPilot"]["regionCount"],33)
+        self.assertTrue(self.site["todayflowerPilot"]["previewOnly"])
+
+    def test_original_three_reviewed_content_hashes_are_unchanged(self):
+        from v5.engine import stable_hash
+        frozen={
+            1:"d953d6d3bb9656d38a40b96d72f6f143b7798458584480d47671d06b3426cf46",
+            2:"0a009dbb94464ed4a947caa5e57d208cc9730db190192f38a6554f63a7502838",
+            3:"a91608f863010dae2cc634125c1f2d8103adaa4a0ffc42a52b8d35e1ba24fb8e",
+        }
+        for page in self.pages[:3]:
+            actual=stable_hash({
+                "intro":page["intro"],"sections":page["sections"],
+                "faq":page.get("faq",[]),"title":page["title"],
+                "region":page["region"],"productSkus":page["productSkus"]
+            })
+            self.assertEqual(actual,frozen[page["number"]],page["id"])
+
+    def test_30_official_legal_regions_and_no_unverified_admin_dongs(self):
+        import json
+        root=ROOT/"sites/todayflower-nalmada"
+        data=json.loads((root/"ansan-legal-regions-evidence.json").read_text(encoding="utf-8"))
+        regions=json.loads((root/"regions.json").read_text(encoding="utf-8"))
+        spec=json.loads((root/"site-spec.json").read_text(encoding="utf-8"))
+        self.assertEqual(spec["targetPageCount"],33)
+        self.assertEqual(data["archiveHash"],
+            "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd")
+        legal=data["legalDongs"]
+        self.assertEqual(len(legal),30)
+        self.assertEqual(len({r["code"] for r in legal}),30)
+        self.assertEqual(len({r["name"] for r in legal}),30)
+        self.assertEqual(len(regions["regions"]),33)
+        self.assertEqual(len(self.pages),33)
+        by_name={r["name"]:r for r in regions["regions"]}
+        for row in legal:
+            self.assertEqual(by_name[row["name"]]["code"],row["code"])
+            self.assertEqual(by_name[row["name"]]["level"],"legal-dong")
+        self.assertEqual(by_name["경기도 안산시 단원구 고잔동"]["code"],"4127310100")
+        self.assertEqual(by_name["경기도 안산시 상록구"]["code"],"4127100000")
+        actual={p["region"] for p in self.pages}
+        self.assertEqual(actual,set(by_name))
+        self.assertEqual(len(self.pages[3:]),30)
 
     def test_seller_products_all_four_intents(self):
         self.assertEqual(len(self.products), 8)
