@@ -1,5 +1,7 @@
 name: Site Factory image-origin provenance gate
 on:
+  push:
+    branches: [policy/image-source-guard-20261030]
   pull_request:
     paths:
       - 'assets/library/**'
