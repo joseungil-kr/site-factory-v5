@@ -2,17 +2,25 @@
 
 > 현재 저장본: **안산시 1 + 일반구 2 + 법정동 30 = 총 33개 지역 안내 문서**. 원래 승인·검수된 3개 페이지 번호(1~3)는 고정했으며, 30개만 번호 4~33으로 추가했다. 이것은 전국 공개나 개별 주소의 당일배송 승인과 다르다.
 
+## 최신 교정·실서버 검증 (2026-10-30 최종)
+
+- **33개 페이지 문장 전수교정 완료:** 신규 30페이지 조사·마침표·미완성 구·FAQ 반복 수정, 원래 3페이지 보존. 사이트 데이터 627필드 + 실제 완성 HTML 33개에서 한국어 조사를 검수했고 264개 전체 문단의 동일문단 0개, 전수 528쌍 최대 유사도 27.416%.
+- **V5 최종 산출물:** [run 41038355570](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41038355570), 소스 SHA `5461da731fe2e316ae511cf59d313fd2821bd704`, 아티팩트 `12968394931`. 정적 파일 50개 해시 전수검수, 오류·경고 0건, 로컬 Chromium 390px/1440px 12개 화면 성공.
+- **기존 noindex Worker에 33개 전부 배포 완료:** [V4 run 41038687704](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41038687704), 현재 버전 `85e3bb72-605c-4b50-9973-5bf233cba92e`. [33페이지 noindex 미리보기](https://sfv56-todayflower-preview.joseungil.workers.dev/) 실제 41건 HTTP 및 6개 브라우저 화면 검사 통과.
+- **검색은 여전히 차단:** workers.dev `X-Robots-Tag: noindex`, HTML `noindex,nofollow`, robots.txt `Disallow: /`, sitemap.xml 404. 별도 도메인/DNS/인증/Secret/권한 변경이나 index 전환은 하지 않음.
+- **최종 인수 기록:** [QA_PROOFREAD_33_LIVE_NOINDEX_20261030.md](QA_PROOFREAD_33_LIVE_NOINDEX_20261030.md). 아래 3페이지 시점 기록/33페이지 오프라인 초안 기록은 역사 자료이며 현재 최종 상태가 아니다.
+
 ## 2026-10-30 확장 최종 검증
 
 - **완료:** source-verified 안산시 33페이지 noindex 오프라인 빌드, 내용 HTML 33 + 404 1, 정적 50파일 해시 전수 검증, 528쌍 최대 유사도 35.578%, 오류·경고 0.
 - **검수 실행:** [GitHub Actions run 41033421847](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41033421847), 고정 소스 SHA `166d9853a699534095888bc82068ac9ca083bf1f`.
 - **결과물:** 아티팩트 `12966946765`, ZIP SHA256 `8c4fee9d6ea204d851b29d2f851ca0c5419008c360777ccc9c16c6f37454d4bb`; 390px/1440px × 6경로 화면 12장.
-- **주의:** 기존 noindex `workers.dev`는 앞선 **3페이지 운영본**이다. 이번 33페이지 빌드는 **배포하지 않았다**. 30개 추가 페이지의 배송서비스 실제 가능 여부는 미확인.
+- **당시 기록:** 이 단락은 최초 33페이지 오프라인 QA 시점에 쓰였고 그때는 3페이지 운영본이었다. 현재는 위 최종 검수에 따라 33페이지가 noindex 미리보기로 배포되었다. 개별 주소 당일배송 가능 여부는 여전히 미확인.
 - **검수 증거 원문:** [QA_ANSAN33_NOINDEX_20261030.md](QA_ANSAN33_NOINDEX_20261030.md).
 
 ## 제작·검수 상태
 - 운영 도메인 후보: `todayflower.nalmada.net`. **DNS / custom domain 변경 없음**, `publishEnabled=false`, IndexNow 비활성화.
-- 기존 noindex Worker `sfv56-todayflower-preview.joseungil.workers.dev`에는 앞선 **대표 3페이지의 성공본**이 유지되며, 이번 33페이지는 오프라인 빌드와 검수 대상이다. 새 아티팩트 배포 여부는 별도 추적한다.
+- 기존 noindex Worker `sfv56-todayflower-preview.joseungil.workers.dev`에 **교정한 대표 33페이지**가 반영되었다. 대상·버전·HTTP 원문 검사는 상단 최종 QA 보고서를 참조한다.
 - 검증된 원래 3페이지의 증거: V5 run [41029442885](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41029442885), 고해상도 이미지 산출물 `12965067290`, SHA `9c983dab6b69a724ae46dbff4a17a0c16f24eeed`.
 - 독립 noindex 실제 배포(이전 3페이지): V4 run [41029861948](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41029861948), Worker 버전 `b571636a-4aba-4756-9793-02e5233c5e14`. 11개 HTTP 검증에 성공했으나 **이번 33페이지 배포를 의미하지 않음**.
 - 5개 ImageGen 이미지의 **생성원본 접근·생성 과정**은 원본 생성 당시의 기록(gen_id)으로 추적한다. 부모가 해당 생성 원본을 직접 열람하지 못했으므로 원본 생성 과정의 독립 확인으로 주장하지 않는다. 별도로 GitHub WebP 바이트 SHA·내장 VP8 1448×1086·실제 Chromium 표시/HTTP 응답은 검증된 범위다.
