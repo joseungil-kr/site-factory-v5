@@ -1,5 +1,5 @@
 # 바른견적스카이 · 사이트팩토리 V5 작업자 3
-Status: 3-page local noindex prototype. NO production deployment, NO DNS or Worker mutation.
+Status: five 768x640 WebP assets committed and three noindex pages built/tested in Actions. Production domain and DNS unchanged; isolated workers.dev preview configuration prepared, live deployment not yet independently confirmed.
 
 ## Keyword and title
 - Focus: `{지역명} 스카이차 견적 최저가`. No measured keyword search volume; previous `스카이차 비용` 340 is **not** interchangeable.
@@ -30,8 +30,9 @@ Quote intent answer → precise jobsite and height/outreach/load → equipment a
 Five generated WebP images:
 `city-crane.webp` (urban truck), `facade-safety.webp` (façade work), `sign-work.webp` (signage), `work-height.webp` (height and reach), `outrigger-access.webp` (ground and outrigger).
 Each page references all five exactly once with real width/height, eager hero, lazy noncritical images, descriptive alt and explicit AI illustrative-not-real-project labels.
-Local build/export in this conversation: `skyquote-preview.zip` containing `build.py`, `assets/5x.webp`, `dist/index.html`, `dist/danwon.html`, `dist/gojan.html`, CSS, robots and manifest. Original image files not yet committed to GitHub: a file-transfer path is required to upload the verified binary bytes; do not fabricate image commit SHA.
-Local test reports 3 HTML pages, 5 embedded images per page, noindex robots preview.
+Reviewed source ZIP: `skyquote-preview-reviewed-768.zip`. AM02 helper committed all five WebP binaries to `sites/skyquote/assets/`. Their remote Git blob SHA-1 values match locally computed Git blobs from the reviewed ZIP exactly (see assets-manifest.json for SHA-256 of each 768x640 image).
+GitHub isolated QA Run `41019416398` succeeded: 5 asset hash/image checks, 3 HTML noindex/15 image references, 390px+1440px Chromium screenshot for every page (6 screens), no horizontal overflow. Artifact `12960459598` contains generated preview HTML and screenshots. This proves local Action-rendered output, not deployed HTTPS.
+Isolated workers.dev noindex Worker source `sites/skyquote/worker.js` and config `sites/skyquote/wrangler.preview.json` added with `workers_dev=true`, no custom domain or routes. V4 deployment workflow `site-factory-v4` branch `ops/v5-isolated-staging-20261024` file `.github/workflows/skyquote-isolated-preview.yml` contains collision preflight, static asset build and HTTPS verification; live run has not yet been independently confirmed.
 
 ## Existing project safety
 V5 Site Factory existing officeplant/hallflower branches and V4 deployed Worker unchanged. GitHub branch `feature/v5-skyquote-three-samples` is isolated. Do not deploy/create Custom Domain or use new secrets. Verify actual Worker-domain inventory before a future preview deploy. Call existing company by tel link only: no form values or user privacy sent.
