@@ -2,6 +2,14 @@
 
 > 현재 저장본: **안산시 1 + 일반구 2 + 법정동 30 = 총 33개 지역 안내 문서**. 원래 승인·검수된 3개 페이지 번호(1~3)는 고정했으며, 30개만 번호 4~33으로 추가했다. 이것은 전국 공개나 개별 주소의 당일배송 승인과 다르다.
 
+## 2026-10-30 확장 최종 검증
+
+- **완료:** source-verified 안산시 33페이지 noindex 오프라인 빌드, 내용 HTML 33 + 404 1, 정적 50파일 해시 전수 검증, 528쌍 최대 유사도 35.578%, 오류·경고 0.
+- **검수 실행:** [GitHub Actions run 41033421847](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41033421847), 고정 소스 SHA `166d9853a699534095888bc82068ac9ca083bf1f`.
+- **결과물:** 아티팩트 `12966946765`, ZIP SHA256 `8c4fee9d6ea204d851b29d2f851ca0c5419008c360777ccc9c16c6f37454d4bb`; 390px/1440px × 6경로 화면 12장.
+- **주의:** 기존 noindex `workers.dev`는 앞선 **3페이지 운영본**이다. 이번 33페이지 빌드는 **배포하지 않았다**. 30개 추가 페이지의 배송서비스 실제 가능 여부는 미확인.
+- **검수 증거 원문:** [QA_ANSAN33_NOINDEX_20261030.md](QA_ANSAN33_NOINDEX_20261030.md).
+
 ## 제작·검수 상태
 - 운영 도메인 후보: `todayflower.nalmada.net`. **DNS / custom domain 변경 없음**, `publishEnabled=false`, IndexNow 비활성화.
 - 기존 noindex Worker `sfv56-todayflower-preview.joseungil.workers.dev`에는 앞선 **대표 3페이지의 성공본**이 유지되며, 이번 33페이지는 오프라인 빌드와 검수 대상이다. 새 아티팩트 배포 여부는 별도 추적한다.
