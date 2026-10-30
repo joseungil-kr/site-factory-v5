@@ -161,6 +161,10 @@ class TodayflowerPilotTest(unittest.TestCase):
             for forbidden in ("전국 3시간", "당일배송 보장", "무료 배송 확정","무조건 당일"):
                 self.assertNotIn(forbidden,body)
             self.assertGreater(len(body),350)
+            if p["number"]>=4:
+                self.assertNotIn("을(를)",body)
+                self.assertNotIn("최저가 보장",body)
+                self.assertNotIn("당일배송 보장",body)
 
 if __name__=="__main__":
     unittest.main()
