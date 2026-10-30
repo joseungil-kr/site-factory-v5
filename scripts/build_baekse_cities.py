@@ -115,7 +115,7 @@ def footer():
     return ('<footer class="site-footer"><div class="wrap footer-grid"><div>'
       '<strong>백세푸드 · 레시피 기술전수·창업 상담</strong>'
       f'<small>문의 {PHONE} · 전수·식자재 상담</small>'
-      '<small>지역별 페이지는 상담 대상 도시를 안내하며 현지 교육장이나 매장 개설 사실을 의미하지 않습니다.</small>'
+      '<small>기술전수 과정과 교육 장소, 메뉴별 지원 조건은 유선으로 상담해 주세요.</small>'
       '</div><nav aria-label="하단메뉴">'
       '<a href="/">홈</a><a href="/m/dakhanmari.html">닭한마리</a>'
       '<a href="/m/dak-kalguksu.html">닭칼국수</a><a href="/m/sundaeguk.html">순대국</a>'
@@ -218,7 +218,7 @@ def render_city(city):
        '<section class="subhero"><div class="wrap"><span class="eyebrow">CITY GUIDE</span>'
        '<h1>'+escape(title)+'</h1>'
        '<p>'+escape(name)+'에서 식당을 운영하거나 창업을 고려한다면, 관심 메뉴와 주방 여건을 정리한 뒤 백세푸드에 상담해 보세요. '
-       '교육은 지역 내 상설 교육장 운영을 전제로 하지 않습니다.</p></div></section>',
+       '전수 프로그램과 교육 장소는 메뉴별 상담으로 안내합니다.</p></div></section>',
        '<main><div class="wrap"><section class="section"><h2>관심 메뉴 선택</h2><div class="grid">']
     for key,obj in MENUS.items():
         parts.append('<article class="card"><div class="photo">'+img(obj["image"],obj["name"]+" 메뉴 이미지")+'</div><div class="details">'
