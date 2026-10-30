@@ -76,3 +76,11 @@
 - **읽기 전용 렌더 QA:** [V4 run 41036075172](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41036075172) 성공, screenshot artifact `12967189850` (데스크톱 1440×900, 모바일 390×844, 총 8장).
 - 실제 workers.dev URL에서 Chromium Playwright로 안산시 대표·수원시·수원시 장안구·안산시 단원구 각 2개 뷰포트를 탐색하고 HTTP200/실이미지 5장 전부 naturalWidth>0/가로 오버플로 없음/HTML noindex를 검증. 조사 오류 및 내부 enum이 고객 본문에 재출현하지 않는지도 검사.
 - 이 테스트는 실제 브라우저 렌더링과 스크린샷 생성을 검증하며 사람이 각 픽셀·시각 디자인 완성도를 별도 검수했다는 주장으로 확대하지 않음.
+
+## 2026-10-31 전국 286 HTML noindex 실제 배포·검수 (최신)
+- source: `sites/wreathprice/verified-regions-nationwide.json` (V4 법정동 상위 지역 코드 284건, 2026-10-22 자료, 법적 적용일 미확인). 사용자에게 배송 가능한 지역을 확인한 수는 **0**.
+- 빌드: 기존 대표 3 + 신규 상위 지역 282 + 목록 허브 1 = **286 HTML**. 기존 16개 경기권 추가 페이지도 재활용되는 282에 포함되어 중복 생성하지 않음. 동일 비교/FAQ/AI이미지 재사용으로 독립 고유 SEO 품질을 주장하지 않음.
+- V5 [run 41094905895](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41094905895) 성공, artifact `12996141154`. 문법/원장코드 중복0/홈→16개 신규 지역과 /regions/ 허브/허브→전국284지역/내부 링크 0 broken/이미지5 해시/전체 HTML noindex 검증.
+- V4 [run 41095222881](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41095222881) 성공, artifact `12995952552`. 수정 전 Worker 100% version `e8bbac15-aec5-4d90-bf58-18669346af20` 대조 → 새 version `7be165ca-d1dc-4d20-9226-5ae0ea6bbc5a` 배포. 정확한 소스 `d23a603f74290f245bda613271bf2ac6d2bc94ac`.
+- 실제 `https://sfv52-wreathprice-preview.joseungil.workers.dev`: HTML 286/286 HTTP200, HTML/헤더 noindex, home 직접 지역링크 최소16개/허브 282개 신규 링크, 페이지마다 WebP 5/상품 상세 링크5, 원래 WebP 5장 원격 SHA256 일치, robots Disallow HTTP200, sitemap/없는 페이지 HTTP404. worker preview에는 **canonical 없음**(public canonical 주장 금지). 롤백 실행 없음.
+- 미완: 신규 운영 도메인 `wreathprice.nalmada.net`은 연결·검증 대상 아님. DNS/Custom Domain/권한/Secret/소유확인·Google/Naver·IndexNow/공개 index 변경 전혀 없음. 현재 실제 지역별 배송 가능·추가 배송비 미확인 유지.
