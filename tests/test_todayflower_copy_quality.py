@@ -159,6 +159,7 @@ class TodayflowerWholeCopyAudit(unittest.TestCase):
             with self.subTest(page=p["number"]):
                 self.assertEqual(visible_copy_errors(html), [])
                 self.assertEqual(html.count('<h1>'), 1)
+                self.assertIn("word-break:keep-all",html)
                 self.assertEqual(html.count('src="/assets/images/'), 7)
                 self.assertEqual(html.count('width="1448" height="1086"'), 5)
                 self.assertIn('<meta name="robots" content="noindex,nofollow">', html)
