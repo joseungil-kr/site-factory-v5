@@ -50,6 +50,11 @@ jobs:
                   '2':'0a009dbb94464ed4a947caa5e57d208cc9730db190192f38a6554f63a7502838',
                   '3':'a91608f863010dae2cc634125c1f2d8103adaa4a0ffc42a52b8d35e1ba24fb8e'}
           assert all(manifest['contentHashes'][num]==sha for num,sha in frozen.items())
+          # Site-only editorial correction: no unresolved Korean placeholder particles in the 30 new documents.
+          for n in range(4,34):
+              article=(root/f'{n}.html').read_text(encoding='utf-8')
+              assert '을(를)' not in article,(n,'unnatural placeholder particle')
+              assert '무조건 당일배송' not in article and '최저가 보장' not in article
           assert not (root/'sitemap.xml').exists()
           assert (root/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
           print('TODAYFLOWER_ANSAN_33PAGE_NO_INDEX_QA_PASS')
