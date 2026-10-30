@@ -234,9 +234,10 @@
         "{시} 방수공사 비용 문의",
         "{동} 방수공사 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "실제 시공 가능한 부위·기존 방수층·표면 상태 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "toilet",
@@ -251,9 +252,10 @@
         "{시} 변기막힘 비용 문의",
         "{동} 변기막힘 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "변기 종류와 증상·이물질 유입·재발 여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "sink",
@@ -268,9 +270,10 @@
         "{시} 싱크대막힘 비용 문의",
         "{동} 싱크대막힘 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "싱크대 하부 구조·음식물처리기 설치 유무 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "pipe",
@@ -285,9 +288,10 @@
         "{시} 배관수리 비용 문의",
         "{동} 배관수리 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "급수관·배수관 취급·노출·매립 상태 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "aircon",
@@ -302,9 +306,10 @@
         "{시} 에어컨청소 비용 문의",
         "{동} 에어컨청소 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "벽걸이·스탠드·시스템 지원·모델과 설치 높이 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "move-clean",
@@ -319,9 +324,10 @@
         "{시} 이사청소 비용 문의",
         "{동} 이사청소 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "퇴실·입주 일정·짐·가구 잔존 여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "newhome-clean",
@@ -335,9 +341,10 @@
         "{시} 입주청소 비용 문의",
         "{동} 입주청소 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "입주 예정일과 주거형태·신축 분진·수납장 범위 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "building-clean",
@@ -352,9 +359,10 @@
         "{시} 건물청소 비용 문의",
         "{동} 건물청소 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "계단·복도·현관 관리범위·정기 청소 가능 주기 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "glass-clean",
@@ -369,9 +377,10 @@
         "{시} 유리창청소 비용 문의",
         "{동} 유리창청소 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "내창·외창 구분·층수와 안전 접근 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "mattress-clean",
@@ -385,9 +394,10 @@
         "{시} 매트리스청소 비용 문의",
         "{동} 매트리스청소 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "매트리스 크기·소재·세척 가능 방식 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "car-detail",
@@ -401,9 +411,10 @@
         "{시} 자동차실내크리닝 비용 문의",
         "{동} 자동차실내크리닝 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "차종과 시트 소재·오염 유형·범위 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "small-move",
@@ -418,9 +429,10 @@
         "{시} 소형이사 비용 문의",
         "{동} 소형이사 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "짐의 종류·규모·차량·인력·포장 범위 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "one-ton",
@@ -435,9 +447,10 @@
         "{시} 1톤용달 비용 문의",
         "{동} 1톤용달 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "적재 크기·무게·기사·상하차 지원 여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "quick",
@@ -452,9 +465,10 @@
         "{시} 퀵서비스 비용 문의",
         "{동} 퀵서비스 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "운송 수단·물품 제한·배차·픽업 가능 조건 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
     },
     {
       "id": "furniture",
@@ -469,9 +483,10 @@
         "{시} 가구조립 비용 문의",
         "{동} 가구조립 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "제품 모델·설명서·벽체 고정 가능 범위 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "doorlock",
@@ -486,9 +501,10 @@
         "{시} 도어락설치 비용 문의",
         "{동} 도어락설치 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "문 종류·두께·기존 장치와 제품 호환성 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "insect-screen",
@@ -502,9 +518,10 @@
         "{시} 방충망교체 비용 문의",
         "{동} 방충망교체 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "망 종류·재질·프레임 손상 여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "skycar",
@@ -519,9 +536,10 @@
         "{시} 스카이차 비용 문의",
         "{동} 스카이차 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "차량·작업높이 제원·현장 도로 폭·설치공간 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "sign",
@@ -536,9 +554,10 @@
         "{시} 간판설치 비용 문의",
         "{동} 간판설치 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "신규·교체·수리 중 제공업무·간판 종류·조명 여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "waste",
@@ -553,9 +572,10 @@
         "{시} 폐기물수거 비용 문의",
         "{동} 폐기물수거 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "품목별 수거 가능여부·허가·적법한 위탁 근거 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "demolition",
@@ -569,9 +589,10 @@
         "{시} 소형철거 비용 문의",
         "{동} 소형철거 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "철거 공종·대상·전기·수도·가스 차단 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "pest",
@@ -585,9 +606,10 @@
         "{시} 방역소독 비용 문의",
         "{동} 방역소독 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "대상 해충·공간·소독업 신고·약제 근거 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "bath",
@@ -601,9 +623,10 @@
         "{시} 욕실리모델링 비용 문의",
         "{동} 욕실리모델링 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "부분·전체 공사 여부·자재·도기·방수 공정 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "boiler",
@@ -617,9 +640,10 @@
         "{시} 보일러수리 비용 문의",
         "{동} 보일러수리 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "제조사·모델 취급범위·가스작업 자격 자료 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "storage",
@@ -633,9 +657,10 @@
         "{시} 이삿짐보관 비용 문의",
         "{동} 이삿짐보관 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "보관기간·금지품목·창고 시설·안전 증빙 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "floor",
@@ -649,9 +674,10 @@
         "{시} 바닥청소 비용 문의",
         "{동} 바닥청소 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "바닥 재질·마모 상태·박리·코팅 서비스 가능여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "tile",
@@ -665,9 +691,10 @@
         "{시} 타일청소 비용 문의",
         "{동} 타일청소 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "타일 재질과 오염 종류·줄눈 보수·교체 제공여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     },
     {
       "id": "watertank",
@@ -681,9 +708,18 @@
         "{시} 저수조청소 비용 문의",
         "{동} 저수조청소 상담"
       ],
-      "consultingAngle": "추가 수요/실제 업종 자료 검증 후 별도 콘텐츠 작성",
-      "launch": false,
-      "landingPath": null
+      "consultingAngle": "저수조 위치·용량·급수차단·배수·환기 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
     }
-  ]
+  ],
+  "launchScope": {
+    "originalIndustryCount": 10,
+    "newIndustryCount": 28,
+    "currentIndustryCount": 38,
+    "sitePages": 42,
+    "scope": "B2B marketing and website-production search intent; no fake consumer service providers",
+    "userInstruction": "2026-10-30 16:55 UTC remaining pages"
+  }
 }
