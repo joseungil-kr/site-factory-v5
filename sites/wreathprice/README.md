@@ -1,6 +1,6 @@
 # 알뜰화환 — 지역 화환 가격 비교 (V5 작업자2 독립 프로젝트)
 
-상태: **대표 시안 3페이지 / 로컬 HTTP 검증. 운영·Cloudflare 배포 없음.** 도메인 후보: `wreathprice.nalmada.net` (DNS/충돌 사전 확인 전 연결 금지).
+현재 상태(2026-10-30): **대표 시안 3페이지 / GitHub 실이미지 5장 검수 / 격리된 workers.dev noindex 미리보기 검증 성공. 커스텀 도메인 공개 배포 없음.** 도메인 후보: `wreathprice.nalmada.net` (DNS/충돌 사전 확인 전 연결 금지).
 
 ## 독립성과 포지셔닝
 - 기존 `sites/wreath-region`, Wallsky, 꽃배달 운영 사이트, Secrets, 인증 파일, IndexNow 접수 상태 변경 금지
@@ -28,13 +28,16 @@
 - `assets/ribbon-guide.webp` — 리본 배치 모형
 - `assets/florist-preparation.webp` — 포장 준비 연출
 
-다섯 장 모두 ImageGen 생성 사진형 예시를 1024px 폭 WebP로 잘라 압축한 **동일 공용 풀**. 상품 실사진·납품/배송 실적 아님. 시안 제작물은 별도 ZIP으로 인계하며, **GitHub 바이너리 업로드는 미완료**이므로 배포하지 않는다.
+다섯 장 모두 ImageGen 생성 사진형 예시를 1024px 폭 WebP로 잘라 압축한 **동일 공용 풀**. 상품 실사진·납품/배송 실적 아님. 생성 공용 이미지 5개는 현재 GitHub `sites/wreathprice/assets/`의 실제 WebP 바이너리로 저장되었고 `image-manifest.json` 해시·치수와 원격 HTTP 검증을 통과했다. 원 ImageGen 호출에서 최종 각 WebP까지의 생성·편집 이력은 ZIP과 코드의 증빙 범위 내에서만 확인 가능하며 원본 기여 이미지에 대한 별도 영구 출처 ID·독립 편집 이력은 완전히 확인되지 않았다.
 
-## 검증·대기
-- 로컬 Python HTTP 시안 3 HTML + 이미지 5 + robots 200; HTML 페이지당 `img` 5개/파일 존재/alt/width/height/noindex 검사 통과.
-- Chromium 실행파일 부재로 실제 시각 브라우저 QA 미완료. `workers.dev` URL 없음. 도메인 충돌 검사 미실행.
-- 다음 단계: GitHub 실이미지 저장 → V5 고정 소스 빌드 → 샘플 QA → 별도 noindex Worker/도메인 충돌 read-only → 부모 검수.
-- 기존 Wreath 네이버 인증 후속 상황과 IndexNow 10,336 URL HTTP200 접수는 별도 작업으로 보존하고 이번 프로젝트에서 변경하지 않음.
+## 현재 QA 및 미리보기
+- GitHub 실이미지 5개 저장 및 해시·실제 치수 검증: V5 [run 41018200247](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41018200247), 빌드·검증 3 tests 통과.
+- 독립 noindex Worker `sfv52-wreathprice-preview`: [미리보기](https://sfv52-wreathprice-preview.joseungil.workers.dev/ansan/), V4 [run 41019185898](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41019185898) 에서 실제 HTML 3개 HTTP 200, 각 페이지 이미지/상품링크 5개, WebP 5개 HTTP 200/해시 일치, robots Disallow, sitemap/없는경로 404 통과.
+- 로컬 Chromium 직접 `browser.goto`는 관리자 차단. HTML·CSS·WebP를 전달한 `set_content` 방식으로 390px 및 1440px 렌더링, 5/5 이미지 로딩·overflow 없음 확인; 실제 클라우드 브라우저의 시각 스크린샷 검수는 별도 확인 대상.
+- 도메인 후보 `wreathprice.nalmada.net`의 Custom Domain 연결 없음(배포 사전 읽기); DNS 및 Workers Route 읽기 검증은 별도 미확인. 연결·공개 index 전환 금지.
+- **역사적 상태:** 2026-10-30 초기 ZIP 인계 당시 GitHub 바이너리/preview가 없었으나 이후 완료됨. 기존 메모의 '업로드 미완료'는 현재 상태가 아님.
+- 지역 확장은 V4 공식 코드 상위 지역 원장을 근거로 검증 범위를 한정하여 noindex 단계부터 수행.
+- 기존 Wreath 네이버 인증 후속 상황과 IndexNow 접수는 별도 작업으로 보존하고 이번 프로젝트에서 변경하지 않음.
 
 ## 공식 자료 및 시장 비교
 - https://fwith.co.kr/shop/item.php?it_id=B201
