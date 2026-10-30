@@ -427,8 +427,8 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
 def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT) -> dict:
     spec, keywords, pool = require_source()
     out, report = out.resolve(), report.resolve()
-    if out == ROOT or out == SITE or out.is_relative_to(ROOT / "sites"):
-        raise ValueError("Unsafe output directory")
+    if out != DEFAULT_OUTPUT.resolve() or report != DEFAULT_REPORT.resolve():
+        raise ValueError("Webbuilder build is restricted to its isolated dist/reports folders")
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
@@ -451,7 +451,8 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT) -> dict:
         '<section class="sub-hero"><div class="container narrow"><h1>찾으시는 페이지가 없습니다.</h1>'
         + secondary("홈으로 이동", "/") + '</div></section>') + "\n", encoding="utf-8")
     (out / "robots.txt").write_text("User-agent: *\nDisallow: /\n", encoding="utf-8")
-    shutil.copy2(SITE / "site.css", out / "assets" / "site.css") if (out / "assets").mkdir(exist_ok=True) is None else None
+    (out / "assets").mkdir(exist_ok=True)
+    shutil.copy2(SITE / "site.css", out / "assets" / "site.css")
     qa = check_output(out, pages, pool, spec["targetPageCount"])
     qa["keywordCandidates"] = export_keywords(keywords, report / "keyword-candidates.csv")
     qa["launchIndustries"] = len(sectors)
