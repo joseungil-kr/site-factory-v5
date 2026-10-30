@@ -20,6 +20,7 @@ jobs:
       - name: Site-only tests and V5 planning gate
         run: |
           python -m unittest discover -s tests -p test_todayflower_pilot.py -v
+          python -m unittest discover -s tests -p test_todayflower_copy_quality.py -v
           python -m v5 plan-check --site todayflower-nalmada
       - name: Reuse V5 engine for approved Ansan 33-page noindex build
         run: |
@@ -46,6 +47,18 @@ jobs:
           assert audit['similarityPopulation']==33 and audit['similarityPairs']==528
           assert audit['similarityMode']=='complete' and audit['maxBodyChar5gramJaccard']<0.49
           assert audit['errors']==[],audit['errors']
+          assert audit['warnings']==[],audit['warnings']
+          # Full article+FAQ Korean-language QA, not sample-only; audited separately above.
+          from v5.config import read_site
+          paragraphs=read_site('todayflower-nalmada')['pages']
+          assert len(paragraphs)==33
+          seen=set()
+          for page in paragraphs:
+              for body in [page['intro']]+[s['paragraph'] for s in page['sections']]+[q['a'] for q in page['faq']]:
+                  assert body not in seen,(page['number'],'identical paragraph')
+                  seen.add(body)
+          assert len(seen)==264,(len(seen),'unique paragraphs')
+          print('TODAYFLOWER_33_PAGE_264_BLOCK_GRAMMAR_DUPLICATE_GATE_PASS')
           frozen={'1':'d953d6d3bb9656d38a40b96d72f6f143b7798458584480d47671d06b3426cf46',
                   '2':'0a009dbb94464ed4a947caa5e57d208cc9730db190192f38a6554f63a7502838',
                   '3':'a91608f863010dae2cc634125c1f2d8103adaa4a0ffc42a52b8d35e1ba24fb8e'}
