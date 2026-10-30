@@ -1,0 +1,56 @@
+{
+  "siteId": "baekse",
+  "createdOn": "2026-10-30",
+  "status": "LOCAL_USER_APPROVED_AI_IMAGES_NOT_YET_COMMITTED_TO_GITHUB",
+  "source": "Five approved softer light, realistic Korean food images. Explicitly AI generated and not evidence of actual baekse store/service.",
+  "sourceFileBundle": "baekse_approved_images_5.zip",
+  "assets": [
+    {
+      "filename": "hero.webp",
+      "path": "assets/library/baekse/hero.webp",
+      "bytes": 100476,
+      "sha256": "f04e25195d5784b0f8aac65ca81f0982aaca170d31ed97e8291e8eb39a8253b8",
+      "width": 1280,
+      "height": 720,
+      "alt": "대표 4종 메뉴를 표현한 실사풍 생성 이미지"
+    },
+    {
+      "filename": "dakhanmari.webp",
+      "path": "assets/library/baekse/dakhanmari.webp",
+      "bytes": 89748,
+      "sha256": "5dbcfd95abc0f4a3ea470ef651d5ed88069686fb17c4cd753a2d851fb8d851dc",
+      "width": 1280,
+      "height": 720,
+      "alt": "닭한마리 전골을 표현한 생성 이미지"
+    },
+    {
+      "filename": "dak-kalguksu.webp",
+      "path": "assets/library/baekse/dak-kalguksu.webp",
+      "bytes": 92110,
+      "sha256": "44fb492ac8e42a44471f924cad55feadf3e016919d8f3fc32513fed0580a6f34",
+      "width": 1280,
+      "height": 720,
+      "alt": "닭칼국수를 표현한 생성 이미지"
+    },
+    {
+      "filename": "sundaeguk.webp",
+      "path": "assets/library/baekse/sundaeguk.webp",
+      "bytes": 94778,
+      "sha256": "2ac2890670a605588fdb1d7e78942cdbda1941ce4bdc48dddd8ff0e0f105cb47",
+      "width": 1280,
+      "height": 720,
+      "alt": "순대국을 표현한 생성 이미지"
+    },
+    {
+      "filename": "kitchen-training.webp",
+      "path": "assets/library/baekse/kitchen-training.webp",
+      "bytes": 84520,
+      "sha256": "7975c9b4a17986e4bcd2170b1258cfc06362327c051972ad522e4f7249f2938a7",
+      "width": 1280,
+      "height": 720,
+      "alt": "국물 요리 주방 실습을 표현한 생성 이미지"
+    }
+  ],
+  "allPageUsage": "One shared hero + four contextual food/kitchen images, all file paths stable and cached.",
+  "releaseGate": "Before production or preview with images, verify five actual GitHub blob content SHA-256 and bytes and use unchanged source images; do not simply accept manifest without files"
+}
