@@ -43,3 +43,13 @@
 - `test_pilot.py`, 격리 `worker.js`, `wrangler.preview.json`, `wreathprice-preview-qa.yml` 준비. 사이트 전용 Actions 통과/Cloudflare 배포는 아직 확인하지 않음.
 - **원격 실이미지 업로드 미완료:** GitHub `fetch_file`에서 `sites/wreathprice/assets/funeral-wreath.webp`는 404. `mcp__GitHub__create_file`은 UTF-8 텍스트 전용, `mcp__GitHub__create_blob`은 base64 콘텐츠 인자만 받으며 현재 컨테이너 경로를 직접 업로드하는 도구 인자가 없음. 이 차단이 해소되기 전 미리보기 배포 금지.
 - 기존 Wreath 운영/인증, 타 사이트, DNS, 보안 권한은 변경 없음.
+
+## 2026-10-30 실제 원격 noindex 미리보기 검수 결과
+- **저장 소스 HEAD:** `7c9d9ca735e9729c91286b1e03b8d6501a897305` (5개 WebP 바이너리 포함, 다른 사이트 변경 없음).
+- **사이트 전용 CI:** [V5 run 41018200247](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41018200247) success — Python 컴파일, WebP 5개 전체 SHA-256/치수, 실제 3페이지 빌드 및 내용 검증 3 tests pass.
+- **별도 미리보기 Worker:** `sfv52-wreathprice-preview`, 최초 배포 version `dab3c828-4662-4228-a4b9-21fec3334e14` (V4 run 41018933326: Worker 배포는 성공, 직후 첫 /ansan/ 요청 404로 QA 실패).
+- **읽기 재검증:** [V4 run 41019094135](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41019094135)에서 URL 반영 후 /ansan/ 200 확인. 초기 404 원인은 확정하지 않음.
+- **최종 원격 검증:** [V4 run 41019185898](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41019185898) success. 공개되지 않는 `https://sfv52-wreathprice-preview.joseungil.workers.dev`에서 시/구/동 대표 3페이지 HTTP 200 및 각 이미지 5개/상품 주문 링크 5개 확인. 5개 WebP HTTP 200, 정확한 전체 바이트 SHA-256/크기 검증 통과. X-Robots-Tag noindex, HTML meta noindex, robots Disallow, sitemap 404, 임의 누락 경로 404 통과.
+- **영수증:** run 41019185898 artifact 12960339636 (`wreathprice-preview-final.json` 및 응답 진단).
+- **도메인:** `wreathprice.nalmada.net` DNS/Custom Domain 연결하지 않음. Workers Custom Domain에서는 충돌 검증 당시 해당 호스트 바인딩 없음; DNS/Routes 별도 읽기 상태는 미확인.
+- 실제 운영/공개색인/Google/Naver/IndexNow, 인증·Secret·권한 변경 없음. 본 시안은 부모 화면 검수 후에만 다음 범위를 결정한다.
