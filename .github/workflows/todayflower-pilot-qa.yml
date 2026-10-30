@@ -33,12 +33,17 @@ jobs:
           from pathlib import Path
           root=Path('dist/todayflower-nalmada')
           assert len(list(root.glob('*.html')))==5071
-          for p in (['index.html']+[f'{n}.html' for n in range(2,5071)]):
+          assert (root/'404.html').is_file()
+          assert (root/'405.html').is_file()
+          assert (root/'5071.html').is_file()
+          assert '페이지를 찾을 수' in (root/'404.html').read_text(encoding='utf-8')
+          assert 'fwith.co.kr/shop/item.php?it_id=' in (root/'405.html').read_text(encoding='utf-8')
+          for p in (['index.html']+[f'{n}.html' for n in range(2,5072) if n!=404]):
               html=(root/p).read_text(encoding='utf-8')
               assert 'noindex,nofollow' in html and 'rel="canonical"' not in html
               assert html.count('src="/assets/images/')==7
               assert 'fwith.co.kr/shop/item.php?it_id=' in html
-          for filename in (['index.html']+[f'{n}.html' for n in range(2,5071)]):
+          for filename in (['index.html']+[f'{n}.html' for n in range(2,5072) if n!=404]):
               html=(root/filename).read_text(encoding='utf-8')
               assert html.count('width="1448" height="1086"') == 5
               assert 'width:96px' not in html and 'width="96"' not in html
@@ -146,7 +151,7 @@ jobs:
                   browser=p.chromium.launch(headless=True)
                   for width in (390,1440):
                       context=browser.new_context(viewport={'width':width,'height':900})
-                      for route,name in (('/','city'),('/4.html','sangnok-ward'),('/28.html','receiver-absent'),('/29.html','shipping-fee'),('/33.html','last-reviewed-dong'),('/34.html','first-national'),('/100.html','national-100'),('/2500.html','national-2500'),('/5070.html','last-national')):
+                      for route,name in (('/','city'),('/4.html','sangnok-ward'),('/28.html','receiver-absent'),('/29.html','shipping-fee'),('/33.html','last-reviewed-dong'),('/34.html','first-national'),('/403.html','before-404'),('/405.html','after-404'),('/2500.html','national-2500'),('/5071.html','last-national')):
                           page=context.new_page()
                           response=page.goto('http://127.0.0.1:8133'+route,wait_until='domcontentloaded',timeout=30000)
                           page.locator('.tf-layout').wait_for()
@@ -205,7 +210,7 @@ jobs:
           (screenshots.parent/'browser-qa.json').write_text(json.dumps(results,indent=2)+'\n')
           (screenshots.parent/'seller-image-qa.json').write_text(json.dumps([{'route':r['route'],'width':r['width'],'loaded':r['sellerPhotoLoaded'],'total':r['sellerPhotoCount']} for r in results],indent=2)+'\n')
           (screenshots.parent/'large-image-qa.json').write_text(json.dumps([{'route':r['route'],'width':r['width'],'gridColumns':r['imageGridColumns'],'images':r['largeAIImages'],'horizontalOverflow':not r['noHorizontalOverflow']} for r in results],ensure_ascii=False,indent=2)+'\n')
-          print('TODAYFLOWER_NATIONAL_EIGHTEEN_LOCAL_BROWSER_SCREENSHOTS_PASS',len(results))
+          print('TODAYFLOWER_NATIONAL_TWENTY_LOCAL_BROWSER_SCREENSHOTS_PASS',len(results))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
