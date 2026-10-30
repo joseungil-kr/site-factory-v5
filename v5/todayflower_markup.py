@@ -206,7 +206,7 @@ def _body(site,page,pages,products,links):
         suggested=[pages[i] for i in sorted(positions) if i!=index][:8]
     snippet+=''.join('<a href="'+_h(base.url_path(p["number"]))+'">'+_h(p["region"])+' 꽃배달 확인</a>' for p in suggested)
     snippet+='</nav></section>'
-    snippet+='<section class="tf-order"><h2>상품번호·배송지를 준비해 상담하세요</h2><p>실제 주문과 결제는 꽃이랑 판매처에서 진행됩니다. 1844-0644로 당일 가능 여부를 확인하세요.</p>'
+    snippet+='<section class="tf-order" id="order"><h2>상품번호·배송지를 준비해 상담하세요</h2><p>실제 주문과 결제는 꽃이랑 판매처에서 진행됩니다. 1844-0644로 당일 가능 여부를 확인하세요.</p>'
     snippet+='<div class="tf-actions"><a class="tf-action" href="tel:18440644">전화 상담</a>'
     snippet+='<a class="tf-action secondary" href="https://fwith.co.kr" target="_blank" rel="noopener noreferrer">꽃이랑 상품 전체 보기</a></div></section>'
     if len(pages)>100:
@@ -228,7 +228,22 @@ def _body(site,page,pages,products,links):
     return snippet
 
 def home(site,page,pages,products,links):
-    return _head(site,page)+base.header(site)+_body(site,page,pages,products,links)+base.footer(site,links,page)
+    if site.get("todayflowerNational",{}).get("enabled",False):
+        # Nationwide pages need useful in-page navigation, never a fixed
+        # Ansan / Danwon / Gojan menu shown as if it were the country menu.
+        presentation_site={
+            **site,
+            "navigation":[
+                {"label":"꽃 종류","href":"#choices"},
+                {"label":"실상품·가격","href":"#products"},
+                {"label":"주문 상담","href":"#order"},
+            ],
+        }
+    else:
+        presentation_site=site
+    return (_head(site,page)+base.header(presentation_site)
+            +_body(site,page,pages,products,links)
+            +base.footer(presentation_site,links,page))
 
 def detail(site,page,pages,products,links):
     return home(site,page,pages,products,links)
