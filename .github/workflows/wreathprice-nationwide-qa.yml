@@ -1,0 +1,46 @@
+name: WreathPrice nationwide official-code noindex QA
+on:
+  push:
+    branches: [feature/v52-wreathprice-20261030]
+    paths:
+      - 'sites/wreathprice/expand_nationwide.py'
+      - 'sites/wreathprice/test_nationwide.py'
+      - 'sites/wreathprice/verified-regions-nationwide.json'
+      - '.github/workflows/wreathprice-nationwide-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Compile scripts and validate original real image files
+        run: |
+          python -m py_compile sites/wreathprice/build.py sites/wreathprice/expand_nationwide.py sites/wreathprice/test_nationwide.py
+          python -m pip install pillow==11.3.0
+          python sites/wreathprice/test_pilot.py
+      - name: Verify 284 official code links and complete 286 page output
+        run: |
+          python sites/wreathprice/test_nationwide.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('sites/wreathprice/dist-nationwide')
+          j=json.loads((p/'expansion-report.json').read_text())
+          assert (j['listedAdministrativeRegions'],j['expandedPages'],j['totalPages'])==(284,282,286)
+          assert j['verifiedDeliveryAreas']==0 and not j['contentUniquenessClaim']
+          assert not (p/'sitemap.xml').exists()
+          print('WREATHPRICE_NATIONWIDE_NO_INDEX_PASS',{'adminRegions':284,'htmlPages':286,'images':5,'deliveryEvidence':0})
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wreathprice-nationwide-drafts-${{ github.run_id }}
+          path: |
+            sites/wreathprice/dist-nationwide/
+            sites/wreathprice/verified-regions-nationwide.json
+          retention-days: 21
+          if-no-files-found: error
