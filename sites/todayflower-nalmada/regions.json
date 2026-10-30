@@ -1,0 +1,24 @@
+{
+  "source": "V4 official active region master retrieved 2026-10-22 and V5 pinned Seoul/Gyeonggi current-dong names as of 2026-10-12",
+  "asOf": "2026-10-12",
+  "regions": [
+    {
+      "name": "경기도 안산시",
+      "code": "4127000000",
+      "level": "municipality",
+      "evidence": "V4 master.json"
+    },
+    {
+      "name": "경기도 안산시 단원구",
+      "code": "4127300000",
+      "level": "ward",
+      "evidence": "V4 master.json"
+    },
+    {
+      "name": "경기도 안산시 단원구 고잔동",
+      "code": null,
+      "level": "current-dong",
+      "evidence": "V5 data/regions/seoul_gyeonggi_current_dong.json: 경기도 안산시 단원구 + 고잔동"
+    }
+  ]
+}
