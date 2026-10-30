@@ -1,0 +1,162 @@
+{
+  "version": 1,
+  "scope": "Ansan 1 city + 2 ward + 30 legal-dong records, 33 noindex preview pages",
+  "officialOrigin": "https://www.code.go.kr/stdcode/regCodeL.do",
+  "source": "2026-10-22 V4 official-codes.zip SHA256 44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
+  "derivation": "This step checks 30 Ansan legal codes and names against V5 Flowershop SHA-pinned 7af03c2 artifact 12874109256 generated HTML page IDs/titles, not direct current registry requery. V4 master 284 city/ward rows and their lineage also compared.",
+  "effectiveDate": "not supplied by the pinned legal archive",
+  "archiveHash": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
+  "flowershopArtifactId": 12874109256,
+  "pinnedV5FlowershopSHA": "7af03c2f81e7443673848ab18519bea2dda6e976",
+  "city": {
+    "code": "4127000000",
+    "name": "경기도 안산시"
+  },
+  "wards": [
+    {
+      "code": "4127100000",
+      "name": "경기도 안산시 상록구"
+    },
+    {
+      "code": "4127300000",
+      "name": "경기도 안산시 단원구"
+    }
+  ],
+  "legalDongs": [
+    {
+      "code": "4127110100",
+      "name": "경기도 안산시 상록구 일동"
+    },
+    {
+      "code": "4127110200",
+      "name": "경기도 안산시 상록구 이동"
+    },
+    {
+      "code": "4127110300",
+      "name": "경기도 안산시 상록구 사동"
+    },
+    {
+      "code": "4127110400",
+      "name": "경기도 안산시 상록구 본오동"
+    },
+    {
+      "code": "4127110500",
+      "name": "경기도 안산시 상록구 팔곡이동"
+    },
+    {
+      "code": "4127110600",
+      "name": "경기도 안산시 상록구 양상동"
+    },
+    {
+      "code": "4127110700",
+      "name": "경기도 안산시 상록구 부곡동"
+    },
+    {
+      "code": "4127110800",
+      "name": "경기도 안산시 상록구 성포동"
+    },
+    {
+      "code": "4127110900",
+      "name": "경기도 안산시 상록구 월피동"
+    },
+    {
+      "code": "4127111000",
+      "name": "경기도 안산시 상록구 팔곡일동"
+    },
+    {
+      "code": "4127111100",
+      "name": "경기도 안산시 상록구 건건동"
+    },
+    {
+      "code": "4127111200",
+      "name": "경기도 안산시 상록구 사사동"
+    },
+    {
+      "code": "4127111300",
+      "name": "경기도 안산시 상록구 수암동"
+    },
+    {
+      "code": "4127111400",
+      "name": "경기도 안산시 상록구 장상동"
+    },
+    {
+      "code": "4127111500",
+      "name": "경기도 안산시 상록구 장하동"
+    },
+    {
+      "code": "4127310100",
+      "name": "경기도 안산시 단원구 고잔동"
+    },
+    {
+      "code": "4127310200",
+      "name": "경기도 안산시 단원구 와동"
+    },
+    {
+      "code": "4127310300",
+      "name": "경기도 안산시 단원구 신길동"
+    },
+    {
+      "code": "4127310400",
+      "name": "경기도 안산시 단원구 성곡동"
+    },
+    {
+      "code": "4127310500",
+      "name": "경기도 안산시 단원구 원시동"
+    },
+    {
+      "code": "4127310600",
+      "name": "경기도 안산시 단원구 목내동"
+    },
+    {
+      "code": "4127310700",
+      "name": "경기도 안산시 단원구 초지동"
+    },
+    {
+      "code": "4127310800",
+      "name": "경기도 안산시 단원구 원곡동"
+    },
+    {
+      "code": "4127310900",
+      "name": "경기도 안산시 단원구 선부동"
+    },
+    {
+      "code": "4127311000",
+      "name": "경기도 안산시 단원구 대부동동"
+    },
+    {
+      "code": "4127311100",
+      "name": "경기도 안산시 단원구 대부북동"
+    },
+    {
+      "code": "4127311200",
+      "name": "경기도 안산시 단원구 대부남동"
+    },
+    {
+      "code": "4127311300",
+      "name": "경기도 안산시 단원구 선감동"
+    },
+    {
+      "code": "4127311400",
+      "name": "경기도 안산시 단원구 풍도동"
+    },
+    {
+      "code": "4127311500",
+      "name": "경기도 안산시 단원구 화정동"
+    }
+  ],
+  "exclusions": "44 V5 Ansan candidate current-dong names not used as official; 30 pinned active legal-dong records only; 1732 current-dong site inventory not reused.",
+  "deliverySource": {
+    "repo": "site-factory-v4",
+    "file": "site/data/service-facts.json",
+    "reportedOn": "2026-10-21",
+    "reportedModel": "National delivery by partner florists",
+    "notVerified": [
+      "per-address same-day delivery",
+      "cutoff/stock/price at time of purchase",
+      "surcharge applicability",
+      "branch existence"
+    ]
+  },
+  "contentNotes": "30 occasion-distinct (not claimed local popularity) customer decision guides, 4 custom sections and 3 FAQ per added page; never presents neighborhood demand/real local branch as fact",
+  "indexing": "preview noindex only"
+}
