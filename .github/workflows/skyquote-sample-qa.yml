@@ -63,7 +63,7 @@ jobs:
                       assert page.locator('a[href="tel:01053221952"]').count()>=1
                       assert page.locator('meta[name="robots"]').get_attribute('content')=='noindex,nofollow'
                       Path('reports/skyquote').mkdir(parents=True,exist_ok=True)
-                      screenshot=Path('reports/skyquote')/(path.strip('/').replace('.html','') or 'index')+'.'+str(width)+'.png'
+                      screenshot=Path('reports/skyquote')/((path.strip('/').replace('.html','') or 'index')+'.'+str(width)+'.png')
                       page.screenshot(path=str(screenshot),full_page=True)
                       print('RENDER_PASS',path,'width',width,'images=5','overflow=false',screenshot)
                       page.close()
