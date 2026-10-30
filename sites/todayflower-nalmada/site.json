@@ -56,7 +56,7 @@
     "enabled": true,
     "regionCount": 3,
     "regionalScope": "Ansan city, Danwon ward, Gojan current-dong; no nationwide publishing approval",
-    "editorialImages": 10,
+    "editorialImages": 7,
     "productKinds": [
       "bouquet",
       "plant",
@@ -70,6 +70,12 @@
       "celebration-wreath.webp",
       "condolence-wreath.webp",
       "flower-wrapping.webp"
-    ]
+    ],
+    "localEditorialImagesPerPage": 7,
+    "generatedEditorialImagesPerPage": 5,
+    "otherLocalEditorialImagesPerPage": 2,
+    "imageLibraryFileCount": 10,
+    "responsiveImageLayout": "desktop 3+2, tablet 2, mobile full width",
+    "highResolutionImageSize": "1448x1086"
   }
 }
