@@ -31,3 +31,10 @@
 .related-links a{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:18px 14px;border-radius:12px;background:#fff;border:1px solid #d7e5f1;color:#25436c;font-weight:730;line-height:1.45}
 .related-links a:hover{border-color:#5879cb;box-shadow:0 9px 20px #21386210}
 @media(max-width:760px){.related-links{grid-template-columns:1fr}.industry-categories{gap:30px}.industry-group-heading{font-size:1.17rem;flex-wrap:wrap}.bottom-illustration{display:none}.feature-illustration{max-height:165px}}
+
+/* Real mobile screenshot review: show all five navigation links without cut-off. */
+@media(max-width:760px){
+  .nav{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch;gap:3px;overflow:visible;white-space:normal;padding:4px 0}
+  .nav a{display:flex;align-items:center;justify-content:center;text-align:center;min-height:44px;padding:6px 2px;font-size:.72rem;line-height:1.28;word-break:keep-all;border-radius:7px}
+  .nav a[aria-current="page"]{background:#eff5fc}
+}
