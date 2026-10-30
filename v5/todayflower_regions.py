@@ -316,7 +316,11 @@ def expand(site,pages,regions,root:Path):
     new=[(code,name) for code,name in official if code not in prior]
     if len(new)!=EXPECTED_NEW:
         raise ConfigError("Unexpected nationwide legal-dong delta count")
-    generated=[_make_page(code,name,i+34) for i,(code,name) in enumerate(new)]
+    # 404.html is the V5 real error document; numbered page 404 would
+    # overwrite it. Reserve 404 in Todayflower only, without altering V5,
+    # Flowershop, or any other site's existing filename numbering.
+    generated=[_make_page(code,name,(i+34 if i+34<404 else i+35))
+               for i,(code,name) in enumerate(new)]
     original_ids={p["id"] for p in pages}
     if any(p["id"] in original_ids for p in generated):
         raise ConfigError("National page identity collision")
