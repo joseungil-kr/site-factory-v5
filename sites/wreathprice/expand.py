@@ -8,7 +8,6 @@ import hashlib
 import html
 import json
 import shutil
-from itertools import combinations
 from pathlib import Path
 from xml.etree import ElementTree as ET
 import build as pilot
@@ -63,23 +62,24 @@ def build():
     media={x['filename']:x for x in images}
     assert set(spec['images'])==set(media)
     records=[]
-    variants=set()
-    combos=list(combinations(range(5),3))
+    comparison_variants=set()
     for i,area in enumerate(source['expandEntries']):
         label=area['fullName']
         title=label+' 화환 가격, 근조·축하 상품과 최종 주문금액 | 알뜰화환'
         focus,explainer=DECISIONS[i]
-        choices=combos[i%len(combos)]
-        products=[catalog[j] for j in choices]
-        low,high=min(products,key=lambda x:x['referenceKRW']),max(products,key=lambda x:x['referenceKRW'])
+        # Compare like-for-like funeral three-tier items only.
+        # Celebration and objet products are a separate purpose/form introduction.
+        products=catalog[:3]
+        assert all(p['kind']=='근조' for p in products)
+        low,mid,high=products
         spread=high['referenceKRW']-low['referenceKRW']
-        selection=(', '.join(p['sku'] for p in products))
-        variants.add((focus,selection))
+        selection=', '.join(p['sku'] for p in products)
+        comparison_variants.add(selection)
         # Claims are SKU catalogue facts and official administrative hierarchy,
         # not unverified locality-level delivery facts.
-        intro=(label+'은 '+area['level']+' 등급의 법정동 코드 '
-          +area['code']+'에 대응하는 상위 행정구역 명칭입니다. '
-          +'아래 금액은 판매 상품의 확인 당시 기준가이며, 이 지역으로 배송할 수 있다는 근거는 아닙니다.')
+        intro=(label+'에서 화환 가격을 알아보신다면 먼저 근조와 축하 중 용도에 맞는 상품을 고르고, '
+          +'판매처의 확인된 표시 가격과 주문 시 추가되는 비용을 구분해 보세요. '
+          +'이 지역의 실제 배송 가능 여부와 추가 배송료는 아직 확인되지 않았으므로 주문 전 상담이 필요합니다.')
         rows=''.join('<tr><td>'+escape(p['kind'])+'</td><td>'+escape(p['sku'])+'</td><td>'+escape(p['name'])+
           '</td><td>'+format(p['referenceKRW'],',')+'원</td><td><a href="'+escape(p['orderUrl'])+
           '" rel="noopener noreferrer">실제 상품·주문 조건 확인</a></td></tr>' for p in catalog)
@@ -111,11 +111,20 @@ def build():
           '<p>근조 B201/B203/B205: 2026-10-22 확보 원장. 축하 C205/C030: 2026-10-30 확인 기록.'
           ' 재고, 판매가 변경 및 최종 결제액은 실주문 단계에서 확인하세요.</p></section>'
           '<section><h2>'+escape(focus)+'</h2><p>'+escape(explainer)+'</p>'
-          '<p>이번 비교 예시의 세 상품 '+escape(selection)+' 중 표시가가 가장 낮은 '
-          +escape(low['sku'])+'은 '+format(low['referenceKRW'],',')+'원, 가장 높은 '
-          +escape(high['sku'])+'은 '+format(high['referenceKRW'],',')+
-          '원입니다. 표시가 차이는 '+format(spread,',')+
-          '원이나 사양·배송료 차이를 뜻하지 않습니다.</p></section>'
+          '<h3>동일 용도 근조 3단 화환 기준가 비교</h3>'
+          '<p>근조 3단 기본형('+escape(low['sku'])+')은 '+format(low['referenceKRW'],',')+
+          '원, 고급형('+escape(mid['sku'])+')은 '+format(mid['referenceKRW'],',')+
+          '원, 특대형('+escape(high['sku'])+')은 '+format(high['referenceKRW'],',')+
+          '원으로 기록돼 있습니다. 기본형과 고급형은 '
+          +format(mid['referenceKRW']-low['referenceKRW'],',')+
+          '원, 고급형과 특대형은 '+format(high['referenceKRW']-mid['referenceKRW'],',')+
+          '원, 기본형과 특대형은 '+format(spread,',')+
+          '원의 <strong>표시가 차이</strong>가 있습니다. '
+          '이는 꽃 수량·품질이나 배송비 차이를 입증하지 않습니다.</p>'
+          '<h3>용도와 형태가 다른 상품 안내</h3>'
+          '<p>축하 3단 화환('+escape(catalog[3]['sku'])+')과 축하 2단 오브제('
+          +escape(catalog[4]['sku'])+')는 서로 형태가 다른 축하용 상품입니다. '
+          '근조 3단 상품의 등급·가격 순위에 섞어 비교하지 않고, 행사 목적·설치 공간과 상세 구성을 따로 확인합니다.</p></section>'
           '<section><h2>AI 이미지로 살펴보는 형태와 옵션</h2>'
           '<div class="cards">'+figures+'</div></section>'
           '<section><h2>해당 지역명으로 주문 전에 확인할 사항</h2><p>'
@@ -137,11 +146,13 @@ def build():
           'focus':focus,'comparedSKUs':list(selection.split(', ')),
           'lowReferencePrice':low['referenceKRW'],'highReferencePrice':high['referenceKRW'],
           'referenceSpread':spread,'htmlSHA256':hashlib.sha256(html_text.encode('utf-8')).hexdigest()})
-    assert len(records)==16 and len(variants)==16
+    assert len(records)==16 and len(comparison_variants)==1
     report={'site':'wreathprice','mode':'noindex-offline-expansion',
       'sourceBlobSha':source['sourceBlobSha'],'officialRetrievedOn':source['retrievedOn'],
       'pilotPages':3,'expandedPages':len(records),'totalPages':3+len(records),
-      'imagesPerPage':5,'verifiedDeliveryAreas':0,'uniqueEditorialFocusPairs':len(variants),
+      'imagesPerPage':5,'verifiedDeliveryAreas':0,'distinctComparisonSets':len(comparison_variants),
+      'editorialFocusCount':len({x['focus'] for x in records}),
+      'contentUniquenessClaim':False,
       'sitemap':False,'publicDeployment':False,'records':records}
     (OUT/'expansion-report.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('WREATHPRICE_VERIFIED_REGION_NO_INDEX_BUILD '+json.dumps(
