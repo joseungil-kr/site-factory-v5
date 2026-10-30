@@ -325,7 +325,7 @@ def render_sector(item: dict, data: dict, pool: dict, sectors: list[dict]) -> st
         '<section class="sub-hero"><div class="container narrow">'
         + kicker("업종별 지역검색 홈페이지 제작") +
         '<h1>' + escape(data["title"]) + '<br><em>페이지당 월 1,000원부터.</em></h1>'
-        '<p class="sub-lead">' + escape(data["intro"]) + '</p>'
+        '<p class="sub-lead">' + escape(item["consultingAngle"]) + ' 실제 제공 서비스를 기준으로 고객 질문과 상담 흐름을 설명하는 홈페이지를 설계합니다.</p>'
         '<p class="small-note">최소 10페이지 월 10,000원부터 · 업종별 도메인 확보·관리 및 서버비 포함.</p><div class="hero-actions">'
         + cta(item["label"] + " 홈페이지 상담") + secondary("전체 업종 보기", "/#industries") +
         '</div></div></section>'
