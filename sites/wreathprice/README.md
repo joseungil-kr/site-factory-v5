@@ -45,7 +45,7 @@
 - 기존 Wreath 별도 보조 원장 `sites/wreath-region/regions.json`: 5,034개 하위 지역명(2025년 출처), 상위명 3,596건 일치·1,438건 미일치. 화분 전용 1,732건 수치를 신규 화환 가격 지역 근거로 사용하지 않음.
 - `verified-regions.json`: 공식 원장으로 확인된 경기권 18개 상위지역 중 기존 시·구 대표 2개를 제외한 **추가 16개**만 추려 원장 코드·부모코드·출처행까지 고정.
 - `expand.py`: 기존 `build.py`의 3페이지/실제 이미지 자산을 재사용하여 **독립 `dist-expansion/`에 16개 추가 noindex 문서, 총 19개**를 생성. 서비스 지역 16개가 확인됐다는 뜻이 아님(배송 확인 지역 0).
-- 고유 내용은 코드/행정계층 정보 외에 16개의 편집 주제와 각각 다른 실제 SKU 3개 비교·가격 차이·주문 검증 절차를 넣음. 지명만 바꾼 허위 배송 정보, 가짜 매장/리뷰, 최저가·배송 확약 없음. 다만 공통 가격표·사진·FAQ 재사용 구조이므로 검색 색인용 고유 품질이 별도로 검증되었다는 주장은 하지 않음.
+- 고유 내용은 코드/행정계층 정보 외에 16개의 편집 주제와 같은 용도 근조 3단 SKU(B201/B203/B205)의 공통 가격 비교 1종, 별도 축하·오브제 유형 안내 및 주문 확인 절차를 넣음. 지명만 바꾼 허위 배송 정보, 가짜 매장/리뷰, 최저가·배송 확약 없음. 다만 공통 가격표·사진·FAQ 재사용 구조이므로 검색 색인용 고유 품질이 별도로 검증되었다는 주장은 하지 않음.
 - <https://github.com/joseungil-kr/site-factory-v5/actions/runs/41031299548> (성공): Python syntax, 5개 WebP 실제 해시/치수, 대표 3페이지 및 확장 16페이지의 테스트 3+3개 통과. 산출물 artifact `12966760028`. Sitemap 없음 / noindex 유지 / 공개 배포하지 않음.
 - 이미지 출처: `image-provenance.json`에 기존 대화에서 생성된 원본 PNG의 SHA-256, generation ID, 크롭 좌표와 WebP 인코딩을 기록. 원본 PNG에서 5개 WebP를 바이트 단위로 재현하여 일치 확인. 원본 PNG를 GitHub에 추가하지 않았으며, 원본 접근 불가 환경에서는 해당 연결을 별도 재검증할 수 없다는 제한을 유지.
 
@@ -61,3 +61,12 @@
 - https://www.dogus.co.kr/life/wreath-cost
 
 외부 타사 가격과 배달 조건은 본 사이트의 사실/보장 문구로 사용하지 않는다.
+
+## 2026-10-30 문구 교정 및 19페이지 미리보기 재검증 (최신)
+- **수정 코드:** `sites/wreathprice/expand.py` — 고객용 본문에서 `municipality`, `ward`, 코드 등 내부 원장 표현 제거. 공식 코드·분류 등 증거는 `verified-regions.json`과 `dist-expansion/expansion-report.json`에만 유지. 'B205은' 등 조사 오류 제거.
+- **비교 기준:** 동일 용도 근조 3단 B201 59,000원 / B203 79,000원 / B205 109,000원의 **공통 비교 1종**. 축하 3단 C205와 축하 오브제 C030은 가격순위에 혼합하지 않고 서로 다른 용도·형태로 소개. 기존 초안의 `combinations(5,3)`은 총 10개 비교 조합이 16페이지 중 6번 반복되었음; '16개 독립 비교 조합' 주장은 잘못된 기록이었음.
+- **차별화의 한계:** 지역별 상세 실사·배송 조건·추가요금 자료가 없어 16개의 편집 초점은 각각 다르지만 같은 공통 가격/이미지/FAQ를 사용. HTML 해시가 다르다는 이유로 지역 고유 콘텐츠의 검색 품질을 보장하지 않음. 실제 확인된 배송 가능 지역은 **0개**.
+- **V5 성공 QA:** [run 41035612269](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41035612269) 문법, 이미지 해시, 19페이지/고객 문구 회귀 테스트 통과.
+- **V4 미리보기 배포 및 운영 URL 검증:** [run 41035787113](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41035787113) 성공. Worker `sfv52-wreathprice-preview`, 활성 배포버전 `e8bbac15-aec5-4d90-bf58-18669346af20`, 소스 SHA `9c27e766d47cf10ab32cbe84a0855cf5f1f0f142`. 19페이지 모두 HTTP200 및 noindex, WebP 5개 HTTP200/원장 해시 일치, robots Disallow, Sitemap 404 및 누락 페이지 404. 영수증 artifact `12968555792`. 새 도메인/DNS/인증/Secret/권한, public index 전환 없음.
+- **실제 미리보기:** https://sfv52-wreathprice-preview.joseungil.workers.dev/region/4111000000.html
+- **원장 확인 시점:** 2026-10-22 다운로드한 법정동 코드 상위 행정구역 자료; 원본의 법적 적용일(`sourceEffectiveDate`)은 미확인. 오늘 행정구역 재조회나 지역 배송 실측으로 오인시키지 않음.
