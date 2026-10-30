@@ -31,7 +31,8 @@
         }
       ],
       "toolGenerated": false,
-      "isActualBusinessDeliveryProof": false
+      "isActualBusinessDeliveryProof": false,
+      "depictedFactRole": "approved_external_photo_not_independent_proof_of_service_delivery"
     },
     {
       "sourceType": "USER_APPROVED_EXTERNAL",
@@ -58,7 +59,8 @@
         }
       ],
       "toolGenerated": false,
-      "isActualBusinessDeliveryProof": false
+      "isActualBusinessDeliveryProof": false,
+      "depictedFactRole": "approved_external_photo_not_independent_proof_of_service_delivery"
     },
     {
       "sourceType": "USER_APPROVED_EXTERNAL",
@@ -85,7 +87,8 @@
         }
       ],
       "toolGenerated": false,
-      "isActualBusinessDeliveryProof": false
+      "isActualBusinessDeliveryProof": false,
+      "depictedFactRole": "approved_external_photo_not_independent_proof_of_service_delivery"
     }
   ]
 }
