@@ -43,8 +43,22 @@ def require_source() -> tuple[dict, dict, dict]:
         raise ValueError("Webbuilder domain or phone drift")
     if spec["publishPolicy"]["production"] or spec["publishPolicy"]["indexNow"]:
         raise ValueError("Production and IndexNow must remain disabled")
-    if spec["pricing"]["billingCycle"] != "UNCONFIRMED":
-        raise ValueError("Pricing changed: review and update this release gate first")
+    pricing = spec["pricing"]
+    if not (pricing["billingCycle"] == "monthly"
+            and pricing["headlinePriceKRW"] == 1000
+            and pricing["domainRegistrationIncluded"] is True
+            and pricing["domainIncluded"] is True
+            and pricing["hostingIncluded"] is True
+            and pricing["creationIncluded"] is True
+            and pricing["baseOfferConfirmed"] is True
+            and pricing["fullContractTermsConfirmed"] is False):
+        raise ValueError("Monthly base offer drift: expected 1,000 KRW/page with domain purchase and server costs included")
+    if (pool["pricingFact"]["monthlyFeePerPageKRW"] != pricing["headlinePriceKRW"]
+            or pool["pricingFact"]["domainRegistrationIncluded"] is not True
+            or pool["pricingFact"]["hostingIncluded"] is not True
+            or [(x["pages"], x["amountKRW"]) for x in pool["pricingFact"]["monthlyExamples"]]
+            != [(10, 10000), (20, 20000), (30, 30000), (50, 50000), (100, 100000)]):
+        raise ValueError("Monthly price examples and contract facts drift")
     if len(keywords["industries"]) < 30:
         raise ValueError("Insufficient candidate keyword sectors")
     launch = [x for x in keywords["industries"] if x["launch"]]
@@ -123,6 +137,18 @@ def layout(title: str, description: str, body: str, active: str = "") -> str:
     )
 
 
+def monthly_price_rows(pool: dict, limit: int | None = None) -> str:
+    examples = pool["pricingFact"]["monthlyExamples"]
+    if limit is not None:
+        examples = examples[:limit]
+    return "".join(
+        '<div class="price-row' + (' highlighted' if item["pages"] == 20 else '') +
+        '"><span>' + str(item["pages"]) + '페이지 × 월 1,000원</span><strong>월 ' +
+        format(item["amountKRW"], ",") + '원</strong></div>'
+        for item in examples
+    )
+
+
 def industry_cards(sectors: list[dict]) -> str:
     cards = []
     for i, item in enumerate(sectors, 1):
@@ -157,9 +183,9 @@ def render_home(keywords: dict, pool: dict) -> str:
     body = (
         '<section class="hero"><div class="container hero-grid">'
         '<div class="hero-copy">' + kicker("동네 검색을 이해하는 홈페이지 제작") +
-        '<h1>업종별 검색 홈페이지,<br><em>1페이지 1,000원부터.</em></h1>'
+        '<h1>업종별 검색 홈페이지,<br><em>페이지당 월 1,000원부터.</em></h1>'
         '<p class="hero-lead">누수탐지, 하수구막힘, 이삿짐, 출장세차까지. '
-        '지역 서비스업의 실제 업무를 설명하고 고객의 문의로 연결되는 홈페이지를 설계합니다.</p>'
+        '지역 서비스업의 실제 업무를 설명하고 고객의 문의로 연결되는 홈페이지를 설계합니다. 기본 제작비·도메인 구입비·서버비를 포함합니다.</p>'
         '<div class="hero-actions">' + cta("제작 비용 상담하기") +
         secondary("업종별 구성 보기", "/#industries") + '</div>'
         '<div class="hero-note"><span>●</span> 검색엔진 노출·순위는 보장하지 않습니다. '
@@ -173,7 +199,7 @@ def render_home(keywords: dict, pool: dict) -> str:
         '<div class="browser-footer"><span>고유 제목과 본문</span><span>모바일 전화 연결</span></div>'
         '</div></div></div></section>'
         '<section class="stats-strip"><div class="container strip-grid">'
-        '<div><strong>1,000원부터</strong><span>기본 페이지 단가 안내</span></div>'
+        '<div><strong>월 1,000원부터</strong><span>페이지당 · 도메인·서버비 포함</span></div>'
         '<div><strong>10개 업종</strong><span>우선 제작 상담 분야</span></div>'
         '<div><strong>지역 맞춤</strong><span>실제 서비스 범위에 맞춰 구성</span></div>'
         '</div></section>'
@@ -197,21 +223,19 @@ def render_home(keywords: dict, pool: dict) -> str:
         '<span class="eyebrow">제작 절차</span><h2>작게 검증하고, 필요한 만큼 확장합니다.</h2>'
         '</div><div class="step-grid">' + steps + '</div></div></section>'
         '<section class="section section-muted"><div class="container pricing-grid">'
-        '<div><span class="eyebrow">비용 계산 예시</span><h2>페이지 수부터<br>예산을 가늠해 보세요.</h2>'
-        '<p>페이지당 1,000원을 단순 적용한 합계입니다. 과금 주기, 도메인·호스팅 포함 범위와 실제 계약 조건은 상담에서 확정합니다.</p>'
+        '<div><span class="eyebrow">월 이용료 안내</span><h2>페이지 수만큼<br>월 이용료를 계산하세요.</h2>'
+        '<p>페이지당 월 1,000원이며 기본 홈페이지 제작비, 도메인 구입비, 서버비를 포함합니다. 최소 수량·부가세·도메인 갱신·유지보수·해지 조건은 계약 전에 확인합니다.</p>'
         + secondary("가격과 포함 범위", "/guide/pricing/") + '</div>'
-        '<div class="price-panel"><div class="price-row"><span>10페이지</span><strong>10,000원</strong></div>'
-        '<div class="price-row highlighted"><span>20페이지</span><strong>20,000원</strong></div>'
-        '<div class="price-row"><span>30페이지</span><strong>30,000원</strong></div>'
-        '<p class="price-footnote">위 금액은 페이지 단가 계산 예시이며 월 청구액 또는 일회비용으로 확정된 금액이 아닙니다.</p></div>'
+        '<div class="price-panel">' + monthly_price_rows(pool, limit=3) +
+        '<p class="price-footnote">월 이용료 산식 기준입니다. 실제 가능한 지역과 페이지 수는 별도 확인하며, 부가세·최소 수량·갱신·수정 범위 등 세부 계약 조건은 상담 시 안내합니다.</p></div>'
         '</div></section>'
         '<section class="section"><div class="container"><div class="section-heading">'
         '<span class="eyebrow">자주 묻는 질문</span><h2>제작 전에 알아둘 내용</h2></div>'
         '<div class="faq-list">' + sample_faq + '</div><div class="more-link">'
         '<a href="/guide/faq/">질문 전체 보기 ↗</a></div></div></section>'
     )
-    return layout("업종별 검색 홈페이지 1페이지 1,000원부터 | 인터피아드",
-                  "누수탐지, 하수구막힘, 이삿짐, 출장세차 등 지역서비스 사업자용 홈페이지 제작. 페이지당 1,000원부터, 인터피아드 전화 010-2490-0555.",
+    return layout("업종별 검색 홈페이지 페이지당 월 1,000원부터 | 인터피아드",
+                  "누수탐지, 하수구막힘, 이삿짐, 출장세차 등 지역서비스업 홈페이지. 페이지당 월 1,000원부터, 도메인 구입비·서버비 포함. 인터피아드 010-2490-0555.",
                   body, active="home")
 
 
@@ -234,8 +258,9 @@ def render_sector(item: dict, data: dict, pool: dict) -> str:
     body = (
         '<section class="sub-hero"><div class="container narrow">'
         + kicker("업종별 지역검색 홈페이지 제작") +
-        '<h1>' + escape(data["title"]) + '<br><em>페이지당 1,000원부터.</em></h1>'
-        '<p class="sub-lead">' + escape(data["intro"]) + '</p><div class="hero-actions">'
+        '<h1>' + escape(data["title"]) + '<br><em>페이지당 월 1,000원부터.</em></h1>'
+        '<p class="sub-lead">' + escape(data["intro"]) + '</p>'
+        '<p class="small-note">기본 홈페이지 제작·도메인 구입비·서버비 포함. 세부 이용 조건은 상담 시 확인합니다.</p><div class="hero-actions">'
         + cta(item["label"] + " 홈페이지 상담") + secondary("전체 업종 보기", "/#industries") +
         '</div></div></section>'
         '<section class="section"><div class="container article-layout">'
@@ -252,7 +277,7 @@ def render_sector(item: dict, data: dict, pool: dict) -> str:
         ' 이 키워드는 설명을 위한 문구 예시이며 검색량·순위 또는 해당 지역 업체의 존재를 보증하지 않습니다.</p>'
         '</div></section>'
     )
-    return layout(data["title"] + " 1페이지 1,000원부터 | 인터피아드",
+    return layout(data["title"] + " 페이지당 월 1,000원부터 | 인터피아드",
                   item["label"] + " 사업자용 지역검색 홈페이지 제작. " + item["consultingAngle"] +
                   ". 인터피아드 010-2490-0555.",
                   body)
@@ -261,24 +286,21 @@ def render_sector(item: dict, data: dict, pool: dict) -> str:
 def render_pricing(pool: dict) -> str:
     body = (
         '<section class="sub-hero"><div class="container narrow">' + kicker("제작 비용 안내") +
-        '<h1>1페이지 1,000원부터,<br><em>필요한 수량부터 계산합니다.</em></h1>'
-        '<p class="sub-lead">많은 페이지를 먼저 사는 것이 목적은 아닙니다. 실제 서비스 범위와 상담에 도움이 되는 내용이 있는 문서부터 설계합니다.</p>'
+        '<h1>페이지당 월 1,000원부터,<br><em>도메인·서버비 포함.</em></h1>'
+        '<p class="sub-lead">홈페이지 제작비와 도메인 구입비·서버비를 포함하는 월 이용료 상품입니다. 실제 서비스 범위와 상담에 도움이 되는 문서부터 설계합니다.</p>'
         '</div></section><section class="section"><div class="container narrow">'
-        '<div class="price-panel full"><h2>기본 페이지 단가 계산</h2>'
-        '<div class="price-row"><span>10페이지 × 1,000원</span><strong>10,000원</strong></div>'
-        '<div class="price-row highlighted"><span>20페이지 × 1,000원</span><strong>20,000원</strong></div>'
-        '<div class="price-row"><span>30페이지 × 1,000원</span><strong>30,000원</strong></div>'
-        '<p class="price-footnote">위 금액은 단순 산식입니다. 1회비와 월 요금 구분, 최소 수량, 부가세, 도메인 등록·갱신, 호스팅, 수정과 해지 조건은 상담에서 확정합니다.</p></div>'
+        '<div class="price-panel full"><h2>페이지 수에 따른 월 이용료</h2>' + monthly_price_rows(pool) +
+        '<p class="price-footnote">1페이지당 월 1,000원 기준입니다. 기본 제작비·도메인 구입비·서버비를 포함합니다. 최소 수량, 부가세, 계약기간, 도메인 종류·갱신, 수정·해지 조건은 계약 전에 안내합니다.</p></div>'
         '<div class="article-section"><h2>한 도시의 모든 동도 같은 금액인가요?</h2>'
-        + paragraph("시마다 동 개수는 서로 다릅니다. 20~30페이지 구성은 기본 계산상 2만~3만원이지만, 해당 시 전체 동이 반드시 20~30개라는 뜻은 아닙니다. 실제 서비스 가능한 지역과 페이지 구성을 확인해 필요한 수를 산정합니다.")
+        + paragraph("시마다 동 개수는 서로 다릅니다. 20~30페이지를 이용하는 경우 월 2만~3만원이지만, 해당 시 전체 동을 반드시 같은 월 이용료로 구성할 수 있다는 뜻은 아닙니다. 실제 서비스 가능 지역과 페이지 구성을 확인해 필요한 수를 산정합니다.")
         + '</div><div class="article-section"><h2>도메인·서버 운영은 어떻게 하나요?</h2>'
-        + paragraph("도메인 등록과 갱신, HTTPS 적용, 정적 웹사이트 호스팅과 운영 기간에 필요한 비용을 포함할 수 있는지 계약 범위를 정해야 합니다. 고객별 소유권과 이전·해지 조건도 함께 확인하는 것이 좋습니다.")
+        + paragraph("기본 월 이용료에 도메인 구입비와 서버 운영비를 포함합니다. 다만 제공 도메인의 종류와 갱신 기간, 소유권·이전·해지 조건, 서버 사용량 및 수정 범위는 계약 전에 명확히 안내합니다.")
         + '</div><div class="article-section"><h2>제작단가가 낮을 수 있는 이유</h2>'
         + paragraph(pool["offerVariants"][0]) + paragraph(pool["offerVariants"][1]) +
         '</div></div></section>'
     )
-    return layout("홈페이지 제작 페이지당 1,000원부터 비용 안내 | 인터피아드",
-                  "업종별 홈페이지 10·20·30페이지 기본 금액 계산, 도메인·서버·수정 포함 범위 확인 방법을 안내합니다.",
+    return layout("홈페이지 제작 페이지당 월 1,000원부터 비용 안내 | 인터피아드",
+                  "업종별 홈페이지 페이지당 월 1,000원, 도메인 구입비와 서버비 포함. 10~100페이지 월 이용료 및 계약 조건을 안내합니다.",
                   body, "pricing")
 
 
@@ -316,7 +338,7 @@ def render_faq(pool: dict) -> str:
         '<div class="faq-list">' + faq + '</div></div></section>'
     )
     return layout("홈페이지 제작·SEO 자주 묻는 질문 | 인터피아드",
-                  "페이지당 1,000원 제작 조건, 도메인과 서버, 지역별 홈페이지, SEO 검색 노출의 실제 의미를 안내합니다.",
+                  "페이지당 월 1,000원 이용료, 도메인·서버비 포함, 지역별 홈페이지와 검색 노출에 대한 질문을 안내합니다.",
                   body, "faq")
 
 
@@ -421,7 +443,9 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
             "narrativePairsChecked": len(similarities),
             "narrativeMaxChar5GramJaccard": round(max_pair[0], 6),
             "maxPair": [max_pair[1], max_pair[2]],
-            "pricingApproved": False, "domainDeployed": False, "indexNowSubmitted": False}
+            "pricingApproved": False, "baseOfferApproved": True, "billingCycle": "monthly",
+            "domainAndHostingIncluded": True, "fullContractTermsConfirmed": False,
+            "domainDeployed": False, "indexNowSubmitted": False}
 
 
 def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT) -> dict:
@@ -454,6 +478,13 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT) -> dict:
     (out / "assets").mkdir(exist_ok=True)
     shutil.copy2(SITE / "site.css", out / "assets" / "site.css")
     qa = check_output(out, pages, pool, spec["targetPageCount"])
+    for example in pool["pricingFact"]["monthlyExamples"]:
+        text = (out / "guide" / "pricing" / "index.html").read_text(encoding="utf-8")
+        if (f'{example["pages"]}페이지 × 월 1,000원' not in text
+                or f'월 {example["amountKRW"]:,}원' not in text):
+            raise ValueError("Missing or incorrect monthly pricing for "+str(example["pages"]))
+    if '페이지당 월 1,000원부터' not in (out / "index.html").read_text(encoding="utf-8"):
+        raise ValueError("Monthly fee not visible on homepage")
     qa["keywordCandidates"] = export_keywords(keywords, report / "keyword-candidates.csv")
     qa["launchIndustries"] = len(sectors)
     qa["researchIndustries"] = len(keywords["industries"]) - len(sectors)
