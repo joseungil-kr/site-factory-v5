@@ -81,9 +81,21 @@ def require_source() -> tuple[dict, dict, dict]:
         raise ValueError("Unverified domain examples cannot be claimed as owned")
     if len(keywords["industries"]) < 30:
         raise ValueError("Insufficient candidate keyword sectors")
+    extra_a = load("industry-expansion-a.json")["industry"]
+    extra_b = load("industry-expansion-b.json")["industry"]
+    supplemental = {**extra_a, **extra_b}
+    if len(pool["industry"]) != 10 or len(extra_a) != 14 or len(extra_b) != 14 or len(supplemental) != 28:
+        raise ValueError("Original 10 and supplemental 28 industry copy records required")
+    if set(pool["industry"]) & set(supplemental):
+        raise ValueError("New copy must never overwrite original 10 industry records")
+    for ident, article in supplemental.items():
+        narrative = "".join(article.get(f, "") for f in ("intro", "problem", "structure", "conversion", "difference"))
+        if len(narrative) < 360 or len(article.get("checklist", [])) != 4:
+            raise ValueError("Unfinished original industry narrative: "+ident)
+    pool["industry"] = {**pool["industry"], **supplemental}
     launch = [x for x in keywords["industries"] if x["launch"]]
-    if len(launch) != 10 or set(pool["industry"]) != {x["id"] for x in launch}:
-        raise ValueError("Launch sector and original prose mismatch")
+    if len(keywords["industries"]) != 38 or len(launch) != 38 or set(pool["industry"]) != {x["id"] for x in launch}:
+        raise ValueError("38 sector launch source mismatch")
     if len(pool["heroVariants"]) < 10 or len(pool["faq"]) < 10:
         raise ValueError("Insufficient independently written copy pool")
     return spec, keywords, pool
@@ -145,7 +157,8 @@ def layout(title: str, description: str, body: str, active: str = "") -> str:
         '<div><span class="eyebrow">한 장부터, 필요한 정보부터</span>'
         '<h2>우리 업종의 검색 홈페이지를 설계해보세요.</h2>'
         '<p>실제 서비스와 가능한 지역을 알려주시면 문서 구성을 함께 검토합니다.</p></div>'
-        + cta("010-2490-0555 전화 상담") +
+        + illustration("mobile-contact.svg", "모바일 전화 상담을 나타내는 원본 일러스트", "bottom-illustration") +
+        cta("010-2490-0555 전화 상담") +
         '</div></section>'
         '<footer class="site-footer"><div class="container footer-inner">'
         '<div><strong>인터피아드</strong><p>지역 서비스업을 위한 홈페이지 제작 안내</p>'
@@ -169,6 +182,17 @@ def monthly_price_rows(pool: dict, limit: int | None = None) -> str:
     )
 
 
+def illustration(file: str, description: str, css_class: str) -> str:
+    dimensions = {"webbuilder-hero.svg": (1200, 760), "industry-services.svg": (1000, 680),
+                  "local-search.svg": (1000, 680), "managed-domain.svg": (1000, 680),
+                  "mobile-contact.svg": (1000, 680)}
+    if file not in dimensions:
+        raise ValueError("Unexpected webbuilder image file: "+file)
+    w, h = dimensions[file]
+    return ('<img src="/assets/images/' + file + '" alt="' + escape(description) +
+            '" class="' + escape(css_class) + '" width="' + str(w) +
+            '" height="' + str(h) + '">')
+
 def industry_cards(sectors: list[dict]) -> str:
     cards = []
     for i, item in enumerate(sectors, 1):
@@ -181,6 +205,33 @@ def industry_cards(sectors: list[dict]) -> str:
             '<span class="industry-arrow" aria-hidden="true">↗</span></a>'
         )
     return "".join(cards)
+
+
+def grouped_industry_cards(sectors: list[dict]) -> str:
+    grouped = {}
+    for item in sectors:
+        grouped.setdefault(item["cluster"], []).append(item)
+    return "".join(
+        '<section class="industry-group"><h3 class="industry-group-heading">' +
+        escape(category) + '<span>' + str(len(items)) + '개 업종</span></h3>' +
+        '<div class="industry-grid">' + industry_cards(items) + '</div></section>'
+        for category, items in grouped.items()
+    )
+
+
+def related_industry_cards(item: dict, sectors: list[dict]) -> str:
+    group = [x for x in sectors if x["cluster"] == item["cluster"] and x["id"] != item["id"]]
+    if len(group) < 3:
+        group.extend(x for x in sectors if x["cluster"] != item["cluster"] and x["id"] != item["id"])
+    return (
+        '<section class="section related-section"><div class="container narrow">'
+        '<span class="eyebrow">함께 살펴볼 업종</span><h2>관련 홈페이지 제작 서비스</h2>'
+        '<div class="related-links">' +
+        "".join('<a href="/industry/' + escape(x["id"]) + '/">' +
+                escape(x["label"]) + ' 홈페이지 제작 <span aria-hidden="true">↗</span></a>'
+                for x in group[:3]) +
+        '</div></div></section>'
+    )
 
 
 def render_home(keywords: dict, pool: dict) -> str:
@@ -210,14 +261,8 @@ def render_home(keywords: dict, pool: dict) -> str:
         secondary("업종별 구성 보기", "/#industries") + '</div>'
         '<div class="hero-note"><span>●</span> 검색엔진 노출·순위는 보장하지 않습니다. '
         '서비스 범위와 문서 품질을 먼저 확인합니다.</div></div>'
-        '<div class="hero-art" aria-label="지역 검색용 페이지 구성 예시">'
-        '<div class="browser-top"><span></span><span></span><span></span><b>지역 서비스 검색 페이지</b></div>'
-        '<div class="browser-body"><span class="browser-pill">내 업종에 맞는 홈페이지 제작</span>'
-        '<h2>고객이 찾는 순간,<br>정확한 안내가 보이도록.</h2>'
-        '<p>사업에 맞는 도메인 확보·관리부터 홈페이지 운영까지</p>'
-        '<div class="query-list">' + examples + '</div>'
-        '<div class="browser-footer"><span>고유 제목과 본문</span><span>모바일 전화 연결</span></div>'
-        '</div></div></div></section>'
+        '<div class="hero-art">' + illustration("webbuilder-hero.svg", "반응형 홈페이지와 스마트폰 원본 벡터 일러스트", "hero-illustration") +
+        '</div></div></section>'
         '<section class="stats-strip"><div class="container strip-grid">'
         '<div><strong>월 10,000원부터</strong><span>최소 10페이지 · 페이지당 월 1,000원</span></div>'
         '<div><strong>도메인까지 관리</strong><span>업종 맞춤 주소 확보·관리 제공</span></div>'
@@ -227,12 +272,13 @@ def render_home(keywords: dict, pool: dict) -> str:
         '<div class="section-heading"><span class="eyebrow">업종별 홈페이지 제작</span>'
         '<h2>어떤 일을 하시는 사장님인가요?</h2>'
         '<p>서로 다른 서비스를 같은 광고 문구로 채우지 않습니다. 업종의 고객 문의 흐름부터 분리합니다.</p>'
-        '</div><div class="industry-grid">' + industry_cards(sectors) + '</div></div></section>'
+        '</div><div class="industry-categories">' + grouped_industry_cards(sectors) + '</div></div></section>'
         '<section class="section section-muted"><div class="container feature-grid">'
         '<div><span class="eyebrow">왜 지역 검색 페이지인가요?</span><h2>동 이름보다 중요한 건<br>고객이 찾는 답입니다.</h2>'
         + paragraph(pool["heroVariants"][2]) + paragraph(pool["localStrategyVariants"][0])
         + secondary("제작 절차 확인하기", "/guide/process/") +
-        '</div><div class="feature-panel"><div class="feature-row"><b>01</b>'
+        '</div><div class="feature-panel">' + illustration("local-search.svg", "지역 검색을 표현한 원본 벡터 지도", "feature-illustration") +
+        '<div class="feature-row"><b>01</b>'
         '<div><strong>실제 서비스 지역</strong><span>방문 가능한 동·시 기준으로 안내</span></div></div>'
         '<div class="feature-row"><b>02</b><div><strong>업종별 유용한 정보</strong>'
         '<span>가격 결정 요소, 상담 질문, 업무 범위</span></div></div>'
@@ -259,7 +305,7 @@ def render_home(keywords: dict, pool: dict) -> str:
                   body, active="home")
 
 
-def render_sector(item: dict, data: dict, pool: dict) -> str:
+def render_sector(item: dict, data: dict, pool: dict, sectors: list[dict]) -> str:
     values = [data["intro"], data["problem"], data["structure"], data["conversion"], data["difference"]]
     heads = ["고객이 실제로 궁금해하는 것", "지역 서비스 페이지에서 피할 실수",
              "홈페이지에 담을 고유한 정보", "문의로 연결되는 구성", "비슷한 검색어와 구별되는 점"]
@@ -274,7 +320,7 @@ def render_sector(item: dict, data: dict, pool: dict) -> str:
         for x in item["exampleCustomerQueries"]
     )
     other = [x for x in pool["examples"] if x["industry"] == item["label"]]
-    sample_note = escape(other[0]["point"]) if other else ""
+    sample_note = escape(other[0]["point"]) if other else "업종별 고객 검색어 유형을 설명하기 위한 문구 예시입니다."
     body = (
         '<section class="sub-hero"><div class="container narrow">'
         + kicker("업종별 지역검색 홈페이지 제작") +
@@ -286,7 +332,8 @@ def render_sector(item: dict, data: dict, pool: dict) -> str:
         '<section class="section"><div class="container article-layout">'
         '<article class="article">' + sections + '</article>'
         '<aside class="article-aside"><div class="aside-box"><span class="eyebrow">사업자 확인 목록</span>'
-        '<h2>실제 서비스 정보부터</h2><ul class="check-list">' + checklist + '</ul>'
+        '<h2>실제 서비스 정보부터</h2>' + illustration("industry-services.svg", "설비·청소·운송·설치 서비스를 나타내는 원본 일러스트", "aside-illustration") +
+        '<ul class="check-list">' + checklist + '</ul>'
         '<a class="aside-phone" href="tel:' + TEL + '">' + PHONE + ' 상담하기 ↗</a></div></aside>'
         '</div></section>'
         '<section class="section section-muted"><div class="container narrow">'
@@ -295,7 +342,7 @@ def render_sector(item: dict, data: dict, pool: dict) -> str:
         '<ul class="keyword-chips">' + sample_queries + '</ul>'
         '<p class="small-note">' + sample_note +
         ' 이 키워드는 설명을 위한 문구 예시이며 검색량·순위 또는 해당 지역 업체의 존재를 보증하지 않습니다.</p>'
-        '</div></section>'
+        '</div></section>' + related_industry_cards(item, sectors)
     )
     return layout(data["title"] + " 페이지당 월 1,000원부터 | 인터피아드",
                   item["label"] + " 사업자용 지역검색 홈페이지 제작. " + item["consultingAngle"] +
@@ -310,6 +357,7 @@ def render_pricing(pool: dict) -> str:
         '<p class="sub-lead">페이지당 월 1,000원, 최소 10페이지부터 제작합니다. 업종별 맞춤 도메인을 확보하고 관리해 드리며, 기본 홈페이지 제작·주소 제공·서버 운영비까지 포함합니다.</p>'
         '</div></section><section class="section"><div class="container narrow">'
         '<div class="price-panel full"><h2>페이지 수에 따른 월 이용료</h2>' + monthly_price_rows(pool) +
+        illustration("managed-domain.svg", "업종별 홈페이지 주소 관리를 나타내는 원본 일러스트", "price-illustration") +
         '<p class="price-footnote">최소 10페이지부터 신청 가능하며, 월 1,000원/페이지입니다. 계약기간·부가세·수정 및 홈페이지 주소 이용 조건은 상담 시 안내합니다.</p></div>'
         '<div class="article-section"><h2>한 도시의 모든 동도 같은 금액인가요?</h2>'
         + paragraph("시마다 동 개수는 서로 다릅니다. 20~30페이지를 이용하는 경우 월 2만~3만원이지만, 해당 시 전체 동을 반드시 같은 월 이용료로 구성할 수 있다는 뜻은 아닙니다. 실제 서비스 가능 지역과 페이지 구성을 확인해 필요한 수를 산정합니다.")
@@ -483,7 +531,7 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT) -> dict:
     pages = {"index.html": render_home(keywords, pool)}
     for sector in sectors:
         pages[f'industry/{sector["id"]}/index.html'] = render_sector(
-            sector, pool["industry"][sector["id"]], pool
+            sector, pool["industry"][sector["id"]], pool, sectors
         )
     pages["guide/pricing/index.html"] = render_pricing(pool)
     pages["guide/process/index.html"] = render_process(pool)
@@ -499,6 +547,10 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT) -> dict:
     (out / "robots.txt").write_text("User-agent: *\nDisallow: /\n", encoding="utf-8")
     (out / "assets").mkdir(exist_ok=True)
     shutil.copy2(SITE / "site.css", out / "assets" / "site.css")
+    images_out = out / "assets" / "images"
+    images_out.mkdir(parents=True, exist_ok=True)
+    for art in sorted((SITE / "illustrations").glob("*.svg")):
+        shutil.copy2(art, images_out / art.name)
     qa = check_output(out, pages, pool, spec["targetPageCount"])
     for example in pool["pricingFact"]["monthlyExamples"]:
         text = (out / "guide" / "pricing" / "index.html").read_text(encoding="utf-8")
