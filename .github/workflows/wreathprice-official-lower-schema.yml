@@ -14,7 +14,7 @@ jobs:
         run: |
           python - <<'PY'
           import urllib.request,io,zipfile,hashlib,csv,collections,json
-          url='https://raw.githubusercontent.com/joseungil-kr/site-factory-v4/main/data/regions/sources/official-codes.zip'
+          url='https://raw.githubusercontent.com/joseungil-kr/site-factory-v4/ops/v5-isolated-staging-20261024/data/regions/sources/official-codes.zip'
           blob=urllib.request.urlopen(url,timeout=30).read()
           digest=hashlib.sha256(blob).hexdigest()
           assert digest=='44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd',digest
