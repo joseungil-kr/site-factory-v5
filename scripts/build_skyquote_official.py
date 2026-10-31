@@ -60,6 +60,29 @@ def main():
         # Images remain original 5, links point to already verified operator.
         p=DEST/slug;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(html,encoding='utf-8')
         indices[record['id']]={'slug':'/'+slug,'region':loc,'level':record['level'],'questions':[x[0] for x in chosen]}
+    # Navigable official-code hierarchy: national directory -> province -> municipality -> ward.
+    # No claim that any node is an available dispatch location.
+    by_parent={}
+    for record in d['entries']:
+        if record.get('parent'):
+            by_parent.setdefault(record['parent'],[]).append(record)
+    for record in d['entries']:
+        children=sorted(by_parent.get(record['code'],[]),key=lambda x:x['fullName'])
+        links_for_children=''.join('<li><a href="/national/'+escape(ch['code'])+'.html">'+escape(ch['fullName'])+' — 견적 확인 질문</a></li>' for ch in children)
+        code_note='<section><h2>공식 지역 코드와 연결</h2><p>2026년 10월 22일 확보한 법정동 코드 원장에 존재하는 지역입니다. 코드 '+escape(record['code'])+'는 행정구역 식별용이며 장비 출동·가격이나 영업지점을 증명하지 않습니다.</p>'
+        if record.get('parent'):
+            code_note+='<p><a href="/national/'+escape(record['parent'])+'.html">상위 지역 안내</a></p>'
+        if children:
+            code_note+='<h3>하위 지역의 비교 질문</h3><ul>'+links_for_children+'</ul>'
+        code_note+='<p><a href="/national/index.html">전국 행정구역 목록</a></p></section>'
+        target=DEST/'national'/(record['code']+'.html')
+        html=target.read_text(encoding='utf-8')
+        html=html.replace('</main>',code_note+'</main>',1)
+        target.write_text(html,encoding='utf-8')
+    root=DEST/'index.html'
+    homepage=root.read_text(encoding='utf-8')
+    homepage=homepage.replace('</main>','<section><h2>전국 지역명으로 견적 준비하기</h2><p>공식 행정구역명 안내이며 전국 출동 가능을 뜻하지 않습니다.</p><a href="/national/index.html">전국 행정구역별 견적 비교 질문 보기</a></section></main>',1)
+    root.write_text(homepage,encoding='utf-8')
     # Group index for information discovery only; do not mislabel as service areas.
     links=''.join('<li><a href="'+x['slug']+'">'+escape(x['region'])+' — 견적 준비 안내</a></li>' for x in indices.values() if x['level']==1)
     page=DEST/'national/index.html'
