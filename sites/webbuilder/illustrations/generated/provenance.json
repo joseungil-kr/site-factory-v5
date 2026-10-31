@@ -1,0 +1,145 @@
+{
+  "version": 2,
+  "asOf": "2026-10-31",
+  "scope": "Webbuilder 42-page noindex website image swap; service promotional visuals; no claims about actual customers",
+  "primaryGenerator": "OpenAI image_gen (existing available tool; normal full-resolution PNG stored locally)",
+  "warning": "Five distinct final raster assets, derived from THREE full-resolution generated PNG source images. Not five independent generation jobs. Source 2 and 3 are collages; final variants were visually recomposed. The first Canva result remains unexportable and is not a source.",
+  "originalCanva": {
+    "mediaId": "MAHZkNFvG9I",
+    "originalDimensions": [
+      1536,
+      1024
+    ],
+    "downloaded": false,
+    "notUsed": true,
+    "evidence": "sites/webbuilder/illustrations/raster-generation-receipt-pending.json"
+  },
+  "generations": [
+    {
+      "id": "source1",
+      "genId": "5f8cb17b-fdf3-4228-9f54-ce2320105595",
+      "fileName": "a_bright_clean_modern_workspace_scene_a_shallow.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "bytes": 1934025,
+      "sha256": "38d47c6fa430a02be3fa35f94c845cf4c85167a9034615141238f649c9bec405",
+      "sceneBrief": "Single bright minimal desk photo: laptop and smartphone with responsive home-services website UI; blue/white palette; no real client data",
+      "exactToolPrompt": "not provided by image_gen (tool response prompt field blank)",
+      "sourceStoredInConversation": true
+    },
+    {
+      "id": "source2",
+      "genId": "3b8fc573-621f-43ad-9b03-148f8f3b0341",
+      "fileName": "a_clean_well_lit_collage_style_marketing_banner_l.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "bytes": 2180881,
+      "sha256": "245149b4bf1a485963b38a10b851391fa58f2150bb5c61bbb8bc2e01d648037b",
+      "sceneBrief": "Five-panel Korean website builder marketing collage with local map and home-service personnel",
+      "exactToolPrompt": "not provided by image_gen (tool response prompt field blank)",
+      "sourceStoredInConversation": true
+    },
+    {
+      "id": "source3",
+      "genId": "969b545f-2580-4deb-b0c9-837376197955",
+      "fileName": "a_clean_bright_modern_korean_web_landing_page_co.png",
+      "dimensions": [
+        1536,
+        1024
+      ],
+      "bytes": 2151790,
+      "sha256": "903b189131795089d758ce556d17b8ba401a4e065a422adf660c4a317758410a",
+      "sceneBrief": "Five-panel portfolio collage with worker scene, regional map, sample website and person on phone",
+      "exactToolPrompt": "not provided by image_gen (tool response prompt field blank)",
+      "sourceStoredInConversation": true
+    }
+  ],
+  "editor": "Pillow: crop and composite existing generated full-resolution scenes, rounded panels, neutral backgrounds; no 200x133 thumbnail enlargement",
+  "assetRefs": [
+    {
+      "path": "sites/webbuilder/illustrations/generated/webbuilder-hero.webp",
+      "fileName": "webbuilder-hero.webp",
+      "gitBlob": "929d34b1b6bd909ec99228c8ed6d0387c047c558",
+      "sha256": "aa18c3c917ea8eb4379c28473be63d6c5076b7b1e655ddea8d2988521011ea6a",
+      "width": 1536,
+      "height": 1024,
+      "bytes": 126138,
+      "generationSources": [
+        "source1"
+      ],
+      "role": "webbuilder-hero",
+      "type": "derived-generation-raster-webp"
+    },
+    {
+      "path": "sites/webbuilder/illustrations/generated/industry-services.webp",
+      "fileName": "industry-services.webp",
+      "gitBlob": "c734f19d232d84d97870af0c65cf413254bda591",
+      "sha256": "58dec4edbfc4790ce8817f738dc48fa107df86219e81edda45537ff0874d93e5",
+      "width": 1024,
+      "height": 680,
+      "bytes": 48568,
+      "generationSources": [
+        "source2",
+        "source3"
+      ],
+      "role": "industry-services",
+      "type": "derived-generation-raster-webp"
+    },
+    {
+      "path": "sites/webbuilder/illustrations/generated/local-search.webp",
+      "fileName": "local-search.webp",
+      "gitBlob": "556563a02f4bb8ef9a7370c3c693bf0d9be4be45",
+      "sha256": "f62fb67e7d30e29410c9cc788d00268d9eef76ea6d67b91c9a0d8909705c9f0e",
+      "width": 1024,
+      "height": 680,
+      "bytes": 35994,
+      "generationSources": [
+        "source2",
+        "source3"
+      ],
+      "role": "local-search",
+      "type": "derived-generation-raster-webp"
+    },
+    {
+      "path": "sites/webbuilder/illustrations/generated/managed-domain.webp",
+      "fileName": "managed-domain.webp",
+      "gitBlob": "710d20295b9c38e0913b89bb0cfa3e3d44a1554f",
+      "sha256": "15b2357aab5454c8f8222406698fc5eb473d7bbabb7dd3b315130fa4ad6ece66",
+      "width": 1024,
+      "height": 680,
+      "bytes": 39150,
+      "generationSources": [
+        "source3"
+      ],
+      "role": "managed-domain",
+      "type": "derived-generation-raster-webp"
+    },
+    {
+      "path": "sites/webbuilder/illustrations/generated/mobile-contact.webp",
+      "fileName": "mobile-contact.webp",
+      "gitBlob": "7f1431721a3ff465f3d9a5d1952cd8241da46ffb",
+      "sha256": "1fd178853cf6467d1f187eb305767f4ac528f46dce03a71ab2af0d721ec6a810",
+      "width": 1024,
+      "height": 680,
+      "bytes": 42212,
+      "generationSources": [
+        "source1",
+        "source3"
+      ],
+      "role": "mobile-contact",
+      "type": "derived-generation-raster-webp"
+    }
+  ],
+  "marketingCompliance": {
+    "siteMinPages": 10,
+    "monthlyPriceKRWPerPage": 1000,
+    "robots": "noindex,nofollow,noarchive",
+    "publicDeployment": false,
+    "noActualClientWorkClaims": true
+  },
+  "generatedAtStatement": "Image creation occurred 2026-10-31 KST; exact tool timestamps were not supplied in response. Local file creation timestamps to be supplemented by artifact archive."
+}
