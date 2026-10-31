@@ -28,6 +28,7 @@ for path in m["paths"]:
     for bad in ("업계 최저가 보장","무조건 최저가","전국 출동 가능합니다","즉시 배차 보장"):
         assert bad not in raw,(path,bad)
     for a in manifest["assets"]:assert Path(a["path"]).name in raw,path
+    assert 'href="//' not in raw,(path,'scheme-relative URL is not allowed')
     for dest in re.findall(r'href="(/[^"#?]*)"',raw):
         target=OUT/"index.html" if dest=="/" else OUT/dest.lstrip("/")
         assert target.exists(),(path,dest)
