@@ -23,9 +23,16 @@ def audit(archive):
     entries=data["entries"]
     assert len(entries)==284
     assert len({x["code"] for x in entries})==284
+    mismatches=[]
     for item in entries:
         assert item["sourceStatus"]=="존재"
-        assert active.get(item["code"])==item["fullName"],item
+        official=active.get(item["code"])
+        if official!=item["fullName"]:
+            mismatches.append({"code":item["code"],"cachedName":item["fullName"],"officialActiveName":official,
+                               "status":"active" if official else "notActive"})
+    if mismatches:
+        print("SKYQUOTE_UPPER_CODE_MISMATCH_REPORT",json.dumps(mismatches,ensure_ascii=False))
+        raise AssertionError("Cached upper-region rows do not match the official ZIP; update the reviewed ledger before release")
     upper_names=sorted(entries,key=lambda x:len(x["fullName"]),reverse=True)
     unmatched=[]
     for code,name,_ in lower:
