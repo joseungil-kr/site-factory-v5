@@ -108,6 +108,14 @@ jobs:
           for file,word in (('4.html','정확한 구·동'),('28.html','수령자 부재 시'),('29.html','추가배송비·최종 결제금액')):
               assert word in (root/file).read_text(encoding='utf-8'),('SEMANTIC_CONTEXT_MISSING',file,word)
           print('TODAYFLOWER_33PAGE_INTENT_NOT_PRODUCT_QA_PASS')
+          # The previous national preview accidentally retained Ansan-only
+          # header menu. The current host menu must lead to same-page actions.
+          for n in ('index.html','4.html','34.html','2500.html','5071.html'):
+              t=(root/n).read_text(encoding='utf-8')
+              for target in ('#choices','#products','#order'):
+                  assert 'href="'+target+'"' in t,('NATIONAL_NAV_TARGET',n,target)
+                  assert 'id="'+target[1:]+'"' in t,('MISSING_ANCHOR',n,target)
+              assert '>안산시</a>' not in t and '>단원구</a>' not in t,('ANSAN_ONLY_NAV',n)
           assert not (root/'sitemap.xml').exists()
           assert (root/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
           copy_quality={
@@ -159,6 +167,10 @@ jobs:
                           page.locator('.tf-layout').wait_for()
                           assert response and response.status==200
                           assert page.locator('h1').count()==1
+                          for target in ('choices','products','order'):
+                              assert page.locator('a[href="#'+target+'"]').count()>=1,(width,route,'missing nav CTA',target)
+                              assert page.locator('#'+target).count()==1,(width,route,'missing target',target)
+
                           assert page.locator('.tf-hero h1').evaluate(
                               "e => getComputedStyle(e).wordBreak") == 'keep-all'
                           assert page.locator('a[href^="tel:"]').count()>=1
