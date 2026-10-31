@@ -1,6 +1,6 @@
 # 알뜰화환 — 지역 화환 가격 비교 (V5 작업자2 독립 프로젝트)
 
-현재 상태(2026-10-31 KST): **공식 ZIP에서 추출한 읍·면·동 4,632개 + 기존 상위 지역·허브 303개 = 전체 HTML 4,935개. 기존 Worker noindex 배포 및 승인된 wreathprice.nalmada.net Custom Domain 연결, 실제 HTTPS·모바일 검증 완료. 검색 색인은 미전환(지역별 실배송 검증 0건/공통 내용 중복).** 도메인 후보: `wreathprice.nalmada.net` (DNS/충돌 사전 확인 전 연결 금지).
+현재 상태(2026-10-31 KST): **공식 ZIP에서 추출한 읍·면·동 4,632개 + 기존 상위 지역·허브 303개 = 전체 HTML 4,935개. 기존 Worker noindex 배포 및 승인된 wreathprice.nalmada.net Custom Domain 연결, 실제 HTTPS·모바일 검증 완료. 검색 색인은 미전환(지역별 실배송 검증 0건/공통 내용 중복).** 현재 연결 호스트: `wreathprice.nalmada.net` (2026-10-31 사용자 승인으로 연결, 여전히 noindex).
 
 ## 독립성과 포지셔닝
 - 기존 `sites/wreath-region`, Wallsky, 꽃배달 운영 사이트, Secrets, 인증 파일, IndexNow 접수 상태 변경 금지
@@ -34,7 +34,7 @@
 - GitHub 실이미지 5개 저장 및 해시·실제 치수 검증: V5 [run 41018200247](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41018200247), 빌드·검증 3 tests 통과.
 - 독립 noindex Worker `sfv52-wreathprice-preview`: [미리보기](https://sfv52-wreathprice-preview.joseungil.workers.dev/ansan/), V4 [run 41019185898](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41019185898) 에서 실제 HTML 3개 HTTP 200, 각 페이지 이미지/상품링크 5개, WebP 5개 HTTP 200/해시 일치, robots Disallow, sitemap/없는경로 404 통과.
 - 로컬 Chromium 직접 `browser.goto`는 관리자 차단. HTML·CSS·WebP를 전달한 `set_content` 방식으로 390px 및 1440px 렌더링, 5/5 이미지 로딩·overflow 없음 확인; 실제 클라우드 브라우저의 시각 스크린샷 검수는 별도 확인 대상.
-- 도메인 후보 `wreathprice.nalmada.net`의 Custom Domain 연결 없음(배포 사전 읽기); DNS 및 Workers Route 읽기 검증은 별도 미확인. 연결·공개 index 전환 금지.
+- **이전 미리보기 당시 기록:** 도메인 연결 전에는 Custom Domain이 없었음. 현재는 2026-10-31 연결 완료 및 HTTPS 검증 완료; 공개 index 전환은 여전히 보류.
 - **역사적 상태:** 2026-10-30 초기 ZIP 인계 당시 GitHub 바이너리/preview가 없었으나 이후 완료됨. 기존 메모의 '업로드 미완료'는 현재 상태가 아님.
 - 지역 확장은 V4 공식 코드 상위 지역 원장을 근거로 검증 범위를 한정하여 noindex 단계부터 수행.
 - 기존 Wreath 네이버 인증 후속 상황과 IndexNow 접수는 별도 작업으로 보존하고 이번 프로젝트에서 변경하지 않음.
@@ -93,3 +93,10 @@
 - **공개 호스트 검증:** [V4 run 41186449493](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41186449493) 성공. 운영 호스트 11개 HTTP 표본과 390px·1440px Chromium 화면 12개, 이미지 로딩·넘침·링크·robots 및 noindex 확인. 증거 artifact `13037185824`.
 - **공개 색인 정책:** Custom Domain은 접속 가능하지만 전역 **noindex,nofollow** 및 `robots.txt` Disallow. `sitemap.xml` HTTP 404, noindex 페이지 canonical 없음. 이는 현재 검증된 품질에 맞는 의도적 설정이며 공개 index·사이트맵·검색등록 완료 상태가 아님. 기존 4,632개는 공통 가격표/설명과 지명 위주로 구성되고 실배송·지역별 추가금/현장 차별 정보는 미확인이므로, HTML·해시 차이를 고유 검색 콘텐츠로 간주하지 않음.
 - **추가 실증 필요:** 지역 배송 가용성·시간·배송비·리본 포함·상품 실물 사양을 판매처 근거로 확보하고 대표 지역의 독립적인 페이지 품질을 개선·검증한 뒤 공개 색인 범위를 별도로 결정.
+
+## 2026-10-31 대표 읍면동 콘텐츠 공개 전 재검수 (최신)
+- **대표 사례:** `/locality/1111010100.html` 청운동과 `/locality/1111010200.html` 신교동. 지역명 치환 전후의 본문·FAQ가 실질적으로 동일했으며, 이름만 바꾼 페이지를 '고유 지역 콘텐츠'로 인정하지 않음.
+- **원격 소스 수정:** `expand_lower.py`는 법정동 ZIP이 확인한 지역명·상위 지역만 문장에 사용하고, 실제 주문자가 확인할 구체적인 질문(도로명 주소 및 수령 시설, 희망 날짜·시간, 배송비·리본 비용, 근조 3단 상품 사양)을 제시함. 이는 지역별 독립 현장 정보를 확보했다는 뜻이 아니며 **공통 문구·FAQ 반복 구조를 명시적으로 유지/공개**.
+- **동일 용도 가격 비교:** B201/B203/B205 59,000/79,000/109,000원, 근조 기본·고급 기준가 차이 20,000원. 축하 C205/C030은 근조 등급과 혼합 비교하지 않고 별도 유형 안내. 주문 상세 5개 링크/AI 안내 WebP 5개 그대로 보존.
+- **품질 게이트:** `test_lower.py`는 청운동·신교동에서 지역명 정규화 후 공통 본문이 완전히 같은 사실을 검사하고, 배송 가능성 근거 0·공개 index 불가·canonical/sitemap 부재를 명시적으로 강제한다. 공식 ZIP의 코드 4,632개는 지명·상위 행정구역만 검증하며 배송·지역별 가격, 실제 추가 배송료는 미확인.
+- **공개 적합성 판단:** 현재 승인된 정상 호스트 `wreathprice.nalmada.net` 연결 자체는 완료됐지만 4,632개 읍면동의 **공개 색인 적합성 충족 수는 0개**. 따라서 허위 지역 정보/중복 템플릿을 공개 index 전환하지 않음. 전체 noindex 및 robots Disallow, sitemap 404, canonical 부재를 유지. 지역별 확인 데이터가 확보된 페이지만 별도 후속 심사.
