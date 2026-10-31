@@ -1,4 +1,20 @@
-# 오늘꽃배달 — 안산시 지역 확장 (noindex)
+# 오늘꽃배달 — 전국 5,070개 페이지 공개 운영 (2026-10-31)
+
+**현재 실서버 공개 URL:** https://todayflower.nalmada.net/  
+**전국 사이트맵:** https://todayflower.nalmada.net/sitemap.xml (5,070 URL)  
+**Worker 비노출 URL:** https://sfv56-todayflower-preview.joseungil.workers.dev/ (noindex)
+
+- 최신 검증 소스 `0ca5705aa12950da571f089b2d4ac7256111f77e`, V5 CI [41185803963](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41185803963) 성공.
+- 공개 호스트 바인딩 [V4 41185837366](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41185837366) 성공, 공개 전환 [V4 41186459796](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41186459796) 성공. 현재 Worker 버전 `4b35c279-adfb-41e7-96f8-a82cd71e2442`.
+- **동일 Worker의 호스트별 분기**: `todayflower.nalmada.net`만 `index,follow`+canonical+sitemap, `workers.dev`는 `noindex`·sitemap404 유지. `site.json.publishEnabled=false`는 SHA 고정 정적 아티팩트의 **기본 noindex 빌드 모드**이며 실제 호스트별 검색 공개 정책은 V4 Worker에 있다.
+- **V4 2026-10-22 고정 법정동 5,067건**을 전국 대상 이름 자료로 사용(새 공식 조회 없음); 기존 33개 보존, 전국 **5,037개** 신규 문서 추가. 콘텐츠 5,070개, 정적 파일 5,087개. 실제 서비스 가능 지역·당일 마감·가격 최종확인은 별도이며 검색엔진의 실제 색인 등록/성공은 검증하지 않음.
+- 실서버 공개 HTML 18개·상품 이미지 5개·모바일/PC 16개 화면·Worker.dev 7개 HTTP 점검과 기타 공개 sitemap/robots·404 검사 통과. 방문자 표시 문구·SKU 링크는 원본과 같지만 **전달 HTML 바이트는 변경됨**(Cloudflare 전달 계층), 바이트 일치 주장 금지.
+- 전국 본문 해시 중복 없음; 의미 유사도는 **고정 1% 표본 51개/1,275쌍** 기준이고 전수 사람 의미검수는 미실시. 대규모 유사 콘텐츠의 검색 품질 위험 존재.
+- **원격 증거:** [RELEASE_NATIONAL5070_PUBLIC_20261031.md](RELEASE_NATIONAL5070_PUBLIC_20261031.md).
+
+---
+
+## 과거 기록: 안산시 33페이지 noindex 검수 시점
 
 > 현재 저장본: **안산시 1 + 일반구 2 + 법정동 30 = 총 33개 지역 안내 문서**. 원래 승인·검수된 3개 페이지 번호(1~3)는 고정했으며, 30개만 번호 4~33으로 추가했다. 이것은 전국 공개나 개별 주소의 당일배송 승인과 다르다.
 
