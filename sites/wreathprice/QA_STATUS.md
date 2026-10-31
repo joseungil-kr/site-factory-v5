@@ -88,3 +88,13 @@
 ## 전국 미리보기 모바일·PC 실제 화면 최종 검증
 - [V4 run 41095998098](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41095998098) 성공, artifact `12995957893`(스크린샷 12장). Chromium 실제 HTTP 탐색: 1440×900 PC 및 390×844 모바일 × 안산시 홈, 전국지역 허브, 수원시, 서울특별시, 부산광역시, 안산 단원구 = **12개 화면**. 모두 HTTP 200, 390px/1440px 가로 넘침 0, 페이지당 WebP 5/5 로드 성공(이미지 없는 목록 허브 제외), HTML noindex 통과.
 - 주의: 자동화 화면 검증·스크린샷 저장 성공이며 화면 디자인을 사람이 주관적으로 검수한 증거는 아님. 검색엔진 공개 운영은 미승인 상태이고, 현 Workers 미리보기는 noindex 상태를 유지함.
+
+## 2026-10-31 공식 읍면동 4,632개 및 승인 도메인 실제 배포 (최신 최종)
+- V4 공식 2026-10-22 확보 ZIP(고정 SHA-256 `44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd`)의 법정동 코드 53,403행 중 `존재` 20,560, 읍면동 suffix 4,632. 4,632건 모두 284개 상위 코드 부모명과 일치, 나머지 `리` 등은 이번 읍면동 전용 생성 범위에서 제외. 법적 적용일과 2026-10-31 당시 원장 최신 상태는 미확인.
+- 전체 **4,935 HTML** (기존 286 + 신규 읍면동 4,632 + 전국/광역 허브 17). 등급별 실제 배송 가능 확인 0건. 공통 상품표/AI 이미지/배송비 확인 문장을 재사용하며 HTML SHA 또는 지명 차이를 독립 콘텐츠 품질로 주장하지 않음.
+- 오프라인 [V4 run 41186127429](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41186127429): 성공. Python 빌드, 공식 ZIP SHA, 4,935 전수 내부링크/코드 중복/이미지 5종 원본 해시/noindex·canonical 부재/Sitemap 부재 통과.
+- 기존 Worker 배포 [V4 run 41186242257](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41186242257): 성공. 배포 당시 원래 활성 Worker 버전 `7be165ca-d1dc-4d20-9226-5ae0ea6bbc5a`를 먼저 확인하고 동일 `sfv52-wreathprice-preview`를 버전 `c5f7b9c6-3198-4996-8776-6bf287cb510f`로 업로드. 배포 V5 SHA `37ec80f703be8fda5388e0777238b53bf0427306`, Worker 공개 미리보기 57개 HTTP 표본·WebP SHA 검증, artifact `13036804570`, rollback 미실행.
+- 승인된 도메인 연결 [V4 run 41186379115](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41186379115): 성공. 정확한 호스트 `wreathprice.nalmada.net`만 기존 Worker에 Custom Domain API PUT 1회로 연결. 기존 계정·zone·Worker 버전·DNS 무충돌 검사 후 HTTPS 성공. DNS API 별도 쓰기·다른 사이트/Worker 변경·추가 비밀키/권한 변경 없음. 영수증 artifact `13036839289`.
+- 실제 운영 호스트 화면 [V4 run 41186449493](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41186449493): 성공. 11개 HTTP 체크 + `/, /localities/, /localities/1100000000.html, /locality/1111010100.html, /ansan/, /region/1100000000.html`에서 PC 1440×900 및 모바일 390×844 Chromium 화면 12개. HTTP200, 가로 overflow 없음, 본문 사진 5/5 정상 로딩(목록 허브 제외), 홈↔전국 허브 링크, noindex HTML·헤더 검증. artifact `13037185824`.
+- **Canonical/sitemap/robots 정확한 판정:** 현재 Custom Domain에서 HTML 모두 `noindex,nofollow`, X-Robots-Tag noindex, `robots.txt` Allow 아님 **Disallow**, `/sitemap.xml` **HTTP404**, 자기 canonical 없음. 공개 index·검색등록 및 index용 sitemap을 배포했다는 보고는 사실 아님. 현재 사이트는 접속 가능한 **noindex 운영 호스트** 상태이며, 사용자 승인 자체가 콘텐츠 품질의 실제 검증 근거를 대신하지 않음.
+- 남은 개선: 실제 근조·축하 상품 가격 재확인과 지역별 배송·비용 근거 수집, 템플릿 중복 완화 및 대표 페이지 정보 밀도 검증 후 일부/전체 index 검토. 다른 사이트·네이버/Google 인증 변경이나 IndexNow POST 없음.
