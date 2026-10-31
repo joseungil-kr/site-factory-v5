@@ -25,3 +25,11 @@
 - [V4 QA run 41187036206](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41187036206): 완료/성공, 공식 ZIP 기준 4,935 HTML 재생성, 4개 테스트 통과, 청운동·신교동 같은 템플릿 반복 인정, 배송 확인 0건, noindex 강제.
 - [V4 운영 Readback run 41187153365](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41187153365): 완료/성공. 청운동·신교동 모두 HTTP200/noindex, 지명 치환 후 동일 HTML(`sameNormalizedHTML: true`) 확인. **새 주문 확인 질문의 라이브 반영은 false**. 현재 운영 버전과 수정 소스의 차이를 명확히 구분한다.
 - 기존 운영 도메인 `wreathprice.nalmada.net`은 noindex 상태로 유지. 새 문구 배포 및 그 결과 검증은 완료된 것으로 주장하지 않음. Cloudflare 배포 워크플로 변경 요청이 안전 검사에서 거절돼, 별도 권한/Secret을 추가하거나 보호 검사를 우회하지 않았다.
+
+## 2026-10-31 11:30 UTC 사용자 재승인 후 실제 재배포
+- 최신 원격 V5 HEAD `4a58d2a14b7c65707484bd313c614205e03d2aaf` 확인 후, 원본이 반영되지 않은 V4 전용 배포 워크플로 파일만 **1회** 갱신.
+- 변경 대상: `joseungil-kr/site-factory-v4`, `ops/v5-isolated-staging-20261024`, `.github/workflows/wreathprice-lower-preview-release.yml`. 기존 Blob `96bce37bc1b8f88639c2089c379699bfb643e2c3` → `dfc1afbf7337256bb572766ecab799cee4229ca1`, 변경 commit `189a1b80144248d444c8682f53b8ec2579be3b72`.
+- 주요 diff: checkout source `37ec80f7...` → `4a58d2a...`; 예상 활성 Worker `7be165ca...` → `c5f7b9c6...`; 신교동 `/locality/1111010200.html` 실응답 검사, 청운동과 지명 정규화 후 동일 본문 사실 기록, 새 주문 질문/조건부 배송 확인, `indexEligibleLocalities=0`.
+- [V4 Actions run 41197038256](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41197038256) **success**: 공식 ZIP 기반 4,935 HTML 전수 빌드/기존 Worker 버전 검사/기존 Worker 재배포/Workers.dev 대표 58개 응답 확인. 새 Worker version `e3f6df1e-15dc-4289-ac19-c3429407b13e`. Artifact `13040814039`. 롤백 실행하지 않음.
+- **검증 범위 주의:** 해당 Actions의 실응답 검사는 `sfv52-wreathprice-preview.joseungil.workers.dev`이며, 연결된 `wreathprice.nalmada.net`을 별도로 새 HTTP 클라이언트로 확인한 성공 결과는 이번 기록에 없음. 외부 열람 시도가 실패해 정식 도메인 URL에서 동일 본문을 독립적으로 읽어 확인하지는 못함. DNS/권한/Secret/다른 워크플로 변경 없음.
+- **품질 결론 불변:** 청운동과 신교동은 지명 정규화 시 동일 본문임을 의도적으로 검사하고, 실배송 근거 0건, 고유 지역 콘텐츠 입증 0건, **index 전환 0페이지**. Workers.dev 및 배포 Worker는 noindex/nofollow, robots Disallow, sitemap 404, canonical 없음.
