@@ -52,8 +52,47 @@ jobs:
                    links:[...document.querySelectorAll('tbody a[href]')].filter(x=>x.href.includes('shop/item.php?it_id=')).length};
                 });
                 if(q.images!==5||q.loaded!==5||q.overflow||q.robots!=='noindex,nofollow'||q.links!==5)throw Error(JSON.stringify({name,label,q}));
+                const expectations=[
+                  {sku:'B201',price:'59,000원'},{sku:'B203',price:'79,000원'},
+                  {sku:'B205',price:'109,000원'},{sku:'C205',price:'149,000원'},
+                  {sku:'C030',price:'200,000원'}];
+                const cards=[];
+                await page.evaluate(()=>{
+                  window.__qaClicks=[];
+                  for(const a of document.querySelectorAll('tbody a[href]')){
+                    a.addEventListener('click',e=>{e.preventDefault();window.__qaClicks.push(a.href)},true);
+                  }
+                });
+                for(let n=0;n<expectations.length;n++){
+                  const expected=expectations[n];
+                  const row=page.locator('tbody tr').nth(n);
+                  await row.scrollIntoViewIfNeeded();
+                  const detail=await row.evaluate((tr,expected)=>{
+                    const cells=[...tr.querySelectorAll('td')], price=cells[1], link=cells[2].querySelector('a');
+                    const p=price.getBoundingClientRect(),a=link.getBoundingClientRect(),container=document.querySelector('.scroll');
+                    const rect=container.getBoundingClientRect();
+                    const priceWhole=p.left>=0&&p.right<=innerWidth&&p.width>0&&
+                      price.scrollWidth<=price.clientWidth+1;
+                    const linkWhole=a.left>=0&&a.right<=innerWidth&&a.width>=80&&
+                      link.getClientRects().length>0;
+                    return {sku:expected.sku,price:price.innerText.trim(),expectedPrice:expected.price,
+                      href:link.getAttribute('href'),priceWhole,linkWhole,
+                      scrollContainerOverflow:container.scrollWidth>container.clientWidth+1,
+                      cardDisplay:getComputedStyle(tr).display,
+                      buttonHeight:Math.round(a.height),priceRect:[Math.round(p.left),Math.round(p.right)]};
+                  },expected);
+                  if(detail.price!==expected.price||!detail.href.endsWith('it_id='+expected.sku)||
+                    !detail.priceWhole||!detail.linkWhole||
+                    (label==='mobile'&&(detail.scrollContainerOverflow||detail.cardDisplay!=='grid'||detail.buttonHeight<44)))
+                    throw Error('PRICE_OR_CTA_VISIBILITY_FAILURE '+JSON.stringify({name,label,detail}));
+                  await row.locator('a').click();
+                  const click=await page.evaluate(()=>window.__qaClicks.at(-1));
+                  if(!click||!click.endsWith('it_id='+expected.sku))throw Error('CTA_CLICK_FAILURE '+JSON.stringify({name,label,detail}));
+                  cards.push({...detail,clicked:true});
+                }
+                await page.locator('tbody tr').first().scrollIntoViewIfNeeded();
                 await page.screenshot({path:'editorial-review-screens/'+label+'-'+name+'.png',fullPage:true});
-                results.push({name,label,...q});
+                results.push({name,label,...q,checkedPrices:cards});
               }
               await page.close();
             }
