@@ -58,6 +58,9 @@ jobs:
           assert (pre/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
           key=Path('sites/baekse/indexnow-key.txt').read_text().strip()
           assert (root/(key+'.txt')).read_text()==key+'\n'
+          naver='<meta name="naver-site-verification" content="3203fa257fed369e603424067cbfab1f2611638b" />'
+          assert (root/'index.html').read_text().count(naver)==1
+          assert (pre/'index.html').read_text().count(naver)==1
           for route in m['pages']:
               path='index.html' if route=='/' else route.lstrip('/')
               content=(root/path).read_text()
@@ -65,6 +68,7 @@ jobs:
               assert content.count('<link rel="canonical" href="https://baekse.nalmada.net'+route+'">')==1
               assert 'noindex,nofollow' not in content.split('</head>',1)[0]
               assert 'tel:0314070103' in content
+              assert content.count('name="naver-site-verification"')==(1 if route=='/' else 0), route
               assert (pre/path).read_text().count('<meta name="robots" content="noindex,nofollow">')==1
           print('BAEKSE_PUBLIC_430_QUALITY_PASS',json.dumps({
               'cityNames':85,'cityMenuPages':340,'sitemap':len(urls),'canonical':len(urls),
