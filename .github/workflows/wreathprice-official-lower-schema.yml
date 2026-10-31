@@ -1,0 +1,26 @@
+name: WreathPrice pinned official lower-level source schema survey
+on:
+  push:
+    branches: [feature/v52-wreathprice-20261030]
+    paths: ['.github/workflows/wreathprice-official-lower-schema.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Examine pinned official-code ZIP fields and active-level counts read-only
+        run: |
+          python - <<'PY'
+          import urllib.request,io,zipfile,hashlib,csv,collections,json
+          url='https://raw.githubusercontent.com/joseungil-kr/site-factory-v4/main/data/regions/sources/official-codes.zip'
+          blob=urllib.request.urlopen(url,timeout=30).read()
+          digest=hashlib.sha256(blob).hexdigest()
+          assert digest=='44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd',digest
+          z=zipfile.ZipFile(io.BytesIO(blob));names=z.namelist()
+          assert len(names)==1
+          raw=z.read(names[0])
+          text=raw.decode('cp949')
+          print('WREATHPRICE_OFFICIAL_ZIP_SCHEMA='+json.dumps({'sha256':digest,'file':names[0],'totalLines':len(text.splitlines()),'headLines':text.splitlines()[:7],'tailLines':text.splitlines()[-3:]},ensure_ascii=False),flush=True)
+          PY
