@@ -187,7 +187,7 @@ def webp_dimensions(raw: bytes) -> tuple[int, int]:
     """Read dimensions of the verified lossy WebP frame using stdlib, no extra dependency."""
     if len(raw) < 30 or raw[:4] != b"RIFF" or raw[8:12] != b"WEBP":
         raise ValueError("Bad RIFF/WEBP file header")
-    i = raw.find(b"\\x9d\\x01\\x2a", 20, 60)
+    i = raw.find(b"\x9d\x01\x2a", 20, 60)
     if i < 0 or i + 7 > len(raw):
         raise ValueError("VP8 frame marker missing")
     return (int.from_bytes(raw[i + 3:i + 5], "little") & 0x3fff,
