@@ -58,6 +58,31 @@ class QA(unittest.TestCase):
         directory=(self.out/'localities/index.html').read_text()
         self.assertEqual(directory.count('href="/localities/'),16)
         self.assertIn('href="/localities/"',(self.out/'ansan/index.html').read_text())
+    def test_cheongun_singyo_customer_questions_and_index_gate(self):
+        a=(self.out/'locality/1111010100.html').read_text(encoding='utf-8')
+        b=(self.out/'locality/1111010200.html').read_text(encoding='utf-8')
+        self.assertIn('청운동',a)
+        self.assertIn('신교동',b)
+        for code,text in [('1111010100',a),('1111010200',b)]:
+            self.assertIn('실제 주문 전 확인 질문',text)
+            self.assertIn('근조 기본형과 고급형',text)
+            self.assertIn('20,000원',text)
+            self.assertIn('도로명 주소',text)
+            self.assertIn('리본 문구',text)
+            self.assertIn('배송 가능 시간이나 당일 배송 여부는 확인되지 않았습니다',text)
+            self.assertIn('<meta name="robots" content="noindex,nofollow">',text)
+            self.assertNotIn('rel="canonical"',text)
+            self.assertEqual(text.count('shop/item.php?it_id='),5)
+            self.assertEqual(text.count('<img '),5)
+            self.assertNotIn('해당 지역에서 바로 배송',text)
+        # Different name/parent text is not proof of independent local information.
+        self.assertFalse(self.r['uniqueContentProven'])
+        self.assertTrue(self.r['copyReusedAcrossLocalities'])
+        self.assertEqual(self.r['regionalShippingEvidenceCount'],0)
+        self.assertEqual(self.r['verifiedDeliveryAreas'],0)
+        self.assertFalse(self.r['indexable'])
+        self.assertFalse(self.r['canonical'])
+        self.assertFalse(self.r['sitemap'])
     def test_five_real_webp_hashes(self):
         manifest=json.loads((ROOT/'image-manifest.json').read_text())['images']
         for item in manifest:
