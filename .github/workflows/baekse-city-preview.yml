@@ -1,0 +1,78 @@
+name: Baekse 85-city four-menu preview build and quality audit
+on:
+  pull_request:
+    paths:
+      - 'sites/baekse/**'
+      - 'scripts/build_baekse_cities.py'
+      - 'tests/test_baekse_cities.py'
+      - 'assets/library/baekse/**'
+      - '.github/workflows/baekse-city-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  generate-430:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate approved city-only spec and original text pool
+        run: |
+          python -m v5 plan-check --site baekse
+          python -m unittest discover -s tests -p 'test_baekse_cities.py' -v
+      - name: Build exact 430 noindex HTML pages
+        run: |
+          python -m scripts.build_baekse_cities --allow-missing-assets
+      - name: Audit routes, content and binary assets separately
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          dist=Path('dist/baekse')
+          ledger=json.loads(Path('sites/baekse/cities.json').read_text())
+          report=json.loads(Path('reports/baekse/audit.json').read_text())
+          manifest=json.loads(Path('reports/baekse/manifest.json').read_text())
+          assert report['sitePages']==manifest['count']==430
+          assert report['cityNames']==len(ledger['cities'])==85
+          assert report['cityMenuPages']==340
+          assert report['pageTypes']=={'home':1,'menu-guide':4,'city-hub':85,'city-menu':340}
+          assert report['uniqueTitles']==report['uniqueDescriptions']==430
+          assert report['internalBrokenLinks']==0
+          assert report['similarity']['passed']
+          assert len(list(dist.rglob('*.html')))==431
+          assert not (dist/'sitemap.xml').exists()
+          assert (dist/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
+          for page in manifest['pages']:
+              path='index.html' if page=='/' else page.lstrip('/')
+              body=(dist/path).read_text()
+              assert '<meta name="robots" content="noindex,nofollow">' in body
+              assert 'rel="canonical"' not in body
+              assert 'tel:0314070103' in body
+          assert (dist/'assets/site.css').is_file()
+          missing=set(report['missingImages'])
+          if missing:
+              assert report['status']=='CONTENT_ONLY_PASS_IMAGES_NOT_UPLOADED'
+              assert not report['publicReleaseAllowed'] and not report['operationalDeployment']
+              print('BAEKSE_IMAGE_BINARY_UPLOAD_REQUIRED',sorted(missing))
+          else:
+              assert report['status']=='PASS'
+              assert len(report['imagesCopiedAndShaVerified'])==5
+          print('BAEKSE_430_CITY_MENU_PREVIEW_QA',json.dumps({
+              'pages':report['sitePages'],'cityNames':report['cityNames'],
+              'menuLandings':report['cityMenuPages'],'pool':report['copyPool'],
+              'similarity':report['similarity'],'missingImages':list(missing),
+              'indexablePages':0,'deployed':False},ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: baekse-430-noindex-qa-${{ github.sha }}
+          path: |
+            dist/baekse/
+            reports/baekse/audit.json
+            reports/baekse/manifest.json
+            sites/baekse/images-manifest.json
+          if-no-files-found: error
+          retention-days: 21
