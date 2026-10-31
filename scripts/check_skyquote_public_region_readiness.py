@@ -1,34 +1,32 @@
-"""Fail-closed national public release gate: evidence-backed source freshness checks.
+"""Fail closed unless original authenticated ZIP and reviewed upper-level codes agree.
 
-This is deliberately NOT a generator and does not mutate site, DNS, or Worker.
-Current 242-record third-party dataset is known incomplete and deprecated for public index.
+The deprecated third-party 242-region source is never accepted for publication.
+Runtime Cloudflare verification must still be checked independently.
 """
 from pathlib import Path
-import json,sys
+import argparse,json,sys
 ROOT=Path(__file__).resolve().parents[1]
-SOURCE=ROOT/"sites/skyquote/nationwide-district-source.json"
-EVIDENCE=ROOT/"sites/skyquote/official-region-reconciliation.json"
+sys.path.insert(0,str(ROOT/"scripts"))
+from skyquote_audit_official import audit
+
 def main():
-    data=json.loads(SOURCE.read_text(encoding="utf-8"))
-    check=json.loads(EVIDENCE.read_text(encoding="utf-8"))
-    rows=data["rows"]
-    names={(r["region"],r["name"]) for r in rows if r["level"]==2}
-    province_names={r["name"] for r in rows if r["level"]==1}
-    seen=[]
-    for province,district in check["requiredPresentDistricts"]:
-        if (province,district) not in names:seen.append("MISSING "+province+" "+district)
-    for province in check["mustNotUseFormerProvinceNames"]:
-        if province in province_names:seen.append("STALE PROVINCE "+province)
-    for province,district in check["mustNotUseFormerDistrictNames"]:
-        if (province,district) in names:seen.append("STALE DISTRICT "+province+" "+district)
-    # A full official snapshot and reconciliation, not just a patched list, is mandatory.
-    verified=check.get("fullOfficialSnapshot",{})
-    if not verified.get("sha256") or not verified.get("validatedRowCount") or verified.get("matchedCurrentCodeSystem") is not True:
-        seen.append("OFFICIAL_SNAPSHOT_NOT_VERIFIED")
-    result={"releaseReadiness":"BLOCKED" if seen else "SOURCE_CHECK_PASS",
-            "candidateProvinceCount":sum(r["level"]==1 for r in rows),
-            "candidateDistrictCount":sum(r["level"]==2 for r in rows),
-            "checks":seen,"previewNoindexOnly":True}
-    print("SKYQUOTE_PUBLIC_REGION_READINESS",json.dumps(result,ensure_ascii=False))
-    if seen:raise SystemExit(2)
-if __name__=="__main__":main()
+    p=argparse.ArgumentParser()
+    p.add_argument("--archive",type=Path)
+    args=p.parse_args()
+    if not args.archive or not args.archive.is_file():
+        print("SKYQUOTE_PUBLIC_OFFICIAL_SOURCE_BLOCKED original ZIP not present in this checkout; use authorized V4 archive")
+        return 2
+    result=audit(args.archive)
+    review=json.loads((ROOT/"sites/skyquote/official-region-reconciliation.json").read_text())
+    verified=review["fullOfficialSnapshot"]
+    assert result["archiveSHA256"]==verified["sha256"]
+    assert result["activeLegalCodeRows"]==verified["validatedRowCount"]==20560
+    assert result["eupMyeonDongLegalCodeRecords"]==verified["activeEupMyeonDongLegalRecords"]==4632
+    assert result["matchedParents"]==4632
+    assert result["upperCodeEntries"]==284
+    assert verified["matchedCurrentCodeSystem"] is True
+    print("SKYQUOTE_OFFICIAL_SOURCE_READY source=V4-archive upper=284 lowerLegalRows=4632 notServiceAreas=true")
+    return 0
+
+if __name__=="__main__":
+    raise SystemExit(main())
