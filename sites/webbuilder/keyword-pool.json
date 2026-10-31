@@ -1,0 +1,725 @@
+{
+  "version": 1,
+  "asOf": "2026-10-30",
+  "researchType": "editorially proposed candidates; NOT search-volume measurements, rankings or proof of high demand",
+  "categories": [
+    "설비·수리",
+    "운송·이사",
+    "차량관리",
+    "가전청소",
+    "공간청소",
+    "생활설치",
+    "현장장비"
+  ],
+  "keywordLayers": {
+    "buyer": "webbuilder.nalmada.net의 제작 의뢰를 위한 검색 의도",
+    "customer": "고객 사업자가 실제 서비스를 제공한다는 확인 후 제작할 수 있는 예시 검색 의도; 웹빌더 자체 페이지 타깃 아님"
+  },
+  "buyerIntentTemplates": [
+    "{업종} 홈페이지 제작",
+    "{업종} 업체 홈페이지 만들기",
+    "{업종} 홈페이지 제작 비용",
+    "{업종} 업체 지역검색 SEO",
+    "{업종} 랜딩페이지 제작",
+    "{업종} 저렴한 홈페이지",
+    "{업종} 동별 검색 홈페이지",
+    "{업종} 온라인 문의 홈페이지",
+    "{업종} 마케팅 홈페이지 제작",
+    "{업종} 검색용 웹사이트 제작"
+  ],
+  "placeholders": {
+    "{업종}": "industry label/verified alias",
+    "{동}": "고객의 실제 서비스 가능 동",
+    "{시}": "고객의 실제 서비스 가능 시"
+  },
+  "rules": [
+    "같은 검색 의도·동의어는 하나의 유익한 원본 페이지에 묶어 중복 도어웨이 생성을 금지",
+    "동·시 이름을 임의로 전수 치환하지 않음; 고객의 실제 서비스 범위·현장 정보 확인 후 제작",
+    "업종별 구매 의도와 소비자 검색 의도를 분리",
+    "예상 검색량·랭킹·매출을 무근거 숫자로 표시하지 않음",
+    "이사짐은 이삿짐의 비표준 검색 alias로만 보유",
+    "출장세차와 새벽세차는 시간대 조건이 실질적으로 다를 때만 별도 페이지 사용"
+  ],
+  "industries": [
+    {
+      "id": "leak",
+      "label": "누수탐지",
+      "cluster": "설비·수리",
+      "aliases": [
+        "누수",
+        "누수공사",
+        "누수탐지 전문"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 누수탐지 전문업체",
+        "{동} 배관 누수 점검",
+        "{시} 누수탐지 비용 문의"
+      ],
+      "consultingAngle": "누수 위치·증상·점검 범위를 구분하는 상담형 페이지",
+      "launch": true,
+      "landingPath": "/industry/leak/"
+    },
+    {
+      "id": "drain",
+      "label": "하수구막힘",
+      "cluster": "설비·수리",
+      "aliases": [
+        "하수구 막힘",
+        "하수구 뚫음",
+        "배관막힘"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 하수구막힘 해결업체",
+        "{동} 하수구 역류 점검",
+        "{시} 배수관 막힘 상담"
+      ],
+      "consultingAngle": "역류 여부·배수 위치·긴급성을 정리하는 문의 페이지",
+      "launch": true,
+      "landingPath": "/industry/drain/"
+    },
+    {
+      "id": "moving",
+      "label": "이삿짐",
+      "cluster": "운송·이사",
+      "aliases": [
+        "이사짐",
+        "이삿짐센터",
+        "이사"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 소형 이삿짐 운반",
+        "{시} 이삿짐센터 견적",
+        "{동} 원룸이사 상담"
+      ],
+      "consultingAngle": "짐 규모·층수·이동거리 확인을 돕는 견적형 페이지",
+      "launch": true,
+      "landingPath": "/industry/moving/"
+    },
+    {
+      "id": "small-freight",
+      "label": "소형화물",
+      "cluster": "운송·이사",
+      "aliases": [
+        "소화물",
+        "소형 화물",
+        "소형용달"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 소형화물 운송",
+        "{시} 소형화물 견적",
+        "{동} 1톤 이하 운송 문의"
+      ],
+      "consultingAngle": "적재 크기·출발지·도착지·시간을 확인하는 문의 페이지",
+      "launch": true,
+      "landingPath": "/industry/small-freight/"
+    },
+    {
+      "id": "mobile-carwash",
+      "label": "출장세차",
+      "cluster": "차량관리",
+      "aliases": [
+        "방문세차",
+        "출장 세차",
+        "정기출장세차"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 출장세차 업체",
+        "{시} 방문세차 가격 문의",
+        "{동} 정기출장세차 상담"
+      ],
+      "consultingAngle": "주차 위치·물 사용 조건·차종을 확인하는 예약형 안내",
+      "launch": true,
+      "landingPath": "/industry/mobile-carwash/"
+    },
+    {
+      "id": "washer-clean",
+      "label": "세탁조청소",
+      "cluster": "가전청소",
+      "aliases": [
+        "세탁기청소",
+        "세탁조 청소",
+        "세탁기 분해청소"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 세탁조청소 업체",
+        "{시} 통돌이 세탁기 청소",
+        "{동} 드럼세탁기 분해청소 문의"
+      ],
+      "consultingAngle": "통돌이·드럼 방식과 분해 범위를 안내하는 상담형 페이지",
+      "launch": true,
+      "landingPath": "/industry/washer-clean/"
+    },
+    {
+      "id": "dryer-clean",
+      "label": "건조기청소",
+      "cluster": "가전청소",
+      "aliases": [
+        "건조기분해청소",
+        "건조기 필터청소",
+        "건조기 청소"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 건조기청소 업체",
+        "{시} 건조기 내부 청소",
+        "{동} 건조기 점검 상담"
+      ],
+      "consultingAngle": "기기 모델·청소 범위·통풍 조건을 정리하는 페이지",
+      "launch": true,
+      "landingPath": "/industry/dryer-clean/"
+    },
+    {
+      "id": "vacant-clean",
+      "label": "빈집청소",
+      "cluster": "공간청소",
+      "aliases": [
+        "공실청소",
+        "빈집 정리",
+        "공실 정리"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 빈집청소 업체",
+        "{시} 공실청소 견적",
+        "{동} 빈집 정리 청소 상담"
+      ],
+      "consultingAngle": "오염 상태·폐기물 별도 처리·면적을 구분하는 페이지",
+      "launch": true,
+      "landingPath": "/industry/vacant-clean/"
+    },
+    {
+      "id": "office-clean",
+      "label": "사무실청소",
+      "cluster": "공간청소",
+      "aliases": [
+        "오피스청소",
+        "사무실 정기청소",
+        "사무실 청소"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 사무실청소 업체",
+        "{시} 사무실 정기청소 견적",
+        "{동} 야간 사무실 청소 상담"
+      ],
+      "consultingAngle": "업무 시간·면적·공용구역 요구를 설명하는 페이지",
+      "launch": true,
+      "landingPath": "/industry/office-clean/"
+    },
+    {
+      "id": "dawn-carwash",
+      "label": "새벽세차",
+      "cluster": "차량관리",
+      "aliases": [
+        "출근전세차",
+        "새벽 출장세차",
+        "이른아침세차"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 새벽세차 업체",
+        "{시} 출근전 출장세차",
+        "{동} 새벽 방문세차 문의"
+      ],
+      "consultingAngle": "시간대·주차 접근·소음 제약을 명확히 하는 특화 페이지",
+      "launch": true,
+      "landingPath": "/industry/dawn-carwash/"
+    },
+    {
+      "id": "waterproof",
+      "label": "방수공사",
+      "cluster": "설비·수리",
+      "aliases": [
+        "옥상방수",
+        "욕실방수"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 방수공사 전문업체",
+        "{시} 방수공사 비용 문의",
+        "{동} 방수공사 상담"
+      ],
+      "consultingAngle": "실제 시공 가능한 부위·기존 방수층·표면 상태 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "toilet",
+      "label": "변기막힘",
+      "cluster": "설비·수리",
+      "aliases": [
+        "변기뚫음",
+        "변기역류"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 변기막힘 전문업체",
+        "{시} 변기막힘 비용 문의",
+        "{동} 변기막힘 상담"
+      ],
+      "consultingAngle": "변기 종류와 증상·이물질 유입·재발 여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "sink",
+      "label": "싱크대막힘",
+      "cluster": "설비·수리",
+      "aliases": [
+        "싱크대 역류",
+        "주방 배수구 막힘"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 싱크대막힘 전문업체",
+        "{시} 싱크대막힘 비용 문의",
+        "{동} 싱크대막힘 상담"
+      ],
+      "consultingAngle": "싱크대 하부 구조·음식물처리기 설치 유무 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "pipe",
+      "label": "배관수리",
+      "cluster": "설비·수리",
+      "aliases": [
+        "배관교체",
+        "수도배관"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 배관수리 전문업체",
+        "{시} 배관수리 비용 문의",
+        "{동} 배관수리 상담"
+      ],
+      "consultingAngle": "급수관·배수관 취급·노출·매립 상태 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "aircon",
+      "label": "에어컨청소",
+      "cluster": "가전청소",
+      "aliases": [
+        "벽걸이에어컨 청소",
+        "스탠드에어컨 청소"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 에어컨청소 전문업체",
+        "{시} 에어컨청소 비용 문의",
+        "{동} 에어컨청소 상담"
+      ],
+      "consultingAngle": "벽걸이·스탠드·시스템 지원·모델과 설치 높이 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "move-clean",
+      "label": "이사청소",
+      "cluster": "공간청소",
+      "aliases": [
+        "퇴실청소",
+        "이사 전 청소"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 이사청소 전문업체",
+        "{시} 이사청소 비용 문의",
+        "{동} 이사청소 상담"
+      ],
+      "consultingAngle": "퇴실·입주 일정·짐·가구 잔존 여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "newhome-clean",
+      "label": "입주청소",
+      "cluster": "공간청소",
+      "aliases": [
+        "신축 입주청소"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 입주청소 전문업체",
+        "{시} 입주청소 비용 문의",
+        "{동} 입주청소 상담"
+      ],
+      "consultingAngle": "입주 예정일과 주거형태·신축 분진·수납장 범위 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "building-clean",
+      "label": "건물청소",
+      "cluster": "공간청소",
+      "aliases": [
+        "상가청소",
+        "건물관리"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 건물청소 전문업체",
+        "{시} 건물청소 비용 문의",
+        "{동} 건물청소 상담"
+      ],
+      "consultingAngle": "계단·복도·현관 관리범위·정기 청소 가능 주기 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "glass-clean",
+      "label": "유리창청소",
+      "cluster": "공간청소",
+      "aliases": [
+        "외창청소",
+        "창문청소"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 유리창청소 전문업체",
+        "{시} 유리창청소 비용 문의",
+        "{동} 유리창청소 상담"
+      ],
+      "consultingAngle": "내창·외창 구분·층수와 안전 접근 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "mattress-clean",
+      "label": "매트리스청소",
+      "cluster": "가전청소",
+      "aliases": [
+        "침대청소"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 매트리스청소 전문업체",
+        "{시} 매트리스청소 비용 문의",
+        "{동} 매트리스청소 상담"
+      ],
+      "consultingAngle": "매트리스 크기·소재·세척 가능 방식 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "car-detail",
+      "label": "자동차실내크리닝",
+      "cluster": "차량관리",
+      "aliases": [
+        "차량실내청소"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 자동차실내크리닝 전문업체",
+        "{시} 자동차실내크리닝 비용 문의",
+        "{동} 자동차실내크리닝 상담"
+      ],
+      "consultingAngle": "차종과 시트 소재·오염 유형·범위 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "small-move",
+      "label": "소형이사",
+      "cluster": "운송·이사",
+      "aliases": [
+        "원룸이사",
+        "1인 이사"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 소형이사 전문업체",
+        "{시} 소형이사 비용 문의",
+        "{동} 소형이사 상담"
+      ],
+      "consultingAngle": "짐의 종류·규모·차량·인력·포장 범위 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "one-ton",
+      "label": "1톤용달",
+      "cluster": "운송·이사",
+      "aliases": [
+        "용달",
+        "1톤 화물"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 1톤용달 전문업체",
+        "{시} 1톤용달 비용 문의",
+        "{동} 1톤용달 상담"
+      ],
+      "consultingAngle": "적재 크기·무게·기사·상하차 지원 여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "quick",
+      "label": "퀵서비스",
+      "cluster": "운송·이사",
+      "aliases": [
+        "오토바이퀵",
+        "당일퀵"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 퀵서비스 전문업체",
+        "{시} 퀵서비스 비용 문의",
+        "{동} 퀵서비스 상담"
+      ],
+      "consultingAngle": "운송 수단·물품 제한·배차·픽업 가능 조건 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-a.json"
+    },
+    {
+      "id": "furniture",
+      "label": "가구조립",
+      "cluster": "생활설치",
+      "aliases": [
+        "이케아 조립",
+        "가구설치"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 가구조립 전문업체",
+        "{시} 가구조립 비용 문의",
+        "{동} 가구조립 상담"
+      ],
+      "consultingAngle": "제품 모델·설명서·벽체 고정 가능 범위 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "doorlock",
+      "label": "도어락설치",
+      "cluster": "생활설치",
+      "aliases": [
+        "도어락교체",
+        "디지털도어락"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 도어락설치 전문업체",
+        "{시} 도어락설치 비용 문의",
+        "{동} 도어락설치 상담"
+      ],
+      "consultingAngle": "문 종류·두께·기존 장치와 제품 호환성 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "insect-screen",
+      "label": "방충망교체",
+      "cluster": "생활설치",
+      "aliases": [
+        "미세방충망"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 방충망교체 전문업체",
+        "{시} 방충망교체 비용 문의",
+        "{동} 방충망교체 상담"
+      ],
+      "consultingAngle": "망 종류·재질·프레임 손상 여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "skycar",
+      "label": "스카이차",
+      "cluster": "현장장비",
+      "aliases": [
+        "스카이차 대여",
+        "고소작업차"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 스카이차 전문업체",
+        "{시} 스카이차 비용 문의",
+        "{동} 스카이차 상담"
+      ],
+      "consultingAngle": "차량·작업높이 제원·현장 도로 폭·설치공간 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "sign",
+      "label": "간판설치",
+      "cluster": "현장장비",
+      "aliases": [
+        "간판수리",
+        "간판교체"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 간판설치 전문업체",
+        "{시} 간판설치 비용 문의",
+        "{동} 간판설치 상담"
+      ],
+      "consultingAngle": "신규·교체·수리 중 제공업무·간판 종류·조명 여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "waste",
+      "label": "폐기물수거",
+      "cluster": "생활설치",
+      "aliases": [
+        "생활폐기물",
+        "가구폐기"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 폐기물수거 전문업체",
+        "{시} 폐기물수거 비용 문의",
+        "{동} 폐기물수거 상담"
+      ],
+      "consultingAngle": "품목별 수거 가능여부·허가·적법한 위탁 근거 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "demolition",
+      "label": "소형철거",
+      "cluster": "현장장비",
+      "aliases": [
+        "원상복구 철거"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 소형철거 전문업체",
+        "{시} 소형철거 비용 문의",
+        "{동} 소형철거 상담"
+      ],
+      "consultingAngle": "철거 공종·대상·전기·수도·가스 차단 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "pest",
+      "label": "방역소독",
+      "cluster": "공간청소",
+      "aliases": [
+        "해충방제"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 방역소독 전문업체",
+        "{시} 방역소독 비용 문의",
+        "{동} 방역소독 상담"
+      ],
+      "consultingAngle": "대상 해충·공간·소독업 신고·약제 근거 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "bath",
+      "label": "욕실리모델링",
+      "cluster": "생활설치",
+      "aliases": [
+        "화장실리모델링"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 욕실리모델링 전문업체",
+        "{시} 욕실리모델링 비용 문의",
+        "{동} 욕실리모델링 상담"
+      ],
+      "consultingAngle": "부분·전체 공사 여부·자재·도기·방수 공정 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "boiler",
+      "label": "보일러수리",
+      "cluster": "설비·수리",
+      "aliases": [
+        "보일러점검"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 보일러수리 전문업체",
+        "{시} 보일러수리 비용 문의",
+        "{동} 보일러수리 상담"
+      ],
+      "consultingAngle": "제조사·모델 취급범위·가스작업 자격 자료 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "storage",
+      "label": "이삿짐보관",
+      "cluster": "운송·이사",
+      "aliases": [
+        "짐보관"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 이삿짐보관 전문업체",
+        "{시} 이삿짐보관 비용 문의",
+        "{동} 이삿짐보관 상담"
+      ],
+      "consultingAngle": "보관기간·금지품목·창고 시설·안전 증빙 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "floor",
+      "label": "바닥청소",
+      "cluster": "공간청소",
+      "aliases": [
+        "바닥왁스"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 바닥청소 전문업체",
+        "{시} 바닥청소 비용 문의",
+        "{동} 바닥청소 상담"
+      ],
+      "consultingAngle": "바닥 재질·마모 상태·박리·코팅 서비스 가능여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "tile",
+      "label": "타일청소",
+      "cluster": "공간청소",
+      "aliases": [
+        "타일곰팡이"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 타일청소 전문업체",
+        "{시} 타일청소 비용 문의",
+        "{동} 타일청소 상담"
+      ],
+      "consultingAngle": "타일 재질과 오염 종류·줄눈 보수·교체 제공여부 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    },
+    {
+      "id": "watertank",
+      "label": "저수조청소",
+      "cluster": "공간청소",
+      "aliases": [
+        "물탱크청소"
+      ],
+      "exampleCustomerQueries": [
+        "{동} 저수조청소 전문업체",
+        "{시} 저수조청소 비용 문의",
+        "{동} 저수조청소 상담"
+      ],
+      "consultingAngle": "저수조 위치·용량·급수차단·배수·환기 중심의 제작 안내",
+      "launch": true,
+      "landingPath": null,
+      "contentLedger": "industry-expansion-b.json"
+    }
+  ],
+  "launchScope": {
+    "originalIndustryCount": 10,
+    "newIndustryCount": 28,
+    "currentIndustryCount": 38,
+    "sitePages": 42,
+    "scope": "B2B marketing and website-production search intent; no fake consumer service providers",
+    "userInstruction": "2026-10-30 16:55 UTC remaining pages"
+  }
+}

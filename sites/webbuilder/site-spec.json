@@ -1,0 +1,150 @@
+{
+  "version": 1,
+  "siteId": "webbuilder",
+  "approved": true,
+  "approvalScope": "KEYWORD_RESEARCH_AND_NOINDEX_PREVIEW_ONLY; monthly KRW1000/page and 10-page minimum confirmed, provider may purchase/use multiple industry-specific parent domains and assign customer subdomains; VAT, contract and production release remain gated",
+  "approvalEvidence": "2026-10-30 user requested webbuilder.nalmada.net site, keyword pool, sector pages, 1,000 KRW/page ad, Interpiad footer and phone; 2026-10-30 user explicitly confirmed 1,000 KRW per page is MONTHLY; 2026-10-30 user clarified provider-owned nalmada.net subdomain (e.g. leak119.nalmada.net), minimum 10 pages; 2026-10-30 user clarified domain pool is NOT limited to nalmada.net: provider will purchase industry domains, e.g. *.leak119.net for leak services and *.skycar24hr.com for skycar; 2026-10-30 16:55 UTC user authorized creation of remaining planned Worker5 pages, not production deployment",
+  "domain": "https://webbuilder.nalmada.net",
+  "brand": "인터피아드",
+  "businessModel": "B2B local-service SEO landing-page production; phone inquiry only",
+  "serviceScope": {
+    "region": "대한민국",
+    "granularity": "업종별 제작 의뢰 페이지; 고객의 동 단위 검색어는 설명용 예시",
+    "facilities": "none; no claims of real service providers in sample locations"
+  },
+  "pageTypes": [
+    "homepage",
+    "industry-solution x38",
+    "pricing-guide",
+    "production-process",
+    "seo-and-pricing-faq"
+  ],
+  "targetPageCount": 42,
+  "titlePattern": "{업종} 홈페이지 제작 페이지당 월 1,000원부터 | 인터피아드",
+  "urlPattern": "/, /industry/{slug}/, /guide/pricing/, /guide/process/, /guide/faq/",
+  "keywordGroups": {
+    "primary": [
+      "누수업체 홈페이지 제작",
+      "하수구막힘 홈페이지 제작",
+      "이삿짐 업체 홈페이지 제작",
+      "소형화물 홈페이지 제작",
+      "출장세차 홈페이지 제작",
+      "세탁조청소 홈페이지 제작",
+      "건조기청소 홈페이지 제작",
+      "빈집청소 홈페이지 제작",
+      "사무실청소 홈페이지 제작",
+      "새벽세차 홈페이지 제작"
+    ],
+    "secondary": [
+      "업종별 저렴한 홈페이지 제작",
+      "지역검색용 랜딩페이지 제작",
+      "소상공인 웹문서 SEO",
+      "동별 서비스업 홈페이지",
+      "지역 서비스 문의 페이지"
+    ]
+  },
+  "copyPoolPlan": {
+    "industry": "소상공인 로컬서비스 B2B 홈페이지 제작",
+    "source": "user offer + Interpiad public service listing + independently written sector-specific original copy",
+    "sentenceTarget": 269,
+    "sourceOfTruth": "sites/webbuilder/copy-pool.json + industry-expansion-a.json + industry-expansion-b.json",
+    "noLocationImpersonation": true,
+    "extensionIndustryCount": 28
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-jaccard",
+    "thresholdExclusive": 0.49,
+    "sampleFraction": 1,
+    "seed": 20261030,
+    "scope": "all 38 industry-specific narrative bodies in full 703-pair char5gram Jaccard; excludes shared layout",
+    "noManufacturedLocationPages": true
+  },
+  "conversion": {
+    "phone": "010-2490-0555",
+    "orderUrl": null,
+    "mode": "tel link and official Interpiad site link, no personal data collected"
+  },
+  "images": {
+    "source": "3 high-resolution OpenAI image_gen PNG sources, with five generated/edited WebP raster site assets. Hero is derived from source 1; other 4 composited from generated sources 1-3. Not five independent generator jobs.",
+    "approved": false,
+    "publicVisualReviewRequired": true,
+    "assetType": "WebP",
+    "sourceFolder": "sites/webbuilder/illustrations/generated",
+    "requiredCount": 5,
+    "originalArtwork": false,
+    "AIPhotoGenerationUsed": true,
+    "visualsAreConceptual": true,
+    "actualClientPhotos": false,
+    "provenanceManifest": "sites/webbuilder/illustrations/generated/provenance.json",
+    "minimumWidth": 768,
+    "requires": "42 page QA and 390/1440 live Chromium preview; no production deploy"
+  },
+  "pricing": {
+    "headlinePriceKRW": 1000,
+    "unit": "KRW per page per month",
+    "billingCycle": "monthly",
+    "minimumPages": 10,
+    "domainIncluded": true,
+    "hostingIncluded": true,
+    "vat": "UNCONFIRMED",
+    "monthlyIllustration": "minimum 10 pages = KRW 10000/month; 20 pages = 20000/month; 30 pages = 30000/month; city-wide coverage not implied",
+    "prohibitSuperlative": "전국 최저가 비교 근거 확보 전 사용 금지",
+    "searchRankGuarantee": false,
+    "creationIncluded": true,
+    "domainRegistrationIncluded": true,
+    "domainRenewalPolicy": "Provider operates parent zone and funds domain costs during the agreed service, while duration, cancellation and root-domain ownership terms must be explained before sale",
+    "domainTypeLimit": "Provider-owned or provider-purchased domain pool, selected by industry; never restricted to *.nalmada.net",
+    "contractTerm": "UNCONFIRMED",
+    "maintenanceEdits": "UNCONFIRMED",
+    "baseOfferConfirmed": true,
+    "fullContractTermsConfirmed": false,
+    "minimumMonthlyKRW": 10000,
+    "providerOwnedSubdomainIncluded": true,
+    "providerPurchasedIndustryDomainCostsIncluded": true,
+    "customerDomainRegistrationIncluded": false
+  },
+  "publishPolicy": {
+    "mode": "preview-noindex",
+    "production": false,
+    "indexNow": false,
+    "workersDevNoindex": true,
+    "dnsChanges": false,
+    "customDomainAttach": false,
+    "requires": "VAT, contract term, cancellation and domain continuity, customer content ownership, scope of edits, approved industry domain procurement and zone inventory, Cloudflare wildcard route/DNS/certificate tests, 390/1440 visual QA and explicit release approval"
+  },
+  "footer": {
+    "businessName": "인터피아드",
+    "url": "https://interpiad.com",
+    "phone": "010-2490-0555"
+  },
+  "domainProvision": {
+    "type": "provider-managed-multi-domain-pool",
+    "rootDomainWhitelistFixed": false,
+    "allowedHostPattern": "{customer-slug}.{verified-provider-managed-root-domain}",
+    "customerAssignedSubdomain": true,
+    "customerOwnsParentDomain": false,
+    "customerPurchasesApex": false,
+    "monthlyPriceIncludesDomainProcurementAndHosting": true,
+    "domainsSource": "sites/webbuilder/domain-policy.json",
+    "sampleHost": "leak119.nalmada.net",
+    "sampleHostOnly": true,
+    "candidateExamples": [
+      "*.nalmada.net",
+      "*.leak119.net",
+      "*.skycar24hr.com"
+    ],
+    "domainRegistrationOrPurchaseExecuted": false,
+    "providerMayAcquireNewIndustryRoots": true,
+    "actualDomainInventoryVerificationRequired": true,
+    "customerHostAllocationExecuted": false,
+    "sslAndHttpUnverified": true,
+    "attachPolicy": "Require verified operator ownership, active Cloudflare zone, certificate coverage, exact hostname collision and zone route checks; no wildcard Custom Domain assumption",
+    "pendingContract": [
+      "VAT",
+      "term",
+      "termination/domain continuity",
+      "customer source ownership",
+      "edits/maintenance"
+    ]
+  }
+}

@@ -1,0 +1,72 @@
+name: Webbuilder worker5 42-page noindex site and keyword QA
+on:
+  pull_request:
+    paths:
+      - 'sites/webbuilder/**'
+      - 'scripts/build_webbuilder.py'
+      - 'tests/test_webbuilder.py'
+      - 'tests/webbuilder_visual_qa.py'
+      - 'tests/webbuilder-worker.test.mjs'
+      - 'v5/site_plan.py'
+      - 'v5/visitor_copy.py'
+      - '.github/workflows/webbuilder-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preflight site specification
+        run: python -m v5 plan-check --site webbuilder
+      - name: Generate preview and run unit tests
+        run: python -m unittest discover -s tests -p test_webbuilder.py -v
+      - name: Node worker route/indexing tests
+        run: node --test tests/webbuilder-worker.test.mjs
+      - name: Reproduce preview and keyword export
+        run: python -m scripts.build_webbuilder
+      - name: V5 visible customer-copy gate
+        run: python -m v5.visitor_copy dist/webbuilder
+      - name: Count files and assert no live-release artifacts
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          p=Path("dist/webbuilder")
+          q=json.loads(Path("reports/webbuilder/qa.json").read_text())
+          assert len(list(p.rglob("*.html"))) == 43
+          assert q["pages"]==42 and q["keywordCandidates"]==494
+          assert q["launchIndustries"]==38 and q["researchIndustries"]==0
+          assert q["narrativePairsChecked"]==703 and q["imageFiles"]==5
+          assert q["brokenLinks"]==0 and q["narrativeMaxChar5GramJaccard"]<.49
+          assert not (p/"sitemap.xml").exists()
+          assert q["previewNoindex"] is True
+          assert q["pricingApproved"] is False
+          print("WEBBUILDER_42_PAGE_PREVIEW_AND_494_KEYWORD_QA_PASS",q)
+          PY
+      - name: Install headless Chromium for genuine PC/mobile visual QA
+        run: |
+          python -m pip install --disable-pip-version-check 'playwright==1.56.0'
+          python -m playwright install --with-deps chromium
+      - name: Capture PC 1440 and mobile 390 screenshots and verify image loading
+        run: python tests/webbuilder_visual_qa.py
+      - name: Save independently reproducible noindex preview and keyword list
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: webbuilder-worker5-noindex-preview-${{ github.sha }}
+          path: |
+            dist/webbuilder/
+            reports/webbuilder/qa.json
+            reports/webbuilder/keyword-candidates.csv
+            reports/webbuilder/visual/
+          if-no-files-found: warn
+          retention-days: 7
