@@ -1,0 +1,73 @@
+name: WreathPrice three-intent editorial review read-only
+on:
+  push:
+    branches: [feature/v52-wreathprice-20261030]
+    paths:
+      - 'sites/wreathprice/editorial-review/**'
+      - 'sites/wreathprice/test_editorial_review.py'
+      - '.github/workflows/wreathprice-editorial-review.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Run three only detailed editorial and evidence tests
+        run: |
+          python -m py_compile sites/wreathprice/test_editorial_review.py
+          python sites/wreathprice/test_editorial_review.py
+      - name: Install headless Chromium without changing deployment
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Render each static review at 1440 and 390 pixels, check actual images and overflowing text
+        run: |
+          mkdir -p editorial-review-screens
+          node - <<'JS'
+          const {chromium}=require('playwright');
+          const fs=require('fs'),path=require('path');
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const base=path.resolve('sites/wreathprice/editorial-review');
+            const names=['funeral-budget-cheongun.html','funeral-receipt-singyo.html','congratulations-format-bono.html'];
+            const results=[];
+            for(const [label,size] of [['desktop',{width:1440,height:900}],['mobile',{width:390,height:844}]]){
+              const page=await browser.newPage({viewport:size,deviceScaleFactor:1});
+              for(const name of names){
+                const response=await page.goto('file://'+path.join(base,name),{waitUntil:'load',timeout:30000});
+                await page.locator('figure img').last().scrollIntoViewIfNeeded();
+                const q=await page.evaluate(()=>{
+                  let ims=[...document.images];
+                  return {h1:document.querySelector('h1')?.innerText,
+                   images:ims.length,loaded:ims.filter(x=>x.complete&&x.naturalWidth>=768).length,
+                   overflow:document.documentElement.scrollWidth>innerWidth,
+                   robots:document.querySelector('meta[name=robots]')?.content,
+                   links:[...document.querySelectorAll('a[href]')].filter(x=>x.href.includes('shop/item.php?it_id=')).length};
+                });
+                if(q.images!==5||q.loaded!==5||q.overflow||q.robots!=='noindex,nofollow'||q.links!==5)throw Error(JSON.stringify({name,label,q}));
+                await page.screenshot({path:'editorial-review-screens/'+label+'-'+name+'.png',fullPage:true});
+                results.push({name,label,...q});
+              }
+              await page.close();
+            }
+            await browser.close();
+            fs.writeFileSync('editorial-review-screens/qa.json',JSON.stringify({passed:true,results},null,2));
+            console.log('WREATHPRICE_EDITORIAL_REVIEW_RENDER_PASS '+JSON.stringify({screenshots:results.length,results}));
+          })().catch(e=>{console.error(e);process.exit(1)})
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wreathprice-three-editorial-drafts-and-screens
+          path: |
+            sites/wreathprice/editorial-review/
+            editorial-review-screens/
+          if-no-files-found: warn
+          retention-days: 21
