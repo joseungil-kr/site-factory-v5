@@ -19,6 +19,10 @@ def main():
     assert len(locations)==310 and len(set(locations))==310
     assert all(x.startswith("https://skyquote.nalmada.net/") for x in locations)
     assert (OUT/"robots.txt").read_text()=='User-agent: *\nAllow: /\nSitemap: https://skyquote.nalmada.net/sitemap.xml\n'
+    expected='<meta name="naver-site-verification" content="f8afb036a43ba44dc04b4c73de487908bed4a65e" />'
+    homepage=(OUT/"index.html").read_text(encoding="utf-8")
+    assert homepage.count(expected)==1 and homepage.count("naver-site-verification")==1
+    assert homepage.index("<head>")<homepage.index(expected)<homepage.index("</head>")
     for filename in m["paths"]:
         content=(OUT/filename).read_text(encoding="utf-8")
         h=H();h.feed(content)
@@ -28,6 +32,7 @@ def main():
         assert url in locations,filename
         assert content.count('<img ')==5,filename
         assert 'href="//' not in content,filename
+        if filename!="index.html":assert "naver-site-verification" not in content,filename
         assert not any(bad in content for bad in ('최저가를 보장합니다','전국 출동 가능합니다','업계 최저가 보장')),filename
     imgs=json.loads((ROOT/"sites/skyquote/assets-manifest.json").read_text())["assets"]
     for x in imgs:
