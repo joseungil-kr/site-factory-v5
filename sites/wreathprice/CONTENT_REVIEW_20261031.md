@@ -19,3 +19,9 @@
 
 ## 배포 상태 — 혼동 금지
 기존 운영 4,935페이지는 정상 접근 가능하나, 최근 FAQ 수정 소스는 수정 Worker 배포 완료 및 실제 HTTP 결과가 확보되기 전까지 운영 반영으로 표시하지 않는다. 기존 V4 배포 워크플로 변경 요청이 도구 안전 검사에 의해 거절된 적이 있으므로 새로운 배포 성공을 만들어 보고하지 않는다. 추가 Secret/권한/DNS/다른 사이트 변경 없음.
+
+## 수정 코드 독립 검증 및 라이브 미반영 판정
+- 수정 소스 `d66178800630373779591417e2d135b1fefee076`에서 조사 오류(은/는 병기)를 제거한 자연스러운 문장으로 변경.
+- [V4 QA run 41187036206](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41187036206): 완료/성공, 공식 ZIP 기준 4,935 HTML 재생성, 4개 테스트 통과, 청운동·신교동 같은 템플릿 반복 인정, 배송 확인 0건, noindex 강제.
+- [V4 운영 Readback run 41187153365](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41187153365): 완료/성공. 청운동·신교동 모두 HTTP200/noindex, 지명 치환 후 동일 HTML(`sameNormalizedHTML: true`) 확인. **새 주문 확인 질문의 라이브 반영은 false**. 현재 운영 버전과 수정 소스의 차이를 명확히 구분한다.
+- 기존 운영 도메인 `wreathprice.nalmada.net`은 noindex 상태로 유지. 새 문구 배포 및 그 결과 검증은 완료된 것으로 주장하지 않음. Cloudflare 배포 워크플로 변경 요청이 안전 검사에서 거절돼, 별도 권한/Secret을 추가하거나 보호 검사를 우회하지 않았다.
