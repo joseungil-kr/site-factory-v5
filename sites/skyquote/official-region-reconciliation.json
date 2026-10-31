@@ -1,0 +1,86 @@
+{
+  "status": "not_reconciled_no_public_index",
+  "assessedDate": "2026-10-31",
+  "candidateSource": "open-admin-data/south-korea-administrative-divisions, 2026-09-08, CC-BY-4.0",
+  "officialPrimarySources": [
+    {
+      "url": "https://www.code.go.kr/stdcode/regCodeL.do?menuNo=101010100010",
+      "note": "Official standard legal-dong code lookup; current/deprecated and effective dates"
+    },
+    {
+      "url": "https://www.data.go.kr/data/15063424/fileData.do",
+      "note": "MOLIT nationwide legal-dong CSV 2026-06-30, published/updated 2026-07-29; 20561 records, not direct target-page count"
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=127039",
+      "note": "MOIS 2026-07-01 KIK administrative/legal changes; attachment bytes not yet independently retrieved"
+    },
+    {
+      "url": "https://www.gks.go.kr/ko/life/regionsIntro.do",
+      "note": "Government overview of regional names, including Seoul Gangseo-gu"
+    },
+    {
+      "url": "https://www.incheon.go.kr/mayor_8/MA040101/view?curPage=46&repSeq=DOM_0000000015389902",
+      "note": "Incheon city official reference to four 2026 newly created districts"
+    }
+  ],
+  "requiredPresentDistricts": [
+    [
+      "서울특별시",
+      "강서구"
+    ],
+    [
+      "인천광역시",
+      "제물포구"
+    ],
+    [
+      "인천광역시",
+      "영종구"
+    ],
+    [
+      "인천광역시",
+      "서해구"
+    ],
+    [
+      "인천광역시",
+      "검단구"
+    ]
+  ],
+  "mustNotUseFormerProvinceNames": [
+    "광주광역시",
+    "전라남도",
+    "강원도",
+    "전라북도"
+  ],
+  "mustNotUseFormerDistrictNames": [
+    [
+      "인천광역시",
+      "중구"
+    ],
+    [
+      "인천광역시",
+      "동구"
+    ],
+    [
+      "인천광역시",
+      "서구"
+    ]
+  ],
+  "fullOfficialSnapshot": {
+    "sha256": null,
+    "validatedRowCount": null,
+    "matchedCurrentCodeSystem": false
+  },
+  "limitations": [
+    "The old dataset's 17 provinces and 225 districts are not a verified exhaustive current nationwide registry.",
+    "Region name does not prove business dispatch/price/service coverage.",
+    "Official snapshot CSV not yet downloaded and independently reconciled; do not synthesize rows or silently patch from unofficial sources.",
+    "Keep preview noindex; canonical/sitemap and indexable custom-domain release blocked until source and service audits."
+  ],
+  "safeNextSteps": [
+    "Obtain exact KIKcd_B/KIKcd_H at effective 2026-07-01 or later from MOIS and record raw hashes.",
+    "Reconcile current legal vs administrative names and complete 2026 provincial/district restructure.",
+    "Verify business-specific actual service area; distinguish conditional quote info from accepted dispatch regions.",
+    "Build and audit public canonical sitemap, product contact links, original five provenance images, mobile 390/1440 and live endpoints."
+  ]
+}
