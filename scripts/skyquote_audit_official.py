@@ -14,7 +14,7 @@ def audit(archive):
         assert len(names)==1
         records=list(csv.reader(io.StringIO(z.read(names[0]).decode("cp949")),delimiter="\t"))
     assert records[0]==["법정동코드","법정동명","폐지여부"]
-    active={r[0]:r[1] for r in records[1:] if len(r)==3 and r[2].strip()=="존재"}
+    active={r[0]:r[1].strip() for r in records[1:] if len(r)==3 and r[2].strip()=="존재"}
     active_names=[r for r in records[1:] if len(r)==3 and r[2].strip()=="존재"]
     lower=[r for r in active_names if r[1].split()[-1].endswith(("읍","면","동"))]
     assert len(records)-1==53403 and len(active)==20560,(len(records),len(active))
