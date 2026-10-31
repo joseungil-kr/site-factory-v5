@@ -369,7 +369,8 @@ def render_pricing(pool: dict) -> str:
         '<p class="sub-lead">페이지당 월 1,000원, 최소 10페이지부터 제작합니다. 업종별 맞춤 도메인을 확보하고 관리해 드리며, 기본 홈페이지 제작·주소 제공·서버 운영비까지 포함합니다.</p>'
         '</div></section><section class="section"><div class="container narrow">'
         '<div class="price-panel full"><h2>페이지 수에 따른 월 이용료</h2>' + monthly_price_rows(pool) +
-        illustration("managed-domain.webp", "업종별 홈페이지 주소 관리를 나타내는 생성형 래스터 홍보 이미지", "price-illustration") +
+        illustration("managed-domain.webp", "가상 홈페이지 화면 예시, 실제 고객사례가 아닌 생성형 이미지", "price-illustration") +
+        '<p class="small-note">이 이미지는 생성형 가상 홈페이지 화면 예시이며 실제 고객 작업 사례가 아닙니다.</p>'
         '<p class="price-footnote">최소 10페이지부터 신청 가능하며, 월 1,000원/페이지입니다. 계약기간·부가세·수정 및 홈페이지 주소 이용 조건은 상담 시 안내합니다.</p></div>'
         '<div class="article-section"><h2>한 도시의 모든 동도 같은 금액인가요?</h2>'
         + paragraph("시마다 동 개수는 서로 다릅니다. 20~30페이지를 이용하는 경우 월 2만~3만원이지만, 해당 시 전체 동을 반드시 같은 월 이용료로 구성할 수 있다는 뜻은 아닙니다. 실제 서비스 가능 지역과 페이지 구성을 확인해 필요한 수를 산정합니다.")

@@ -1,9 +1,9 @@
 {
-  "version": 2,
+  "version": 3,
   "asOf": "2026-10-31",
   "scope": "Webbuilder 42-page noindex website image swap; service promotional visuals; no claims about actual customers",
   "primaryGenerator": "OpenAI image_gen (existing available tool; normal full-resolution PNG stored locally)",
-  "warning": "Five distinct final raster assets, derived from THREE full-resolution generated PNG source images. Not five independent generation jobs. Source 2 and 3 are collages; final variants were visually recomposed. The first Canva result remains unexportable and is not a source.",
+  "warning": "Three existing generated full-res source PNG images yield five site WebPs; only three derivatives repaired. No claim of five distinct original generation jobs, real customer portfolio, exact provider prompts or verified third-party origin.",
   "originalCanva": {
     "mediaId": "MAHZkNFvG9I",
     "originalDimensions": [
@@ -77,17 +77,20 @@
     {
       "path": "sites/webbuilder/illustrations/generated/industry-services.webp",
       "fileName": "industry-services.webp",
-      "gitBlob": "c734f19d232d84d97870af0c65cf413254bda591",
-      "sha256": "58dec4edbfc4790ce8817f738dc48fa107df86219e81edda45537ff0874d93e5",
+      "gitBlob": "781b977be13eab0081e7dde0d4f6c769dfaf021c",
+      "sha256": "ec7fb5e1738fb68cada0f2b2c3890a1b0ec82ff7417ba49ac20d31101b8ba007",
       "width": 1024,
       "height": 680,
-      "bytes": 48568,
+      "bytes": 60906,
       "generationSources": [
-        "source2",
-        "source3"
+        "source2"
       ],
       "role": "industry-services",
-      "type": "derived-generation-raster-webp"
+      "type": "derived-generation-raster-webp",
+      "previousGitBlob": "c734f19d232d84d97870af0c65cf413254bda591",
+      "previousSha256": "58dec4edbfc4790ce8817f738dc48fa107df86219e81edda45537ff0874d93e5",
+      "edition": "reviewed-remediation-20261031",
+      "imageFixNotes": "Four individually bounded worker photo panels crop full 1536x1024 source2; removed left blue clipped characters, unrelated laptop/cup junctions"
     },
     {
       "path": "sites/webbuilder/illustrations/generated/local-search.webp",
@@ -107,31 +110,39 @@
     {
       "path": "sites/webbuilder/illustrations/generated/managed-domain.webp",
       "fileName": "managed-domain.webp",
-      "gitBlob": "710d20295b9c38e0913b89bb0cfa3e3d44a1554f",
-      "sha256": "15b2357aab5454c8f8222406698fc5eb473d7bbabb7dd3b315130fa4ad6ece66",
+      "gitBlob": "007b5732184bd62706c6644d32102c310f908cf8",
+      "sha256": "4eec60c601ed4ea340bb06cf2070e7d1f14672d8b41e2160b615388d65f1ba85",
       "width": 1024,
       "height": 680,
-      "bytes": 39150,
+      "bytes": 61346,
       "generationSources": [
-        "source3"
+        "source1"
       ],
       "role": "managed-domain",
-      "type": "derived-generation-raster-webp"
+      "type": "derived-generation-raster-webp",
+      "previousGitBlob": "710d20295b9c38e0913b89bb0cfa3e3d44a1554f",
+      "previousSha256": "15b2357aab5454c8f8222406698fc5eb473d7bbabb7dd3b315130fa4ad6ece66",
+      "edition": "reviewed-remediation-20261031",
+      "imageFixNotes": "Use source1 generic site laptop instead of source3 '제작사례' UI; visible Korean note: 가상 홈페이지 화면 예시 · 실제 고객사례 아님"
     },
     {
       "path": "sites/webbuilder/illustrations/generated/mobile-contact.webp",
       "fileName": "mobile-contact.webp",
-      "gitBlob": "7f1431721a3ff465f3d9a5d1952cd8241da46ffb",
-      "sha256": "1fd178853cf6467d1f187eb305767f4ac528f46dce03a71ab2af0d721ec6a810",
+      "gitBlob": "726796c32b9c7108b55a84079b62b16aac166c23",
+      "sha256": "ef2002f7a6c90f10c709454af693032d9145a45be58b4d4379cb764e88cf3daa",
       "width": 1024,
       "height": 680,
-      "bytes": 42212,
+      "bytes": 67088,
       "generationSources": [
         "source1",
         "source3"
       ],
       "role": "mobile-contact",
-      "type": "derived-generation-raster-webp"
+      "type": "derived-generation-raster-webp",
+      "previousGitBlob": "7f1431721a3ff465f3d9a5d1952cd8241da46ffb",
+      "previousSha256": "1fd178853cf6467d1f187eb305767f4ac528f46dce03a71ab2af0d721ec6a810",
+      "edition": "reviewed-remediation-20261031",
+      "imageFixNotes": "Full 1536x1024 source1 smartphone and source3 clean operator crop beginning at x510; removes partial left-bottom caption and pale cover rectangle"
     }
   ],
   "marketingCompliance": {
@@ -141,5 +152,67 @@
     "publicDeployment": false,
     "noActualClientWorkClaims": true
   },
-  "generatedAtStatement": "Image creation occurred 2026-10-31 KST; exact tool timestamps were not supplied in response. Local file creation timestamps to be supplemented by artifact archive."
+  "generatedAtStatement": "Image creation occurred 2026-10-31 KST; exact tool timestamps were not supplied in response. Local file creation timestamps to be supplemented by artifact archive.",
+  "visualCorrection": {
+    "dateKST": "2026-10-31",
+    "reason": "Parent visual QA artifact 13037049751 found cropped blue text/monitor cup seams, truncated contact caption and false client-example implication",
+    "sourceArchive": {
+      "localPath": "/mnt/data/webbuilder_generated_sources_provenance_20261031.zip",
+      "archiveMemberPrefix": "original_png/",
+      "containsGeneratedPng": 3,
+      "access": "Conversation downloadable archive; not a remote public URL"
+    },
+    "sourcePaths": [
+      {
+        "path": "/mnt/data/a_bright_clean_modern_workspace_scene_a_shallow.png",
+        "sha256": "38d47c6fa430a02be3fa35f94c845cf4c85167a9034615141238f649c9bec405",
+        "dimensions": [
+          1536,
+          1024
+        ],
+        "generationId": "5f8cb17b-fdf3-4228-9f54-ce2320105595",
+        "providerExactPrompt": "NOT_RETURNED (image_gen tool prompt was auto-inferred, response prompt blank)",
+        "generationTimestamp": "Exact tool timestamp NOT_RETURNED",
+        "sourceLocalMTimeUtc": "2026-10-31T09:15:16.223069+00:00"
+      },
+      {
+        "path": "/mnt/data/a_clean_well_lit_collage_style_marketing_banner_l.png",
+        "sha256": "245149b4bf1a485963b38a10b851391fa58f2150bb5c61bbb8bc2e01d648037b",
+        "dimensions": [
+          1536,
+          1024
+        ],
+        "generationId": "3b8fc573-621f-43ad-9b03-148f8f3b0341",
+        "providerExactPrompt": "NOT_RETURNED",
+        "generationTimestamp": "Exact tool timestamp NOT_RETURNED",
+        "sourceLocalMTimeUtc": "2026-10-31T09:12:49.583593+00:00"
+      },
+      {
+        "path": "/mnt/data/a_clean_bright_modern_korean_web_landing_page_co.png",
+        "sha256": "903b189131795089d758ce556d17b8ba401a4e065a422adf660c4a317758410a",
+        "dimensions": [
+          1536,
+          1024
+        ],
+        "generationId": "969b545f-2580-4deb-b0c9-837376197955",
+        "providerExactPrompt": "NOT_RETURNED",
+        "generationTimestamp": "Exact tool timestamp NOT_RETURNED",
+        "sourceLocalMTimeUtc": "2026-10-31T09:12:49.391589+00:00"
+      }
+    ],
+    "correctionMethod": "Reframe/crop from full-resolution image-gen originals in source archive using PIL, not an enlarged thumbnail or inactive SVG, and add explicit simulated example disclosure in image and HTML",
+    "generatorOriginalPromptAndTimeLimit": "Exact provider image-gen prompts and generation timestamps remain unavailable. Scene briefs and image generation IDs are separately recorded; do NOT present file modification time as generation time.",
+    "visualReview": "Three corrected WebP assets visually inspected as actual 1024x680 pixels; GitHub 390/1440 post-commit screenshot results pending",
+    "rightsEvidenceStatus": "Generator references and matching original PNG sha checked. External third-party provenance is not independently verified; avoid calling rights verified or depicting a real client.",
+    "unmodified": [
+      "webbuilder-hero.webp",
+      "local-search.webp"
+    ],
+    "editedFiles": [
+      "industry-services.webp",
+      "mobile-contact.webp",
+      "managed-domain.webp"
+    ],
+    "noRelease": true
+  }
 }

@@ -187,6 +187,19 @@ class WebbuilderPreviewTest(unittest.TestCase):
                 self.assertGreaterEqual(info["width"], 768)
                 self.assertIn("/assets/images/" + name, all_html)
 
+    def test_virtual_example_disclosure_and_image_review_ledger(self):
+        data = (self.out / "guide" / "pricing" / "index.html").read_text(encoding="utf-8")
+        self.assertIn("가상 홈페이지 화면 예시이며 실제 고객 작업 사례가 아닙니다", data)
+        source = ROOT / "sites" / "webbuilder" / "illustrations" / "generated"
+        import json
+        manifest = json.loads((source / "provenance.json").read_text(encoding="utf-8"))
+        fix = manifest["visualCorrection"]
+        self.assertEqual(set(fix["editedFiles"]),
+                         {"industry-services.webp","mobile-contact.webp","managed-domain.webp"})
+        self.assertEqual(len(fix["sourcePaths"]),3)
+        self.assertIn("not independently verified",fix["rightsEvidenceStatus"])
+        self.assertTrue(fix["noRelease"])
+
     def test_all_38_sectors_are_discoverable_and_related(self):
         home = (self.out / "index.html").read_text(encoding="utf-8")
         self.assertEqual(home.count('class="industry-card"'), 38)
