@@ -60,7 +60,7 @@ def main():
         p=DEST/slug;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(html,encoding='utf-8')
         indices[record['id']]={'slug':'/'+slug,'region':loc,'level':record['level'],'questions':[x[0] for x in chosen]}
     # Group index for information discovery only; do not mislabel as service areas.
-    links=''.join('<li><a href="/'+x['slug']+'">'+escape(x['region'])+' — 견적 준비 안내</a></li>' for x in indices.values() if x['level']==1)
+    links=''.join('<li><a href="'+x['slug']+'">'+escape(x['region'])+' — 견적 준비 안내</a></li>' for x in indices.values() if x['level']==1)
     page=DEST/'national/index.html'
     page.write_text('<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>전국 행정구역별 스카이차 견적 확인사항 | 바른견적스카이</title><link rel="stylesheet" href="/assets/style.css"><style>img{max-width:100%;height:auto}main{overflow-wrap:anywhere}figure{margin:12px 0}</style><main><h1>전국 행정구역별 견적 비교 준비</h1><p>이 목록은 CC-BY 행정구역 정보로, 스카이차 업체의 전국 출동 범위·현장 작업사례 또는 가격 보장 목록이 아닙니다.</p><p>아래 다섯 이미지는 AI 생성 견적 설명용으로 실제 현장의 증거가 아닙니다.</p>'+''.join(base.photo(i) for i in range(5))+'<ul>'+links+'</ul><a href="/">안산시 검수 페이지</a></main></html>',encoding='utf-8')
     assert not (DEST/'sitemap.xml').exists()
