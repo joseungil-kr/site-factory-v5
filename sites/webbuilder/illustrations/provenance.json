@@ -16,5 +16,9 @@
   "usage": "Hero, 38 industry informational asides, local SEO explainer, monthly price guide and phone CTA",
   "noFabrication": "Images are conceptual illustrations, never evidence of customer projects, purchased domains, or SEO results",
   "qa": "GitHub CI verifies XML, source-to-dist bytes, HTTP browser loading at 390/1440, viewport overflow and screenshots",
-  "publicApproval": "Not granted; preview only, original artwork requires user visual review for publication"
+  "publicApproval": "Not granted; preview only, original artwork requires user visual review for publication",
+  "status": "legacy-inactive",
+  "currentWebsiteUse": false,
+  "replacedBy": "sites/webbuilder/illustrations/generated/provenance.json",
+  "note": "Hand-authored SVG source remains in Git history for audit and rollback, but never copied to current dist"
 }

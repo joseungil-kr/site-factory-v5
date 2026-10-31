@@ -70,7 +70,7 @@ def main():
                         label, uri, "horizontal overflow", metrics
                     )
                     assert metrics["images"] and all(
-                        i["complete"] and i["width"] >= 768 for i in metrics["images"]
+                        i["complete"] and i["width"] >= 768 and i["src"].endswith(".webp") for i in metrics["images"]
                     ), (label, uri, "image loading", metrics["images"])
                     assert metrics["hasPhone"] and metrics["hasFooter"], (label, uri, "contact missing")
                     assert metrics["robots"] == "noindex,nofollow,noarchive", (label, uri, "noindex")
@@ -84,7 +84,7 @@ def main():
                     page.screenshot(path=str(screenshot), full_page=True, animations="disabled")
                     findings.append({"device": label, "path": uri,
                                      "screenshot": str(screenshot), **metrics})
-                    print("VISUAL_PASS", label, uri, "SVG", len(metrics["images"]), "overflow=0")
+                    print("VISUAL_PASS", label, uri, "WEBP", len(metrics["images"]), "overflow=0")
                 context.close()
             browser.close()
         conn = http.client.HTTPConnection("127.0.0.1", server.server_port, timeout=10)

@@ -17,7 +17,7 @@
 | keyword-pool.json | 38개 업종, 10개 홈페이지 제작 의뢰 템플릿, 업종별 3개 소비자 검색 키워드 구조. 총 494개 후보 |
 | copy-pool.json | 업종별 고유 문구 50개와 공통 변주·FAQ·CTA를 포함한 원본 문구/문단 128개 |
 | industry-expansion-a.json, industry-expansion-b.json | 새 28개 업종의 독립 설명 본문 140개와 업체 상담 체크리스트 |
-| illustrations/*.svg + provenance.json | 원본 벡터 일러스트 5개, 출처·사용정책 기록 |
+| illustrations/*.svg + provenance.json | 생성 기반 WebP 일러스트 5개, 출처·사용정책 기록 |
 | site.css | 독립 반응형 웹 디자인, 외부 폰트·CDN·추적 호출 없음 |
 | worker.preview.js | 200/404 응답 모두 noindex 헤더를 강제하는 격리형 Worker |
 | wrangler.preview.json | 기존 Worker와 분리된 sfv55-webbuilder-preview 설정 |
@@ -124,6 +124,13 @@ Cloudflare 공식 문서상 Workers **Custom Domain은 wildcard hostname 등록�
 - 이전 14개 콘텐츠 문서 및 10개 업종 원고를 보존하고, 업종별 새 콘텐츠 문서 28개를 추가해 **총 42개 콘텐츠 URL**을 오프라인 생성한다. 404 오류 페이지는 별도이다.
 - 38개 업종은 설비·수리 / 운송·이사 / 차량관리 / 가전청소 / 공간청소 / 생활설치 / 현장장비 7개 분야로 분류한다.
 - 이전 129개 원고/FAQ·일반 문구에 새 업종 독립 본문 140개를 추가했고, FAQ 및 상담 체크리스트는 별도로 취급한다.
-- 이미지 파일은 **원본 SVG 일러스트 5개**이며 실제 시공·고객 운영 사진, AI 생성 실사 사진, 매출/순위 실적을 주장하는 이미지가 아니다. 허위 작업사진은 금지한다.
+- 이미지 파일은 **생성 래스터 WebP 일러스트 5개**이며 실제 시공·고객 운영 사진, AI 생성 실사 사진, 매출/순위 실적을 주장하는 이미지가 아니다. 허위 작업사진은 금지한다.
 - Python 원장·이미지 무결성·업종당 고유 설명·실제 내부링크·42개 URL을 검증하고, PC1440/모바일390의 실제 Chromium 화면에서 SVG 로딩·전화 CTA·사업자 푸터·가로 넘침/404를 확인하도록 전용 QA를 추가했다.
 - 이 변경은 기존 PR #26의 독립 preview 소스만 수정한다. Cloudflare 배포, 사용자 도메인 연결, Google/Naver 검색 공개 및 IndexNow는 **미실행**이다.
+
+## 2026-10-31 이미지 생성 원본·래스터 교체 검수
+- 기존 SVG 5개는 재사용하지 않고 소스에 비활성으로 보존하며, 사이트 빌드는 `illustrations/generated/*.webp`의 5개 이미지로 교체한다.
+- 3건의 실제 OpenAI image_gen 원본 PNG(모두 1536×1024)를 출처로 사용했다. Webbuilder 메인 1개는 원본을 WebP로 변환했고 나머지 4개는 생성 장면을 편집·합성한 파생 이미지다. **5개를 독립적으로 생성했다고 주장하지 않는다.**
+- 각 WebP의 실제 파일, Git Blob SHA, SHA-256, 가로·세로 치수, 생성 출처는 `illustrations/generated/provenance.json`에 기록.
+- Canva 기존 1개 원본은 정상 다운로드되지 않아 재생성·썸네일 확대 없이 별도 기록을 보존한다.
+- 본 변경은 `webbuilder.nalmada.net` 홍보 홈페이지 42페이지와 확정 월 요금을 보존하며 실제 운영 배포·DNS·검색등록은 진행하지 않는다.

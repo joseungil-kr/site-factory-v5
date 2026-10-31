@@ -163,23 +163,29 @@ class WebbuilderPreviewTest(unittest.TestCase):
                 self.assertNotIn("추가 수요/실제 업종 자료 검증 후", narrative)
                 self.assertIn("홈페이지", article["title"])
 
-    def test_original_svg_illustrations_integrity(self):
-        from xml.etree import ElementTree
-        src = ROOT / "sites" / "webbuilder" / "illustrations"
+    def test_generated_webp_files_match_source_and_provenance(self):
+        import hashlib
+        from scripts.build_webbuilder import webp_dimensions
+        source = ROOT / "sites" / "webbuilder" / "illustrations" / "generated"
         dest = self.out / "assets" / "images"
-        names = {"webbuilder-hero.svg", "industry-services.svg", "local-search.svg",
-                 "managed-domain.svg", "mobile-contact.svg"}
-        self.assertEqual({x.name for x in dest.glob("*.svg")}, names)
+        meta = __import__("json").loads((source / "provenance.json").read_text(encoding="utf-8"))
+        records = {x["fileName"]: x for x in meta["assetRefs"]}
+        self.assertEqual(len(records), 5)
+        self.assertEqual({x.name for x in dest.glob("*.webp")}, set(records))
+        self.assertEqual(list(dest.glob("*.svg")), [])
         self.assertEqual(self.qa["imageFiles"], 5)
         self.assertGreater(self.qa["imageReferences"], 50)
-        combined = "\n".join(x.read_text(encoding="utf-8") for x in self.html)
-        for name in names:
-            with self.subTest(asset=name):
-                self.assertEqual((src / name).read_bytes(), (dest / name).read_bytes())
-                root = ElementTree.fromstring((dest / name).read_bytes())
-                self.assertEqual(root.tag, "{http://www.w3.org/2000/svg}svg")
-                self.assertGreaterEqual(int(root.get("width", "0")), 768)
-                self.assertIn("/assets/images/" + name, combined)
+        self.assertIn("generated-raster-WebP", self.qa["imagesSource"])
+        all_html = "\\n".join(x.read_text(encoding="utf-8") for x in self.html)
+        for name, info in records.items():
+            with self.subTest(filename=name):
+                b = (dest / name).read_bytes()
+                self.assertEqual((source / name).read_bytes(), b)
+                self.assertEqual(hashlib.sha256(b).hexdigest(), info["sha256"])
+                self.assertEqual(len(b), info["bytes"])
+                self.assertEqual(webp_dimensions(b), (info["width"], info["height"]))
+                self.assertGreaterEqual(info["width"], 768)
+                self.assertIn("/assets/images/" + name, all_html)
 
     def test_all_38_sectors_are_discoverable_and_related(self):
         home = (self.out / "index.html").read_text(encoding="utf-8")
@@ -190,7 +196,7 @@ class WebbuilderPreviewTest(unittest.TestCase):
             doc = (self.out / "industry" / id / "index.html").read_text(encoding="utf-8")
             self.assertIn('class="related-links"', doc)
             self.assertIn("페이지당 월 1,000원부터", doc)
-        self.assertIn("webbuilder-hero.svg", home)
+        self.assertIn("webbuilder-hero.webp", home)
 
     def test_original_body_paragraph_is_not_repeated_as_hero(self):
         corpus = {**load("copy-pool.json")["industry"],

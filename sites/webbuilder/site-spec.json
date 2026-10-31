@@ -65,14 +65,19 @@
     "mode": "tel link and official Interpiad site link, no personal data collected"
   },
   "images": {
-    "source": "five original vector SVG website illustrations, not fabricated worksite/actual customer photographs",
+    "source": "3 high-resolution OpenAI image_gen PNG sources, with five generated/edited WebP raster site assets. Hero is derived from source 1; other 4 composited from generated sources 1-3. Not five independent generator jobs.",
     "approved": false,
     "publicVisualReviewRequired": true,
-    "assetType": "SVG",
-    "sourceFolder": "sites/webbuilder/illustrations",
+    "assetType": "WebP",
+    "sourceFolder": "sites/webbuilder/illustrations/generated",
     "requiredCount": 5,
-    "originalArtwork": true,
-    "AIPhotoGenerationUsed": false
+    "originalArtwork": false,
+    "AIPhotoGenerationUsed": true,
+    "visualsAreConceptual": true,
+    "actualClientPhotos": false,
+    "provenanceManifest": "sites/webbuilder/illustrations/generated/provenance.json",
+    "minimumWidth": 768,
+    "requires": "42 page QA and 390/1440 live Chromium preview; no production deploy"
   },
   "pricing": {
     "headlinePriceKRW": 1000,

@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import csv
 import html
+import hashlib
 import json
 import re
 import shutil
@@ -157,7 +158,7 @@ def layout(title: str, description: str, body: str, active: str = "") -> str:
         '<div><span class="eyebrow">최소 10페이지부터, 필요한 정보부터</span>'
         '<h2>우리 업종의 검색 홈페이지를 설계해보세요.</h2>'
         '<p>실제 서비스와 가능한 지역을 알려주시면 문서 구성을 함께 검토합니다.</p></div>'
-        + illustration("mobile-contact.svg", "모바일 전화 상담을 나타내는 원본 일러스트", "bottom-illustration") +
+        + illustration("mobile-contact.webp", "모바일 전화 상담을 나타내는 생성형 래스터 홍보 이미지", "bottom-illustration") +
         cta("010-2490-0555 전화 상담") +
         '</div></section>'
         '<footer class="site-footer"><div class="container footer-inner">'
@@ -182,10 +183,21 @@ def monthly_price_rows(pool: dict, limit: int | None = None) -> str:
     )
 
 
+def webp_dimensions(raw: bytes) -> tuple[int, int]:
+    """Read dimensions of the verified lossy WebP frame using stdlib, no extra dependency."""
+    if len(raw) < 30 or raw[:4] != b"RIFF" or raw[8:12] != b"WEBP":
+        raise ValueError("Bad RIFF/WEBP file header")
+    i = raw.find(b"\\x9d\\x01\\x2a", 20, 60)
+    if i < 0 or i + 7 > len(raw):
+        raise ValueError("VP8 frame marker missing")
+    return (int.from_bytes(raw[i + 3:i + 5], "little") & 0x3fff,
+            int.from_bytes(raw[i + 5:i + 7], "little") & 0x3fff)
+
+
 def illustration(file: str, description: str, css_class: str) -> str:
-    dimensions = {"webbuilder-hero.svg": (1200, 760), "industry-services.svg": (1000, 680),
-                  "local-search.svg": (1000, 680), "managed-domain.svg": (1000, 680),
-                  "mobile-contact.svg": (1000, 680)}
+    dimensions = {"webbuilder-hero.webp": (1536, 1024), "industry-services.webp": (1024, 680),
+                  "local-search.webp": (1024, 680), "managed-domain.webp": (1024, 680),
+                  "mobile-contact.webp": (1024, 680)}
     if file not in dimensions:
         raise ValueError("Unexpected webbuilder image file: "+file)
     w, h = dimensions[file]
@@ -261,7 +273,7 @@ def render_home(keywords: dict, pool: dict) -> str:
         secondary("업종별 구성 보기", "/#industries") + '</div>'
         '<div class="hero-note"><span>●</span> 검색엔진 노출·순위는 보장하지 않습니다. '
         '서비스 범위와 문서 품질을 먼저 확인합니다.</div></div>'
-        '<div class="hero-art">' + illustration("webbuilder-hero.svg", "반응형 홈페이지와 스마트폰 원본 벡터 일러스트", "hero-illustration") +
+        '<div class="hero-art">' + illustration("webbuilder-hero.webp", "반응형 홈페이지와 스마트폰 생성형 이미지 기반 원본 래스터 사진", "hero-illustration") +
         '</div></div></section>'
         '<section class="stats-strip"><div class="container strip-grid">'
         '<div><strong>월 10,000원부터</strong><span>최소 10페이지 · 페이지당 월 1,000원</span></div>'
@@ -277,7 +289,7 @@ def render_home(keywords: dict, pool: dict) -> str:
         '<div><span class="eyebrow">왜 지역 검색 페이지인가요?</span><h2>동 이름보다 중요한 건<br>고객이 찾는 답입니다.</h2>'
         + paragraph(pool["heroVariants"][2]) + paragraph(pool["localStrategyVariants"][0])
         + secondary("제작 절차 확인하기", "/guide/process/") +
-        '</div><div class="feature-panel">' + illustration("local-search.svg", "지역 검색을 표현한 원본 벡터 지도", "feature-illustration") +
+        '</div><div class="feature-panel">' + illustration("local-search.webp", "지역 검색을 표현한 생성 이미지 기반 지역 지도 자료", "feature-illustration") +
         '<div class="feature-row"><b>01</b>'
         '<div><strong>실제 서비스 지역</strong><span>방문 가능한 동·시 기준으로 안내</span></div></div>'
         '<div class="feature-row"><b>02</b><div><strong>업종별 유용한 정보</strong>'
@@ -332,7 +344,7 @@ def render_sector(item: dict, data: dict, pool: dict, sectors: list[dict]) -> st
         '<section class="section"><div class="container article-layout">'
         '<article class="article">' + sections + '</article>'
         '<aside class="article-aside"><div class="aside-box"><span class="eyebrow">사업자 확인 목록</span>'
-        '<h2>실제 서비스 정보부터</h2>' + illustration("industry-services.svg", "설비·청소·운송·설치 서비스를 나타내는 원본 일러스트", "aside-illustration") +
+        '<h2>실제 서비스 정보부터</h2>' + illustration("industry-services.webp", "설비·청소·운송·설치 서비스를 나타내는 생성형 래스터 홍보 이미지", "aside-illustration") +
         '<ul class="check-list">' + checklist + '</ul>'
         '<a class="aside-phone" href="tel:' + TEL + '">' + PHONE + ' 상담하기 ↗</a></div></aside>'
         '</div></section>'
@@ -357,7 +369,7 @@ def render_pricing(pool: dict) -> str:
         '<p class="sub-lead">페이지당 월 1,000원, 최소 10페이지부터 제작합니다. 업종별 맞춤 도메인을 확보하고 관리해 드리며, 기본 홈페이지 제작·주소 제공·서버 운영비까지 포함합니다.</p>'
         '</div></section><section class="section"><div class="container narrow">'
         '<div class="price-panel full"><h2>페이지 수에 따른 월 이용료</h2>' + monthly_price_rows(pool) +
-        illustration("managed-domain.svg", "업종별 홈페이지 주소 관리를 나타내는 원본 일러스트", "price-illustration") +
+        illustration("managed-domain.webp", "업종별 홈페이지 주소 관리를 나타내는 생성형 래스터 홍보 이미지", "price-illustration") +
         '<p class="price-footnote">최소 10페이지부터 신청 가능하며, 월 1,000원/페이지입니다. 계약기간·부가세·수정 및 홈페이지 주소 이용 조건은 상담 시 안내합니다.</p></div>'
         '<div class="article-section"><h2>한 도시의 모든 동도 같은 금액인가요?</h2>'
         + paragraph("시마다 동 개수는 서로 다릅니다. 20~30페이지를 이용하는 경우 월 2만~3만원이지만, 해당 시 전체 동을 반드시 같은 월 이용료로 구성할 수 있다는 뜻은 아닙니다. 실제 서비스 가능 지역과 페이지 구성을 확인해 필요한 수를 산정합니다.")
@@ -492,31 +504,33 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
                 total_links += 1
                 if not dest.is_file():
                     errors.append("broken link " + relative + " -> " + href)
-    from xml.etree import ElementTree
-    art_names = {"webbuilder-hero.svg", "industry-services.svg", "local-search.svg",
-                 "managed-domain.svg", "mobile-contact.svg"}
+    source_dir = SITE / "illustrations" / "generated"
     art_out = out / "assets" / "images"
-    if {x.name for x in art_out.glob("*.svg")} != art_names:
-        errors.append("Original SVG asset count or filenames differ")
-    for art in sorted(art_names):
-        source_path = SITE / "illustrations" / art
-        dest_path = art_out / art
-        if not dest_path.is_file() or dest_path.read_bytes() != source_path.read_bytes():
-            errors.append("Missing or modified original illustration "+art)
+    provenance = json.loads((source_dir / "provenance.json").read_text(encoding="utf-8"))
+    inventory = {x["fileName"]: x for x in provenance["assetRefs"]}
+    if len(inventory) != 5 or {x.name for x in art_out.glob("*.webp")} != set(inventory):
+        errors.append("Exactly five verified generated raster assets required")
+    if list(art_out.glob("*.svg")):
+        errors.append("Inactive SVG illustration leaked into preview")
+    for name, info in sorted(inventory.items()):
+        source_path = source_dir / name
+        dest_path = art_out / name
+        if not source_path.is_file() or not dest_path.is_file():
+            errors.append("Missing generated image: "+name)
             continue
-        raw_svg = dest_path.read_text(encoding="utf-8")
-        if "<script" in raw_svg.lower():
-            errors.append("Executable content in SVG "+art)
+        raw = dest_path.read_bytes()
+        if raw != source_path.read_bytes():
+            errors.append("Raster build/source byte mismatch: "+name)
+        if len(raw) != info["bytes"] or hashlib.sha256(raw).hexdigest() != info["sha256"]:
+            errors.append("Generated raster SHA-256/size mismatch: "+name)
         try:
-            svg_root = ElementTree.fromstring(raw_svg)
-            if svg_root.tag != "{http://www.w3.org/2000/svg}svg":
-                errors.append("Invalid namespace in SVG "+art)
-            if int(svg_root.attrib.get("width", "0")) < 768:
-                errors.append("SVG narrower than 768 "+art)
-        except (ElementTree.ParseError, ValueError) as exc:
-            errors.append("Invalid SVG XML "+art+": "+str(exc))
+            dims = webp_dimensions(raw)
+            if dims != (info["width"], info["height"]) or dims[0] < 768:
+                errors.append("Raster dimensions mismatch or undersized: "+name+" "+str(dims))
+        except ValueError as exc:
+            errors.append("Invalid WebP asset: "+name+" "+str(exc))
     if image_refs < 50:
-        errors.append("Expected original illustrations across homepage and industry pages")
+        errors.append("Expected generated raster images in homepage/industry sections")
     display_errors = audit_html_tree(out)
     if display_errors:
         errors.append("V5 visitor-copy gate " + str(display_errors))
@@ -538,7 +552,7 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
     if max_pair[0] >= .49:
         raise ValueError("Sector prose >=0.49 Jaccard: " + str(max_pair))
     return {"pages": len(pages), "titleUnique": len(titles), "linksChecked": total_links,
-            "imageFiles": 5, "imageReferences": image_refs, "imagesSource": "original-project-SVG",
+            "imageFiles": 5, "imageReferences": image_refs, "imagesSource": "generated-raster-WebP-derived-from-3-original-PNGs",
             "brokenLinks": 0, "previewNoindex": True, "sitemap": False,
             "narrativePairsChecked": len(similarities),
             "narrativeMaxChar5GramJaccard": round(max_pair[0], 6),
@@ -581,7 +595,7 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT) -> dict:
     shutil.copy2(SITE / "site.css", out / "assets" / "site.css")
     images_out = out / "assets" / "images"
     images_out.mkdir(parents=True, exist_ok=True)
-    for art in sorted((SITE / "illustrations").glob("*.svg")):
+    for art in sorted((SITE / "illustrations" / "generated").glob("*.webp")):
         shutil.copy2(art, images_out / art.name)
     qa = check_output(out, pages, pool, spec["targetPageCount"])
     for example in pool["pricingFact"]["monthlyExamples"]:
