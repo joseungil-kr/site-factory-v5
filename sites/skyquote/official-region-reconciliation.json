@@ -1,0 +1,125 @@
+{
+  "status": "official_archive_verified_and_exact_domain_public_live",
+  "assessedDate": "2026-10-31",
+  "candidateSource": "Superseded: Open Admin Data 2026-09-08, incomplete. NOT used for released site.",
+  "officialPrimarySources": [
+    {
+      "url": "https://www.code.go.kr/stdcode/regCodeL.do?menuNo=101010100010",
+      "note": "Official standard legal-dong code lookup; current/deprecated and effective dates"
+    },
+    {
+      "url": "https://www.data.go.kr/data/15063424/fileData.do",
+      "note": "MOLIT nationwide legal-dong CSV 2026-06-30, published/updated 2026-07-29; 20561 records, not direct target-page count"
+    },
+    {
+      "url": "https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=127039",
+      "note": "MOIS 2026-07-01 KIK administrative/legal changes; attachment bytes not yet independently retrieved"
+    },
+    {
+      "url": "https://www.gks.go.kr/ko/life/regionsIntro.do",
+      "note": "Government overview of regional names, including Seoul Gangseo-gu"
+    },
+    {
+      "url": "https://www.incheon.go.kr/mayor_8/MA040101/view?curPage=46&repSeq=DOM_0000000015389902",
+      "note": "Incheon city official reference to four 2026 newly created districts"
+    }
+  ],
+  "requiredPresentDistricts": [
+    [
+      "서울특별시",
+      "강서구"
+    ],
+    [
+      "인천광역시",
+      "제물포구"
+    ],
+    [
+      "인천광역시",
+      "영종구"
+    ],
+    [
+      "인천광역시",
+      "서해구"
+    ],
+    [
+      "인천광역시",
+      "검단구"
+    ]
+  ],
+  "mustNotUseFormerProvinceNames": [
+    "광주광역시",
+    "전라남도",
+    "강원도",
+    "전라북도"
+  ],
+  "mustNotUseFormerDistrictNames": [
+    [
+      "인천광역시",
+      "중구"
+    ],
+    [
+      "인천광역시",
+      "동구"
+    ],
+    [
+      "인천광역시",
+      "서구"
+    ]
+  ],
+  "fullOfficialSnapshot": {
+    "repository": "joseungil-kr/site-factory-v4",
+    "branch": "ops/v5-isolated-staging-20261024",
+    "path": "data/regions/sources/official-codes.zip",
+    "gitBlobSHA": "105e3084be32a116b7c3c8361edaacd0ea40b110",
+    "sha256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
+    "bytes": 413481,
+    "obtainedOn": "2026-10-22",
+    "sourceRows": 53403,
+    "validatedRowCount": 20560,
+    "activeEupMyeonDongLegalRecords": 4632,
+    "verifiedParentMappings": 4632,
+    "officialUpperRegions": 284,
+    "regionLevels": {
+      "province": 16,
+      "municipality": 229,
+      "ward": 39
+    },
+    "matchedCurrentCodeSystem": true,
+    "caveat": "Legal-code rows are not necessarily distinct administrative-dong marketing pages and do not prove operator dispatch coverage. Three Bucheon upper-name rows contain trailing blanks in original ZIP; normalized for comparison only.",
+    "reference": "sites/skyquote/official-upper-regions-20261022.json"
+  },
+  "limitations": [
+    "Only 284 current official upper-level region names plus 25 previously reviewed Ansan guide pages and one directory were published. The other 4,632 legal 읍·면·동 rows are verified as code records, NOT additional Skyquote pages.",
+    "Region code existence does not establish a real Skyquote branch, operator dispatch/arrival availability, work price or guaranteed lowest quote. Site content explicitly presents hypothetical quote checklists.",
+    "The archived ZIP was acquired on 2026-10-22; this is a retrieval date, not an assertion of a daily live government-code refresh.",
+    "Five AI-generated images are illustrative only, not actual completed operations or owned equipment. Original 1536×1024 images, PNGs and generation provenance remain unchanged.",
+    "Cloudflare Workers Free 100-script limit prevented a new script; the existing preview worker was reused with host-specific robots separation. No payment or credential changes."
+  ],
+  "safeNextSteps": [
+    "Monitor public Search Console index coverage and server errors after verified public release.",
+    "Independently verify business-specific operational coverage/quotes before any strong claims of local availability or lowest price.",
+    "Do not bulk-index lower legal-code 4,632 rows as unique pages without separate meaningful content and administrative-dong reconciliation.",
+    "Retain rollback Worker version f975e05f-a0c7-49fa-84d7-bf7f7e3bdba7 and GitHub V4 pre-deploy receipts."
+  ],
+  "publicDeployment": {
+    "domain": "https://skyquote.nalmada.net/",
+    "worker": "sfv5-skyquote-preview",
+    "reusedExistingWorker": true,
+    "exactHostIndex": true,
+    "workersDevNoindex": true,
+    "workerVersion": "ae51d5a8-565f-4ea6-be71-c2466492b84f",
+    "deploymentId": "55738f85-7631-47ef-958a-56f6cc29c47f",
+    "deploymentRun": 41187522242,
+    "liveUrlCount": 310,
+    "sitemapUrlCount": 310,
+    "canonicalCount": 310,
+    "liveImageHashesVerified": 5,
+    "sourceSHA": "a76e7a6fa2a09d26067e94688cea73442693256e",
+    "browserRun": 41187680304,
+    "browserScreenshotsArtifact": 13037866390,
+    "imageNativeSize": [
+      1536,
+      1024
+    ]
+  }
+}

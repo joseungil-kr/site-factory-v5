@@ -1,0 +1,22 @@
+{
+  "name": "sfv5-skyquote-public",
+  "main": "worker.public.js",
+  "compatibility_date": "2026-10-24",
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "skyquote.nalmada.net",
+      "custom_domain": true
+    }
+  ],
+  "vars": {
+    "SKYQUOTE_PUBLIC": "1"
+  },
+  "assets": {
+    "directory": "../../dist/skyquote-public",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "none",
+    "not_found_handling": "404-page"
+  }
+}
