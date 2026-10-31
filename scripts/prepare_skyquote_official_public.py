@@ -48,6 +48,15 @@ def main():
         check=CheckMeta();check.feed(text)
         assert check.robots==["index,follow"] and check.canonicals==[uri],p
         urls.append(uri)
+    # Naver ownership proof belongs to homepage <head> only; never enter sitemap/content count.
+    verification='<meta name="naver-site-verification" content="f8afb036a43ba44dc04b4c73de487908bed4a65e" />'
+    homepage=OUT/"index.html"
+    home=homepage.read_text(encoding="utf-8")
+    assert "<head>" in home and "</head>" in home
+    assert "naver-site-verification" not in home, "Existing Naver tag needs inspection; refuse duplicate"
+    home=home.replace("</head>",verification+"</head>",1)
+    assert home.count(verification)==1 and home.count("naver-site-verification")==1
+    homepage.write_text(home,encoding="utf-8")
     assert len(urls)==310 and len(set(urls))==310
     # sitemap is constructed exclusively from content-page paths, excluding verification/static/404.
     sitemap='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join('<url><loc>'+u+'</loc></url>\n' for u in urls)+'</urlset>\n'
