@@ -49,7 +49,7 @@ jobs:
                    images:ims.length,loaded:ims.filter(x=>x.complete&&x.naturalWidth>=768).length,
                    overflow:document.documentElement.scrollWidth>innerWidth,
                    robots:document.querySelector('meta[name=robots]')?.content,
-                   links:[...new Set([...document.querySelectorAll('a[href]')].filter(x=>x.href.includes('shop/item.php?it_id=')).map(x=>x.href.split('it_id=')[1]))].length};
+                   links:[...document.querySelectorAll('tbody a[href]')].filter(x=>x.href.includes('shop/item.php?it_id=')).length};
                 });
                 if(q.images!==5||q.loaded!==5||q.overflow||q.robots!=='noindex,nofollow'||q.links!==5)throw Error(JSON.stringify({name,label,q}));
                 await page.screenshot({path:'editorial-review-screens/'+label+'-'+name+'.png',fullPage:true});
