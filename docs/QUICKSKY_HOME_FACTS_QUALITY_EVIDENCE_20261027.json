@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "siteId": "quicksky",
+  "hostname": "quicksky.nalmada.net",
+  "releaseScope": "quicksky-home-1-20261027",
+  "reviewedAtUTC": "2026-10-27T12:55:00Z",
+  "basis": "Home-specific verification of user-designated marketing/service facts, not independent proof of actual dispatch on a particular day.",
+  "factMatrix": [
+    {
+      "fact": "Brand",
+      "value": "빠른스카이",
+      "basis": "User's explicit site name request; home source brand string",
+      "status": "CONFIRMED_BY_SITE_OPERATOR"
+    },
+    {
+      "fact": "Consultation telephone",
+      "value": "010-5322-1952",
+      "basis": "User's explicit same-site phone approval 2026-10-27; existing homepage tel:01053221952 link",
+      "status": "USER_DESIGNATED; live human answer not independently tested"
+    },
+    {
+      "fact": "Consultation service area",
+      "value": "서울·경기",
+      "basis": "User's explicit Seoul/Gyeonggi project scope approval",
+      "status": "CONSULTATION_AREA_ONLY; no guaranteed dispatch in 1732 locations"
+    },
+    {
+      "fact": "Topics 1t, 3.5t, 5t",
+      "value": "equipment consultation options",
+      "basis": "Existing user-requested site copy and linked skycar1day marketing site; current live cars not independently checked",
+      "status": "DISCUSS_OPTIONS_NOT_VERIFIED_FLEET"
+    },
+    {
+      "fact": "Photographs",
+      "value": "yjsky_01.jpg and yjsky_02.jpg and their 3 fixed WebP crops",
+      "basis": "2026-10-27 11:26 UTC owner direct statement; docs/QUICKSKY_PHOTO_PERMISSION_20261027.json; docs/QUICKSKY_IMAGE_VISUAL_QA_20261027.md",
+      "status": "EXACT_IMAGE_USE_REVIEWED; generic illustration not owner vehicle proof"
+    },
+    {
+      "fact": "Domain association",
+      "value": "quicksky.nalmada.net -> sfv5-quicksky-preview",
+      "basis": "User-authorized Cloudflare UI binding and V4 run 40498377315 HTTPS/unique domain mapping readback",
+      "status": "LIVE_HTTPS_AND_BOUND_WORKER_VERIFIED"
+    },
+    {
+      "fact": "Pricing",
+      "value": "telephone quote only",
+      "basis": "sites/quicksky/rates.json has no verified numeric prices; consultation-only site copy",
+      "status": "NO_NUMERIC_PRICE_CLAIMS"
+    }
+  ],
+  "homeCopyReview": {
+    "statementType": "general skycar equipment, site access/safety checks, and phone consultation preparation",
+    "reviewedSeedPath": "sites/quicksky/pages.json",
+    "unverifiedClaimsExplicitlyExcluded": [
+      "arrival within minutes",
+      "guaranteed dispatch throughout Seoul and Gyeonggi",
+      "company owns all pictured equipment",
+      "completed Quicksky jobs in region",
+      "fixed rental price",
+      "24-hour guaranteed service"
+    ],
+    "operatorCapabilityLimit": "Specific machines, availability, feasibility and field dispatch must be agreed in individual phone consultation; not verified in this record",
+    "accepted": "Home represents an informational phone consultation entrypoint and not an asserted local case-study or dispatch guarantee",
+    "indexablePaths": [
+      "/"
+    ],
+    "regionalPageCountRetained": 1732,
+    "regionPagesIndexable": 0,
+    "userValue": "One overview page supplies task categories, preparation checklist, access/safety factors, contact CTA, and upfront quote limitations; 1732 generated regional pages are excluded from index."
+  },
+  "qualityDecision": {
+    "homeOnly": "APPROVED_AFTER_SCOPE_LIMITED_COPY_REVIEW",
+    "allRegions": "NOT_APPROVED",
+    "indexNow": "DO_NOT_SUBMIT_WITHOUT_VALIDATED_KEY_AND_HTTP_RECEIPT",
+    "googleNaver": "PARENT_TEAM_HANDLES_SEPARATELY"
+  },
+  "evidenceRefs": [
+    "docs/QUICKSKY_PHOTO_PERMISSION_20261027.json",
+    "docs/QUICKSKY_IMAGE_VISUAL_QA_20261027.md",
+    "docs/QUICKSKY_LIVE_CONTENT_AUDIT_20261027.md",
+    "docs/QUICKSKY_BULK_INDEX_QUALITY_DECISION_20261027.md",
+    "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40498377315"
+  ],
+  "declaration": "This is a narrower editorial verification based on documented first-party statements and observed website behavior. It does not establish physical fleet ownership or completed jobs."
+}

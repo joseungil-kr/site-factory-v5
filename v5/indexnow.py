@@ -13,8 +13,14 @@ from .engine import report_dir
 
 def submission(site_id,key,*,submit=False):
     data=read_site(site_id);site=data['site']
-    if not site['domain'] or not site['publishEnabled']:
-        raise ConfigError('IndexNow requires a real approved domain')
+    quicksky_public=(site_id=='quicksky' and site.get('domain')=='https://quicksky.nalmada.net'
+        and site.get('publicIndexingScope')=='quicksky-seoul-gyeonggi-1733-20261027'
+        and site.get('publicIndexingApproved') is True
+        and site.get('imageAssetsApproved') is True
+        and site.get('contentQualityApproved') is True
+        and site.get('domainOwnershipVerified') is True)
+    if not site['domain'] or not (site['publishEnabled'] or quicksky_public):
+        raise ConfigError('IndexNow requires an approved domain, validated image/content and ownership')
     if not site.get('indexNow',{}).get('enabled',False) or site['indexNow'].get('key')!=key:
         raise ConfigError('Key must match the stable IndexNow site configuration')
     if not re.fullmatch(r'[a-f0-9]{32,64}',key):
@@ -33,6 +39,10 @@ def submission(site_id,key,*,submit=False):
     if status!=200 or body.strip()!=key:
         raise ConfigError('IndexNow public key verification failed')
     manifest=json.loads((report/'manifest.json').read_text(encoding='utf-8'))
+    if quicksky_public and (manifest.get('mode')!='public-indexing'
+                            or manifest.get('siteId')!='quicksky'
+                            or len(manifest['pages'])!=1733):
+        raise ConfigError('Quicksky indexed manifest mismatch; no IndexNow submission')
     urls=[origin+p['urlPath'] for p in manifest['pages']]
     urls += [origin+'/'+quote(x['path']) for x in data['special'] if x.get('enabled',True)]
     chunks=[urls[i:i+10000] for i in range(0,len(urls),10000)]

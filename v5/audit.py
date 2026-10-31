@@ -8,6 +8,7 @@ from pathlib import Path
 from urllib.parse import unquote, urlsplit, quote
 import json
 import re
+from xml.etree import ElementTree as ET
 from .config import read_site
 from .engine import target_dir, report_dir, sha
 from . import markup
@@ -60,9 +61,14 @@ def resolved_reference(ref):
     return file_path or 'index.html'
 
 
-def audit(site_id, *,output:Path|None=None,write_report=True):
+def audit(site_id, *,output:Path|None=None,write_report=True,release_mode:str|None=None):
     data=read_site(site_id);site=data['site']
     out=(output or target_dir(site_id)).resolve()
+    if release_mode is None and output is None:
+        manifest_file=report_dir(site_id)/'manifest.json'
+        if manifest_file.is_file():
+            release_mode=json.loads(manifest_file.read_text(encoding='utf-8')).get('mode')
+    home_only=release_mode=='home-indexing'
     errors=[];warnings=[]
     if not out.exists():
         return {'site':site_id,'errors':['Build directory absent'],'warnings':[]}
@@ -97,6 +103,12 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
     for p in data['pages']:
         file=markup.filename(p['number'])
         html=(out/file).read_text(encoding='utf-8')
+        # Approved home-only release intentionally omits navigation to 1732
+        # unverified landing pages while leaving the files and IDs untouched.
+        if release_mode=='home-indexing' and p['number']==1:
+            if 'id="regions"' in html or 'href="/2.html"' in html:
+                errors.append('Home-only homepage exposes unverified region index')
+            continue
         numbers=markup.pagination(data['pages'],p['number'])
         for n in numbers:
             if n==p['number']:
@@ -139,6 +151,8 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
     if max_sim[0]>=0.49:errors.append(f'Body similarity over 49%: {max_sim}')
     robots_text=(out/'robots.txt').read_text(encoding='utf-8')
     indexable='Allow: /' in robots_text
+    if home_only and (site_id!='quicksky' or not indexable):
+        errors.append('Home-only release must be on Quicksky exact indexable origin')
     if not indexable:
         if (out/'sitemap.xml').exists():errors.append('Preview must not have production sitemap')
         if robots_text!='User-agent: *\nDisallow: /\n':
@@ -151,12 +165,33 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
         elif f'Sitemap: {site["domain"]}/sitemap.xml' not in robots_text:
             errors.append('Indexed robots.txt must reference verified domain sitemap')
         if not (out/'sitemap.xml').exists():errors.append('Indexed build missing sitemap')
+        if home_only:
+            try:
+                doc=ET.parse(out/'sitemap.xml')
+                ns='{http://www.sitemaps.org/schemas/sitemap/0.9}'
+                paths=[x.text for x in doc.findall('.//'+ns+'loc')]
+                if paths!=['https://quicksky.nalmada.net/']:
+                    errors.append('Home-only sitemap must contain exactly the canonical homepage')
+            except (OSError,ET.ParseError) as exc:
+                errors.append('Invalid home-only sitemap: '+str(exc))
+            if 'Disallow: /' in robots_text:
+                errors.append('Do not block robots from reading regional noindex')
         for f,scan in extracted.items():
             actual_robots=next((m.get('content') for m in scan.meta if m.get('name')=='robots'),None)
             if f in ('404.html','search.html'):
                 if actual_robots!='noindex,nofollow':errors.append('Error/search page must remain noindex: '+f)
+            elif home_only:
+                required='index,follow' if f=='index.html' else 'noindex,nofollow'
+                if actual_robots!=required:
+                    errors.append('Home-only robots mismatch: '+f)
+                html=(out/f).read_text(encoding='utf-8')
+                canon=f'<link rel="canonical" href="{site["domain"]}/">'
+                if f=='index.html' and html.count(canon)!=1:
+                    errors.append('Home-only homepage canonical mismatch')
+                if f!='index.html' and 'rel="canonical"' in html:
+                    errors.append('Region must have no canonical in home-only release: '+f)
             elif actual_robots!='index,follow':errors.append('Indexed HTML missing index,follow: '+f)
-            if f not in ('404.html','search.html') and site['domain']:
+            if not home_only and f not in ('404.html','search.html') and site['domain']:
                 uri='/' if f=='index.html' else '/'+quote(f)
                 if f'<link rel="canonical" href="{site["domain"]}{uri}">' not in (out/f).read_text(encoding='utf-8'):
                     errors.append('Indexed page canonical mismatch: '+f)
@@ -164,7 +199,10 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
             text=(out/'index.html').read_text(encoding='utf-8')
             if text.count(f'<meta name="naver-site-verification" content="{site["naverSiteVerification"]}">')!=1:
                 errors.append('Homepage Naver verification missing or duplicated')
-        warnings.append('Indexing permitted by user; indexed pages still require independent inventory, delivery and content quality review')
+        if home_only:
+            warnings.append('Home-only index scope: all 1732 regional pages remain noindex; no region has quality approval')
+        else:
+            warnings.append('Indexing permitted by user; indexed pages still require independent inventory, delivery and content quality review')
     if any(not p.get('verifiedLive') for p in data['products']):
         warnings.append('Product price/stock and order destinations are referenced V4 data, not independently rechecked live')
     if any(p.suffix=='.svg' for p in out.rglob('*')):
