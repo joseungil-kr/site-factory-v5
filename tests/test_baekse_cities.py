@@ -43,6 +43,19 @@ class BaekseCityTests(unittest.TestCase):
         self.assertEqual(len(set(paths+details+list(b.MENUS))),429)
         self.assertTrue(all(path.endswith(".html") for path in paths+details))
 
+    def test_naver_verification_is_exact_once_on_home_only(self):
+        cities=b.read(b.SITE/"cities.json")["cities"]
+        exact='<meta name="naver-site-verification" content="3203fa257fed369e603424067cbfab1f2611638b" />'
+        home=b.render_home(cities)
+        self.assertEqual(home.count(exact),1)
+        self.assertEqual(home.split("</head>",1)[0].count(exact),1)
+        self.assertEqual(home.count('name="naver-site-verification"'),1)
+        city=cities[0]
+        pool=b.read(b.SITE/"copy-pool.json")
+        self.assertNotIn('name="naver-site-verification"',b.render_city(city))
+        self.assertNotIn('name="naver-site-verification"',b.render_menu("dakhanmari",cities,pool))
+        self.assertNotIn('name="naver-site-verification"',b.render_city_menu(city,"dakhanmari",pool)[0])
+
     def test_preview_is_noindex_and_business_accurate(self):
         city=b.read(b.SITE/"cities.json")["cities"][0]
         pool=b.read(b.SITE/"copy-pool.json")
