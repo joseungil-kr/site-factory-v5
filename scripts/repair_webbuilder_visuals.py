@@ -6,6 +6,7 @@ site WebP images. No external photography, thumbnails or real customer cases.
 """
 from PIL import Image, ImageDraw, ImageFilter, ImageOps, ImageFont
 from pathlib import Path
+import os
 import hashlib, json, math, datetime
 import numpy as np
 
