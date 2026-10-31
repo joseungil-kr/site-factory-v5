@@ -1,0 +1,29 @@
+name: Skyquote official region public-release gate (read only)
+on:
+  push:
+    branches: [feature/v5-skyquote-three-samples]
+    paths:
+      - 'sites/skyquote/official-region-reconciliation.json'
+      - 'sites/skyquote/nationwide-district-source.json'
+      - 'scripts/check_skyquote_public_region_readiness.py'
+      - '.github/workflows/skyquote-region-readiness.yml'
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify old source is blocked pending full official 2026 reconciliation
+        run: |
+          python - <<'PY'
+          import subprocess,sys
+          cmd=[sys.executable,'scripts/check_skyquote_public_region_readiness.py']
+          result=subprocess.run(cmd,capture_output=True,text=True,check=False)
+          print(result.stdout)
+          assert result.returncode==2, 'Known-stale third-party national source must fail closed'
+          for expected in ('MISSING 서울특별시 강서구','MISSING 인천광역시 제물포구','STALE PROVINCE 광주광역시','STALE PROVINCE 전라남도','OFFICIAL_SNAPSHOT_NOT_VERIFIED'):
+              assert expected in result.stdout,expected
+          print('SKYQUOTE_PUBLIC_SOURCE_GATE_FAIL_CLOSED_PASS')
+          PY
