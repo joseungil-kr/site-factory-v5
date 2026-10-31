@@ -1,6 +1,6 @@
 # 알뜰화환 — 지역 화환 가격 비교 (V5 작업자2 독립 프로젝트)
 
-현재 상태(2026-10-31 KST): **전국 상위 행정구역 284개 목록 / 신규 지역 282페이지 + 기존 3페이지 + 지역 목록 허브 1페이지 = 총 286 HTML. 기존 workers.dev에 noindex 배포·실제 HTTP 검증 성공. 커스텀 도메인·공개 index 연결 없음.** 도메인 후보: `wreathprice.nalmada.net` (DNS/충돌 사전 확인 전 연결 금지).
+현재 상태(2026-10-31 KST): **공식 ZIP에서 추출한 읍·면·동 4,632개 + 기존 상위 지역·허브 303개 = 전체 HTML 4,935개. 기존 Worker noindex 배포 및 승인된 wreathprice.nalmada.net Custom Domain 연결, 실제 HTTPS·모바일 검증 완료. 검색 색인은 미전환(지역별 실배송 검증 0건/공통 내용 중복).** 도메인 후보: `wreathprice.nalmada.net` (DNS/충돌 사전 확인 전 연결 금지).
 
 ## 독립성과 포지셔닝
 - 기존 `sites/wreath-region`, Wallsky, 꽃배달 운영 사이트, Secrets, 인증 파일, IndexNow 접수 상태 변경 금지
@@ -82,3 +82,14 @@
 - **기존 Worker에 noindex 배포:** [V4 run 41095222881](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41095222881) success, artifact `12995952552`. Worker `sfv52-wreathprice-preview` 버전 `7be165ca-d1dc-4d20-9226-5ae0ea6bbc5a`, V5 배포 소스 `d23a603f74290f245bda613271bf2ac6d2bc94ac`. 실제 HTML **286/286 HTTP200**, X-Robots-Tag 및 meta noindex, 상품 링크/이미지 5개, WebP 원격 바이트 해시, robots Disallow, sitemap/없는 페이지 404, canonical 없음 검증. 사용 도메인은 기존 `*.workers.dev`만 해당. 롤백 불필요.
 - **가용성:** 실제 배송 가능 지역 확인 0건, 배송 추가금·리본 비용 미확인; 상품 표시는 실거래 총액이 아님. 전국 모든 지역에 배송된다고 주장하거나 최저가, 지점명, 후기 조작 없음.
 - **비공개/공개 구분:** 신규 `wreathprice.nalmada.net` 도메인/DNS/소유확인/Secret·권한 변경 없음, 공개 index 미전환. 공개 URL의 자기 canonical·index sitemap은 커스텀 도메인 승인 및 배송 가용성 검증 후 별도 단계.
+
+## 2026-10-31 현재 공개 호스트 및 전국 읍면동 후속 (최신 확정)
+- **운영 호스트:** https://wreathprice.nalmada.net/ · https://wreathprice.nalmada.net/localities/ · 예시 https://wreathprice.nalmada.net/locality/1111010100.html (서울특별시 종로구 청운동). HTTPS 확인. 내부 홈↔전국 읍면동 허브↔16개 광역 허브↔4,632개 읍면동 경로는 전수 링크 검사 통과.
+- **코드 원본:** V4 `data/regions/sources/official-codes.zip`, SHA-256 `44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd`, 2026-10-22 수집. ZIP의 53,403 자료행 중 `존재` 20,560행, 그 중 이름 끝이 `동·읍·면`인 4,632코드(상위 코드 부모 일치 4,632건, 미일치 0). **리 등 다른 수준/명칭은 포함하지 않으며, 현재 날짜의 공식 재수집 자료가 아님.**
+- **산출물:** V5 `expand_lower.py --archive <approved-V4-ZIP>`, `test_lower.py`; 실제 빌드 4,935 HTML = 기존 대표 3 + 기존 상위 신규 282 + 상위 목록 1 + 신규 읍면동 4,632 + 광역 읍면동 허브 16 + 전국 읍면동 허브 1. 공식 검증은 **지역명과 코드뿐**이며 배송 가능 지역 0건. 기존 이미지 5개와 실상품 주문 링크 5개 재사용.
+- **오프라인 검수:** [V4 run 41186127429](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41186127429) 성공. 4,935 HTML 코드 중복·깨진 링크 0, 이미지 해시, 가격·고객문장, noindex 검증.
+- **미리보기 배포:** [V4 run 41186242257](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41186242257) 성공. 동일 Worker `sfv52-wreathprice-preview`, 100% 버전 `c5f7b9c6-3198-4996-8776-6bf287cb510f`, V5 배포 소스 SHA `37ec80f703be8fda5388e0777238b53bf0427306`. 대표 57개 실제 HTTP 응답, robots·이미지·noindex 확인, rollback 미실행.
+- **승인된 Custom Domain:** [V4 run 41186379115](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41186379115) 성공. 기존 계정/zone/Worker/미리보기 버전 확인 후 `wreathprice.nalmada.net` 정확한 호스트 **1개만** Cloudflare Workers Custom Domain API로 연결. 수동 DNS API 쓰기 0, 신규 Secret/권한 변경 0. HTTPS는 두 번째 재검사 성공.
+- **공개 호스트 검증:** [V4 run 41186449493](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41186449493) 성공. 운영 호스트 11개 HTTP 표본과 390px·1440px Chromium 화면 12개, 이미지 로딩·넘침·링크·robots 및 noindex 확인. 증거 artifact `13037185824`.
+- **공개 색인 정책:** Custom Domain은 접속 가능하지만 전역 **noindex,nofollow** 및 `robots.txt` Disallow. `sitemap.xml` HTTP 404, noindex 페이지 canonical 없음. 이는 현재 검증된 품질에 맞는 의도적 설정이며 공개 index·사이트맵·검색등록 완료 상태가 아님. 기존 4,632개는 공통 가격표/설명과 지명 위주로 구성되고 실배송·지역별 추가금/현장 차별 정보는 미확인이므로, HTML·해시 차이를 고유 검색 콘텐츠로 간주하지 않음.
+- **추가 실증 필요:** 지역 배송 가용성·시간·배송비·리본 포함·상품 실물 사양을 판매처 근거로 확보하고 대표 지역의 독립적인 페이지 품질을 개선·검증한 뒤 공개 색인 범위를 별도로 결정.
