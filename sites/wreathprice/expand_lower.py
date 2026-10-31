@@ -80,6 +80,14 @@ def main(archive):
     for r in records:
         by_province[r['provinceCode']].append(r)
         name=r['name'];parent=r['parentName']
+        # The source confirms the name/parent/type, not local delivery facts.
+        # Practical questions vary only by verified administrative level.
+        kind={'동':'동','읍':'읍','면':'면'}[r['suffix']]
+        address_question=('수령 장소가 '+name+'에 있다면, 주문서의 도로명 주소와 시설명을 먼저 확인하셨나요?')
+        schedule_question=('꽃 배송 접수 전에 정확한 수령지, 희망 날짜·시간, 시설의 반입 가능 시간 등을 판매처에 전달하셨나요?')
+        additional_question=('해당 수령지의 배송 가능 여부, 추가 배송비, 리본 문구·제작비가 포함되는지 확인하셨나요?')
+        admin_context=(name+'은(는) 2026-10-22에 확보한 법정동 코드 자료에서 '+kind+' 명칭으로 확인되며 상위 지역명은 '+parent+'입니다. '
+          '이 정보는 배송 지점의 존재나 배송 가능 여부를 확인한 자료가 아닙니다.')
         desc=(name+'의 화환 가격을 알아보는 고객에게 표시가와 주문 전 확인할 추가비를 구분해 안내합니다. '
               '지역명은 행정구역명이며 화환 제작·배송 지점, 실제 배송 가능 여부를 보증하지 않습니다.')
         pagestr=(
@@ -106,14 +114,20 @@ def main(archive):
           '판매처에 알려 상담한 뒤 결제 화면에서 총액을 확인하세요.</p>'
           '<p>현재 확인된 지역별 배송 가능 사례: 0건. '
           '지역명 목록이 전국 배송이나 최저가를 보장하지 않습니다.</p></section>'
-          '<section><h2>지역명 찾아보기</h2><p>원장상 상위 행정구역: '+e(parent)+'. '
-          '해당 구역의 배송 가능 여부를 뜻하지 않습니다.</p>'
+          '<section><h2>지역명과 배송지 확인</h2><p>'+e(admin_context)+'</p>'
+          '<p>같은 '+e(kind)+' 명칭이라도 결제 전에는 정확한 수령 시설명과 상세 주소를 별도로 전달해야 합니다.</p>'
           '<p><a href="/localities/'+e(r['provinceCode'])+'.html">해당 시·도 읍면동 목록</a> · '
           '<a href="/localities/">전국 읍면동 목록</a> · <a href="/regions/">시·군·구 목록</a></p>'
-          '</section><section><h2>FAQ</h2><details><summary>표시 가격이 결제총액인가요?</summary>'
-          '<p>아닙니다. 배송비와 리본·옵션 비용을 판매처에 확인하세요.</p></details>'
-          '<details><summary>이 지역에 당일 배송되나요?</summary><p>확인되지 않았습니다. '
-          '수령지와 희망 시간을 먼저 상담하세요.</p></details></section></main></body></html>')
+          '</section><section><h2>실제 주문 전 확인 질문</h2>'
+          '<details><summary>'+e(address_question)+'</summary>'
+          '<p>행정구역명만으로 배송지를 확정할 수 없습니다. 정확한 도로명 주소, 수령 시설명과 필요한 경우 빈소·행사장 정보를 판매처에 전달하세요. 개인정보는 이 안내 페이지에서 수집하지 않습니다.</p></details>'
+          '<details><summary>'+e(schedule_question)+'</summary>'
+          '<p>현재 이 지역의 배송 가능 시간이나 당일 배송 여부는 확인되지 않았습니다. 판매처에 정확한 날짜·시간을 알려 접수 가능 여부를 확인하세요.</p></details>'
+          '<details><summary>'+e(additional_question)+'</summary>'
+          '<p>표시 상품가는 최종 결제금액을 보장하지 않습니다. 실제 배송지에 적용되는 추가 운송비, 리본 문구와 옵션 금액을 확인한 뒤 주문서의 총액을 검토하세요.</p></details>'
+          '<details><summary>근조 기본형과 고급형은 무엇이 다른가요?</summary>'
+          '<p>확인된 기준가 차이는 20,000원입니다. 실제 꽃 구성·품종·크기를 가격만으로 추정하지 말고 두 상품 상세의 규격을 비교하세요.</p></details>'
+          '</section></main></body></html>')
         (OUT/'locality'/f"{r['code']}.html").write_text(pagestr,encoding='utf-8')
     directory=[]
     for n,p in provinces.items():
@@ -142,7 +156,8 @@ def main(archive):
       'verifiedParentLocalities':len(records),'unmatched':excluded,
       'upperRegions':284,'pilotPages':3,'upperNewPages':282,'provinceLocalityHubs':16,
       'localityDirectory':1,'grandTotalHTML':303+len(records),
-      'verifiedDeliveryAreas':0,'regionalServiceClaims':False,'uniqueContentProven':False,
+      'verifiedDeliveryAreas':0,'regionalServiceClaims':False,'uniqueContentProven':False,'regionalShippingEvidenceCount':0,
+      'copyReusedAcrossLocalities':True,'faqBasedOnVerifiedLocalityNameAndGeneralPurchaseQuestions':True,
       'indexable':False,'canonical':False,'sitemap':False,'localities':records}
     (OUT/'localities-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('WREATHPRICE_LOWER_OFFICIAL_BUILD_PASS '+json.dumps({k:v for k,v in report.items() if k!='localities'},ensure_ascii=False),flush=True)
