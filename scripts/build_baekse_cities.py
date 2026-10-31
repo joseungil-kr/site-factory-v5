@@ -164,7 +164,11 @@ def city_directory(cities):
 
 def render_home(cities):
     title="백세푸드 닭한마리·닭칼국수·순대국·소머리국밥 전수 창업"
-    content=[head(title,title+" 및 전국 시 단위 창업 상담. "+PHONE),header()]
+    home_head=head(title,title+" 및 전국 시 단위 창업 상담. "+PHONE)
+    verification='<meta name="naver-site-verification" content="3203fa257fed369e603424067cbfab1f2611638b" />'
+    assert home_head.count("</head>")==1 and verification not in home_head
+    home_head=home_head.replace("</head>",verification+"</head>",1)
+    content=[home_head,header()]
     content.append('<main><div class="wrap hero"><div><span class="eyebrow">BAEKSE FOOD · RECIPE TRANSFER</span>'
       '<h1>'+escape(title)+'</h1>'
       '<p>닭한마리·닭칼국수·순대국·소머리국밥 메뉴를 검토하는 예비 창업자와 기존 식당을 위한 전수 상담입니다. '
