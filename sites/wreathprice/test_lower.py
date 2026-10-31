@@ -63,6 +63,8 @@ class QA(unittest.TestCase):
         b=(self.out/'locality/1111010200.html').read_text(encoding='utf-8')
         self.assertIn('청운동',a)
         self.assertIn('신교동',b)
+        self.assertEqual(a.replace('청운동','[지역명]'),b.replace('신교동','[지역명]'),
+            'Same-parent localities still reuse the exact common template; do not claim uniqueness')
         for code,text in [('1111010100',a),('1111010200',b)]:
             self.assertIn('실제 주문 전 확인 질문',text)
             self.assertIn('근조 기본형과 고급형',text)
