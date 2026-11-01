@@ -565,7 +565,9 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
             "domainDeployed": False, "indexNowSubmitted": False}
 
 
-def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT) -> dict:
+def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT, mode: str = "preview") -> dict:
+    if mode not in ("preview", "public"):
+        raise ValueError("Unknown publication mode")
     spec, keywords, pool = require_source()
     out, report = out.resolve(), report.resolve()
     if out != DEFAULT_OUTPUT.resolve() or report != DEFAULT_REPORT.resolve():
@@ -624,7 +626,26 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT) -> dict:
     qa["researchIndustries"] = len(keywords["industries"]) - len(sectors)
     qa["extensionIndustries"] = 28
     qa["originalIndustriesPreserved"] = 10
-    qa["sourceCommitMode"] = "offline preview only"
+    if mode == "public":
+        urls = []
+        for relative in pages:
+            path = "/" if relative == "index.html" else "/" + relative.removesuffix("index.html")
+            url = DOMAIN + path
+            urls.append(url)
+            dest = out / relative
+            source = dest.read_text(encoding="utf-8")
+            source = source.replace('content="noindex,nofollow,noarchive"', 'content="index,follow"', 1)
+            source = source.replace("</head>", '<link rel="canonical" href="' + url + '"></head>', 1)
+            dest.write_text(source, encoding="utf-8")
+        (out / "sitemap.xml").write_text(
+            '<?xml version="1.0" encoding="UTF-8"?>\n'
+            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+            + "".join("<url><loc>" + escape(url) + "</loc></url>" for url in urls)
+            + "</urlset>\n", encoding="utf-8")
+        (out / "robots.txt").write_text("User-agent: *\nAllow: /\nSitemap: " + DOMAIN + "/sitemap.xml\n", encoding="utf-8")
+    qa["sourceCommitMode"] = mode + " local build; deployment is separate"
+    qa["previewNoindex"] = mode == "preview"
+    qa["sitemap"] = mode == "public"
     (report / "qa.json").write_text(json.dumps(qa, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return qa
 
@@ -633,5 +654,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT)
+    parser.add_argument("--mode", choices=("preview", "public"), default="preview")
     a = parser.parse_args()
-    print(json.dumps(build(a.output, a.report), ensure_ascii=False, indent=2))
+    print(json.dumps(build(a.output, a.report, a.mode), ensure_ascii=False, indent=2))
