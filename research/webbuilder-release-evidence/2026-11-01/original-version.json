@@ -1,0 +1,31 @@
+{
+  "id": "a75d5a85-d2fb-445a-8699-37577c3c4c62",
+  "number": 11,
+  "metadata": {
+    "created_on": "2026-10-02T18:18:06.42462Z",
+    "source": "wrangler",
+    "has_preview": true
+  },
+  "annotations": {
+    "workers/triggered_by": "version_upload"
+  },
+  "resources": {
+    "script": {
+      "etag": "",
+      "handlers": null,
+      "last_deployed_from": ""
+    },
+    "script_runtime": {
+      "assets": {
+        "html_handling": "auto-trailing-slash",
+        "not_found_handling": "404-page",
+        "serve_directly": true,
+        "raw_run_worker_first": false,
+        "base_path": "/"
+      },
+      "compatibility_date": "2026-10-01",
+      "usage_model": "standard"
+    },
+    "bindings": []
+  }
+}
