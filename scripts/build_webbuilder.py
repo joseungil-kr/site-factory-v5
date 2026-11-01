@@ -636,6 +636,8 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT, mode: str =
             source = dest.read_text(encoding="utf-8")
             source = source.replace('content="noindex,nofollow,noarchive"', 'content="index,follow"', 1)
             source = source.replace("</head>", '<link rel="canonical" href="' + url + '"></head>', 1)
+            if relative == "index.html":
+                source = source.replace("</head>", '<meta name="naver-site-verification" content="1992f8e06229005ed7038234611e654b31db4dbf" /></head>', 1)
             dest.write_text(source, encoding="utf-8")
         (out / "sitemap.xml").write_text(
             '<?xml version="1.0" encoding="UTF-8"?>\n'

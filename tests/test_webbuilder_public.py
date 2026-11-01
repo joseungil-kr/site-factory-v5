@@ -26,6 +26,10 @@ class PublicModeTest(unittest.TestCase):
             canonical = '<link rel="canonical" href="' + b.DOMAIN + path + '">'
             self.assertEqual(new.count(canonical), 1)
             self.assertIn(b.DOMAIN + path, urls)
+            tag = '<meta name="naver-site-verification" content="1992f8e06229005ed7038234611e654b31db4dbf" />'
+            self.assertEqual(new.count(tag), 1 if relative == "index.html" else 0)
+            self.assertNotIn(tag, old)
+            new = new.replace(tag, "")
             self.assertEqual(new.replace(canonical, "").replace('content="index,follow"', 'content="noindex,nofollow,noarchive"'), old)
         self.assertEqual(hashes, {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in (out / "assets/images").glob("*.webp")})
         self.assertIn("Allow: /", (out / "robots.txt").read_text())
