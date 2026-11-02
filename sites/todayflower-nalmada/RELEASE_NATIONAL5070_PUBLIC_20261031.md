@@ -40,3 +40,41 @@
 
 ## 향후 별도 작업
 실제 검색수록/유입·전환 측정, Search Console/Naver 사이트 등록(기존 소유확인 계정·인증 자료 필요), 지역별 배송 가능 조건의 증거 확보와 5,070페이지 문서 품질 점검.
+
+
+---
+
+## 2026-11-02 후속2 인계 독립 점검 — 마지막 운영 배포 추가 확인
+
+이 항목은 **2026-11-02 KST 후속2 인계 시점에 GitHub를 새로 조회한 결과**다. 위 2026-10-31 초기 공개 배포의 당시 버전과 혼동하지 않는다. 저장·검수 이외 운영 변경은 없다.
+
+### 마지막 성공 운영 배포
+
+- **V4 Actions 최신 확인 성공:** [run #41209263178](https://github.com/joseungil-kr/site-factory-v4/actions/runs/41209263178), 2026-10-31 **23:16 KST** 완료, workflow source SHA \`9aeeed9f1aac5da45f3b771a6ffd610db7b83ecd\`.
+- **최신 성공 Worker 활성 버전 기록:** \`79e425cf-2592-40ec-a55b-7ad383d132f1\` (run job \`124560625584\` Cloudflare 100% 활성 버전 GET 영수증). 위 원래 기록의 \`4b35c279-...\`는 직전 역사적 버전이다.
+- 운영 호스트 \`https://todayflower.nalmada.net/\` 홈 \`<head>\`에 네이버 태그 \`<meta name="naver-site-verification" content="d970eeb70abc7b36cbcc02fadd9362c5c57fcb46" />\` 정확히 **1개**, 대표 비홈 페이지에는 **0개**를 배포 Workflow의 실제 실서버 HTMLParser 검사로 확인. 공개는 \`index,follow\`·자기 canonical·sitemap 5,070 URL, 별도 \`workers.dev\`는 계속 noindex·robots Disallow·sitemap 404.
+- 동일 V4 Workflow에서 공개 HTML 18개·이미지 5개·비공개 7 HTTP 검사 PASS(\`TODAYFLOWER_PUBLIC_INDEX_5070_CANONICAL_SITEMAP_PASS 18 5 7\`), Chromium 390/1440px 합계 16개 화면 PASS(\`TODAYFLOWER_PUBLIC_16_SCREEN_390_1440_PASS 16\`). 새 Worker/DNS/Secret/권한 생성 없음.
+- Artifact ID \`13045292821\`, 업로드 ZIP digest \`sha256:417e0ab5c260838cd55c1827f39c6a98afefcb64c37843d74d99844463f6b631\`.
+- **한계:** 이 인계 환경에서 현재 도메인 DNS 해석이 실패해 2026-11-02의 신규 라이브 HTTP 재조회는 하지 못했다. 위 정보는 2026-10-31 성공 Actions의 실제 실행 로그와 SHA를 직접 재조회한 범위이다. 네이버 Search Advisor \`statz\`의 실제 소유확인 버튼·사이트맵 등록 성공, 실제 검색엔진 색인은 확인되지 않았다.
+
+### 이미지 5개 독립 GitHub 원격 바이너리 검증
+
+2026-11-02 브랜치 커밋 \`7365337804f0f366b8c0e4c32573c51ef03d8e73\`에서 각 파일의 GitHub 원격 base64 바이트의 RIFF/WEBP/VP8 frame header를 개별 확인. 다섯 장 모두 실제 **1448×1086 픽셀**, 원격 blob SHA와 RIFF 전체 바이트 길이가 \`site-spec.json\`의 기록에 맞는다. 대상은 \`gift-bouquet.webp\` (167,766B), \`opening-plant.webp\` (140,286B), \`celebration-wreath.webp\` (272,178B), \`condolence-wreath.webp\` (149,518B), \`flower-wrapping.webp\` (135,190B). **96×141px 단순 업스케일이 아니라는 과거 원본 사용 기록과 별도로, 최종 파일의 실제 해상도를 이번에 직접 확인**했다.
+
+생성 원본의 정확한 \`image_gen\` 호출 프롬프트·생성 UTC 타임스탬프는 \`site-spec.json images.provenance\`에 없다. gen_id와 원격 바이너리 존재만으로 V5 \`main\`의 신규 이미지 출처 검증 규칙을 충족했다고 말하지 않는다. 원본 프롬프트/UTC를 추측으로 보완하거나 출처 정책을 우회하지 않는다.
+
+### 소스/운영 상태 정합성 — 후속 체크 항목
+
+- 해당 V5 브랜치는 2026-11-02 기준 \`main\`과 diverged: **ahead 101 / behind 2**, merge-base \`d4f58c660655afc5f8359fe0fa70b98fc7588309\`; 작업자1용 PR은 확인되지 않음. 운영은 V4의 고정 V5 소스 \`0ca5705aa12950da571f089b2d4ac7256111f77e\`를 인출해 배포한 별도 루틴.
+- \`site.json.publishEnabled=false\` 및 \`site-spec.json.publishPolicy.production=false\`, \`rollout.publicReleaseApproved=false\`는 **미리보기 정적 아티팩트의 기본 차단/이전 승인 상태**로 남아 있다. 실운영은 V4 Worker의 정확한 hostname 분기로 index이며, 단순히 false 값을 모두 true로 바꾸면 원본 noindex 안전망을 훼손할 수 있다. 원장과 운영 이중 상태를 명시적으로 모델링하기 전 값 변경 금지.
+- 전체 5,070페이지의 실질 정보 가치 검수는 기존 고정 1% **51페이지 / 1,275쌍** 수준. 유사도 최고 약 **43.18%**와 경고 1건만 검증됐으며 5,070개 전체 문서의 실지역 배송 가능성을 검증한 것이 아님. 중복 문서/저품질 SEO 위험 모니터링 필요.
+- 2026-10-31 성공 QA: [V5 run #41185803963](https://github.com/joseungil-kr/site-factory-v5/actions/runs/41185803963). 새 배포·IndexNow/Google 재제출·전체 재생성·신규 이미지 교체는 불필요하므로 수행하지 않음.
+
+### 이어서 처리할 순서
+
+1. Naver Search Advisor(기존 \`statz\`)의 **소유확인 및 사이트맵 실제 성공 영수증** 확인. 메타 삽입 성공만으로 등록 완료를 주장하지 않기.
+2. 이미지 생성 원기록의 정확한 프롬프트·생성 시각 회수 또는 출처 미완료를 그대로 유지. 출처검증 우회·가공 금지.
+3. 도메인 HTTP가 가능한 환경에서 현재 운영 \`index\`·대표 canonical·sitemap/robots·workers.dev \`noindex\` 재검증.
+4. 실제 검색 수록·전환과 지역별 서비스 조건을 소규모로 검증한 뒤 전국 5,070페이지 문서 가치/품질 개선 여부 판단. 전국 재발행을 먼저 반복하지 않음.
+
+이번 인계 기록 자체는 **문서만 수정**하며, 운영 Worker/도메인/비밀키/검색 설정/상품 가격과 주문 링크는 건드리지 않는다.
