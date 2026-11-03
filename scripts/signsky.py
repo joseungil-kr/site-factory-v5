@@ -118,6 +118,11 @@ def build(mode):
     sitemap=OUT/'sitemap.xml'
     if mode=='public': sitemap.write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>'+ORIGIN+u+'</loc></url>' for u in urls)+'</urlset>',encoding='utf-8')
     elif sitemap.exists(): sitemap.unlink()
+    if mode=='public':
+        from v5.rss import generate
+        generate(OUT,ORIGIN,'간판스카이 작업 안내')
+    else:
+        (OUT/'rss.xml').unlink(missing_ok=True)
     write(ROOT/'reports/signsky/manifest.json',{'mode':mode,'pageCount':len(urls),'urls':urls,'regionCount':69,'dongCount':1732,'pages':pages})
     print(json.dumps({'generated':len(urls),'mode':mode}))
 

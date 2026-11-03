@@ -7,14 +7,17 @@ export default {
     const response=await adapter.fetch(request,{...env,V5_STAGING:'0',ANALYTICS:undefined});
     const headers=new Headers(response.headers);
     headers.set('X-Content-Type-Options','nosniff');
+    if(publicHost && response.status===200 && url.pathname==='/rss.xml') headers.set('Content-Type','application/rss+xml; charset=utf-8');
     if(!publicHost || response.status===404) headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
     if(!publicHost && url.pathname==='/robots.txt') return new Response('User-agent: *\nDisallow: /\n',{headers});
     if(!publicHost && url.pathname==='/sitemap.xml') return new Response('Not found',{status:404,headers});
+    if(!publicHost && url.pathname==='/rss.xml') return new Response('Not found',{status:404,headers});
     if(!publicHost && response.status===200 && (headers.get('content-type')||'').includes('text/html')){
       let body=await response.text();
       body=body.replace(/<meta\s+name=["']robots["']\s+content=["']index,follow["']\s*\/?>/i,
         '<meta name="robots" content="noindex,nofollow">');
       body=body.replace(/<link\s+rel=["']canonical["'][^>]*>\s*/ig,'');
+      body=body.replace(/<link rel="alternate" type="application\/rss\+xml"[^>]*>/g,'');
       headers.delete('content-length');
       headers.delete('content-encoding');
       headers.delete('etag');

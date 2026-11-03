@@ -30,6 +30,10 @@ test('only exact approved host is indexable; preview HTML is noindex and canonic
     assert.match(missing.headers.get('x-robots-tag'),/noindex/);
     const sitemap=await worker.fetch(new Request('https://'+host+'/sitemap.xml'),env);
     assert.equal(sitemap.status,isPublic?200:404);
+    const feed=await worker.fetch(new Request('https://'+host+'/rss.xml'),env);
+    assert.equal(feed.status,isPublic?200:404);
+    if(isPublic) assert.equal(feed.headers.get('Content-Type'),'application/rss+xml; charset=utf-8');
+    else assert.match(feed.headers.get('X-Robots-Tag'),/noindex/);
     const robots=await worker.fetch(new Request('https://'+host+'/robots.txt'),env);
     const robotsText=await robots.text();
     if(isPublic) assert.ok(robotsText.includes('Allow: /'));
