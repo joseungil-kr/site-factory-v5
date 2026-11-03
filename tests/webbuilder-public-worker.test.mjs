@@ -19,9 +19,15 @@ test('workers.dev remains blocked even with public assets', async () => {
   assert.match(html, /noindex/);
   assert.doesNotMatch(html, /canonical/);
   assert.match(r.headers.get('X-Robots-Tag'), /noindex/);
-  for (const path of ['/robots.txt','/sitemap.xml']) {
+  for (const path of ['/robots.txt','/sitemap.xml','/rss.xml']) {
     const response = await worker.fetch(new Request('https://test.workers.dev'+path), env);
     assert.equal(response.status, path === '/robots.txt' ? 200 : 404);
     assert.match(await response.text(), /Disallow: \//);
   }
+});
+
+test('RSS keeps correct MIME on the public host only', async () => {
+  const r = await worker.fetch(new Request('https://webbuilder.nalmada.net/rss.xml'), env);
+  assert.equal(r.status, 200);
+  assert.equal(r.headers.get('Content-Type'), 'application/rss+xml; charset=utf-8');
 });

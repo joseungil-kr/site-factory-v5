@@ -645,6 +645,8 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT, mode: str =
             + "".join("<url><loc>" + escape(url) + "</loc></url>" for url in urls)
             + "</urlset>\n", encoding="utf-8")
         (out / "robots.txt").write_text("User-agent: *\nAllow: /\nSitemap: " + DOMAIN + "/sitemap.xml\n", encoding="utf-8")
+        from v5.rss import generate
+        qa["rss"] = generate(out, DOMAIN, "인터피아드 홈페이지 제작 안내")
     qa["sourceCommitMode"] = mode + " local build; deployment is separate"
     qa["previewNoindex"] = mode == "preview"
     qa["sitemap"] = mode == "public"
