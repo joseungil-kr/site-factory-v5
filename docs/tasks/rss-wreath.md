@@ -1,0 +1,7 @@
+# Wreath RSS maintenance
+
+Base 356378c1fe35151935fd7d9126b40bb6748a5df9 matches all 10336 current public pages. Existing Worker sfv52-wreath-preview active 6059997a-3b77-4a58-9bfe-da854c606655, WREATH_PUBLIC=1, must be guarded before deploy. Initial network timeout was read-only; bounded retry completed all 10336 comparisons with no mismatch.
+
+Existing public build generates RSS via v5/rss.py reused from 94db74d90e999fd19cf33716a6c2c7ee1a588d52, narrowly extended with explicit whole-body selection and source H1 to include the existing hero/introduction outside main. Two XML/full-hero tests pass. RSS 50 entries / 626821 bytes, exact own-host URLs/guid, undated pubDate omitted. Public-only discovery/MIME; preview RSS 404 and HTMLRewriter removes preview discovery without changing current SEO isolation. Existing runtime Naver ownership handler is preserved exactly.
+
+Validation: seller tests 6, public-path tests 3, RSS tests 2 and Worker tests 4; live seller QA verified all six current prices/product images against frozen hashes, no order submitted. Original full public build and QA checked 10337 HTML, 103077 internal links and 60414 external product links/images. Seeded 118 samples versus 10068 article population / 1187906 comparisons passed maximum 0.473684, zero duplicates/violations/errors. No content, price, image, sitemap URL or threshold changes. Source remains isolated from main/order.

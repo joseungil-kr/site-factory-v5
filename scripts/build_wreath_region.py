@@ -187,6 +187,11 @@ def main():
         for url in published:ET.SubElement(ET.SubElement(root,'{http://www.sitemaps.org/schemas/sitemap/0.9}url'),'{http://www.sitemaps.org/schemas/sitemap/0.9}loc').text=DOMAIN+url
         ET.ElementTree(root).write(OUT/'sitemap.xml',encoding='utf-8',xml_declaration=True)
     else:(OUT/'robots.txt').write_text('User-agent: *\nDisallow: /\n',encoding='utf-8')
+    if args.public:
+        from v5.rss import generate
+        generate(OUT, DOMAIN, '바로플라워 지역 안내', body_tag='body')
+    else:
+        (OUT/'rss.xml').unlink(missing_ok=True)
     manifest={'site':'wreath-region','mode':'public-candidate' if args.public else 'preview','sample':args.sample,'pageCount':len(published),
        'regionRows':len(records),'articleCount':len(candidate),'provinceCount':len({r[0] for r in records}),'districtCount':len(groups),
        'links':[DOMAIN+u for u in published[:8]],'regionSource':'sites/wreath-region/regions.json',

@@ -18,18 +18,20 @@ export default {
         headers: {'Content-Type': 'text/plain; charset=utf-8', 'X-Robots-Tag': 'noindex,nofollow,noarchive'}
       });
     }
-    if (!isPublicHost && u.pathname === '/sitemap.xml') {
+    if (!isPublicHost && ['/sitemap.xml','/rss.xml'].includes(u.pathname)) {
       return new Response('Not found', {status: 404, headers: {'X-Robots-Tag': 'noindex,nofollow,noarchive'}});
     }
     if (u.pathname === '/') u.pathname = '/index.html';
     const response = await env.ASSETS.fetch(new Request(u, request));
     const headers = new Headers(response.headers);
     headers.set('X-Content-Type-Options', 'nosniff');
+    if(isPublicHost && u.pathname === '/rss.xml' && response.ok)headers.set('Content-Type','application/rss+xml; charset=utf-8');
     if (!isPublicHost || response.status === 404) headers.set('X-Robots-Tag', 'noindex,nofollow,noarchive');
     if (!isPublicHost && response.status === 200 && (headers.get('content-type') || '').includes('text/html')) {
       // Public candidate HTML contains index/follow and the public canonical.
       // For workers.dev only, rewrite HTML metadata without weakening access controls.
       return new HTMLRewriter()
+        .on('head link[type="application/rss+xml"]', { element(e) { e.remove(); } })
         .on('head link[rel="canonical"]', { element(e) { e.remove(); } })
         .on('head meta[name="robots"]', { element(e) { e.setAttribute('content', 'noindex,nofollow'); } })
         .transform(new Response(response.body, {status: response.status, headers}));

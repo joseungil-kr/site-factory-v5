@@ -32,6 +32,7 @@ test('preview HTML metadata is rewritten but public HTML metadata is preserved',
       const handlers=this.handlers;
       return response.text().then(body=>{
         let out=body;
+        if(handlers.some(x=>x.selector==='head link[type="application/rss+xml"]'))out=out.replace(/<link rel="alternate" type="application\/rss\+xml"[^>]*>/g,'');
         if(handlers.some(x=>x.selector==='head link[rel="canonical"]'))out=out.replace(/<link\s+rel="canonical"[^>]*>/gi,'');
         if(handlers.some(x=>x.selector==='head meta[name="robots"]'))out=out.replace(/(<meta\s+name="robots"\s+content=")[^"]*(")/i,'$1noindex,nofollow$2');
         return new Response(out,{status:response.status,headers:response.headers});
@@ -39,17 +40,19 @@ test('preview HTML metadata is rewritten but public HTML metadata is preserved',
     }
   };
   try {
-    const html='<html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://wreath.nalmada.net/r/x"></head><body>ok</body></html>';
+    const html='<html><head><meta name="robots" content="index,follow"><link rel="canonical" href="https://wreath.nalmada.net/r/x"><link rel="alternate" type="application/rss+xml" href="https://wreath.nalmada.net/rss.xml"></head><body>ok</body></html>';
     const env={WREATH_PUBLIC:'1',ASSETS:{fetch:async()=>new Response(html,{status:200,headers:{'Content-Type':'text/html; charset=utf-8'}})}};
     const preview=await worker.fetch(new Request('https://sfv52-wreath-preview.joseungil.workers.dev/r/x'),env);
     const previewHtml=await preview.text();
     assert.match(previewHtml,/name="robots" content="noindex,nofollow"/);
     assert.doesNotMatch(previewHtml,/rel="canonical"/);
+    assert.doesNotMatch(previewHtml,/application\/rss\+xml/);
     assert.match(preview.headers.get('X-Robots-Tag'),/noindex/);
     const publicResponse=await worker.fetch(new Request('https://wreath.nalmada.net/r/x'),env);
     const publicHtml=await publicResponse.text();
     assert.match(publicHtml,/name="robots" content="index,follow"/);
     assert.match(publicHtml,/rel="canonical" href="https:\/\/wreath.nalmada.net\/r\/x"/);
+    assert.match(publicHtml,/application\/rss\+xml/);
     assert.equal(publicResponse.headers.has('X-Robots-Tag'),false);
   } finally {
     if(old===undefined)delete globalThis.HTMLRewriter;else globalThis.HTMLRewriter=old;
@@ -74,4 +77,11 @@ test('Naver ownership response is served only on exact approved host/path for GE
   const preview=await worker.fetch(new Request('https://sfv52-wreath-preview.joseungil.workers.dev'+path),env);
   assert.equal(preview.status,404);
   assert.equal(assetCalls,2);
+});
+
+test('RSS uses proper MIME only on exact public host',async()=>{
+ const env={WREATH_PUBLIC:'1',ASSETS:{fetch:async()=>new Response('<rss/>')}};
+ const pub=await worker.fetch(new Request('https://wreath.nalmada.net/rss.xml'),env);
+ assert.equal(pub.status,200);assert.match(pub.headers.get('Content-Type'),/application\/rss\+xml/);
+ for(const host of ['preview.workers.dev','quicksky.nalmada.net'])assert.equal((await worker.fetch(new Request('https://'+host+'/rss.xml'),env)).status,404);
 });
