@@ -116,6 +116,9 @@ def build(public=False):
         if len(key)!=32 or any(char not in '0123456789abcdef' for char in key):
             raise RuntimeError('Officeplant public IndexNow key must be 32 lowercase hexadecimal characters')
         (out/(key+'.txt')).write_text(key+'\n',encoding='utf-8')
+    if public:
+        from v5.rss import generate
+        generate(out, DOMAIN, '오피스플랜트')
     report=ROOT/'reports/officeplant';report.mkdir(parents=True,exist_ok=True)
     manifest={'site':'officeplant','public':public,'pages':pages,'contentCount':len(pages),'regions':len(rows),'poolBlocks':len(pool),'poolAllocation':{'method':'GF(9) Reed-Solomon code, 9x9 groups + 1 shared block','regionalPages':len(allocation),'uniqueSelections':len({tuple(x) for x in allocation}),'maximumSharedBlocks':max_shared,'maximumAllowedSharedBlocks':4,'pass':max_shared<=4},'sourceRegionSHA256':source_region_sha}
     (report/('manifest-public.json' if public else 'manifest.json')).write_text(json.dumps(manifest,ensure_ascii=False,indent=2),encoding='utf-8')
