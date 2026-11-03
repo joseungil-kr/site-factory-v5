@@ -5,7 +5,9 @@ No DNS changes. Does not alter original 1536x1024 WebP/provenance.
 from pathlib import Path
 from html.parser import HTMLParser
 import hashlib,json,re,shutil,xml.etree.ElementTree as ET
+import sys
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
 IN=ROOT/"dist/skyquote-official-preview"
 OUT=ROOT/"dist/skyquote-public"
 HOST="skyquote.nalmada.net"
@@ -66,6 +68,8 @@ def main():
     for img in manifest["assets"]:
         f=OUT/"assets"/Path(img["path"]).name
         assert hashlib.sha256(f.read_bytes()).hexdigest()==img["sha256"],f
+    from v5.rss import generate
+    generate(OUT, ORIGIN, '스카이차 견적 안내', body_tag='body')
     (OUT/"public-manifest.json").write_text(json.dumps({
         "publicHost":HOST,"sourceArchiveSHA256":m["sourceArchiveSHA256"],
         "sitePages":len(urls),"sitemapUrls":len(urls),"correctedOfficialUpperRecords":284,

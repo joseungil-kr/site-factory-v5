@@ -12,7 +12,7 @@ export default {
       return new Response(PREVIEW_ROBOTS,{status:200,headers:{"Content-Type":"text/plain; charset=utf-8",
         "X-Robots-Tag":ROBOTS_NOINDEX,"X-Content-Type-Options":"nosniff"}});
     }
-    if (!publicMode && incoming.pathname==="/sitemap.xml") {
+    if (!publicMode && ["/sitemap.xml","/rss.xml"].includes(incoming.pathname)) {
       return new Response("Not found",{status:404,headers:{"X-Robots-Tag":ROBOTS_NOINDEX,"X-Content-Type-Options":"nosniff"}});
     }
     if (incoming.pathname==="/")incoming.pathname="/index.html";
@@ -23,6 +23,7 @@ export default {
       headers.set("X-Robots-Tag",ROBOTS_NOINDEX);
     } else {
       headers.delete("X-Robots-Tag");
+      if(incoming.pathname==="/rss.xml")headers.set("Content-Type","application/rss+xml; charset=utf-8");
     }
     const type=headers.get("Content-Type")||"";
     if (!publicMode && type.includes("text/html") && original.status===200) {
@@ -33,6 +34,7 @@ export default {
       if (!html.includes('<meta name="robots" content="noindex,nofollow">')) {
         return new Response("Unsafe preview HTML robots state",{status:503,headers:{"X-Robots-Tag":ROBOTS_NOINDEX}});
       }
+      html=html.replace(/<link rel="alternate" type="application\/rss\+xml"[^>]*>/g,"");
       headers.delete("Content-Length");
       headers.delete("Content-Encoding");
       headers.delete("ETag");

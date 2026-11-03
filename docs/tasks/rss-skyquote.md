@@ -1,0 +1,7 @@
+# Skyquote RSS on actual operating dual-host source
+
+Actual source is 87fd483acfe489dcc474352069c65b69bee91ce3 from the latest Naver-meta existing-Worker controller, not the older d2046c4 clue or uncreated sfv5-skyquote-public Worker. All 310 public HTML pages and five original images matched. GET-only inventory confirmed sfv5-skyquote-preview hosts skyquote.nalmada.net at version dc6e5761-f512-4ae0-84da-33ed58e4e20a, SKYQUOTE_PUBLIC=1, existing preview flags true. These settings and exact binding must remain unchanged.
+
+Existing public prepare generates RSS automatically from the full rendered body, 50 entries / 969103 bytes / no fabricated dates. Reuses v5/rss.py plus narrowly tested compatibility for whole-body heroes and the existing national index document with implicit HTML head/body tags: fallback to its complete main and discovery inserted before main, preserving its original markup/content. Exact public RSS MIME, preview 404/noindex and removal of preview discovery. Existing 310 URLs, canonical/indexing policy, Naver-home meta and five image hashes preserved.
+
+Validation: official government ZIP restored from existing V4 main blob, SHA-256 44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd (413481 bytes), original official audit/build/310-page preview+public smoke passed; three RSS XML/full-body/implicit-head tests and exact-host Worker test passed. Local raw-ledger guard used original Git blob bytes to avoid Windows checkout line-ending effects; no ledger change adopted. Source branches are isolated from main/order.
