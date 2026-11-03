@@ -1,5 +1,15 @@
 # 사이트 제작 사전기획 게이트 (Preflight Planning Gate)
 
+## 신규 사이트 전달 방식
+
+앞으로 신규 사이트는 공유 Worker의 정적 HTML·이미지 전달 경로를 기본으로 준비한다.
+`scaffold-site`의 기본 `deliveryMode`는 `shared-static-preview`다. 승인된 운영 준비 시
+`shared-static`과 같은 묶음의 정확한 Worker 이름을 사용하며 `v5.shared_release`로 함께 준비한다.
+개별 사이트용 배포 경로는 공유 모드를 거부한다. 기존 사이트의 설정·Worker·URL은 변경하지 않는다.
+서비스형은 전화 문의만 지원하며 analytics·siteSearch·IndexNow·특수 페이지를 켜면 실패한다.
+지원하지 않는 문의·검색 기능은 묵시적으로 생략하지 말고 기획에서 명시한다.
+구체적인 입력·복구·배포 준비 제약은 `docs/SHARED_RELEASE_PREPARATION_20261103.md`를 따른다.
+
 ## 대상
 Site Factory에서 **새로 생성하는 사이트**. 기존 운영 사이트의 배포/빌드 기능을 소급 차단하지 않는다.
 

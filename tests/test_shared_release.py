@@ -156,11 +156,12 @@ class SharedReleaseTests(unittest.TestCase):
         from v5.deploy import preflight, worker_config
         from v5.config import read_site
         data = read_site('ansan-promotion-plant')
-        data['site']['deliveryMode'] = 'shared-static'
-        with patch('v5.deploy.read_site', return_value=data):
-            self.assertTrue(any('overwrite the shared Worker' in x for x in preflight('new-a')['blockers']))
-            with self.assertRaisesRegex(ConfigError, 'shared_release'):
-                worker_config('new-a')
+        for mode in ('shared-static', 'shared-static-preview'):
+            data['site']['deliveryMode'] = mode
+            with patch('v5.deploy.read_site', return_value=data):
+                self.assertTrue(any('overwrite the shared Worker' in x for x in preflight('new-a')['blockers']))
+                with self.assertRaisesRegex(ConfigError, 'shared_release'):
+                    worker_config('new-a')
 
     def test_feed_path_collision_cannot_overwrite_original(self):
         source = self.root / 'source'; source.mkdir()
@@ -276,3 +277,35 @@ class SharedReleaseTests(unittest.TestCase):
             self.assertEqual(manifest['mode'], mode)
             feed = (target / 'public/_sfv5/sites' / site_id / 'rss.xml').read_text(encoding='utf-8')
             self.assertIn('https://' + site_id + '.example.test/', feed)
+
+    def test_real_service_json_input_path_and_unsupported_features_fail_closed(self):
+        from v5.config import read_site
+        from v5.engine import build as real_build
+        self.service_data()
+        source = self.data['new-a']['root']
+        original = json.loads((source / 'site.json').read_text(encoding='utf-8'))
+        # Use file-backed read_site in the adapter, engine and audit; no reader mock.
+        with patch('v5.config.SITES', self.root / 'sites'), patch('v5.site_plan.ROOT', self.root), patch.object(release, 'read_site', side_effect=read_site), patch.object(release, 'build', side_effect=real_build):
+            target = self.prepare('real-input', ids=['new-a'])
+            release.verify_release(target)
+            for feature in ('analytics', 'indexNow', 'siteSearch'):
+                changed = dict(original); changed[feature] = {'enabled': True}
+                (source / 'site.json').write_text(json.dumps(changed), encoding='utf-8')
+                with self.assertRaisesRegex(ConfigError, 'disabled'):
+                    self.prepare('unsupported-' + feature, ids=['new-a'])
+                self.assertFalse((self.root / ('unsupported-' + feature)).exists())
+            (source / 'site.json').write_text(json.dumps(original), encoding='utf-8')
+            (source / 'special-pages.json').write_text('[{"path":"extra.html"}]')
+            with self.assertRaisesRegex(ConfigError, 'special pages'):
+                self.prepare('unsupported-special', ids=['new-a'])
+            (source / 'special-pages.json').write_text('[]')
+            changed = dict(original); changed['phone'] = 'not-a-phone'
+            (source / 'site.json').write_text(json.dumps(changed), encoding='utf-8')
+            with self.assertRaisesRegex(ConfigError, 'phone'):
+                self.prepare('invalid-phone', ids=['new-a'])
+            (source / 'site.json').write_text(json.dumps(original), encoding='utf-8')
+            spec_file = source / 'site-spec.json'
+            spec = json.loads(spec_file.read_text(encoding='utf-8')); spec['conversion']['mode'] = 'form'
+            spec_file.write_text(json.dumps(spec), encoding='utf-8')
+            with self.assertRaisesRegex(ConfigError, 'phone conversion plan'):
+                self.prepare('unsupported-form', ids=['new-a'])
