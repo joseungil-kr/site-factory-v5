@@ -75,6 +75,8 @@ def construct(source=SOURCE,dest=DEST,report=REPORT):
                (dest/("index.html" if p["path"]=="/" else p["path"].lstrip("/"))).read_text(encoding="utf-8")
                for p in manifest["pages"])
     assert len(list((dest/"assets/images").glob("*.webp")))==5
+    from v5.rss import generate
+    generate(dest, DOMAIN, '겨울빵', body_tag='body')
     receipt={
       "site":"winterbbang","mode":"ALL_1804_INDEXABLE_RELEASE_CANDIDATE",
       "sourceNameLedger":"data/regions/seoul_gyeonggi_current_dong.json",

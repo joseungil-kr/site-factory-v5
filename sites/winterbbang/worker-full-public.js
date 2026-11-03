@@ -9,7 +9,7 @@ const PREVIEW_HOST = "sfv54-winterbbang-preview.joseungil.workers.dev";
 const INDEXNOW_KEY = "2a73e0239c3bcec564b34d6386cc622c";
 const PUBLIC_ORIGIN = "https://" + PUBLIC_HOST;
 const KEY_ROUTE = "/" + INDEXNOW_KEY + ".txt";
-const HIDE_ON_PREVIEW = new Set(["/sitemap.xml", KEY_ROUTE]);
+const HIDE_ON_PREVIEW = new Set(["/sitemap.xml", "/rss.xml", KEY_ROUTE]);
 const PREVIEW_ROBOTS = "User-agent: *\nDisallow: /\n";
 const INDEX_META = '<meta name="robots" content="index,follow">';
 const NOINDEX_META = '<meta name="robots" content="noindex,nofollow">';
@@ -41,7 +41,7 @@ function stripPublicSEO(body) {
   if (matches.length !== 1) {
     throw new Error("Generated public HTML missing unique public canonical");
   }
-  return body.replace(INDEX_META,NOINDEX_META).replace(canonical,"");
+  return body.replace(INDEX_META,NOINDEX_META).replace(canonical,"").replace(/<link rel="alternate" type="application\/rss\+xml"[^>]*>/g,"");
 }
 export default {
   async fetch(request, env) {
@@ -64,6 +64,7 @@ export default {
     const original = await env.ASSETS.fetch(new Request(url,request));
     const headers = new Headers(original.headers);
     const ok = original.status === 200;
+    if(role === "public" && ok && path === "/rss.xml"){headers.set("Content-Type","application/rss+xml; charset=utf-8");headers.set("X-Content-Type-Options","nosniff");}
     const publicHTML = role === "public" && ok && isHTML(path);
     if (role === "preview" || !ok) {
       headers.set("X-Robots-Tag","noindex, nofollow, noarchive");
