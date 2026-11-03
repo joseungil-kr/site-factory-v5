@@ -1,7 +1,9 @@
 """Prepare an indexable candidate without changing the noindex preview or live Worker."""
 from pathlib import Path
 import json,hashlib
+import sys
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
 PREVIEW=ROOT/'dist/hallflower-full-preview'
 PUBLIC=ROOT/'dist/hallflower-public-candidate'
 DOMAIN='https://hallflower.nalmada.net'
@@ -38,6 +40,8 @@ def main():
     (PUBLIC/'robots.txt').write_text('User-agent: *\nAllow: /\nSitemap: '+DOMAIN+'/sitemap.xml\n',encoding='utf-8')
     sitemap='<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'+''.join('  <url><loc>'+u+'</loc></url>\n' for u in urls)+'</urlset>\n'
     (PUBLIC/'sitemap.xml').write_text(sitemap,encoding='utf-8')
+    from v5.rss import generate
+    generate(PUBLIC, DOMAIN, '장례식장 화환 안내', body_tag='body')
     # Keep explicit block: creating candidate files is not authorization to bind or publish.
     report={'candidateOnly':True,'publicReleaseBlocked':True,'hostname':DOMAIN,'pages':len(urls),'sourceCount':manifest['count'],'sourceAudit':audit,'previewUnchanged':True,'sitemapUrls':len(urls),'sha256':{p.relative_to(PUBLIC).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in (PUBLIC/'index.html',PUBLIC/'robots.txt',PUBLIC/'sitemap.xml')}}
     (PUBLIC/'public-candidate-manifest.json').write_text(json.dumps(report,ensure_ascii=False,indent=2),encoding='utf-8')
