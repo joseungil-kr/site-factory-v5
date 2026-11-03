@@ -67,6 +67,8 @@ def render(source=SOURCE,dest=DEST,report=REPORT):
     assert (dest/"404.html").read_text(encoding="utf-8").count("noindex,nofollow")==1
     assert len(list((dest/"assets/baekse").glob("*.webp")))==5
     assert len(list(dest.rglob("*.html")))==431
+    from v5.rss import generate
+    generate(dest, HOST, '백세푸드')
     receipt={
       "site":"baekse","domain":HOST,"status":"FULL_430_INDEXABLE_CANDIDATE_OFFLINE",
       "counts":quality["pageTypes"],"pageCount":430,"urlCount":len(urls),

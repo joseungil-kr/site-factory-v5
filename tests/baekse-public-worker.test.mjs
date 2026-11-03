@@ -68,3 +68,10 @@ test("preview fails closed if static HTML loses exact public index or canonical"
  assert.equal(r.status,503);
  assert.match(r.headers.get("X-Robots-Tag"),/noindex/);
 });
+
+test('RSS is public only on exact public host',async()=>{
+ const env={ASSETS:{fetch:async()=>new Response('<rss/>')}};
+ const hit=host=>worker.fetch(new Request('https://'+host+'/rss.xml'),env);
+ const good=await hit(PUBLIC_HOST);assert.equal(good.status,200);assert.match(good.headers.get('Content-Type'),/application\/rss\+xml/);
+ for(const host of [PREVIEW_HOST,'other.example.com'])assert.equal((await hit(host)).status,404);
+});

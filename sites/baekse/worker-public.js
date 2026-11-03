@@ -31,7 +31,7 @@ function previewHTML(input) {
   if(!input.includes(META_PUBLIC))throw new Error("Missing public robots metadata");
   const canonicals=[...input.matchAll(PUBLIC_CANONICAL)];
   if(canonicals.length!==1)throw new Error("Expected exactly one public self canonical");
-  return input.replace(META_PUBLIC,META_PREVIEW).replace(PUBLIC_CANONICAL,"");
+  return input.replace(META_PUBLIC,META_PREVIEW).replace(PUBLIC_CANONICAL,"").replace(/<link rel="alternate" type="application\/rss\+xml"[^>]*>/g,"");
 }
 export default {
   async fetch(request,env) {
@@ -47,13 +47,14 @@ export default {
                  "X-Robots-Tag":"noindex, nofollow, noarchive"}
       });
     }
-    if(role==="preview"&&(path==="/sitemap.xml"||path===KEY_ROUTE))return blocked();
+    if(role==="preview"&&(path==="/sitemap.xml"||path==="/rss.xml"||path===KEY_ROUTE))return blocked();
     if(path==="/")url.pathname="/index.html";
     const source=await env.ASSETS.fetch(new Request(url,request));
     const headers=new Headers(source.headers);
     const isPage=path==="/"||path.endsWith(".html");
     if(role==="public"&&source.status===200) {
       headers.delete("X-Robots-Tag");
+      if(path==="/rss.xml")headers.set("Content-Type","application/rss+xml; charset=utf-8");
       return new Response(source.body,{status:source.status,statusText:source.statusText,headers});
     }
     headers.set("X-Robots-Tag","noindex, nofollow, noarchive");
