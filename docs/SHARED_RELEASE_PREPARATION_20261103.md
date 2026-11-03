@@ -1,6 +1,6 @@
 # 신규 사이트 공유 Worker 운영 빌드·배포 준비
 
-`v5.shared_release`는 V5의 기존 publish 생성기를 재사용해 여러 **신규 상품 주문형 사이트**의
+`v5.shared_release`는 V5의 기존 생성기를 재사용해 **신규 상품 주문형 및 서비스 문의형 사이트**의
 운영용 HTML·이미지·SEO·RSS 산출물을 하나의 Worker 패키지로 준비한다.
 기존 사이트의 내용·도메인·주문 링크·Worker·배포 워크플로는 변경하지 않는다.
 배포·DNS·권한·보안 설정 변경과 운영 사이트 HTTP 호출은 실행하지 않는다.
@@ -29,9 +29,13 @@ python -m v5.shared_release prepare --site <new-a> --site <new-b> --worker sfv5-
 python -m v5.shared_release verify dist/shared-fwith-r1
 ```
 
-`v5.engine.build(..., mode='publish')`와 기존 품질 검사를 그대로 호출한다.
-기존 생성 코드가 지원하지 않는 `service-lead` 운영 모드는 이 어댑터도 명시적으로 거부한다.
-해당 업종은 기존 서비스 렌더러의 별도 운영 모드가 구현되기 전까지 미리보기 범위다.
+상품형은 `v5.engine.build(..., mode='publish')`와 기존 품질 검사를 그대로 호출한다.
+서비스형은 기존 `service-lead` preview 생성기의 원본을 보관한 뒤 별도 파생본의 SEO만 운영용으로 준비한다.
+서비스형의 `publishEnabled`는 기존 검증 규칙에 따라 false로 유지한다. 새 사이트의 승인된 publish 계획 외에
+`servicePublicationApproved`, `serviceFactsApproved`, 이미지·개인정보 검토를 요구하며
+계획의 phone 문의 값이 사이트 전화와 정확히 같아야 한다. 기존 서비스 렌더러·validator·engine는 바꾸지 않는다.
+본문·전화·문의·요금 UI는 원본과 동일하고, 파생본의 canonical·robots·sitemap·RSS를 별도로 검사한다.
+설정된 Naver 검증 값은 40자리 hex 검사 후 홈페이지에만 반영한다.
 불확실한 가격 문구 등 새 사이트용 방문자 문구 검사도 통과해야 한다.
 
 단일 사이트용 `v5.deploy.preflight`에는 새 `deliveryMode`에만 적용되는 거부 조건을 추가했다.
@@ -60,6 +64,7 @@ python -m v5.shared_release verify dist/shared-fwith-r1
 - `source-inputs/<id>/`: 입력 JSON 원장, 확장 후 검증된 입력, 원본 build manifest.
 - `release.json`: 모든 산출물 파일의 SHA-256와 릴리스 해시, Worker/호스트 식별 정보.
 - `release.zip`: 위 파일을 복원할 수 있는 스냅샷. 자체 ZIP을 반복 포함하지 않는다.
+- `snapshot.json`: 복구 ZIP 자체의 SHA-256와 릴리스 식별 정보. verify는 ZIP 존재·해시·내부 파일까지 검사한다.
 - `deployment-plan.json`: 정확한 호스트별 custom domain 연결 **제안**, 계정 확인·edge 검증·복구의 미완료 항목.
 - `wrangler.json`: 운영용 코드·정적 자산 설정. `workers_dev: false`, `preview_urls: false`, 실제 `routes` 없음.
 
@@ -70,6 +75,10 @@ python -m v5.shared_release prepare --site <new-a> --site <new-b> --worker sfv5-
 ```
 
 ZIP 복원은 명시된 파일과 해시를 확인하며 경로 이탈·중복 항목·추가 파일을 거부한다.
+복원 결과에도 같은 ZIP과 hash record를 보존한다. 다음 `--previous`는 이를 필수 확인하므로
+복원한 폴더를 사용해도 이전 ZIP 해시가 null로 끊기지 않는다.
+초기 실험 버전의 폴더에 snapshot.json이 없다면 새 verify는 거부한다. 원래 ZIP을 새 폴더로 restore하면
+내부 파일을 검증한 후 hash record를 만들어 이력을 이어갈 수 있다.
 이전 릴리스를 지정한 업데이트는 기존 호스트/URL 삭제·호스트 재할당·Worker 이동을 거부한다.
 캐시된 옛 HTML에서 참조하는 이전 해시 자산도 보존한다. 보존 후 **전체** 자산 18,000개를 넘으면 중단한다.
 옛 자산의 자동 삭제는 하지 않는다. 이전 전체 ZIP과 새 계획의 이전 릴리스 해시·ZIP 해시를 함께 보관한다.
@@ -88,9 +97,10 @@ python -m v5.shared_release probe dist/shared-fwith-r1 --output dist/shared-fwit
 이 테스트 헤더 처리 코드는 운영 패키지에 들어가지 않는다. routes·secrets·cron·서비스 바인딩도 없다.
 
 이번 가상 자료의 정확한 후보 이름은 **`sfv5-new-sites-probe-a3bbebd671b6`**다.
-이는 계정에서 미사용임을 확인한 이름이 아니다. 연결된 Cloudflare 계정 인벤토리를 읽을 수 있는 도구가 없어
-`workerNameAvailabilityVerified: false`로 남겨 두었다. 이름이 존재하면 덮어쓰지 말고 중단해야 한다.
-새 Worker 배포도 이번 지시에서 금지되어 생성하지 않았다.
+이전 준비 시점의 새 이름 후보이며 그 산출물에는 `workerNameAvailabilityVerified: false`가 기록되어 있다.
+후속 조사에서는 기존 Wrangler OAuth 세션으로 관리 API를 조회했다. 새 Worker 생성보다 기존 테스트 Worker
+재사용을 우선하며, 현재 판단은 [서비스형·복구·기존 테스트 Worker 후속 검증](SHARED_SERVICE_AND_RECOVERY_20261103.md)에 기록한다.
+이번 지시에서 새 Worker 생성 및 실제 배포는 실행하지 않았다.
 
 진행 조건은 그 정확한 이름의 미사용 확인, 해당 새 Worker만의 별도 실행 승인, 운영 호스트 연결 없음,
 최대 12회 제한 요청, 링크 추적·상품 호출·IndexNow 제출 없음이다. HTML·정적 자산 요청을 분리하여

@@ -109,6 +109,39 @@ class SharedReleaseTests(unittest.TestCase):
         with self.assertRaises(ConfigError):
             self.prepare('missing-host', previous=first, ids=['new-a'])
 
+    def test_zip_is_required_and_tampering_is_detected_even_with_updated_sidecar(self):
+        target = self.prepare('first')
+        snapshot = target / 'release.zip'
+        original = snapshot.read_bytes()
+        snapshot.unlink()
+        with self.assertRaisesRegex(ConfigError, 'recovery ZIP'):
+            release.verify_release(target)
+        snapshot.write_bytes(b'broken zip')
+        with self.assertRaisesRegex(ConfigError, 'ZIP SHA-256'):
+            release.verify_release(target)
+        snapshot.write_bytes(original)
+        with ZipFile(snapshot) as archive:
+            members = {name: archive.read(name) for name in archive.namelist()}
+        members['worker.js'] += b'\n// unexpected modification'
+        with ZipFile(snapshot, 'w') as archive:
+            for name, raw in members.items():
+                archive.writestr(name, raw)
+        sidecar = json.loads((target / 'snapshot.json').read_text())
+        sidecar['sha256'] = release.file_sha(snapshot)
+        (target / 'snapshot.json').write_text(json.dumps(sidecar))
+        with self.assertRaisesRegex(ConfigError, 'member hash mismatch'):
+            release.verify_release(target)
+
+    def test_restore_keeps_zip_and_update_snapshot_history_continuous(self):
+        original = self.prepare('first')
+        restored = self.root / 'restored'
+        release.restore(original / 'release.zip', restored)
+        self.assertEqual(release.file_sha(original / 'release.zip'), release.file_sha(restored / 'release.zip'))
+        second = self.prepare('second', previous=restored)
+        plan = json.loads((second / 'deployment-plan.json').read_text())
+        self.assertEqual(plan['rollback']['previousSnapshotSHA256'], release.file_sha(original / 'release.zip'))
+        self.assertIsNotNone(plan['rollback']['previousReleaseHash'])
+
     def test_collision_and_image_provenance_fail_before_build(self):
         collision = self.root / 'sites/existing'; collision.mkdir()
         (collision / 'site.json').write_text(json.dumps({'domain': self.data['new-a']['site']['domain']}))
@@ -176,3 +209,70 @@ class SharedReleaseTests(unittest.TestCase):
         self.assertTrue(config['workers_dev'])
         self.assertIn('noindex', (probe / 'public/_headers').read_text())
         self.assertNotIn('X-SFV5-Probe-Host', (target / 'worker.js').read_text())
+
+    def service_data(self):
+        from copy import deepcopy
+        from v5.config import read_site
+        from v5.service_model import read_service_site
+        original = deepcopy(read_site('daysky'))
+        site = original['site']; root = self.data['new-a']['root']
+        site.update(id='new-a', domain='https://new-a.example.test', requestedDomain='https://new-a.example.test',
+                    workerName=self.worker, deliveryMode='shared-static', publishEnabled=False,
+                    publicIndexingApproved=False, servicePublicationApproved=True, serviceFactsApproved=True,
+                    cookiePrivacyReviewed=True, navigation=[{'label': 'Home', 'href': '/'}])
+        site.pop('publicIndexingScope', None)
+        pages = original['pages'][:2]
+        regions = {'regions': [r for r in original['regions']['regions'] if r['name'] in {p['region'] for p in pages}]}
+        for name, value in [('site.json', site), ('pages.json', pages), ('regions.json', regions),
+                            ('services.json', original['services']), ('rates.json', original['rates']),
+                            ('links.json', []), ('special-pages.json', [])]:
+            (root / name).write_text(json.dumps(value, ensure_ascii=False), encoding='utf-8')
+        spec_path = root / 'site-spec.json'; spec = json.loads(spec_path.read_text())
+        spec.update(businessModel='service-lead', conversion={'mode': 'phone', 'phone': site['phone']})
+        spec_path.write_text(json.dumps(spec), encoding='utf-8')
+        self.data['new-a'] = read_service_site('new-a', site, root)
+        (self.data['new-b']['root'] / 'site.json').write_text(json.dumps({'workerName': 'sfv5-new-sites-other'}))
+        return self.data['new-a']
+
+    def test_service_renderer_phone_rates_source_and_seo_are_preserved(self):
+        from v5.engine import build as real_build
+        from v5.shared_static import rewrite_assets
+        data = self.service_data()
+        data['site']['naverSiteVerification'] = 'a' * 40
+        with patch.object(release, 'build', side_effect=real_build) as generator, patch('v5.engine.read_site', return_value=data), patch('v5.audit.read_site', return_value=data):
+            target = self.prepare('service', ids=['new-a'])
+            self.assertEqual(generator.call_args.kwargs['mode'], 'preview')
+        release.verify_release(target)
+        original = (target / 'source-builds/new-a/index.html').read_text(encoding='utf-8')
+        packed = (target / 'public/_sfv5/sites/new-a/index.html').read_text(encoding='utf-8')
+        prefix = '/_sfv5/assets/' + next((target / 'public/_sfv5/assets').iterdir()).name + '/'
+        self.assertEqual(packed.split('<body', 1)[1], rewrite_assets(original.split('<body', 1)[1], 'new-a.example.test', prefix))
+        self.assertIn('href="tel:' + data['site']['phone'].replace('-', '') + '"', packed)
+        self.assertIn('noindex,nofollow', original)
+        self.assertNotIn('rel="canonical"', original)
+        self.assertIn('href="https://new-a.example.test/"', packed)
+        self.assertIn('application/rss+xml', packed)
+        self.assertIn('name="naver-site-verification" content="' + 'a' * 40 + '"', packed)
+        self.assertNotIn('naver-site-verification', (target / 'public/_sfv5/sites/new-a/2.html').read_text(encoding='utf-8'))
+        self.assertFalse(data['site']['publishEnabled'])
+
+    def test_service_requires_separate_facts_and_contact_approval(self):
+        data = self.service_data()
+        data['site']['serviceFactsApproved'] = False
+        with self.assertRaisesRegex(ConfigError, 'approved facts'):
+            self.prepare('unapproved-service', ids=['new-a'])
+
+    def test_service_and_shop_can_share_the_same_production_artifact(self):
+        from v5.engine import build as real_build
+        self.service_data()
+        (self.data['new-b']['root'] / 'site.json').write_text(json.dumps(self.data['new-b']['site']))
+        def generate(site_id, **kwargs):
+            return real_build(site_id, **kwargs) if site_id == 'new-a' else self.fake_publish_build(site_id, **kwargs)
+        with patch.object(release, 'build', side_effect=generate), patch('v5.engine.read_site', side_effect=lambda key: self.data[key]), patch('v5.audit.read_site', side_effect=lambda key: self.data[key]):
+            target = self.prepare('mixed')
+        self.assertEqual(len(release.verify_release(target)['hosts']), 2)
+        for site_id, mode in [('new-a', 'preview'), ('new-b', 'publish')]:
+            manifest = json.loads((target / 'source-inputs' / site_id / 'build-manifest.json').read_text(encoding='utf-8'))
+            self.assertEqual(manifest['mode'], mode)
+            feed = (target / 'public/_sfv5/sites' / site_id / 'rss.xml').read_text(encoding='utf-8')
+            self.assertIn('https://' + site_id + '.example.test/', feed)

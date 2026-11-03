@@ -9,7 +9,7 @@ import tempfile
 from pathlib import Path, PurePosixPath
 from urllib.parse import unquote, urlsplit
 from xml.etree import ElementTree as ET
-from zipfile import ZipFile, ZIP_DEFLATED
+from zipfile import ZipFile, ZIP_DEFLATED, BadZipFile
 from .config import ROOT, ConfigError, read_site
 from .engine import build
 from .markup import url_path, h
@@ -21,9 +21,39 @@ def sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
+def file_sha(path):
+    digest = hashlib.sha256()
+    with Path(path).open('rb') as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b''):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def file_hashes(root):
     return {p.relative_to(root).as_posix(): sha(p.read_bytes()) for p in sorted(root.rglob('*'))
-            if p.is_file() and p.relative_to(root).as_posix() not in {'release.json', 'release.zip'}}
+            if p.is_file() and p.relative_to(root).as_posix() not in {'release.json', 'release.zip', 'snapshot.json'}}
+
+
+def verify_snapshot(root, manifest):
+    snapshot = root / 'release.zip'
+    sidecar = root / 'snapshot.json'
+    if not snapshot.is_file() or not sidecar.is_file():
+        raise ConfigError('Shared release requires its recovery ZIP and snapshot hash record')
+    expected = {'releaseHash': manifest['releaseHash'], 'sha256': file_sha(snapshot)}
+    if json.loads(sidecar.read_text(encoding='utf-8')) != expected:
+        raise ConfigError('Recovery ZIP SHA-256 mismatch')
+    try:
+        with ZipFile(snapshot) as archive:
+            names = list(manifest['files']) + ['release.json']
+            if len(archive.namelist()) != len(set(archive.namelist())) or set(archive.namelist()) != set(names):
+                raise ConfigError('Recovery ZIP has unexpected or duplicate members')
+            if json.loads(archive.read('release.json')) != manifest:
+                raise ConfigError('Recovery ZIP release identity mismatch')
+            for name, expected_hash in manifest['files'].items():
+                if sha(archive.read(name)) != expected_hash:
+                    raise ConfigError('Recovery ZIP member hash mismatch: ' + name)
+    except (BadZipFile, OSError, RuntimeError, KeyError) as exc:
+        raise ConfigError('Recovery ZIP content verification failed: ' + str(exc)) from exc
 
 
 def add_feed(output, data):
@@ -48,6 +78,33 @@ def add_feed(output, data):
         if text.count('</head>') != 1:
             raise ConfigError('Unexpected generator HTML head: ' + page.name)
         page.write_text(text.replace('</head>', tag + '</head>'), encoding='utf-8')
+
+
+def promote_service(output, data):
+    """Add approved host SEO to a derivative of the unchanged service preview output."""
+    site = data['site']; origin = site['domain']
+    if (output / 'sitemap.xml').exists():
+        raise ConfigError('Service source already has a sitemap; refusing to overwrite it')
+    sitemap = ET.Element('urlset', {'xmlns': 'http://www.sitemaps.org/schemas/sitemap/0.9'})
+    for page in data['pages']:
+        from .markup import filename
+        target = output / filename(page['number'])
+        text = target.read_text(encoding='utf-8')
+        old = '<meta name="robots" content="noindex,nofollow">'
+        if text.count(old) != 1 or 'rel="canonical"' in text:
+            raise ConfigError('Service preview SEO differs from the existing renderer contract')
+        location = origin + url_path(page['number'])
+        metadata = '<meta name="robots" content="index,follow"><link rel="canonical" href="' + h(location) + '">'
+        if page['number'] == 1 and site.get('naverSiteVerification'):
+            token = site['naverSiteVerification']
+            if not isinstance(token, str) or not re.fullmatch(r'[0-9a-fA-F]{40}', token):
+                raise ConfigError('Invalid service Naver verification token')
+            metadata += '<meta name="naver-site-verification" content="' + token + '">'
+        text = text.replace(old, metadata)
+        target.write_text(text, encoding='utf-8')
+        ET.SubElement(ET.SubElement(sitemap, 'url'), 'loc').text = location
+    (output / 'sitemap.xml').write_bytes(ET.tostring(sitemap, encoding='utf-8', xml_declaration=True))
+    (output / 'robots.txt').write_text('User-agent: *\nAllow: /\nSitemap: ' + origin + '/sitemap.xml\n', encoding='utf-8')
 
 
 def verify_seo(root, hosts):
@@ -101,6 +158,7 @@ def verify_release(root):
             or json.loads((root / 'hosts.json').read_text(encoding='utf-8')) != manifest['hosts']):
         raise ConfigError('Release identity or unbound deployment configuration mismatch')
     verify_seo(root, manifest['hosts'])
+    verify_snapshot(root, manifest)
     return manifest
 
 
@@ -122,6 +180,8 @@ def restore(snapshot, destination):
                     raise ConfigError('Unsafe snapshot member')
                 target = staged / name; target.parent.mkdir(parents=True, exist_ok=True)
                 target.write_bytes(archive.read(name))
+        shutil.copyfile(snapshot, staged / 'release.zip')
+        (staged / 'snapshot.json').write_text(json.dumps({'releaseHash': manifest['releaseHash'], 'sha256': file_sha(snapshot)}), encoding='utf-8')
         verify_release(staged)
         staged.rename(destination)
     return {'restored': manifest['releaseHash'], 'output': str(destination)}
@@ -197,8 +257,16 @@ def prepare(site_ids, destination, worker_name, *, previous=None):
                 raise ConfigError('Shared production requires an approved publish site plan')
             if spec['targetPageCount'] != len(data['pages']):
                 raise ConfigError('Production page count differs from approved site plan')
-            if site.get('workerName') != worker_name or site.get('businessModel') == 'service-lead':
-                raise ConfigError('Shared Worker name must match; existing service renderer supports preview only')
+            if site.get('workerName') != worker_name:
+                raise ConfigError('Shared Worker name must match')
+            service = site.get('businessModel') == 'service-lead'
+            if service:
+                conversion = spec.get('conversion', {})
+                if (not site.get('servicePublicationApproved') or not site.get('serviceFactsApproved')
+                        or not site.get('imageAssetsApproved') or not site.get('cookiePrivacyReviewed')
+                        or site.get('publishEnabled') is not False or conversion.get('mode') != 'phone'
+                        or conversion.get('phone') != site['phone']):
+                    raise ConfigError('Service publication requires approved facts, images, privacy and the exact phone conversion plan')
             if site.get('analytics', {}).get('enabled') or site.get('publicIndexingApproved'):
                 raise ConfigError('Shared release disables analytics and legacy indexing-review mode')
             origin = urlsplit(site.get('domain') or '')
@@ -220,11 +288,18 @@ def prepare(site_ids, destination, worker_name, *, previous=None):
             if image_errors:
                 raise ConfigError('Release image provenance rejected: ' + '; '.join(image_errors[:3]))
             original = work / (site_id + '-original')
-            result = build(site_id, output=original, reports=work / (site_id + '-reports'), mode='publish', preserve_previous=False)
+            result = build(site_id, output=original, reports=work / (site_id + '-reports'), mode='preview' if service else 'publish', preserve_previous=False)
             from .visitor_copy import require_clean_html
             require_clean_html(original)
             prepared = work / (site_id + '-prepared'); shutil.copytree(original, prepared)
+            if service:
+                promote_service(prepared, data)
             add_feed(prepared, data)
+            if service:
+                from .audit import audit
+                publication_audit = audit(site_id, output=prepared, write_report=False)
+                if publication_audit['errors']:
+                    raise ConfigError('Prepared production audit rejected: ' + '; '.join(publication_audit['errors'][:3]))
             entries.append((site_id, origin.hostname, prepared))
             builds.append((site_id, original, result['manifest']))
             inputs[site_id] = data
@@ -269,7 +344,7 @@ def prepare(site_ids, destination, worker_name, *, previous=None):
                             'Cloudflare isolated edge probe and script upload size verification',
                             'Record prior deployed version ID and asset-complete artifact before an update'],
                 'rollback': {'previousReleaseHash': prior['releaseHash'] if prior else None,
-                             'previousSnapshotSHA256': sha((Path(previous) / 'release.zip').read_bytes()) if prior and (Path(previous) / 'release.zip').is_file() else None,
+                             'previousSnapshotSHA256': file_sha(Path(previous) / 'release.zip') if prior else None,
                              'cloudflareVersionID': None, 'firstReleaseRequiresUnusedWorker': prior is None}}
         (bundle / 'deployment-plan.json').write_text(json.dumps(plan, ensure_ascii=False, indent=2), encoding='utf-8')
         report.update(mode='production-prepared', assetFileCount=asset_count, productionReady=False,
@@ -282,6 +357,7 @@ def prepare(site_ids, destination, worker_name, *, previous=None):
         with ZipFile(bundle / 'release.zip', 'w', ZIP_DEFLATED) as archive:
             for name in list(files) + ['release.json']:
                 archive.write(bundle / name, name)
+        (bundle / 'snapshot.json').write_text(json.dumps({'releaseHash': manifest['releaseHash'], 'sha256': file_sha(bundle / 'release.zip')}), encoding='utf-8')
         verify_release(bundle)
         destination.parent.mkdir(parents=True, exist_ok=True)
         with tempfile.TemporaryDirectory(dir=destination.parent) as staging:
