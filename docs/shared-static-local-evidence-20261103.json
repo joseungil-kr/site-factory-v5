@@ -1,0 +1,103 @@
+{
+  "runtime": "Wrangler 4.148.0 --local",
+  "productionRequests": 0,
+  "edgeBillingVerified": false,
+  "transformRuleOrderVerified": false,
+  "checks": [
+    {
+      "host": "ansanwreath.fwith.kr",
+      "path": "/",
+      "status": 200,
+      "localHandlerEntries": 1
+    },
+    {
+      "host": "seoulwreath.fwith.kr",
+      "path": "/",
+      "status": 200,
+      "localHandlerEntries": 1
+    },
+    {
+      "host": "seoulfuneral.fwith.kr",
+      "path": "/",
+      "status": 200,
+      "localHandlerEntries": 1
+    },
+    {
+      "host": "ansanwreath.fwith.kr",
+      "path": "/2.html",
+      "status": 200,
+      "localHandlerEntries": 1
+    },
+    {
+      "host": "seoulwreath.fwith.kr",
+      "path": "/missing",
+      "status": 404,
+      "localHandlerEntries": 1
+    },
+    {
+      "host": "ansanwreath.fwith.kr",
+      "path": "/_sfv5/sites/seoul/index.html",
+      "status": 404,
+      "localHandlerEntries": 1
+    },
+    {
+      "host": "wreath.fwith.kr",
+      "path": "/",
+      "status": 404,
+      "localHandlerEntries": 1
+    },
+    {
+      "host": "preview.workers.dev",
+      "path": "/",
+      "status": 404,
+      "localHandlerEntries": 1
+    },
+    {
+      "host": "ansanwreath.fwith.kr",
+      "path": "/robots.txt",
+      "status": 200,
+      "localHandlerEntries": 1
+    },
+    {
+      "host": "ansanwreath.fwith.kr",
+      "path": "/sitemap.xml",
+      "status": 404,
+      "localHandlerEntries": 1
+    },
+    {
+      "host": "ansanwreath.fwith.kr",
+      "path": "/_sfv5/assets/ba34376272fe6f3d3956efb6f8f1c3632e3a4c6c8a8586771044ecc9cc45d3dc/site.css",
+      "status": 200,
+      "localHandlerEntries": 0
+    },
+    {
+      "host": "seoulwreath.fwith.kr",
+      "path": "/_sfv5/assets/ba34376272fe6f3d3956efb6f8f1c3632e3a4c6c8a8586771044ecc9cc45d3dc/site.css",
+      "status": 200,
+      "localHandlerEntries": 0
+    },
+    {
+      "host": "ansanwreath.fwith.kr",
+      "path": "/_sfv5/assets/ba34376272fe6f3d3956efb6f8f1c3632e3a4c6c8a8586771044ecc9cc45d3dc/photo.svg",
+      "status": 200,
+      "localHandlerEntries": 0
+    },
+    {
+      "host": "ansanwreath.fwith.kr",
+      "path": "/_sfv5/assets/not-present.png",
+      "status": 404,
+      "localHandlerEntries": 0
+    },
+    {
+      "host": "ansanwreath.fwith.kr",
+      "path": "/__v5_event",
+      "status": 404,
+      "localHandlerEntries": 1
+    },
+    {
+      "negativeControl": "asset-first same / on two hosts",
+      "sameBody": true,
+      "localHandlerEntries": 0
+    }
+  ]
+}
