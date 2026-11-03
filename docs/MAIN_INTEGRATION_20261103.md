@@ -1,5 +1,13 @@
 # V5 공유 전달 main 통합 확인
 
+## 현재 상태: 병합 보류
+
+개선 코드는 별도 브랜치에 업로드됐고 [draft PR #28](https://github.com/joseungil-kr/site-factory-v5/pull/28)을 만들었다.
+main 병합·푸시 명령은 프로세스 실행 전에 자동 승인 검토에서 거절됐다. 로컬 병합과 원격 main 푸시는 실행되지 않았다.
+거절 이유는 일반 GitHub 커밋·푸시 승인 외에 기본 main 브랜치 병합·푸시 자체의 명시적 사용자 승인이 확인되지 않았고,
+main 변경이 외부 자동화나 배포를 유발할 수 있다는 것이었다. 이 거절을 우회하지 않는다.
+원격 main은 아래 기준 SHA에 그대로 있으며 사용자의 해당 main 병합 승인 전까지 PR은 draft로 유지한다.
+
 기준 main은 `a466473c86e485baa9752ba0c2f74b058dd2ac9a`이며 최신 fetch에서 바뀌지 않았다.
 사이트 입력, 기존 Worker 파일, engine, 서비스 validator/renderer, templates, workflow는 수정하지 않는다.
 기존 배포 코드 변경은 shared-static 및 shared-static-preview만 개별 배포를 거부하는 조건이다.
@@ -35,6 +43,6 @@ analytics, IndexNow, siteSearch 또는 special-pages를 실제 입력 파일에�
   기존 브라우저 읽기 fallback도 `window id 131750 no longer belongs to Naver_Whale; current owner is Naver_Whale`
   바인딩 오류가 한 번 재시도 후 반복돼 중단했다. 이 외부 설정은 확인 완료로 주장하지 않는다.
 
-실제 배포 명령이나 공개 URL 호출은 하지 않는다. 명시된 저장소 트리거와 경로 검토를 바탕으로 통합하고,
-main push의 Actions 실행과 Worker 메타데이터를 읽기 전용으로 재확인한다.
+실제 배포 명령이나 공개 URL 호출은 하지 않았다. 명시된 저장소 트리거와 경로 검토는 완료했지만 main push는 거절로 미실행이다.
+대신 draft PR의 오프라인 Actions와 원격 브랜치 SHA를 읽기 전용으로 재확인한다.
 HTML 1회·이미지/CSS 0회는 로컬 증거이며 실제 edge 호출량 절감 검증은 여전히 별도다.
