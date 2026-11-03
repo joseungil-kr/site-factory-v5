@@ -137,6 +137,9 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
             if site.get('indexNow',{}).get('enabled',False):
                 key=site['indexNow']['key']
                 _write_file(tmp,key+'.txt',key+'\n')
+        if mode != 'preview':
+            from .rss import generate
+            generate(tmp,site['domain'],site.get('brand') or site_id)
         manifest=_manifest(data,tmp,mode)
         if len(manifest['files'])>site['staticAssetSoftLimit']:
             raise ConfigError('File count exceeds configured Worker asset soft limit')
