@@ -14,3 +14,15 @@ for (const [host,flag,expected] of [['wallsky.nalmada.net','1',false],['wallsky.
   assert.equal(r.status,404);assert.match(r.headers.get('X-Robots-Tag'),/noindex/);
 }
 console.log('Wallsky host isolation, root, robots and 404: passed');
+
+for (const host of ['wallsky.nalmada.net','preview.workers.dev']) {
+  const r=await worker.fetch(new Request('https://'+host+'/rss.xml'),{WALLSKY_PUBLIC:'1',ASSETS:{fetch:async()=>new Response('<rss/>')}});
+  assert.equal(r.status,host==='wallsky.nalmada.net'?200:404);
+  if(r.ok)assert.match(r.headers.get('Content-Type'),/application\/rss\+xml/);
+}
+
+{
+ const env={WALLSKY_PUBLIC:'1',ASSETS:{fetch:async()=>new Response('<head><link rel="alternate" type="application/rss+xml" href="https://wallsky.nalmada.net/rss.xml"></head>',{headers:{'Content-Type':'text/html','ETag':'old','Content-Length':'200'}})}};
+ const r=await worker.fetch(new Request('https://preview.workers.dev/'),env);
+ assert.ok(!(await r.text()).includes('application/rss+xml'));assert.equal(r.headers.get('Content-Length'),null);assert.equal(r.headers.get('ETag'),null);
+}

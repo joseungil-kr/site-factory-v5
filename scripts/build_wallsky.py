@@ -85,6 +85,11 @@ def main():
     urls=['/']+[f'/{p["number"]}.html' for p in items]
     (OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>https://wallsky.nalmada.net'+u+'</loc></url>' for u in urls)+'</urlset>',encoding='utf-8')
     (OUT/'robots.txt').write_text('User-agent: *\n'+('Allow: /\nSitemap: https://wallsky.nalmada.net/sitemap.xml\n' if args.public else 'Disallow: /\n'),encoding='utf-8')
+    if args.public:
+        from v5.rss import generate
+        generate(OUT, 'https://wallsky.nalmada.net', '외부스카이')
+    else:
+        (OUT/'rss.xml').unlink(missing_ok=True)
     write(REPORT/'pages.json',items)
     write(REPORT/'manifest.json',{'count':len(urls),'expected':spec['targetPageCount'],'mode':'public' if args.public else 'preview','files':{p.name:hashlib.sha256(p.read_bytes()).hexdigest() for p in OUT.iterdir() if p.is_file()}})
     print('GENERATED',len(urls),'URLs; mode', 'public' if args.public else 'noindex')
