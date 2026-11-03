@@ -60,6 +60,7 @@ export default {
         headers.set('Content-Type','text/plain; charset=utf-8');
         return new Response('User-agent: *\nDisallow: /\n', {status:200,headers});
       }
+      if(originalPath === '/rss.xml')return new Response('Not found',{status:404,headers});
       return new Response(response.body, {status:response.status, statusText:response.statusText, headers});
     }
     // One-URL Quicksky release: region HTML and noncanonical /index.html
@@ -72,6 +73,10 @@ export default {
       const headers=new Headers(response.headers);
       headers.set('X-Robots-Tag','noindex, nofollow, noarchive');
       return new Response(response.body,{status:response.status,statusText:response.statusText,headers});
+    }
+    if(indexedHost && originalPath === '/rss.xml' && response.ok){
+      const headers=new Headers(response.headers);headers.set('Content-Type','application/rss+xml; charset=utf-8');headers.set('X-Content-Type-Options','nosniff');
+      return new Response(response.body,{status:response.status,headers});
     }
     if (indexedHost && response.status === 404) {
       const headers=new Headers(response.headers);
