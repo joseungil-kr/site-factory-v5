@@ -59,7 +59,14 @@ export default {
         headers.set('Content-Type','text/plain; charset=utf-8');
         return new Response('User-agent: *\nDisallow: /\n', {status:200,headers});
       }
+      if (url.pathname === '/rss.xml') return new Response('Not found',{status:404,headers});
       return new Response(response.body, {status:response.status, statusText:response.statusText, headers});
+    }
+    if (indexedHost && response.ok && url.pathname === '/rss.xml') {
+      const headers = new Headers(response.headers);
+      headers.set('Content-Type','application/rss+xml; charset=utf-8');
+      headers.set('X-Content-Type-Options','nosniff');
+      return new Response(response.body,{status:response.status,headers});
     }
     if (indexedHost && response.status === 404) {
       const headers=new Headers(response.headers);
