@@ -1,0 +1,24 @@
+{
+  "candidateWorkerName": "sfv5-new-sites-probe-a3bbebd671b6",
+  "sourceReleaseHash": "a3bbebd671b675e42d044f65bd1fc9a441f98ef85616d6683ce76583cc2fb416",
+  "workerNameAvailabilityVerified": false,
+  "deploymentExecuted": false,
+  "domainChanges": [],
+  "productionRoutes": [],
+  "requiredBeforeDeployment": [
+    "Read-only account inventory must prove this exact name absent; stop if present",
+    "Explicit authorization for this new isolated Worker only",
+    "No secrets/bindings/cron/custom domains and no existing Worker edits",
+    "At most 12 bounded probe requests; never follow page links or submit IndexNow",
+    "Compare Worker invocation logs and account statistics separately; local results do not prove edge billing"
+  ],
+  "fixtureOnly": true,
+  "snapshotSHA256": "f7c5422d4d188a76b7461928a18e3ced1ead584ec641842f5fce190248b612dc",
+  "snapshotRestoreVerified": true,
+  "artifactIntegrityAfterDryRunVerified": true,
+  "pythonSuitePassed": 95,
+  "workerTestsPassed": 10,
+  "localChecksPassed": 22,
+  "productionArtifact": "dist/shared-production-release-proof-20261103",
+  "probeArtifact": "dist/shared-edge-probe-proof-20261103"
+}

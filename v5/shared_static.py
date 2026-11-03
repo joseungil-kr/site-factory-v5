@@ -21,8 +21,8 @@ def rewrite_assets(text, hostname, prefix):
     return re.sub(pattern, lambda m: m[1] + prefix, text)
 
 
-def assemble(entries, destination, *, limit=18000):
-    """Package already audited preview builds; never deploy or change source files."""
+def assemble(entries, destination, *, limit=18000, production=False, worker_name=None):
+    """Package already audited builds; never deploy or change source files."""
     destination = Path(destination).resolve()
     if destination.exists():
         raise ConfigError('Shared preview destination already exists')
@@ -79,22 +79,22 @@ def assemble(entries, destination, *, limit=18000):
         if not hosts:
             raise ConfigError('At least one new site is required')
         (assets / '_headers').write_text(
-            '/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n'
+            ('/_sfv5/sites/*' if production else '/*') + '\n  X-Robots-Tag: noindex, nofollow, noarchive\n'
             + ASSET_PREFIX + '*\n  Cache-Control: public, max-age=31536000, immutable\n', encoding='utf-8')
         count = sum(p.is_file() and p.name != '_headers' for p in assets.rglob('*'))
         if count > limit:
             raise ConfigError(f'Shared Worker asset limit exceeded: {count} > {limit}')
         shutil.copyfile(ROOT / 'worker/shared-static.js', out / 'shared-static.js')
         (out / 'hosts.json').write_text(json.dumps(hosts, ensure_ascii=False), encoding='utf-8')
-        (out / 'worker.js').write_text("import {createSharedWorker} from './shared-static.js';\nimport hosts from './hosts.json';\nexport default createSharedWorker(hosts);\n", encoding='utf-8')
+        (out / 'worker.js').write_text("import {createSharedWorker} from './shared-static.js';\nimport hosts from './hosts.json';\nexport default createSharedWorker(hosts, {production: " + str(production).lower() + "});\n", encoding='utf-8')
         config = {
-            'name': 'sfv5-new-sites-shared-preview', 'compatibility_date': '2026-10-13',
+            'name': worker_name or 'sfv5-new-sites-shared-preview', 'compatibility_date': '2026-10-13',
             'main': 'worker.js', 'workers_dev': False, 'preview_urls': False,
             'assets': {'directory': './public', 'binding': 'ASSETS',
                        'html_handling': 'none', 'not_found_handling': 'none',
                        'run_worker_first': ['/*', '!' + ASSET_PREFIX + '*']}}
         (out / 'wrangler.json').write_text(json.dumps(config, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
-        report = {'mode': 'preview-only', 'assetFileCount': count, 'hosts': hosts,
+        report = {'mode': 'production-prepared' if production else 'preview-only', 'assetFileCount': count, 'hosts': hosts,
                   'productionReady': False, 'edgeInvocationSavingsVerified': False,
                   'htmlRequestsUseWorker': True, 'analyticsEnabled': False}
         (out / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

@@ -98,6 +98,48 @@
       "negativeControl": "asset-first same / on two hosts",
       "sameBody": true,
       "localHandlerEntries": 0
+    },
+    {
+      "mode": "production-prepared-local-only",
+      "host": "ansanwreath.fwith.kr",
+      "path": "/",
+      "status": 200,
+      "localHandlerEntries": 1
+    },
+    {
+      "mode": "production-prepared-local-only",
+      "host": "seoulwreath.fwith.kr",
+      "path": "/",
+      "status": 200,
+      "localHandlerEntries": 1
+    },
+    {
+      "mode": "production-prepared-local-only",
+      "host": "ansanwreath.fwith.kr",
+      "path": "/robots.txt",
+      "status": 200,
+      "localHandlerEntries": 1
+    },
+    {
+      "mode": "production-prepared-local-only",
+      "host": "ansanwreath.fwith.kr",
+      "path": "/sitemap.xml",
+      "status": 200,
+      "localHandlerEntries": 1
+    },
+    {
+      "mode": "production-prepared-local-only",
+      "host": "seoulwreath.fwith.kr",
+      "path": "/rss.xml",
+      "status": 200,
+      "localHandlerEntries": 1
+    },
+    {
+      "mode": "production-prepared-local-only",
+      "host": "ansanwreath.fwith.kr",
+      "path": "/_sfv5/assets/ba34376272fe6f3d3956efb6f8f1c3632e3a4c6c8a8586771044ecc9cc45d3dc/site.css",
+      "status": 200,
+      "localHandlerEntries": 0
     }
   ]
 }

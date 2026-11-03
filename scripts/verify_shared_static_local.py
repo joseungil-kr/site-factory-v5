@@ -24,6 +24,9 @@ def run():
             (source / 'assets/photo.svg').write_text('<svg xmlns="http://www.w3.org/2000/svg"/>')
             for name in ['index.html', '2.html', '404.html']:
                 (source / name).write_text(f'<h1>{site} {name}</h1><link href="/assets/site.css">')
+            (source / 'robots.txt').write_text('User-agent: *\nAllow: /\nSitemap: https://' + host + '/sitemap.xml\n')
+            (source / 'sitemap.xml').write_text('<urlset><url><loc>https://' + host + '/</loc></url></urlset>')
+            (source / 'rss.xml').write_text('<rss version="2.0"><channel><link>https://' + host + '/</link></channel></rss>')
             entries.append((site, host, source))
         bundle = base / 'bundle'
         assemble(entries, bundle)
@@ -107,6 +110,31 @@ def run():
                 assert a[0] == b[0] == 200 and a[1] == b[1] == 'same root for every hostname'
                 assert count() == before
                 results.append({'negativeControl': 'asset-first same / on two hosts', 'sameBody': True, 'localHandlerEntries': 0})
+                # Re-enable host dispatch in production mode, still only on localhost.
+                (bundle / 'public/index.html').unlink()
+                (bundle / 'public/_headers').write_text('/_sfv5/sites/*\n  X-Robots-Tag: noindex, nofollow, noarchive\n')
+                entrypoint = bundle / 'worker.js'
+                entrypoint.write_text(entrypoint.read_text().replace('production: false', 'production: true'))
+                config['assets'].update(run_worker_first=['/*', '!/_sfv5/assets/*'], html_handling='none')
+                config_file.write_text(json.dumps(config))
+                for _ in range(40):
+                    time.sleep(.25)
+                    status, body, headers = get('ansanwreath.fwith.kr', '/')
+                    if status == 200 and 'ansan index.html' in body and not any(k.lower() == 'x-robots-tag' for k in headers):
+                        break
+                for host, route, expected, invocation in [
+                    ('ansanwreath.fwith.kr', '/', 'ansan index.html', 1),
+                    ('seoulwreath.fwith.kr', '/', 'seoul index.html', 1),
+                    ('ansanwreath.fwith.kr', '/robots.txt', 'Allow: /', 1),
+                    ('ansanwreath.fwith.kr', '/sitemap.xml', 'https://ansanwreath.fwith.kr/', 1),
+                    ('seoulwreath.fwith.kr', '/rss.xml', 'https://seoulwreath.fwith.kr/', 1),
+                    ('ansanwreath.fwith.kr', path, 'body{color:red}', 0),
+                ]:
+                    before = count(); status, body, headers = get(host, route); delta = count() - before
+                    assert status == 200 and expected in body and delta == invocation, (host, route, status, body, delta)
+                    assert not any(k.lower() == 'x-robots-tag' for k in headers), headers
+                    results.append({'mode': 'production-prepared-local-only', 'host': host, 'path': route,
+                                    'status': status, 'localHandlerEntries': delta})
             finally:
                 # Windows npm is a process tree; stop only this exact process tree.
                 if os.name == 'nt':
