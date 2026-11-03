@@ -1,5 +1,13 @@
 # Site Factory V5 — 독립 반자동 사이트 제작 엔진
 
+신규 사이트는 공유 Worker용 정적 전달 경로를 기본으로 준비합니다. `scaffold-site`는
+`deliveryMode: shared-static-preview`로 생성하며 기존 사이트 설정은 바꾸지 않습니다.
+운영 준비는 개별 사이트 배포 대신 `python -m v5.shared_release`를 사용합니다.
+[신규 공유 전달 사용법](docs/SHARED_RELEASE_PREPARATION_20261103.md)과
+[서비스형 지원·복구·실환경 제약](docs/SHARED_SERVICE_AND_RECOVERY_20261103.md)을 먼저 확인하세요.
+서비스형은 전화 문의 방식이며 siteSearch·analytics·IndexNow·특수 페이지는 기존 validator가 명시적으로 거부합니다.
+실제 배포와 edge 호출량 검증은 별도 단계입니다.
+
 **작업일:** 2026-10-24 KST
 
 V4(기존 꽃배달 운영 사이트)를 보존하면서, 고객·업종·사이트별로 구분된 정적 HTML을 생성하고 GitHub Actions/Cloudflare Workers에 연결하기 위한 독립 코드입니다.

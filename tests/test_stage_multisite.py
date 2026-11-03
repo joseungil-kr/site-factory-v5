@@ -21,6 +21,7 @@ class MultiSite(unittest.TestCase):
             self.assertEqual(json.loads((p/'pages.json').read_text()),[])
             self.assertEqual(json.loads((p/'products.json').read_text()),[])
             self.assertFalse(json.loads((p/'site.json').read_text())['publishEnabled'])
+            self.assertEqual(json.loads((p/'site.json').read_text())['deliveryMode'], 'shared-static-preview')
             with patch('v5.config.SITES',root):
                 data=read_site('demo-skycar')
             self.assertEqual(data['site']['status'],'draft')
