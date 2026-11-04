@@ -1,4 +1,4 @@
-name: Clinic product pilot visual review only
+name: Clinic product-first six-page representative visual review only
 on:
   push:
     branches: [review/clinic-product-pilot-20261105]
@@ -8,7 +8,7 @@ permissions:
 jobs:
   review:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -20,38 +20,88 @@ jobs:
           sudo apt-get install -y -qq fonts-noto-cjk
           python -m pip install --quiet playwright==1.58.0
           python -m playwright install chromium
-      - name: Build and review pilot without deployment
+      - name: Build and inspect six noindex product-first representative pages (no live deployment)
+        shell: bash
         run: |
           set -euo pipefail
           python sites/nalmada-shared3/pilot_review/build_pilot.py
           python -m http.server 8781 --bind 127.0.0.1 --directory sites/nalmada-shared3/pilot_review > /tmp/pilot-server.log 2>&1 &
           mkdir -p pilot-qa
           python - <<'PY'
-          import json
+          import json,hashlib
           from pathlib import Path
           from playwright.sync_api import sync_playwright
-          result=[]
+          base=Path('sites/nalmada-shared3/pilot_review')
+          evidence=json.loads((base/'retail-products-20261105.json').read_text(encoding='utf-8'))
+          products={x['sku']:x for x in evidence['items']}
+          assert len(products)==4
+          report=json.loads((base/'pilot-manifest.json').read_text(encoding='utf-8'))
+          assert len(report['samplePages'])==6 and report['regionalSourceRow']==624
+          for row in report['samplePages']:
+              path=base/row['name']
+              body=path.read_text(encoding='utf-8')
+              assert hashlib.sha256(body.encode()).hexdigest()==row['sha256']
+              assert body.count('<h1>')==1 and body.count('class="product-card"')==2
+              assert 'noindex,nofollow,noarchive' in body
+              assert '<meta property="og:image"' in body
+              assert '<form' not in body and '<script' not in body
+              expected=('D144','D149') if row['site']!='clinicpresent' else ('C200','C206')
+              for sku in expected:
+                  p=products[sku]
+                  assert p['orderUrl'] in body and p['imageUrl'] in body
+                  assert f'{p["priceKRW"]:,}원' in body
+              if row['page']=='bono':
+                  assert '경기도 안산시 상록구 본오동' in body
+              if row['site']=='clinicpresent':
+                  assert '결혼식 리본' in body
+                  assert '병원 현장 배송 사례를 나타내지 않습니다' in body
+          visual=[]
           with sync_playwright() as p:
               browser=p.chromium.launch(headless=True,args=['--no-sandbox'])
               for site in ('clinicflower','clinicopen','clinicpresent'):
-                  for width in (390,1440):
-                      page=browser.new_page(viewport={'width':width,'height':900})
-                      page.goto('http://127.0.0.1:8781/'+site+'.html',wait_until='networkidle',timeout=60000)
-                      assert page.locator('meta[name="robots"]').get_attribute('content')=='noindex,nofollow'
-                      assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+1')
-                      cards=page.locator('.products .card')
-                      assert cards.count()==2
-                      links=cards.locator('a').evaluate_all('(xs)=>xs.map(x=>x.href)')
-                      imgs=cards.locator('img').evaluate_all('(xs)=>xs.map(x=>({url:x.currentSrc,loaded:x.complete && x.naturalWidth>0,width:x.naturalWidth,alt:x.alt}))')
-                      assert all('fwith.co.kr/shop/item.php?it_id=' in x for x in links)
-                      assert all(x['loaded'] and x['alt'] for x in imgs),imgs
-                      assert page.locator('a[href="tel:18440644"]').count()>=2
-                      path=f'pilot-qa/{site}-{width}.png'
-                      page.screenshot(path=path,full_page=True)
-                      result.append({'site':site,'width':width,'products':links,'images':imgs,'screenshot':path})
-                      page.close()
+                  for kind in ('ansan','bono'):
+                      fn=site+('.html' if kind=='ansan' else '-r-00624.html')
+                      for width in (390,1440):
+                          page=browser.new_page(viewport={'width':width,'height':900},device_scale_factor=1,locale='ko-KR')
+                          page.goto('http://127.0.0.1:8781/'+fn,wait_until='networkidle',timeout=60000)
+                          assert page.locator('meta[name="robots"]').get_attribute('content')=='noindex,nofollow,noarchive'
+                          assert page.locator('meta[property="og:image"]').count()==1
+                          assert page.locator('script[type="application/ld+json"]').count()==0
+                          assert page.locator('h1').count()==1
+                          cards=page.locator('.product-card')
+                          assert cards.count()==2
+                          cards.first.scroll_into_view_if_needed()
+                          page.wait_for_timeout(550)
+                          links=cards.locator('a[target="_blank"]').evaluate_all('(xs)=>xs.map(x=>({url:x.href,target:x.target,rel:x.rel}))')
+                          assert len(links)==2 and all('fwith.co.kr/shop/item.php?it_id=' in x['url']
+                                                        and x['target']=='_blank' and 'noopener' in x['rel'] for x in links)
+                          images=page.locator('.hero-picture img,.product-photo img').evaluate_all(
+                              '(xs)=>xs.map(x=>({src:x.currentSrc,loaded:x.complete && x.naturalWidth>0,nw:x.naturalWidth,nh:x.naturalHeight,alt:x.alt,shown:x.getBoundingClientRect().width}))')
+                          assert len(images)==3 and all(x['loaded'] and x['nw']>=280 and x['alt'] and x['shown']>=230 for x in images),(site,kind,width,images)
+                          assert page.locator('a[href="tel:1844-0644"]').count()>=4
+                          assert page.evaluate('document.documentElement.scrollWidth<=innerWidth+1'),(site,kind,width,'overflow')
+                          if width==390:assert page.locator('.mobile-order').is_visible()
+                          assert 'Noto Sans' in page.evaluate('getComputedStyle(document.body).fontFamily')
+                          if site=='clinicpresent':
+                              assert '축하화환' in page.locator('h1').inner_text()
+                          page.evaluate('window.scrollTo(0,0)')
+                          page.wait_for_timeout(150)
+                          pic=f'pilot-qa/{site}-{kind}-{width}.png'
+                          page.screenshot(path=pic,full_page=True)
+                          first=f'pilot-qa/{site}-{kind}-{width}-first.png'
+                          page.screenshot(path=first,full_page=False)
+                          visual.append({'site':site,'type':kind,'width':width,'images':images,'orderLinks':links,
+                                         'phoneCount':page.locator('a[href="tel:1844-0644"]').count(),
+                                         'screenshot':pic,'firstScreen':first})
+                          print('CLINIC_PILOT6_BROWSER_PASS',site,kind,width,'photos',len(images))
+                          page.close()
               browser.close()
-          Path('pilot-qa/result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          assert len(visual)==12
+          Path('pilot-qa/result.json').write_text(json.dumps(
+              {'source':'product-first-pilot','screens':visual,'screensPassed':len(visual),
+               'allProductEvidenceURL':'https://github.com/joseungil-kr/site-factory-v5/actions/runs/41875442755',
+               'noLiveDeployment':True,'pass':True},ensure_ascii=False,indent=2)+'\n')
+          print('CLINIC_PILOT_ALL_SIX_PAGES_TWELVE_REAL_SCREENS_PASS')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
