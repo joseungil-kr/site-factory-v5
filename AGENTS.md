@@ -19,3 +19,9 @@
 - 출처·생성 증거·사용 허락이 불명확한 이미지는 새로 생성하거나 명시적 사용 허락을 확인하기 전까지 공개에 사용하지 않는다. 생성 이미지를 실제 상품·현장·시공·배송 사례 사진으로 주장하거나 오인하게 하지 않는다. 증거와 승인 기록은 저장소/QA 보고서에서 관리한다.
 
 - 이미지 출처의 실행형 상세 기준과 기존 자산 분류는 `docs/IMAGE_SOURCE_POLICY_20261030.md` 및 `docs/image-governance/legacy-inventory-20261030.json`을 참조한다. 새/수정 이미지의 자동검사는 `python -m scripts.check_image_origin --changed-base origin/main --legacy-audit`를 사용한다. 기존 운영본은 증빙 부족만으로 자동 폐기·재배포하지 않는다.
+
+## 도메인별 Worker 운영 원칙 (2026-11-04 사용자 지시)
+
+- **등록 도메인(Cloudflare zone)마다 Worker 1개**를 기본으로 지정한다. `domain.net` 루트와 `*.domain.net` 모든 하위 사이트는 같은 Worker 내 Host 기반 라우팅·정적 자산을 공유한다. 다른 등록 도메인과는 묶지 않는다.
+- **서브도메인마다 Worker 생성 금지.** 동일 Worker에서 안전하게 처리할 수 없는 구체적 인증·런타임·보안 격리 등 비호환성이 증명된 예외만 별도 Worker를 검토한다. 파일 수 증가만으로 바로 분리하지 말고 저장 방식 변경을 먼저 검토한다.
+- 신규 사이트는 `SITE_CREATION_PROTOCOL.md`의 Worker-zone 사전검사와 `docs/DOMAIN_WORKER_POLICY_20261104.md`를 따른다. 기존 사이트 17개 등은 무검증 재바인딩하지 않으며, DNS·와일드카드 Route·권한 실패 시 fail-closed한다.

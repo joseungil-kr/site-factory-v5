@@ -1,5 +1,13 @@
 # 사이트 제작 사전기획 게이트 (Preflight Planning Gate)
 
+## 등록 도메인별 Worker 정책 — 2026-11-04 승인
+
+**신규·증분 사이트는 등록 도메인별 Worker 1개를 사용한다.** `domain.net`과 검증된 `*.domain.net` 호스트를 같은 Worker 패키지에 통합하고, 서로 다른 원 도메인 사이트는 묶지 않는다. 서브도메인별 별도 Worker는 기본적으로 금지하며, 동일 Worker에서 처리 불가능한 기능·보안·운영 격리 요구가 입증될 때만 예외적으로 검토한다.
+
+기존의 `shared-static(-preview)` 명칭은 유지하되 **동일 Worker 공유 범위를 등록 도메인 하나로 제한**한다. `workerZone`을 명시하고 저장소 및 Cloudflare의 실제 기존 Worker/Custom Domain/Zone Route/DNS/배포 버전과 대조한다. 원 도메인 `co.kr` 등은 문자열 두 토막으로 추론하지 않는다. 전체 호스트 구성원·자산을 보존해 패키징하고 새 서브도메인만 기존 Worker에 추가한다. 먼저 `docs/DOMAIN_WORKER_POLICY_20261104.md`의 제한·이전 절차와 예외 기준을 검토한다.
+
+Cloudflare Custom Domain은 `*.domain.net` 자체를 지원하지 않는다. DNS·Route 검증 없이 와일드카드 라우팅을 추가하거나 이미 운영 중인 기존 서브도메인 Worker를 바꾸지 않는다. 시작과 종료 HTTP 증거, robots/canonical/404/이미지/전화 링크 및 정확한 이전 버전을 남긴다. Free 자산 20,000개/Worker 버전(자체 예산 18,000), 계정 전체 100,000 Worker 호출/일과 Worker 총수 제한을 계산한다. 파일 수 문제는 콘텐츠 압축·외부 스토리지 등을 먼저 검토한다.
+
 ## 신규 사이트 전달 방식
 
 앞으로 신규 사이트는 공유 Worker의 정적 HTML·이미지 전달 경로를 기본으로 준비한다.
