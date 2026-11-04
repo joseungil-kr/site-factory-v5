@@ -41,7 +41,7 @@ class RegionCandidatesTest(unittest.TestCase):
         raw = path.read_bytes()
         # Original blob from feature/v52-wreath-region, not a reconstructed list.
         self.assertEqual(
-            sha1(f"blob {len(raw)}\\0".encode() + raw).hexdigest(),
+            sha1((f"blob {len(raw)}" + chr(0)).encode() + raw).hexdigest(),
             "525eb4b5c9f9f046ce2bcbd96a3dcfb343be399d",
         )
         original = json.loads(raw)
@@ -73,14 +73,14 @@ class RegionCandidatesTest(unittest.TestCase):
         path = base / "v4_official_parent_regions_20261022.json"
         raw = path.read_bytes()
         self.assertEqual(
-            sha1(f"blob {len(raw)}\\0".encode() + raw).hexdigest(),
+            sha1((f"blob {len(raw)}" + chr(0)).encode() + raw).hexdigest(),
             "13d43fc3f2492b29b1680858235fe0ac0cd10580",
         )
         self.assertEqual(len(json.loads(raw)["regions"]), 284)
         zip_path = base / "v4_official_legal_codes_20261022.zip"
         zip_bytes = zip_path.read_bytes()
         self.assertEqual(
-            sha1(f"blob {len(zip_bytes)}\\0".encode() + zip_bytes).hexdigest(),
+            sha1((f"blob {len(zip_bytes)}" + chr(0)).encode() + zip_bytes).hexdigest(),
             "105e3084be32a116b7c3c8361edaacd0ea40b110",
         )
         self.assertEqual(sha256(zip_bytes).hexdigest(),
