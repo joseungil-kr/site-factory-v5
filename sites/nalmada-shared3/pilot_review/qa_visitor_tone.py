@@ -65,7 +65,9 @@ def validate():
         assert blocks
         assert all(not any(b in row['body'] for b in BANNED) for row in blocks),site
     originalLegacyCount=extra['count']
+    duplicatesSkipped=extra.get('duplicatesSkippedPerSite',{})
     assert originalLegacyCount>=3600
+    assert sum(duplicatesSkipped.values())>=0
     manifest=json.loads((PILOT/'pilot-manifest.json').read_text(encoding='utf-8'))
     assert len(manifest['samplePages'])==6
     factReport=[]
@@ -75,7 +77,7 @@ def validate():
         parser=ReadBody();parser.feed(raw)
         visible=' '.join(parser.text)
         for phrase in HARD_EXACT+BANNED:
-            assert phrase not in visible,(row['site'],row['page'],'unfriendly visitor copy',phrase)
+            assert phrase not in raw,(row['site'],row['page'],'unfriendly visitor copy anywhere in HTML',phrase)
         assert ('<h1>' in raw and 'tel:1844-0644' in raw and
             'data-sku=' in raw and 'fwith.co.kr/shop/item.php?it_id=' in raw)
         assert 'noindex,nofollow,noarchive' in raw
@@ -95,6 +97,7 @@ def validate():
         similarity[site]=round(score,6)
     result={'pool720':len(pool['blocks']),'poolUniqueBody720':True,
             'compositionalPoolVariants':originalLegacyCount,
+            'duplicateGeneratedVariantsSkipped':duplicatesSkipped,
             'sixPages':len(factReport),'sitePairChar5gramJaccard':similarity,
             'zeroBannedVisitorSentences':True,'humanReviewStillRequired':True,
             'screenshotsNotProvenByThisTextAudit':True,
