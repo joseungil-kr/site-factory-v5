@@ -315,7 +315,7 @@ def editorial_body(body):
 def insight_cards(site,seed):
     """Use the site's own verified-general decision cases, not fake local facts."""
     facts=SITE_META[site]['facts']
-    order=sorted(range(len(facts)),key=lambda i:key_sort(seed+'|decision|'+str(i)))[:2]
+    order=sorted(range(len(facts)),key=lambda i:key_sort(seed+'|decision',i))[:2]
     blocks=[]
     audit=[]
     for i in order:
