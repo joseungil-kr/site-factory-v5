@@ -1,0 +1,64 @@
+name: Clinic product pilot visual review only
+on:
+  push:
+    branches: [review/clinic-product-pilot-20261105]
+    paths: ['sites/nalmada-shared3/pilot_review/**', '.github/workflows/clinic-product-pilot-review.yml']
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install Korean fonts and browser
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          python -m pip install --quiet playwright==1.58.0
+          python -m playwright install chromium
+      - name: Build and review pilot without deployment
+        run: |
+          set -euo pipefail
+          python sites/nalmada-shared3/pilot_review/build_pilot.py
+          python -m http.server 8781 --bind 127.0.0.1 --directory sites/nalmada-shared3/pilot_review > /tmp/pilot-server.log 2>&1 &
+          mkdir -p pilot-qa
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from playwright.sync_api import sync_playwright
+          result=[]
+          with sync_playwright() as p:
+              browser=p.chromium.launch(headless=True,args=['--no-sandbox'])
+              for site in ('clinicflower','clinicopen','clinicpresent'):
+                  for width in (390,1440):
+                      page=browser.new_page(viewport={'width':width,'height':900})
+                      page.goto('http://127.0.0.1:8781/'+site+'.html',wait_until='networkidle',timeout=60000)
+                      assert page.locator('meta[name="robots"]').get_attribute('content')=='noindex,nofollow'
+                      assert page.evaluate('document.documentElement.scrollWidth <= innerWidth+1')
+                      cards=page.locator('.products .card')
+                      assert cards.count()==2
+                      links=cards.locator('a').evaluate_all('(xs)=>xs.map(x=>x.href)')
+                      imgs=cards.locator('img').evaluate_all('(xs)=>xs.map(x=>({url:x.currentSrc,loaded:x.complete && x.naturalWidth>0,width:x.naturalWidth,alt:x.alt}))')
+                      assert all('fwith.co.kr/shop/item.php?it_id=' in x for x in links)
+                      assert all(x['loaded'] and x['alt'] for x in imgs),imgs
+                      assert page.locator('a[href="tel:18440644"]').count()>=2
+                      path=f'pilot-qa/{site}-{width}.png'
+                      page.screenshot(path=path,full_page=True)
+                      result.append({'site':site,'width':width,'products':links,'images':imgs,'screenshot':path})
+                      page.close()
+              browser.close()
+          Path('pilot-qa/result.json').write_text(json.dumps(result,ensure_ascii=False,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: clinic-pilot-review-${{ github.run_id }}
+          path: |
+            pilot-qa/
+            sites/nalmada-shared3/pilot_review/*.html
+            sites/nalmada-shared3/pilot_review/style.css
+          if-no-files-found: error
