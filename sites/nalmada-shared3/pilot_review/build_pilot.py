@@ -201,9 +201,9 @@ a{color:inherit}
 }
 /* 축하화환 제품사진은 꽃 구성 중심으로 표시. 사진 속 행사 리본은 화면 밖으로 배치. */
 .theme-present .hero-picture{overflow:hidden}
-.theme-present .hero-picture img{object-fit:cover;object-position:center;transform:scale(1.92);transform-origin:50% 46%}
+.theme-present .hero-picture img{object-fit:cover;object-position:center;transform:scale(2.55);transform-origin:50% 46%}
 .theme-present .product-photo{overflow:hidden}
-.theme-present .product-photo img{object-fit:cover;object-position:center;transform:scale(1.92);transform-origin:50% 47%}
+.theme-present .product-photo img{object-fit:cover;object-position:center;transform:scale(2.55);transform-origin:50% 47%}
 
 """
 
