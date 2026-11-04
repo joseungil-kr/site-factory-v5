@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "sourceHost": "fwith.co.kr",
+  "checkedDateKST": "2026-11-05",
+  "checkedWith": "GitHub Actions isolated read-only HTTP evidence; run 41875442755",
+  "sourceEvidenceUrl": "https://github.com/joseungil-kr/site-factory-v5/actions/runs/41875442755",
+  "actualApprovalBasis": "Current user's explicit directive for applying authorized fwith.co.kr product photos to the three clinic websites, 2026-11-05. Historical verbatim approval not independently retrieved; do not invent earlier quote.",
+  "rightsScope": "Only these fwith.co.kr product photos on Clinicflower/Clinicopen/Clinicpresent for accurate references; do not claim actual clinic delivery or alter product composition.",
+  "pricesAreSellerListedKRW": true,
+  "regionalSurchargesExtra": true,
+  "stockOrExactDeliveryTimeNotVerified": true,
+  "items": [
+    {
+      "sku": "D144",
+      "name": "금전수 탁상용",
+      "priceKRW": 53000,
+      "imageUrl": "https://fwith.co.kr/data/item/flower379/D144/thumb-1_500x500.jpg",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D144",
+      "photoVerifiedHTTP": 200,
+      "productVerifiedHTTP": 200
+    },
+    {
+      "sku": "D149",
+      "name": "녹보수 소형",
+      "priceKRW": 65000,
+      "imageUrl": "https://fwith.co.kr/data/item/flower379/D149/thumb-1_500x500.jpg",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D149",
+      "photoVerifiedHTTP": 200,
+      "productVerifiedHTTP": 200
+    },
+    {
+      "sku": "C200",
+      "name": "축하 3단 화환",
+      "priceKRW": 59000,
+      "imageUrl": "https://fwith.co.kr/data/item/flower379/C200/thumb-1_500x500.jpg",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=C200",
+      "photoVerifiedHTTP": 200,
+      "productVerifiedHTTP": 200
+    },
+    {
+      "sku": "C206",
+      "name": "축하 4단 화환",
+      "priceKRW": 120000,
+      "imageUrl": "https://fwith.co.kr/data/item/flower379/C206/thumb-1_500x500.jpg",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=C206",
+      "photoVerifiedHTTP": 200,
+      "productVerifiedHTTP": 200
+    }
+  ]
+}
