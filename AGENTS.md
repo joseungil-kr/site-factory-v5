@@ -24,4 +24,4 @@
 
 - **등록 도메인(Cloudflare zone)마다 Worker 1개**를 기본으로 지정한다. `domain.net` 루트와 `*.domain.net` 모든 하위 사이트는 같은 Worker 내 Host 기반 라우팅·정적 자산을 공유한다. 다른 등록 도메인과는 묶지 않는다.
 - **서브도메인마다 Worker 생성 금지.** 동일 Worker에서 안전하게 처리할 수 없는 구체적 인증·런타임·보안 격리 등 비호환성이 증명된 예외만 별도 Worker를 검토한다. 파일 수 증가만으로 바로 분리하지 말고 저장 방식 변경을 먼저 검토한다.
-- 신규 사이트는 `SITE_CREATION_PROTOCOL.md`의 Worker-zone 사전검사와 `docs/DOMAIN_WORKER_POLICY_20261104.md`를 따른다. 기존 사이트 17개 등은 무검증 재바인딩하지 않으며, DNS·와일드카드 Route·권한 실패 시 fail-closed한다.
+- 신규 사이트는 `SITE_CREATION_PROTOCOL.md`의 Worker-zone 사전검사와 `docs/DOMAIN_WORKER_POLICY_20261104.md`를 따른다. **기존 분리된 Worker와 17개 `nalmada.net` 운영 호스트는 이전·통합·재바인딩 없이 그대로 유지한다.** 신규 호스트만 해당 등록 도메인의 Worker에 추가하며, DNS·와일드카드 Route·권한 실패 시 fail-closed한다.
