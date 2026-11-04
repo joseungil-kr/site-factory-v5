@@ -1,0 +1,63 @@
+{
+  "approved": true,
+  "source": "user direct approval 2026-11-04 for three named subdomains on one nalmada worker, existing workers unchanged",
+  "workerZone": "nalmada.net",
+  "workerName": "sfv5-nalmada-domain",
+  "status": "NOINDEX_PREVIEW_ONLY",
+  "existingWorkersPreserve": true,
+  "domains": [
+    {
+      "hostname": "clinicflower.nalmada.net",
+      "brand": "꽃이랑",
+      "keyword": "병원·치과·한의원 개업화분, 개원축하화분",
+      "pageTypes": [
+        "home sample"
+      ],
+      "targetPageCount": 1,
+      "index": false
+    },
+    {
+      "hostname": "clinicopen.nalmada.net",
+      "brand": "꽃이랑",
+      "keyword": "병원·치과·한의원 개원식 화분 주문",
+      "pageTypes": [
+        "home sample"
+      ],
+      "targetPageCount": 1,
+      "index": false
+    },
+    {
+      "hostname": "clinicpresent.nalmada.net",
+      "brand": "꽃이랑",
+      "keyword": "병원·치과·한의원 개원 축하선물·화분 선택",
+      "pageTypes": [
+        "home sample"
+      ],
+      "targetPageCount": 1,
+      "index": false
+    }
+  ],
+  "conversion": {
+    "mode": "tel",
+    "phone": "1844-0644"
+  },
+  "images": {
+    "source": "Existing Clinicflower five AI-generated WebP; same provenance and blob SHA as Clinicflower preview branch; sales actual evidence false"
+  },
+  "copyPool": {
+    "blocks": 720,
+    "unique": 720
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-Jaccard narrative body excluding common navigation",
+    "thresholdExclusive": 0.49,
+    "observedBetweenThreeSamples": [
+      0.0516,
+      0.0578,
+      0.0498
+    ]
+  },
+  "DNSAuth": "preflight required; do not write without checking current bindings",
+  "publish": false,
+  "indexNow": false
+}
