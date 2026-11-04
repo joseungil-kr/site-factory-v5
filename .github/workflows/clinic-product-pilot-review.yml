@@ -25,6 +25,7 @@ jobs:
         run: |
           set -euo pipefail
           python sites/nalmada-shared3/pilot_review/build_pilot.py
+          python sites/nalmada-shared3/pilot_review/qa_visitor_tone.py
           python -m http.server 8781 --bind 127.0.0.1 --directory sites/nalmada-shared3/pilot_review > /tmp/pilot-server.log 2>&1 &
           mkdir -p pilot-qa
           python - <<'PY'
@@ -53,8 +54,9 @@ jobs:
               if row['page']=='bono':
                   assert '경기도 안산시 상록구 본오동' in body
               if row['site']=='clinicpresent':
-                  assert '결혼식 리본' in body
-                  assert '병원 현장 배송 사례를 나타내지 않습니다' in body
+                  assert '결혼식 리본' not in body
+                  assert '병원 현장 배송 사례를 나타내지 않습니다' not in body
+                  assert '축 개원' in body
           visual=[]
           with sync_playwright() as p:
               browser=p.chromium.launch(headless=True,args=['--no-sandbox'])

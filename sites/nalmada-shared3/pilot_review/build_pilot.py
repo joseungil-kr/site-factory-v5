@@ -201,9 +201,9 @@ a{color:inherit}
 }
 /* 축하화환 제품사진은 꽃 구성 중심으로 표시. 사진 속 행사 리본은 화면 밖으로 배치. */
 .theme-present .hero-picture{overflow:hidden}
-.theme-present .hero-picture img{object-fit:cover;object-position:center;transform:scale(1.6);transform-origin:50% 46%}
+.theme-present .hero-picture img{object-fit:cover;object-position:center;transform:scale(1.92);transform-origin:50% 46%}
 .theme-present .product-photo{overflow:hidden}
-.theme-present .product-photo img{object-fit:cover;object-position:center;transform:scale(1.65);transform-origin:50% 47%}
+.theme-present .product-photo img{object-fit:cover;object-position:center;transform:scale(1.92);transform-origin:50% 47%}
 
 """
 
@@ -348,7 +348,7 @@ def render_region_detail(site,productmap):
 </div><figure class="hero-picture">
 <img src="{E(first['imageUrl'])}" width="500" height="500"
 alt="{E(first['name'])} 판매처 상품 사진" decoding="async" loading="eager" fetchpriority="high">
-<figcaption>{E(caution)}</figcaption>
+<figcaption>{E(first['name'])} · {('꽃 부분 확대' if site=='clinicpresent' else '상품 사진')}</figcaption>
 </figure></div></section>
 <section class="section" id="local"><div class="wrap">
 <div class="section-heading"><span class="eyebrow">LOCAL HANDOVER CHECKLIST</span>
@@ -362,6 +362,7 @@ alt="{E(first['name'])} 판매처 상품 사진" decoding="async" loading="eager
 <h2>{E(local['productTitle'])}</h2><p>{E(local['productIntro'])}</p>
 </div><div class="product-grid">{cards}</div>
 <p class="price-note">판매처 확인 상품가격이며 배송지별 추가 배송비는 주문할 때 안내받으실 수 있습니다.</p>
+<p class="price-note">주문 일정 변경이나 취소를 원하시면 꽃이랑 1844-0644로 연락해 주세요. 상품 제작·출고 상황에 따른 처리 방법과 교환·반품 조건을 안내해 드립니다.</p>
 </div></section>
 <section class="section faq" id="faq"><div class="wrap">
 <div class="section-heading"><span class="eyebrow">FAQ</span><h2>받는 장소에 관한 질문</h2></div>
@@ -426,7 +427,7 @@ def render_page(site,kind,productmap):
 </div>
 <figure class="hero-picture"><img src="{E(src)}" alt="{E(first['name'])} 판매처 상품 사진"
 width="500" height="500" loading="eager" decoding="async" fetchpriority="high">
-<figcaption>판매처에 등록된 {E(first['name'])} 상품 사진</figcaption></figure>
+<figcaption>{E(first['name'])} · {('꽃 부분 확대' if site=='clinicpresent' else '상품 사진')}</figcaption></figure>
 </div></section>
 <div class="proof-strip"><div class="wrap"><span>✓ 실판매 상품 직접 비교</span><span>✓ 상품별 사진·가격 표시</span>
 <span>✓ 상품 상세 주문 및 전화상담</span></div></div>
@@ -436,6 +437,7 @@ width="500" height="500" loading="eager" decoding="async" fetchpriority="high">
 <p>{E(important)}</p></div>
 <div class="product-grid">{cards}</div>
 <p class="price-note">판매처 확인 상품가격입니다. 지역별 추가 배송비는 받으실 주소에 따라 주문 단계에서 안내됩니다.</p>
+<p class="price-note">주문 일정 변경이나 취소를 원하시면 꽃이랑 1844-0644로 연락해 주세요. 상품 제작·출고 상황에 따른 처리 방법과 교환·반품 조건을 안내해 드립니다.</p>
 </div></section>
 <section class="section alt" id="compare"><div class="wrap">
 <div class="section-heading"><span class="eyebrow">DECISION POINTS</span>

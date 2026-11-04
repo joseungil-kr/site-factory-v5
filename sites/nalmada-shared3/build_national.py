@@ -23,15 +23,15 @@ SITE_META={
      ('식물 크기','접수대 옆에 둘지 바닥에 세워 둘지 먼저 정합니다','화분 높이와 폭이 출입 동선에 맞는지 확인합니다','식물 크기를 기준 없이 큰 것으로 선택하지 않습니다'),
      ('빛과 관리','로비의 창가와 내부 대기 공간은 채광이 다를 수 있습니다','수령처에서 물주기와 식물 관리를 맡을 분을 확인합니다','어두운 진료실에서도 모든 식물이 오래 자란다고 단정하지 않습니다'),
      ('기념 선물 목적','오래 기르는 개원 기념품과 행사장 장식은 목적이 다릅니다','상대방의 취향과 관리 가능성을 우선 상담합니다','축하화환과 개원축하화분을 같은 상품으로 취급하지 않습니다'),
-     ('받는 사람 이름','병원과 의원의 공식 상호, 대표 원장 이름은 확인이 필요합니다','리본을 쓰기 전에 상호의 띄어쓰기와 발신자 표기를 확인합니다','전문과목이나 대표자를 임의로 추측해 적지 않습니다'),
+     ('받는 사람 이름','병원 이름과 원장 성함은 리본 제작에 쓰이는 중요한 정보입니다','리본을 쓰기 전에 상호의 띄어쓰기와 발신자 표기를 확인합니다','전문과목이나 대표자를 임의로 추측해 적지 않습니다'),
      ('배송 가능 범위','주소가 같은 시군구라도 품목과 날짜에 따라 수령 조건이 다릅니다','상세주소와 희망 전달일을 전화로 먼저 확인합니다','특정 동 전역의 당일배송을 무조건 보장하지 않습니다'),
      ('설치 위치','화분이 놓일 곳은 접수 업무와 방문객 통행에 영향을 줄 수 있습니다','담당자가 안내한 위치에 인계할 수 있는지 상담합니다','의료 장비나 환자 이동 공간을 가려도 괜찮다고 가정하지 않습니다'),
      ('예산 정하기','구성품과 화기 크기, 운송 조건은 선택 금액에 영향을 줄 수 있습니다','희망하는 전체 예산을 알려주고 선택 가능한 상품을 문의합니다','확인되지 않은 고정 가격이나 배송비를 표시하지 않습니다'),
      ('이전 개원','처음 문을 여는 의료기관과 장소를 이전하는 의료기관은 축하 문구가 다를 수 있습니다','신규 개원 또는 이전 축하 중 실제 상황을 확인합니다','이전 개원을 모두 신규 개업으로 표시하지 않습니다'),
      ('직원 수령','진료 중에는 담당자가 물품을 바로 받을 수 없는 경우가 있습니다','전화 연락이 가능한 수령자와 인계 위치를 정리합니다','부재 중인 문 앞에 화분을 임의로 두도록 안내하지 않습니다'),
      ('리본 문구','축 개원과 축 개업은 상황에 따라 선택하는 짧은 축하 표현입니다','축하 문구와 보내는 사람 이름을 따로 적어 상담합니다','주문자가 요청하지 않은 기관 이름이나 직책을 덧붙이지 않습니다'),
-     ('물주기','식물마다 적합한 관리 방법이 같지 않습니다','상품이 결정되면 해당 품종의 관리 조건을 확인합니다','모든 관엽식물에 공통 물주기 주기를 약속하지 않습니다'),
-     ('사전 연락','진료 전후의 안내 인력이 달라질 수 있습니다','희망 수령시간과 실제 출입 가능한 시간대를 확인합니다','영업시간 표기만으로 배송 가능 시간을 확정하지 않습니다')],
+     ('물주기','식물 종류에 따라 햇빛과 물주기 관리가 달라집니다','상품이 결정되면 해당 품종의 관리 조건을 확인합니다','모든 관엽식물에 공통 물주기 주기를 약속하지 않습니다'),
+     ('사전 연락','진료 전후의 안내 인력이 달라질 수 있습니다','받으실 시간과 건물 출입 시간대를 알려주세요','영업시간 표기만으로 배송 가능 시간을 확정하지 않습니다')],
    'faqs':[
       ('개업화분과 개원축하화분은 다른가요?','의료기관의 새 출발을 축하하는 용도로 같은 종류의 화분을 고를 수 있지만, 축하 목적과 문구는 구분해 확인하세요.'),
       ('병원 원장실에 화분을 직접 보낼 수 있나요?','직접 인계가 가능한지, 접수대에서 받아 줄 담당자가 있는지 수령처에 확인하는 것이 우선입니다.'),
@@ -49,7 +49,7 @@ SITE_META={
       ('치과 개원식 준비','직원 출근 시간과 접수 혼잡을 고려해 인계 가능한 시점을 문의합니다.'),
       ('한의원 개원행사 화분','행사 공간 정리 상태와 설치 위치를 먼저 조율합니다.')],
    'facts':[
-     ('행사 날짜','축하 행사일과 진료 개시일이 반드시 같은 날짜는 아닙니다','선물을 받을 정확한 행사일과 원하는 도착시간을 확인합니다','달력상 개원일만 보고 배송일을 정하지 않습니다'),
+     ('행사 날짜','진료 시작일과 개원 축하 행사는 서로 다른 날로 잡힐 수 있습니다','선물을 받을 정확한 행사일과 원하는 도착시간을 확인합니다','달력상 개원일만 보고 배송일을 정하지 않습니다'),
      ('준비 완료','개원 전날까지 시설 정리나 청소가 진행될 수 있습니다','수령 가능 구역과 설치 가능 시간을 담당자에게 문의합니다','준비되지 않은 공간에 선물을 무조건 반입한다고 약속하지 않습니다'),
      ('건물 출입','건물의 방문자 출입 시간과 배송 동선이 다를 수 있습니다','주 출입구와 층수, 엘리베이터 유무를 확인합니다','지도 표기만으로 기사 접근 가능성을 판단하지 않습니다'),
      ('수령 담당자','원장과 직원이 모두 행사 준비로 바쁠 수 있습니다','기사 연락을 받을 담당자 한 명을 정해 알려줍니다','행사 시작 전에는 모두 전화가 가능하다고 가정하지 않습니다'),
@@ -85,7 +85,7 @@ SITE_META={
      ('발신자 표시','사업체 명의와 개인 명의는 리본 표기가 다를 수 있습니다','회사명·직함·개인 이름 중 원하는 발신자 표기를 확정합니다','직함을 추측하거나 한 회사에서 보냈다고 가정하지 않습니다'),
      ('행사 시간','개원식의 시작 시각과 화환을 받을 수 있는 시각은 다를 수 있습니다','행사 준비 담당자에게 희망 반입시간을 확인합니다','행사 직전 주문의 특정 시간 도착을 보장하지 않습니다'),
      ('병원명 표기','의료기관의 정식 명칭에는 병원·의원 등의 차이가 있습니다','간판이나 초대장의 상호를 기준으로 리본 글자를 검토합니다','의원과 병원을 임의로 바꿔 쓰지 않습니다'),
-     ('화환 놓을 곳','인도나 공용 출입구는 안전한 전시 공간이 아닐 수 있습니다','행사 주최자가 지정한 설치 위치를 확인합니다','통행을 막는 곳에 세워도 된다고 안내하지 않습니다'),
+     ('화환 놓을 곳','행사장에서 지정한 자리가 화환을 놓기에 편리합니다','행사 주최자가 지정한 설치 위치를 확인합니다','통행을 막는 곳에 세워도 된다고 안내하지 않습니다'),
      ('행사 후 회수','축하화환을 행사 뒤 어떻게 정리할지도 중요한 조건일 수 있습니다','철수·회수 서비스 제공 범위를 판매처에 문의합니다','모든 주문에 회수가 포함된다고 주장하지 않습니다'),
      ('배송비 문의','화환 크기와 실제 운송 구간에 따라 추가비용 여부가 달라질 수 있습니다','정확한 주소를 제공하고 최종 비용을 확인합니다','도시 이름만으로 무료배송이라고 단정하지 않습니다'),
      ('이전 축하','의료기관을 옮기는 행사는 신규 개원식과 상황이 다릅니다','이전 개원인지 처음 개원인지 확인한 뒤 문구를 고릅니다','이전 축하에 신규 개업 문구만 제시하지 않습니다'),
@@ -145,46 +145,70 @@ WREATH_EXTRA_FACTS = [
 SITE_META['clinicpresent']['facts'].extend(WREATH_EXTRA_FACTS)
 
 # We do not confuse a generated variant with new source evidence.
+# Visitor-first copy composition. The fourth item in historic SITE_META facts
+# contains legacy defensive wording and is intentionally NEVER used in the pool.
+# This pilot review branch retains it only to compare source changes; deployment
+# remains blocked until national semantic QA is independently approved.
 PERSPECTIVES=[
- ('발신자 확인','주문자는 이 조건을 미리 정리해 담당자에게 전달하면 좋습니다.'),
- ('수령처 확인','받는 의료기관은 수령 가능 시간과 실제 설치 위치를 함께 알려주는 편이 좋습니다.'),
- ('행사 담당자','행사 운영 측에 먼저 연락해 변경 가능성을 확인하면 혼선을 줄일 수 있습니다.'),
- ('전화 상담','상담에서는 주소와 일정, 목적을 함께 알려주어야 같은 이름의 장소를 피할 수 있습니다.'),
- ('배송 인계','전달을 맡을 직원과 전화 연락 가능 시간은 배송 준비에 중요한 정보입니다.'),
- ('수신자 선호','받는 분이 선호하는 선물 종류를 모르면 주문 전에 화분·화환의 차이를 확인합니다.'),
- ('상품 비교','상품의 실제 구성과 크기 비교는 판매처가 확정해 주는 현재 정보에 근거해야 합니다.'),
- ('일정 점검','희망 전달일이 행사 운영 일정과 맞는지 미리 확인하는 것이 좋습니다.')]
+ ('보내는 분','보내는 분의 예산과 축하 목적을 알려주시면 고르기 편합니다.'),
+ ('받는 분','받는 분의 취향과 놓을 공간을 함께 고려해 보세요.'),
+ ('개원식 담당자','개원식 날짜와 수령할 담당자를 함께 알려주시면 편리합니다.'),
+ ('전화 주문','상품코드와 받는 주소를 알려주시면 주문을 도와드립니다.'),
+ ('배송 인계','배송 연락을 받을 분과 시간대를 함께 정해 보세요.'),
+ ('선물 취향','화분과 화환 중 받는 분에게 어울리는 선물을 선택해 보세요.'),
+ ('상품 비교','상품 사진·가격·크기를 함께 비교하면 선택하기 좋습니다.'),
+ ('일정 확인','희망 날짜와 받는 주소를 알려주시면 배송 가능한 일정을 안내받으실 수 있습니다.')
+]
 FRAMES=[
- ('우선 판단','{context} {action} {view}'),
- ('현장 준비','{action} {context} {view}'),
- ('오해 점검','{context} {avoid} {action}'),
- ('다음 단계','{action} {view} {avoid}'),
- ('조건 비교','{context} {action} {avoid}'),
- ('변경 대응','{view} {action} {avoid}'),
- ('주문 직전','{action} {avoid} {view}'),
- ('상담 정리','{context} {view} {action}')]
-# 12 concepts x 5 perspectives x 8 discourse frames = 480 per site.
-# Generate 2 more genuinely different practical compositions per concept/perspective
-# without asserting locally verified delivery facts: 12 x 5 x 10 = 600 variants / site.
-FRAMES += [
- ('확인 사항','{avoid} {context} {action}'),
- ('받는 곳 배려','{view} {context} {action}'),
+ ('상품 고르기','{context} {action} {view}'),
+ ('공간 선택','{action} {context} {choice}'),
+ ('수령 준비','{view} {context} {action}'),
+ ('날짜와 장소','{context} {choice} {view}'),
+ ('주문 비교','{action} {choice} {context}'),
+ ('문의 내용','{view} {action} {choice}'),
+ ('선물 목적','{choice} {context} {action}'),
+ ('필요 정보','{context} {view} {choice}'),
+ ('상품 판단','{choice} {action} {view}'),
+ ('전달 계획','{view} {choice} {context}')
 ]
 
+def _visitor_action(s):
+    return (s.replace('확인합니다','확인해 보세요')
+             .replace('정합니다','정해 보세요')
+             .replace('결정합니다','정해 보세요')
+             .replace('문의합니다','문의해 보세요')
+             .replace('전달합니다','알려주세요')
+             .replace('고릅니다','골라보세요')
+             .replace('비교합니다','비교해 보세요')
+             .replace('알립니다','알려주세요'))
+
 def generate_extra_pool() -> dict:
-    output={'type':'compositional-content-variants','sourceType':'curated-general-practical-concepts; not locality-specific facts',
-      'claim':'600 variants/site derived from 12 authored concepts x 5 stakeholder perspectives x 10 explanatory structures',
+    output={'type':'visitor-first-composed-practical-guidance',
+      'sourceType':'V5 authored concepts, site-specific purchase questions, no verified local delivery facts',
+      'claim':'Ten contextual frames per concept and customer perspective; not independently researched local facts',
       'items':{},'count':0}
+    choices={
+      'clinicflower':'금전수·녹보수의 사진과 가격을 비교해 놓을 자리에 어울리는 화분을 골라보세요.',
+      'clinicopen':'행사 날짜와 수령 담당자를 알려주시면 개원식 선물 주문을 도와드립니다.',
+      'clinicpresent':'축하 3단·4단 화환의 꽃 구성과 가격을 비교해 행사 장소에 어울리는 상품을 골라보세요.'
+    }
+    defensive=('않습니다','못합니다','단정하지','약속하지','보장하지','임의로',
+               '가정하지','무조건','확인되지 않은','달력상 개원일만',
+               '현장 설치 인력이 반드시 포함','AI 연출','배송 실적 사진')
     for site,meta in SITE_META.items():
         rows=[]
-        for n,(topic,context,action,avoid) in enumerate(meta['facts']):
+        for n,(topic,context,action,_legacyAvoid) in enumerate(meta['facts']):
             for p,(role,view) in enumerate(PERSPECTIVES):
                 for f,(kind,template) in enumerate(FRAMES):
-                    body=template.format(context=context,action=action,avoid=avoid,view=view)
-                    if "{view}" not in template: body += " " + view
-                    rows.append({'id':f'{site.upper()}-{n:02d}-{p:02d}-{f:02d}', 'topic':topic,
-                                 'heading':f'{topic} — {kind}', 'body':body,
-                                 'role':role,'frame':kind,'sourceConceptNumber':n+1})
+                    body=template.format(context=context,action=_visitor_action(action),
+                                         view=view,choice=choices[site])
+                    body=' '.join(body.split())
+                    if any(x in body for x in defensive):
+                        raise ValueError('Defensive text detected in new pool: '+site+' '+topic)
+                    rows.append({'id':f'{site.upper()}-{n:02d}-{p:02d}-{f:02d}',
+                                 'topic':topic,'heading':f'{topic} — {kind}',
+                                 'body':body,'role':role,'frame':kind,'sourceConceptNumber':n+1,
+                                 'visitorToneVersion':'2026-11-05'})
         assert len(rows)==len(meta['facts'])*len(PERSPECTIVES)*len(FRAMES)
         assert len({x['body'] for x in rows})==len(rows)
         output['items'][site]=rows
@@ -254,7 +278,7 @@ def media_html(site,path):
             '<img src="/assets/images/'+esc(name)+'" alt="'+esc(alt)+'" '
             'width="'+str(width)+'" height="'+str(height)+'" '
             'loading="eager" decoding="async" fetchpriority="high">'
-            '<figcaption>개원 축하를 표현한 AI 연출 이미지이며 특정 상품·배송 사례를 나타내지 않습니다.</figcaption>'
+    
             '</figure></div></section>')
 
 def header(site, title, description, path, mode):
@@ -319,11 +343,11 @@ def insight_cards(site,seed):
     blocks=[]
     audit=[]
     for i in order:
-        topic,context,action,avoid=facts[i]
+        topic,context,action,_legacyAvoid=facts[i]
         blocks.append('<article class="step"><span class="num">'+esc(topic)+'</span>'
                       '<h3>'+esc(context)+'</h3><p>'+esc(action)+'</p>'
-                      '<p>'+esc(avoid)+'</p></article>')
-        audit.extend((context,action,avoid))
+                      '<p>받는 분이 편한 날짜와 수령할 위치를 함께 알려주세요.</p></article>')
+        audit.extend((context,action))
     return ('<section class="section clinic-decision"><div class="wrap">'
             '<div class="heading"><h2>주문 전에 비교할 실제 조건</h2>'
             '<p>확인할 항목을 정리한 뒤 전화로 상품·배송 조건을 상담하세요.</p></div>'
@@ -382,7 +406,7 @@ def render_region(site,rec,pool,mode):
         '<p>'+esc(meta['intro'])+' '+esc(place)+'에 보내는 경우 정확한 수령 주소와 희망 날짜를 전화로 확인해주세요.</p>'
         '<a class="call heroCall" href="tel:1844-0644">☎ 전화주문 1844-0644</a></div></section>'
         +media_html(site,path)+'<section class="section alt"><div class="wrap"><div class="heading"><h2>'+esc(place)+' 주문 전 검토할 내용</h2>'
-        '<p>의료기관의 실제 시설·행사 일정·배송 가능 여부는 개별 확인이 필요합니다.</p></div><div class="grid3">'+''.join(sections)+'</div></div></section>'
+        '<p>받는 분이 편한 날짜와 꽃을 놓을 장소를 알려주시면 제품 선택을 도와드립니다.</p></div><div class="grid3">'+''.join(sections)+'</div></div></section>'
         '<section class="section"><div class="wrap"><div class="heading"><h2>자주 묻는 질문</h2></div><div class="faq">'+faq+'</div>'
         '<p>다른 지역명도 찾아보려면 <a href="'+district_path(p,d)+'">'+esc(p+' '+d)+' 지역 목록</a>을 이용하세요.</p>'
         '</div></section>'+insights)
