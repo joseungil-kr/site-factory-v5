@@ -223,7 +223,7 @@ def product_card(info, sku):
 def render_page(site,kind,productmap):
     meta=CONFIG[site]
     label,region,short = TARGETS[0 if kind=="ansan" else 1]
-    headline=f'{short} {meta["heading"]}'
+    headline=f'{region if kind=="bono" else short} {meta["heading"]}'
     title=headline+' | 꽃이랑'
     description= (f'{region} {meta["name"]} 추천. '+meta["lead"]+
                   ' 실제 상품사진·가격을 비교하고 1844-0644 또는 판매처에서 주문하세요.')
