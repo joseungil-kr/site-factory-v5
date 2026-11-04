@@ -1,0 +1,42 @@
+{
+  "sourceRepository": "joseungil-kr/site-factory-v5",
+  "sourceCommit": "d4f58c660655afc5f8359fe0fa70b98fc7588309",
+  "files": [
+    {
+      "path": "sites/daysky/site.json",
+      "sha256": "2b73652e32ad3cb7f143e310418d4319da7b1c148a0559fe9384efcfb1ecee6e"
+    },
+    {
+      "path": "sites/daysky/services.json",
+      "sha256": "b647d07aa5462d6eab9858dca6ca83fa06a5f29fe42ea5a513549c11ba5a5b4f"
+    },
+    {
+      "path": "docs/DAYSKY_PHOTO_PROVENANCE.json",
+      "sha256": "72a5bb6109d8f3bb93092c9d7debb9681c771cc16bb10d170c72d3d63a3716bb"
+    },
+    {
+      "path": "data/regions/seoul_gyeonggi_current_dong.json",
+      "sha256": "e7788fd6d7fa3fab10699991d82af714c5215967217c2d96bf6650beaf40310f"
+    },
+    {
+      "path": "data/pools/daysky_work_pool.json",
+      "sha256": "17307130b1ba868e71b9c2aea5e04bf5e9b13ba861afc354d4259c767cbc33f4"
+    },
+    {
+      "path": "data/pools/daysky_shared_pool.json",
+      "sha256": "c20db0fcc699fb2a069ddcd1eb4f755a2bc37c84b81b7cc0266be3eedae6dbca"
+    },
+    {
+      "path": "assets/library/daysky/skycar-hero.webp",
+      "sha256": "b8ca62cc58c46e6d192b74f5e3c7b3390ae3662b319152728b39f6bbee535729"
+    },
+    {
+      "path": "assets/library/daysky/skycar-truck.webp",
+      "sha256": "1d1a9cbd4989a0699a5f47d921640942210672ae447467b79fe57dbaf8b651fd"
+    },
+    {
+      "path": "worker/index.js",
+      "sha256": "cb3f7a4364889aa8a7e56f1180a989ee16a832f5c7f000fb78bf883bc31cffd8"
+    }
+  ]
+}

@@ -1,0 +1,144 @@
+Browser tab: 3, Title: "경기 수원시 팔달구 간판·현수막 스카이차 비용·견적 출동 | 연합종합중기 스카이차크레인장비", URL: "https://xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%ED%8C%94%EB%8B%AC%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8".
+0 AXWebArea 경기 수원시 팔달구 간판·현수막 스카이차 비용·견적 출동 | 연합종합중기 스카이차크레인장비, URL: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%ED%8C%94%EB%8B%AC%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+	1 container
+		2 link Description: 연합스카이, Value: xn--9t4b21ghxefvc.kr/
+		3 container
+			4 link Description: 작업유형, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85
+			5 link Description: 출동지역, Value: xn--9t4b21ghxefvc.kr/%EC%A7%80%EC%97%AD
+			6 link Description: 크레인, Value: xn--9t4b21ghxefvc.kr/%ED%81%AC%EB%A0%88%EC%9D%B8
+			7 link Description: 이용안내, Value: xn--9t4b21ghxefvc.kr/#how
+			8 link Description: 자주 묻는 질문, Value: xn--9t4b21ghxefvc.kr/#faq
+		9 link Description: 스카이차배차 전화상담, Value: tel:010-9807-0482
+		10 container 위치
+			11 link Description: 홈, Value: xn--9t4b21ghxefvc.kr/
+			12 text ›
+			13 link Description: 경기, Value: xn--9t4b21ghxefvc.kr/%EC%A7%80%EC%97%AD/%EA%B2%BD%EA%B8%B0-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+			14 text ›
+			15 link Description: 수원시 팔달구, Value: xn--9t4b21ghxefvc.kr/%EC%A7%80%EC%97%AD/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%ED%8C%94%EB%8B%AC%EA%B5%AC-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+			16 text › 간판·현수막
+		17 text 경기 수원시 팔달구  ·  간판·현수막  ·  스카이차
+		18 heading 경기 수원시 팔달구간판·현수막스카이차 출동, Value: 1
+			19 text 경기 수원시 팔달구 간판·현수막 스카이차  출동
+		20 container
+			21 text 경기 수원시 팔달구 간판·현수막  작업을  직진·굴절 스카이 1톤~75M 로 안전하게.  가까운 차량이 당일·긴급 출동합니다.
+		22 container
+			23 text 장비·기사 배차 전문 연합스카이는 간판·현수막 현장에 스카이차와 조작 기사를 보내 드리는 배차 업체입니다. 간판 제작·설치는 직접 하지 않으니, 바스켓에 올라 작업하실 분(시공업체·작업자)은 따로 준비해 주세요.
+		24 link Description: 010.9807.0482, Value: tel:010-9807-0482
+		25 link Description: 자주 묻는 질문, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%ED%8C%94%EB%8B%AC%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8#faq
+		26 text 경기 수원시 팔달구 간판·현수막
+		27 heading 경기 수원시 팔달구에서 간판·현수막스카이차가 필요할 때, Value: 2
+			28 text 경기 수원시 팔달구 에서  간판·현수막 스카이차 가 필요할 때
+		29 text 경기 수원시 팔달구 간판·현수막 스카이차 비용·일정이 궁금하시면 전화 주세요. 경기 수원시 팔달구 현장 위치와 작업 내용을 확인해 정확한 견적을 무료로 안내합니다.
+		30 text 경기 수원시 팔달구 상가 간판·배너·현수막 설치·철거 현장에 스카이차를 보냅니다. 영업에 지장 없도록 간판 작업자가 바로 작업할 수 있게 바스켓을 위치에 맞춰 드리며, 야간·주말 배차도 상담 가능합니다.
+		31 text 영업 지장 최소 신속 배차 야간·주말 작업 설치·철거 모두 왜  연합스카이
+		32 heading 경기 수원시 팔달구간판·현수막 배차, 연합스카이가 맡습니다, Value: 2
+			33 text 경기 수원시 팔달구 간판·현수막  배차,  연합스카이가  맡습니다
+		34 heading 가까운 거점에서 신속 배차, Value: 3
+			35 text 가까운 거점에서 신속 배차
+		36 text 경기 수원시 팔달구 인근에 가용 차량이 있으면 바로 출동합니다. 멀리서 오느라 반나절 기다리는 일 없이, 경기 수원시 팔달구 현장까지 최단 시간에 도착합니다.
+		37 heading 현장에 맞는 정확한 장비, Value: 3
+			38 text 현장에 맞는 정확한 장비
+		39 text 무조건 큰 차를 보내지 않습니다. 경기 수원시 팔달구 현장의 높이·진입·작업 내용을 먼저 확인해, 직진·굴절·톤수 중 딱 맞는 스카이차를 배차합니다.
+		40 heading 안전 최우선, Value: 3
+			41 text 안전 최우선
+		42 text 전 차량 KCS 안전검사 인증, 20여 년 경력 기사가 직접 조작합니다. 경기 수원시 팔달구 현장에서도 아웃트리거·안전거리 등 기본을 철저히 지킵니다.
+		43 heading 투명한 비용, Value: 3
+			44 text 투명한 비용
+		45 text 경기 수원시 팔달구 작업 전에 예상 비용을 먼저 안내합니다. 작업이 끝난 뒤 갑자기 늘어나는 추가금 없이, 합의한 조건대로 정산합니다.
+		46 text 작업 사례
+		47 heading 경기 수원시 팔달구간판·현수막 작업 현장, Value: 2
+			48 text 경기 수원시 팔달구 간판·현수막  작업 현장
+		49 image 경기 수원시 팔달구 간판·현수막 스카이차 외벽·간판 작업 현장
+		50 image 경기 수원시 팔달구 간판·현수막 스카이차 고소작업 현장 현장
+		51 image 경기 수원시 팔달구 간판·현수막 스카이차 설비·전기 작업 현장
+		52 image 경기 수원시 팔달구 간판·현수막 스카이차 유리·청소 작업 현장
+		53 image 경기 수원시 팔달구 간판·현수막 스카이차 간판 설치·철거 현장
+		54 image 경기 수원시 팔달구 간판·현수막 스카이차 외벽 도장·방수 현장
+		55 image 경기 수원시 팔달구 간판·현수막 스카이차 에어컨·실외기 작업 현장
+		56 image 경기 수원시 팔달구 간판·현수막 스카이차 전기·통신 작업 현장
+		57 text 인근 지역
+		58 heading 경기간판·현수막스카이차, Value: 2
+			59 text 경기 간판·현수막 스카이차
+		60 link Description: 수원시간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		61 link Description: 수원시 장안구간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%EC%9E%A5%EC%95%88%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		62 link Description: 수원시 권선구간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%EA%B6%8C%EC%84%A0%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		63 link Description: 수원시 영통구간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%EC%98%81%ED%86%B5%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		64 link Description: 성남시간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%84%B1%EB%82%A8%EC%8B%9C-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		65 link Description: 성남시 수정구간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%84%B1%EB%82%A8%EC%8B%9C%EC%88%98%EC%A0%95%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		66 link Description: 성남시 중원구간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%84%B1%EB%82%A8%EC%8B%9C%EC%A4%91%EC%9B%90%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		67 link Description: 성남시 분당구간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%84%B1%EB%82%A8%EC%8B%9C%EB%B6%84%EB%8B%B9%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		68 link Description: 의정부시간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%9D%98%EC%A0%95%EB%B6%80%EC%8B%9C-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		69 link Description: 안양시간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%95%88%EC%96%91%EC%8B%9C-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		70 link Description: 안양시 만안구간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%95%88%EC%96%91%EC%8B%9C%EB%A7%8C%EC%95%88%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		71 link Description: 안양시 동안구간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%95%88%EC%96%91%EC%8B%9C%EB%8F%99%EC%95%88%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		72 link Description: 부천시간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EB%B6%80%EC%B2%9C%EC%8B%9C-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		73 link Description: 부천시 원미구간판·현수막, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EB%B6%80%EC%B2%9C%EC%8B%9C%EC%9B%90%EB%AF%B8%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		74 text 다른 작업
+		75 heading 경기 수원시 팔달구에서 가능한 다른 작업, Value: 2
+			76 text 경기 수원시 팔달구 에서 가능한 다른 작업
+		77 link Description: 외벽 도장, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%ED%8C%94%EB%8B%AC%EA%B5%AC-%EC%99%B8%EB%B2%BD%EB%8F%84%EC%9E%A5-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		78 link Description: 외벽 청소, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%ED%8C%94%EB%8B%AC%EA%B5%AC-%EC%99%B8%EB%B2%BD%EC%B2%AD%EC%86%8C-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		79 link Description: 방수·실링, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%ED%8C%94%EB%8B%AC%EA%B5%AC-%EB%B0%A9%EC%88%98-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		80 link Description: 유리·창호, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%ED%8C%94%EB%8B%AC%EA%B5%AC-%EC%9C%A0%EB%A6%AC-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		81 link Description: 에어컨 실외기, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%ED%8C%94%EB%8B%AC%EA%B5%AC-%EC%97%90%EC%96%B4%EC%BB%A8-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		82 link Description: 통신·CCTV, Value: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%ED%8C%94%EB%8B%AC%EA%B5%AC-%ED%86%B5%EC%8B%A0-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
+		83 link Description: 조경·전지, Value: …
+		84 container faq
+			85 text 자주 묻는 질문
+			86 heading 경기 수원시 팔달구간판·현수막 자주 묻는 질문, Value: 2
+				87 text 경기 수원시 팔달구 간판·현수막  자주 묻는 질문
+			88 container
+				89 button (expanded) 경기 수원시 팔달구 간판·현수막 작업도 스카이차로 되나요? –, Secondary Actions: Collapse
+					90 text 경기 수원시 팔달구 간판·현수막 작업도 스카이차로 되나요?
+					91 text –
+				92 text 네, 경기 수원시 팔달구 간판·현수막 현장에 직진·굴절 스카이차를 기사와 함께 배차합니다. 현장 높이·진입 여건에 맞는 차량을 보내 드리며, 간판·현수막 작업 자체는 탑승하는 작업자가 진행합니다.
+			93 button (collapsed) 경기 수원시 팔달구 간판·현수막 비용은 어떻게 되나요? +, Secondary Actions: Expand
+				94 text 경기 수원시 팔달구 간판·현수막 비용은 어떻게 되나요?
+				95 text +
+			96 button (collapsed) 경기 수원시 팔달구에서 당일·긴급 간판·현수막 작업도 되나요? +, Secondary Actions: Expand
+				97 text 경기 수원시 팔달구에서 당일·긴급 간판·현수막 작업도 되나요?
+				98 text +
+			99 button (collapsed) 기사 없이 차량만 빌릴 수 있나요? +, Secondary Actions: Expand
+				100 text 기사 없이 차량만 빌릴 수 있나요?
+				101 text +
+			102 button (collapsed) 간판·도장 작업도 직접 해주나요? +, Secondary Actions: Expand
+				103 text 간판·도장 작업도 직접 해주나요?
+				104 text +
+		105 heading 경기 수원시 팔달구간판·현수막, 지금 배차하세요, Value: 2
+			106 text 경기 수원시 팔달구 간판·현수막 , 지금 배차하세요
+		107 container
+			108 text 위치와 작업 내용만 알려주시면 가까운  스카이차 가 출동합니다. 견적 무료.
+		109 link Description: 010.9807.0482, Value: tel:010-9807-0482
+		110 text 연합스카이
+		111 text 고소작업엔, 연합스카이와 함께!
+		112 container
+			113 text 전국 스카이차 · 고소작업차 당일 배차 .  직진·굴절 스카이 1톤~75M , KCS 안전인증 차량으로 안전하게 출동합니다.
+		114 heading 서비스, Value: 4
+			115 text 서비스
+		116 content list
+			117 link Description: 작업유형별 스카이차, Value: …
+			118 link Description: 지역별 스카이차, Value: …
+			119 link Description: 산업단지 스카이차, Value: …
+			120 link Description: 크레인 중량물 양중, Value: …
+			121 link Description: 이용안내, Value: …
+		122 heading 배차 상담, Value: 4
+			123 text 배차 상담
+		124 content list
+			125 link Description: 010.9807.0482, Value: …
+			126 text 24시간 · 연중무휴
+			127 container
+				128 text 전국  출동 · 견적 무료
+		129 container
+			130 text 상호  미래종합중기연합  · 대표  이윤미  · 사업자등록번호  321-10-01598
+			131 text 대표전화  010.9807.0482  ·  전국 스카이차 · 고소작업차  배차
+			132 link Description: 개인정보처리방침, Value: …
+			133 text  · © 2026  연합종합중기 스카이차크레인장비 . All rights reserved.
+		134 container
+			135 text 연합스카이  ·  스카이차 · 고소작업차  24시간 배차
+		136 link Description: 스카이차 배차 전화상담 010.9807.0482, Value: …
+		137 container 눌러서 닫기
+			138 button 안내 닫기
+			139 text 간판·현수막  작업은 하지 않아요.
+			140 text 스카이차 가 필요하실 때 전화 주세요.
+
+The focused UI element is 0 AXWebArea 경기 수원시 팔달구 간판·현수막 스카이차 비용·견적 출동 | 연합종합중기 스카이차크레인장비, URL: xn--9t4b21ghxefvc.kr/%EC%9E%91%EC%97%85/%EA%B2%BD%EA%B8%B0-%EC%88%98%EC%9B%90%EC%8B%9C%ED%8C%94%EB%8B%AC%EA%B5%AC-%EA%B0%84%ED%8C%90-%EC%8A%A4%EC%B9%B4%EC%9D%B4%EC%B0%A8
