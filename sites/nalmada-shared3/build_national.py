@@ -392,15 +392,15 @@ def render_region(site,rec,pool,mode):
 def render_dir(site,kind,place,rows,mode):
     meta=SITE_META[site]
     if kind=='home':
-        path='/';title='전국 '+meta['title'];desc='전국 지역별 '+meta['short']+' 전화 주문 준비와 안내.'
+        path='/';title='전국 '+meta['title'];desc='전국 지역별 '+meta['short']+' 전화 주문 준비와 안내. '+meta['intro']
         tiles=[(province_path(p),p) for p in sorted({x[1] for x in rows})]
         pre='<p>전국 시·도 이름을 선택하면 이어서 시·군·구, 읍면동 목록으로 이동할 수 있습니다.</p>'
     elif kind=='province':
-        p=place[0];path=province_path(p);title=p+' '+meta['title'];desc=p+' 지역별 '+meta['short']+' 주문 안내.'
+        p=place[0];path=province_path(p);title=p+' '+meta['title'];desc=p+' 지역별 '+meta['short']+' 주문 안내. '+meta['intro']
         tiles=[(district_path(p,d),d) for d in sorted({x[2] for x in rows if x[1]==p})]
         pre='<p><a href="/">전국 안내</a> · 시·군·구 목록</p>'
     else:
-        p,d=place;path=district_path(p,d);title=p+' '+d+' '+meta['title'];desc=p+' '+d+' 읍면동별 '+meta['short']+' 주문 안내.'
+        p,d=place;path=district_path(p,d);title=p+' '+d+' '+meta['title'];desc=p+' '+d+' 읍면동별 '+meta['short']+' 주문 안내. '+meta['intro']
         tiles=[(region_path(i),n) for i,pp,dd,n,_ in rows if pp==p and dd==d]
         pre='<p><a href="/">전국 안내</a> · <a href="'+province_path(p)+'">'+esc(p)+'</a></p>'
     assert tiles and len({x[0] for x in tiles})==len(tiles)
