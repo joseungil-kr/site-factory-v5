@@ -20,10 +20,16 @@
 
 - 한 Worker가 다수의 호스트를 처리하는 것과, DNS/Route/Custom Domain을 그 Worker에 연결하는 것은 **다른 단계**다. 호스트 단위 허용 목록을 코드로 강제한다.
 - Cloudflare **Custom Domain은 와일드카드가 아닌 정확한 호스트만 지원**한다. 와일드카드 Route를 사용하려면 해당 zone과 proxied DNS 레코드가 필요하며 루트 `domain.net/*`도 별도로 다룬다. 명시된 경로가 기존 Worker에 연결되어 있으면 우선순위·루트·세부 Route를 독립 확인한다.
-- 이미 운영 중인 독립 Worker 및 서브도메인의 연결을 **자동 변경·삭제·우회하지 않는다**. 매번 zone route 전체, custom domain 전체, DNS, 현재 100% 배포, 관련 cron/service binding을 조회하고 기존 설정을 스냅샷으로 보존한다. DNS/Route API가 403이면 그 검증을 못한 상태로 표시하고 광역 와일드카드 변경을 금지한다.
+- **사용자가 이미 분리해 운영 중인 Worker는 모두 그대로 유지하라고 확정했다(2026-11-04).** 자동·일괄 통합, 재바인딩, 삭제 또는 새 공용 Worker로의 이전을 하지 않는다. 매번 zone route 전체, custom domain 전체, DNS, 현재 100% 배포, 관련 cron/service binding을 조회하고 기존 설정을 스냅샷으로 보존한다. DNS/Route API가 403이면 그 검증을 못한 상태로 표시하고 광역 와일드카드 변경을 금지한다.
 - 새 Worker를 만든다면 정확한 1개 이름으로 시도한다. 계정의 Worker 총수·권한·무료 한도를 먼저 확인하고 10037 등 생성 제한 시 **중복 생성·자동 삭제·무분별한 재시도를 하지 않는다**.
-- 신규 호스트 연결은 해당 호스트의 소유·기존 DNS/도메인 충돌 검사를 거쳐서만 진행한다. 루트·와일드카드 라우트 전면 연결은 기존 호스트별 이전·롤백 검증이 끝난 다음 별도 승인 범위로 진행한다.
+- 신규 호스트 연결은 해당 호스트의 소유·기존 DNS/도메인 충돌 검사를 거쳐서만 진행한다. 기존 호스트에 영향을 줄 수 있는 루트·와일드카드 Route 전면 연결은 하지 않는다. 신규 호스트를 정확한 개별 Custom Domain에 붙이는 경로를 우선 검증한다.
 - 알려지지 않은 Host, 내부 경로, 비정상 인코딩, 없는 사이트/파일은 **404 + noindex**. Preview/Workers.dev는 noindex/nofollow, robots 차단, 공개 사이트로 리디렉션 금지. 공개 승인 호스트만 정확한 index/canonical/sitemap/RSS.
+
+## 등록 도메인이 다른 두 사이트의 공유 가능성
+
+- Cloudflare 기술적으로는 같은 계정의 관리 가능한 서로 다른 zone에서 **동일 Worker를 여러 정확한 Custom Domain/Route에 연결할 수 있다**. 다만 **V5 기본 정책은 등록 도메인별 1 Worker**이므로 `clinicflower.nalmada.net`과 `clinicflower.fwith.kr`은 서로 다른 zone Worker를 사용한다. 실제로 한 Worker를 공유하려면 사용자가 정책의 명시적 예외로 승인해야 하고, 계정·zone 접근 및 독립적인 호스트별 SEO/보안을 검사해야 한다.
+- `clinicflower.nalmada.net`, `clinicopen.nalmada.net`, `clinicpresent.nalmada.net` 등 같은 `nalmada.net` 하위에 **신규로 만드는 세 사이트**는 하나의 `nalmada.net` Worker를 공유한다. 각 호스트의 HTML/CSS/이미지/canonical/robots/sitemap/RSS를 구분하고 다른 호스트의 파일에 접근하지 못하게 한다.
+- 동일 또는 유사한 콘텐츠를 두 원 도메인에 공개할 경우, 중복 URL·색인을 피하도록 주 도메인 선택 및 canonical/301 또는 차별화된 콘텐츠 정책을 정한다. 검증 전 자동 복제·색인 제출 금지.
 
 ## 3. Worker 예외 분리
 
@@ -50,7 +56,7 @@
 - 당시 Cloudflare 조사: Worker 104개, Custom Domain 95개, `nalmada.net` 정확 호스트 매핑 17개가 **각기 다른 Worker**에 연결돼 있음. `sfv5-nalmada-domain`은 미존재. Root `nalmada.net` 및 `clinicflower.nalmada.net`은 Custom Domain으로 미연결.
 - Zone 활성·소유 검증 완료, DNS records 및 zone route 관리 API는 HTTP 403으로 **조회 불가**. 이는 와일드카드 생성·전환 허가 근거가 아니다.
 - Clinicflower는 `sites/clinicflower-preview/`의 정적 `index.html`, CSS, WebP 5장, 원문 POOL 720개로 만든 **1페이지 noindex 샘플**이며 현재 독립 테스트 Worker `sfv5-ansan-promotion-plant-preview`에서 HTTP 200으로 확인됐다. 기존 운영 17개 호스트를 다시 바인딩하지 않는다.
-- 새 `sfv5-nalmada-domain` 준비·한도 확인 → 별도 격리 HTTP 검증 → `clinicflower.nalmada.net` 정확 호스트 연결 → 기존 17개를 별도의 안전 이전 계획으로 통합. 단, 성공 증거가 없는 단계는 완료로 표시하지 않는다.
+- 새 `sfv5-nalmada-domain` 준비·한도 확인 → 격리 HTTP 검증 → `clinicflower.nalmada.net` 등 **신규** 정확 호스트만 연결한다. 기존 17개는 **이전·통합하지 않고 각각의 현재 Worker를 유지**한다. 성공 증거가 없는 단계는 완료로 표시하지 않는다.
 - 전국 Clinicflower 목표 5,302개는 후보 계획이며, 아직 공식 원장 1,438건 미검증, 전체 HTML 생성/페이지 간 5-gram Jaccard 유사도, 모바일/SEO 전체 QA, IndexNow가 완료되지 않았다. 이 검증 없이 전국 배포하지 않는다.
 
 ## 6. 보강할 코드 게이트
