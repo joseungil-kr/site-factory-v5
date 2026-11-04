@@ -1,0 +1,67 @@
+name: Flower nationwide funeral registry preview QA
+on:
+  pull_request:
+    paths:
+      - 'scripts/build_flower_funeral_national.py'
+      - 'scripts/flower_design.py'
+      - 'templates/flower-nalmada/site.css'
+      - 'assets/library/flower-nalmada/**'
+      - 'data/flower/nalmada_funeral_product_reference.json'
+      - 'data/flower/v4_facilities_1080.snapshot.json'
+      - 'data/flower/v4_facility_assignments_1080.snapshot.json'
+      - 'data/flower/v4_assignment_policy.snapshot.json'
+      - 'data/pools/flower_funeral_professional_600.v4.json'
+      - 'data/pools/flower_funeral_sample_pool.json'
+      - '.github/workflows/flower-national-funeral-preview.yml'
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check 1080 group assignments and final rendered text
+        run: python -m unittest discover -s tests -p 'test_flower_pool_semantics.py' -v
+      - name: Compile and generate V4-sourced 1080 preview pages after full corpus audit
+        run: |
+          python -m py_compile scripts/build_flower_funeral_national.py
+          python scripts/build_flower_funeral_national.py
+      - name: Inspect output and enforce noindex
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          r=Path('dist/flower-funeral-national-preview')
+          manifest=json.loads((r/'manifest.json').read_text())
+          source=json.loads(Path('data/flower/v4_facilities_1080.snapshot.json').read_text())
+          report=json.loads(Path('reports/flower-funeral/pool-1080-1pct-audit.json').read_text())
+          assert source['publicationAllowed'] is False
+          assert len(source['facilities'])==1080
+          assert manifest['pageCount']==1080
+          assert manifest['mode']=='noindex-preview' and manifest['qaPasses'] is True
+          assert report['passes'] is True
+          assert report['fullPairComparisons']==1165320
+          assert report['fullPairFailures']==0
+          assert report['maximumSimilarity']<0.49
+          html_files=list(r.glob('fh-*.html'))
+          assert len(html_files)==1080
+          for p in html_files:
+              s=p.read_text()
+              assert '<meta name="robots" content="noindex,nofollow">' in s
+              assert '날마다꽃' in s and '근조화환 주문 가격안내' in s
+              assert '2026.10.27' in s and '59,000원' in s
+              assert 'class="product-card"' in s
+              assert '/assets/css/site.css' in s
+          assert 'Disallow: /' in (r/'robots.txt').read_text()
+          assert not (r/'sitemap.xml').exists()
+          print('V4 1080 noindex preview and full-pair similarity QA passed:',len(html_files),report['maximumSimilarity'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nalmada-flower-funeral-verified-preview
+          path: dist/flower-funeral-national-preview/
+          if-no-files-found: error

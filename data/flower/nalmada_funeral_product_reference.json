@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "sourceRepository": "joseungil-kr/site-factory-v4",
+  "sourceBranch": "feature/funeralflower-mini",
+  "sourcePath": "data/funeral-products/CATALOGUE.json",
+  "sourceBlobSha": "864a2f097c40c645a44a2e44635fea6cdad4930c",
+  "checkedOn": "2026-10-22",
+  "priceFreshness": "snapshot_only_revalidate_before_public_release",
+  "commercialPublicationApproved": false,
+  "imagesFromOwnerRepository": true,
+  "products": [
+    {
+      "id": "B201",
+      "name": "근조 3단 화환",
+      "referencePrice": 59000,
+      "priceVerifiedOn": "2026-10-22",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B201",
+      "sourceImage": "https://fwith.co.kr/data/item/flower379/B201/thumb-1_500x500.jpg",
+      "localImage": "/assets/images/B201.jpg",
+      "originalImageSha256": "7556b6d29ff31e23da6e8e9cfc42b246974e8f8d5e3d3ba5b789fcd8341667f3"
+    },
+    {
+      "id": "B203",
+      "name": "근조 고급 3단 화환",
+      "referencePrice": 79000,
+      "priceVerifiedOn": "2026-10-22",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B203",
+      "sourceImage": "https://fwith.co.kr/data/item/flower379/B203/thumb-1_500x500.jpg",
+      "localImage": "/assets/images/B203.jpg",
+      "originalImageSha256": "0db53ecefe21b765d042fc4ba96a58fff5287be7b15fbf26ff8d4e92095a5114"
+    },
+    {
+      "id": "B205",
+      "name": "근조 특대 3단 화환",
+      "referencePrice": 109000,
+      "priceVerifiedOn": "2026-10-22",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B205",
+      "sourceImage": "https://fwith.co.kr/data/item/flower379/B205/thumb-1_500x500.jpg",
+      "localImage": "/assets/images/B205.jpg",
+      "originalImageSha256": "1873eb9037478de487a4141e0974b90c994cfd0432e07af818799947ce0db43e"
+    }
+  ]
+}
