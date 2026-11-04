@@ -1,0 +1,10 @@
+[
+  {
+    "id": "shipping",
+    "label": "배송·주문 전 확인사항",
+    "target": "배송안내.html",
+    "placement": "footer",
+    "scope": "all",
+    "enabled": true
+  }
+]

@@ -67,6 +67,9 @@ def read_site(site_id: str):
     if site.get('regionalScale',{}).get('enabled',False):
         from .region_pages import expand
         pages,regions=expand(site,pages,regions,ROOT)
+    if site_id == 'flowershop-nalmada' and site.get('flowershopNational',{}).get('enabled',False):
+        from .flowershop_regions import expand as expand_flowershop
+        pages,regions=expand_flowershop(site,pages,regions,ROOT)
     if site['id'] != site_id:
         raise ConfigError('Site id mismatch')
     verification=site.get('naverSiteVerification')
