@@ -1,6 +1,6 @@
 # Site Factory V5 — 독립 반자동 사이트 제작 엔진
 
-신규 사이트는 공유 Worker용 정적 전달 경로를 기본으로 준비합니다. `scaffold-site`는
+**2026-11-04 변경: 등록 도메인별 Worker 1개가 기본입니다.** `nalmada.net`과 모든 `*.nalmada.net` 호스트는 `nalmada.net` 담당 Worker를 공유하며, 서로 다른 원 도메인은 별도 Worker를 사용합니다. 예외는 기능·보안상 공유 불가능한 경우로 제한합니다. [도메인별 Worker 정책](docs/DOMAIN_WORKER_POLICY_20261104.md) 확인 필수.\n\n신규 사이트는 공유 Worker용 정적 전달 경로를 기본으로 준비합니다. `scaffold-site`는
 `deliveryMode: shared-static-preview`로 생성하며 기존 사이트 설정은 바꾸지 않습니다.
 운영 준비는 개별 사이트 배포 대신 `python -m v5.shared_release`를 사용합니다.
 [신규 공유 전달 사용법](docs/SHARED_RELEASE_PREPARATION_20261103.md)과
