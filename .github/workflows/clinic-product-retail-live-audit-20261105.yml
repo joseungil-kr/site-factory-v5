@@ -1,0 +1,101 @@
+name: Clinic fwith product photo price and order URL live audit (read-only)
+on:
+  push:
+    branches: [review/clinic-product-pilot-20261105]
+    paths: ['.github/workflows/clinic-product-retail-live-audit-20261105.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - name: Verify four exact fwith.co.kr product pages and image JPEGs without changing seller data
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,urllib.request,urllib.error,html,re,datetime,hashlib,ssl,time
+          from html.parser import HTMLParser
+          from pathlib import Path
+          PRODUCTS={'D144':('금전수 탁상용',53000),'D149':('녹보수 소형',65000),
+                    'C200':('축하 3단 화환',59000),'C206':('축하 4단 화환',120000)}
+          agents=['Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+                  'SiteFactoryV5-Clinic-Retail-ReadOnly/1']
+          class Tags(HTMLParser):
+              def __init__(self):super().__init__();self.text=[];self.titles=[];self.i=False
+              def handle_starttag(self,tag,attrs):
+                  if tag=='title':self.i=True
+              def handle_endtag(self,tag):
+                  if tag=='title':self.i=False
+              def handle_data(self,data):
+                  if self.i:self.titles.append(data)
+                  if data.strip():self.text.append(data.strip())
+          receipt={'checkedUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),
+                    'seller':'https://fwith.co.kr','readOnly':True,'products':[],
+                    'imageReuseApprovalEvidence':'Current user instruction confirmed usage on the three clinic sites; verbatim historical approval still unlocated.',
+                    'actualProductDeliveryExampleClaim':False}
+          def save():Path('clinic-fwith-product-evidence.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          save()
+          for sku,(name,price) in PRODUCTS.items():
+              row={'sku':sku,'expectedName':name,'expectedKRW':price,
+                   'detailURL':'https://fwith.co.kr/shop/item.php?it_id='+sku,
+                   'imageURL':'https://fwith.co.kr/data/item/flower379/'+sku+'/thumb-1_500x500.jpg',
+                   'pageHTTP':None,'nameVerified':False,'priceVerified':False,
+                   'buyPathPresent':False,'imageHTTP':None,'imageJPEGLooksValid':False,
+                   'verdict':'UNVERIFIED'}
+              for ua in agents:
+                  try:
+                      request=urllib.request.Request(row['detailURL'],headers={'User-Agent':ua,'Accept':'text/html,*/*'})
+                      with urllib.request.urlopen(request,timeout=25,context=ssl.create_default_context()) as res:
+                          row['pageHTTP']=res.status
+                          data=res.read(3000000)
+                          charset=res.headers.get_content_charset() or 'utf-8'
+                          try:body=data.decode(charset)
+                          except (UnicodeError,LookupError):body=data.decode('utf-8','replace')
+                          parser=Tags();parser.feed(body)
+                          joined=' '.join(parser.text)
+                          expectedFormat=f'{price:,}'
+                          row['nameVerified']=name in joined or name in html.unescape(body)
+                          row['skuVerified']=sku in joined or sku in body
+                          row['priceVerified']=expectedFormat in joined or expectedFormat in body
+                          row['buyPathPresent']=any(word in joined for word in ('바로구매','장바구니','구매하기'))
+                          idx=joined.find(expectedFormat)
+                          row['priceContext']=joined[max(0,idx-80):idx+100] if idx>=0 else ''
+                          row['productTitle']=''.join(parser.titles)[:170]
+                          row['pageSHA256']=hashlib.sha256(data).hexdigest()
+                          row['pageUA']='browser' if ua.startswith('Mozilla') else 'site-factory'
+                          break
+                  except urllib.error.HTTPError as e:
+                      row['pageHTTP']=e.code
+                  except Exception as e:
+                      row['pageError']=type(e).__name__+': '+str(e)[:160]
+              for ua in agents:
+                  try:
+                      request=urllib.request.Request(row['imageURL'],headers={'User-Agent':ua,'Accept':'image/jpeg,*/*'})
+                      with urllib.request.urlopen(request,timeout=25,context=ssl.create_default_context()) as res:
+                          b=res.read(800000)
+                          row['imageHTTP']=res.status
+                          row['imageBytes']=len(b)
+                          row['imageSHA256']=hashlib.sha256(b).hexdigest()
+                          row['imageJPEGLooksValid']=b[:3]==b'\xff\xd8\xff' and len(b)>7000
+                          break
+                  except urllib.error.HTTPError as e:row['imageHTTP']=e.code
+                  except Exception as e:row['imageError']=type(e).__name__+': '+str(e)[:160]
+              row['verdict']='LIVE_FULLY_VERIFIED' if (row['pageHTTP']==200 and row['nameVerified'] and
+                 row['skuVerified'] and row['priceVerified'] and row['buyPathPresent'] and
+                 row['imageHTTP']==200 and row['imageJPEGLooksValid']) else 'HOLD_FOR_REVIEW'
+              receipt['products'].append(row)
+              save()
+              print('CLINIC_FWITH_LIVE_PRODUCT='+json.dumps(row,ensure_ascii=False))
+          receipt['allVerified']=all(x['verdict']=='LIVE_FULLY_VERIFIED' for x in receipt['products'])
+          save()
+          if not receipt['allVerified']:raise RuntimeError('At least one seller price, order link or photo could not be verified. Keep pilot noindex.')
+          print('CLINIC_FWITH_ALL_FOUR_PRODUCTS_VERIFIED')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: clinic-fwith-products-evidence-${{ github.run_id }}
+          path: clinic-fwith-product-evidence.json
+          retention-days: 60
+          if-no-files-found: error
