@@ -9,3 +9,14 @@
 @media(max-width:900px){.topnav .jump{display:none}.grid3{gap:14px}.service .content{padding:19px}.service h3{font-size:19px}.steps{grid-template-columns:repeat(2,1fr)}.banner .btext{padding:30px}}
 @media(max-width:640px){body{padding-bottom:75px}.wrap{width:min(100% - 32px,560px)}.notice{font-size:11px}.top .wrap{min-height:64px}.brand{font-size:23px}.top .call{padding:8px 12px;font-size:12px;min-height:38px}.hero{min-height:600px;align-items:flex-start;background-position:58% 100%}.hero:before{background:linear-gradient(180deg,#faf8f2 0%,#faf8f2ed 45%,#faf8f2c4 67%,#faf8f235 95%)}.heroContent{padding:45px 0 33px;max-width:100%}.hero h1{font-size:35px;letter-spacing:-1.7px;line-height:1.3}.hero p{font-size:15px;max-width:95%}.heroAction{gap:10px}.call.heroCall{font-size:16px;padding:13px 19px}.heroNote{font-size:11px}.section{padding:61px 0}.heading h2{font-size:29px}.heading p{font-size:15px}.grid3{grid-template-columns:1fr;gap:18px}.service img{aspect-ratio:16/9;object-position:center 47%}.service h3{font-size:21px}.banner{grid-template-columns:1fr}.banner .btext{padding:29px 26px}.banner h2{font-size:26px}.banner img{max-height:250px;min-height:200px}.steps{grid-template-columns:1fr 1fr;gap:10px}.step{padding:16px}.step h3{font-size:16px}.step p{font-size:13px}.checklist{grid-template-columns:1fr}.checklist div{border-right:0!important;border-bottom:1px solid var(--line)!important}.checklist div:last-child{border-bottom:0!important}.footCall h2{font-size:26px}.footer{padding:28px 0}.mobileCall{display:flex;position:fixed;z-index:30;bottom:0;left:0;width:100%;height:72px;background:#fff;padding:9px 15px;box-shadow:0 -6px 26px #112c2030;border-top:1px solid #dde3dd}.mobileCall a{width:100%;background:var(--forest);color:white;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;border-radius:13px;font-weight:800;font-size:17px}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Clinic nationwide editorial media — real HTML <img> for crawlers and previews. */
+.clinic-visual{padding:28px 0 44px;background:linear-gradient(180deg,#f7f9f5,#fff)}
+.clinic-image{margin:0 auto;max-width:1000px}
+.clinic-image img{display:block;width:100%;height:auto;max-height:520px;aspect-ratio:16/9;object-fit:cover;object-position:center;border-radius:18px;box-shadow:0 14px 32px #1a423019}
+.clinic-image figcaption{padding:9px 2px 0;color:#6a776f;font-size:12px}
+@media(max-width:640px){
+ .clinic-visual{padding:18px 0 30px}
+ .clinic-image img{aspect-ratio:4/3;max-height:420px;object-fit:cover;border-radius:12px}
+ .clinic-image figcaption{font-size:11px}
+}

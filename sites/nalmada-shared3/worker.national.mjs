@@ -7,7 +7,7 @@ const HOSTS = Object.freeze({
   'clinicopen.nalmada.net':'clinicopen',
   'clinicpresent.nalmada.net':'clinicpresent'
 });
-const IMAGES = new Set(['hero.webp','hospital.webp','dental.webp','oriental.webp','phone.webp']);
+const IMAGES = new Set(['hero.webp','hospital.webp','dental.webp','oriental.webp','phone.webp','celebration-wreath.webp']);
 const HEADERS = Object.freeze({'X-Content-Type-Options':'nosniff','Referrer-Policy':'strict-origin-when-cross-origin'});
 const blocked = (status=404) => new Response('Not found',{status,headers:{...HEADERS,'X-Robots-Tag':'noindex, nofollow, noarchive','Cache-Control':'no-store'}});
 export default {

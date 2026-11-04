@@ -223,15 +223,70 @@ def in_site(href):
     if href.startswith('tel:') or href.startswith('mailto:') or href.startswith('#'):return None
     return href.split('#',1)[0] or None if href.startswith('/') else False
 
+
+# Editorial media: the first two sites reuse Clinicflower ImageGen WebPs already
+# present in the shared Worker. The third uses an existing ImageGen wreath
+# illustration from Todayflower, preserving its original Git blob and provenance.
+# No image represents a delivered product or a verified local storefront.
+SITE_IMAGES={
+ 'clinicflower':[
+    ('hero.webp',1672,941,'밝은 병원 로비에 배치한 개원 축하화분 AI 연출'),
+    ('hospital.webp',1448,1086,'병원 접수대와 축하화분을 표현한 AI 연출'),
+    ('dental.webp',1448,1086,'치과 대기실 축하화분을 표현한 AI 연출'),
+    ('oriental.webp',1448,1086,'한의원 실내 축하화분을 표현한 AI 연출')],
+ 'clinicopen':[
+    ('hospital.webp',1448,1086,'의료기관 개원식 축하화분을 표현한 AI 연출'),
+    ('oriental.webp',1448,1086,'한의원 개원식 분위기의 축하화분 AI 연출'),
+    ('dental.webp',1448,1086,'치과 개원식 축하화분을 표현한 AI 연출')],
+ 'clinicpresent':[
+    ('celebration-wreath.webp',1448,1086,'병원 개업 축하화환을 표현한 AI 연출')]
+}
+
+def media_info(site,path):
+    images=SITE_IMAGES[site]
+    idx=int(sha(site+'|'+path+'|editorial-media')[:12],16)%len(images)
+    return images[idx]
+
+def media_html(site,path):
+    name,width,height,alt=media_info(site,path)
+    return ('<section class="clinic-visual"><div class="wrap">'
+            '<figure class="clinic-image">'
+            '<img src="/assets/images/'+esc(name)+'" alt="'+esc(alt)+'" '
+            'width="'+str(width)+'" height="'+str(height)+'" '
+            'loading="eager" decoding="async" fetchpriority="high">'
+            '<figcaption>개원 축하를 표현한 AI 연출 이미지이며 특정 상품·배송 사례를 나타내지 않습니다.</figcaption>'
+            '</figure></div></section>')
+
 def header(site, title, description, path, mode):
     host=SITE_META[site]['host']
     canonical=f'<link rel="canonical" href="https://{host}{path}">' if mode=='public' else ''
+    if site == 'clinicpresent':
+        # Content-specific media guard: a celebration wreath is not a potted plant.
+        assert SITE_IMAGES[site][0][0]=='celebration-wreath.webp'
+    name,width,height,image_alt=media_info(site,path)
+    page_url='https://'+host+path
+    image_url='https://'+host+'/assets/images/'+name
+    og=(
+       '<meta property="og:locale" content="ko_KR">'
+       '<meta property="og:type" content="website">'
+       '<meta property="og:title" content="'+esc(title+' | 꽃이랑')+'">'
+       '<meta property="og:description" content="'+esc(description)+'">'
+       '<meta property="og:url" content="'+esc(page_url)+'">'
+       '<meta property="og:image" content="'+esc(image_url)+'">'
+       '<meta property="og:image:alt" content="'+esc(image_alt)+'">'
+       '<meta property="og:image:width" content="'+str(width)+'">'
+       '<meta property="og:image:height" content="'+str(height)+'">'
+       '<meta name="twitter:card" content="summary_large_image">'
+       '<meta name="twitter:title" content="'+esc(title+' | 꽃이랑')+'">'
+       '<meta name="twitter:description" content="'+esc(description)+'">'
+       '<meta name="twitter:image" content="'+esc(image_url)+'">'
+    )
     return ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
         '<meta name="viewport" content="width=device-width,initial-scale=1">'
         '<title>'+esc(title)+' | 꽃이랑</title>'
         '<meta name="description" content="'+esc(description)+'">'
         '<meta name="robots" content="'+('index,follow' if mode=='public' else 'noindex,nofollow')+'">'
-        +canonical+'<link rel="alternate" type="application/rss+xml" href="https://'+host+'/rss.xml" title="꽃이랑 안내 RSS">'
+        +canonical+og+'<link rel="alternate" type="application/rss+xml" href="https://'+host+'/rss.xml" title="꽃이랑 안내 RSS">'
         '<link rel="stylesheet" href="/assets/style.css">'
         '</head><body><header class="top"><div class="wrap">'
         '<a class="brand" href="/">꽃이랑<small>'+esc(SITE_META[site]['short'])+'</small></a>'
@@ -245,6 +300,35 @@ def foot(site):
         '<footer class="footer"><div class="wrap"><span><strong>꽃이랑</strong> · '+esc(SITE_META[site]['short'])+'</span>'
         '<span>1844-0644 · 지역별 배송 가능 여부는 전화로 확인</span></div></footer>'
         '<div class="mobileCall"><a href="tel:1844-0644" aria-label="전화 주문">☎ 전화주문 1844-0644</a></div></body></html>')
+
+def editorial_body(body):
+    """Trim boilerplate filler without changing the source POOL or fabricating facts."""
+    for filler in (
+        "상황에 맞지 않는 선물보다 받는 곳의 실제 여건을 먼저 살펴보는 편이 좋습니다.",
+        "화분 종류나 가격을 정하기 전에 이 항목을 정리하면 상담이 수월해집니다.",
+        "실제 배송 가능 여부와 상품 구성은 주문 시 다시 확인해야 합니다.",
+    ):
+        body=body.replace(filler,"")
+    return " ".join(body.split())
+
+
+def insight_cards(site,seed):
+    """Use the site's own verified-general decision cases, not fake local facts."""
+    facts=SITE_META[site]['facts']
+    order=sorted(range(len(facts)),key=lambda i:key_sort(seed+'|decision|'+str(i)))[:2]
+    blocks=[]
+    audit=[]
+    for i in order:
+        topic,context,action,avoid=facts[i]
+        blocks.append('<article class="step"><span class="num">'+esc(topic)+'</span>'
+                      '<h3>'+esc(context)+'</h3><p>'+esc(action)+'</p>'
+                      '<p>'+esc(avoid)+'</p></article>')
+        audit.extend((context,action,avoid))
+    return ('<section class="section clinic-decision"><div class="wrap">'
+            '<div class="heading"><h2>주문 전에 비교할 실제 조건</h2>'
+            '<p>확인할 항목을 정리한 뒤 전화로 상품·배송 조건을 상담하세요.</p></div>'
+            '<div class="steps">'+''.join(blocks)+'</div></div></section>'," ".join(audit))
+
 
 def render_region(site,rec,pool,mode):
     i,p,d,n,flag=rec
@@ -282,25 +366,28 @@ def render_region(site,rec,pool,mode):
     assert len(chosen)==(16 if site=='clinicpresent' else 19)
     sections=[]
     for row in chosen:
-        sections.append('<article class="step"><h3>'+esc(row['heading'])+'</h3><p>'+esc(row['body'])+'</p></article>')
+        body=editorial_body(row['body'])
+        assert body and len(body)>30
+        sections.append('<article class="step"><h3>'+esc(row['heading'])+'</h3><p>'+esc(body)+'</p></article>')
     faqs=meta['faqs']
     faq_start=int(sha(seed+'faq')[:8],16)%len(faqs)
     picked=faqs[faq_start:]+faqs[:faq_start]
     faq=''.join('<details><summary>'+esc(q)+'</summary><p>'+esc(a)+'</p></details>' for q,a in picked[:2])
     sectors=''.join('<article class="service"><div class="content"><h3>'+esc(h)+'</h3><p>'+esc(t)+'</p></div></article>' for h,t in meta['sectors'])
+    insights,insights_text=insight_cards(site,seed)
     breadcrumbs='<p class="crumb"><a href="/">전국</a> · <a href="'+province_path(p)+'">'+esc(p)+'</a> · <a href="'+district_path(p,d)+'">'+esc(d)+'</a> · '+esc(n)+'</p>'
     main=(' <main><section class="hero" style="min-height:390px;background-image:none;background-color:#f2f5ef"><div class="wrap heroContent">'
         '<span class="eyebrow">FLOWER WITH CARE · REGIONAL ORDER GUIDE</span>'+breadcrumbs+
         '<h1>'+esc(place)+'<br><strong>'+esc(meta['title'])+'</strong></h1>'
         '<p>'+esc(meta['intro'])+' '+esc(place)+'에 보내는 경우 정확한 수령 주소와 희망 날짜를 전화로 확인해주세요.</p>'
         '<a class="call heroCall" href="tel:1844-0644">☎ 전화주문 1844-0644</a></div></section>'
-        '<section class="section alt"><div class="wrap"><div class="heading"><h2>'+esc(place)+' 주문 전 검토할 내용</h2>'
+        +media_html(site,path)+'<section class="section alt"><div class="wrap"><div class="heading"><h2>'+esc(place)+' 주문 전 검토할 내용</h2>'
         '<p>의료기관의 실제 시설·행사 일정·배송 가능 여부는 개별 확인이 필요합니다.</p></div><div class="grid3">'+''.join(sections)+'</div></div></section>'
         '<section class="section"><div class="wrap"><div class="heading"><h2>자주 묻는 질문</h2></div><div class="faq">'+faq+'</div>'
         '<p>다른 지역명도 찾아보려면 <a href="'+district_path(p,d)+'">'+esc(p+' '+d)+' 지역 목록</a>을 이용하세요.</p>'
-        '</div></section>')
+        '</div></section>'+insights)
     return (header(site,title,description,path,mode)+main+foot(site),
-        title+' '+description+' '+meta['intro']+' '+' '.join(x['body'] for x in chosen)+' '+' '.join(q+' '+a for q,a in picked[:2]))
+        title+' '+description+' '+meta['intro']+' '+' '.join(editorial_body(x['body']) for x in chosen)+' '+insights_text+' '+' '.join(q+' '+a for q,a in picked[:2]))
 
 def render_dir(site,kind,place,rows,mode):
     meta=SITE_META[site]
@@ -319,6 +406,7 @@ def render_dir(site,kind,place,rows,mode):
     assert tiles and len({x[0] for x in tiles})==len(tiles)
     cards=''.join('<a class="service" href="'+url+'" style="display:block;text-decoration:none"><div class="content"><strong>'+esc(name)+'</strong><p style="margin:5px 0">지역별 주문 안내 보기</p></div></a>' for url,name in tiles)
     htmlbody='<main><section class="hero" style="min-height:300px;background-image:none;background:#f3f5ed"><div class="wrap heroContent">'+pre+'<h1>'+esc(title)+'</h1><p>'+esc(desc)+'</p><a class="call" href="tel:1844-0644">☎ 1844-0644</a></div></section>'
+    htmlbody+=media_html(site,path)
     htmlbody+='<section class="section"><div class="wrap"><div class="heading"><h2>지역 선택</h2></div><div class="grid3">'+cards+'</div></div></section>'
     return header(site,title,desc,path,mode)+htmlbody+foot(site)
 
@@ -354,6 +442,12 @@ def generate(root:Path,output:Path,mode='preview',expected_total=15906):
     target.mkdir(parents=True)
     src=root/'sites/nalmada-shared3/public/assets'
     shutil.copytree(src,target/'assets')
+    wreath_src=root/'sites/nalmada-shared3/public/assets/images/celebration-wreath.webp'
+    assert wreath_src.is_file(), 'Original wreath image is not present; do not replace with potted plant photo'
+    for site,images in SITE_IMAGES.items():
+        for name,iw,ih,alt in images:
+            asset=target/'assets/images'/name
+            assert asset.is_file() and asset.stat().st_size>5000,(site,name,'missing image')
     indexnow_key=(root/'sites/nalmada-shared3/clinic-indexnow-key.txt').read_text(encoding='ascii').strip()
     assert re.fullmatch('[0-9a-f]{32}',indexnow_key)
     report={'sites':{},'mode':mode,'regionSourceCount':len(regions),'parentUnmatchedCount':sum(x[-1]==0 for x in regions),
