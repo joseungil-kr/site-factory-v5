@@ -44,6 +44,17 @@ Site Factory에서 **새로 생성하는 사이트**. 기존 운영 사이트의
 
 `approved=true`라도 검증할 값이 없으면 FAIL. 검사는 `v5/site_plan.py`에서 수행한다.
 
+## 공개 HTML 이미지·메타데이터 자동 품질 게이트 (2026-11-05 보강)
+
+- **이미지를 파일로 배포하는 것만으로 완료 처리하지 않는다.** 공개 페이지의 실제 HTML에 용도와 문맥이 맞는 `<img src="...">`가 출력되는지, 원본 이미지와 `alt` 설명이 일치하는지, `width/height` 또는 `aspect-ratio`가 레이아웃 이동을 방지하는지 확인한다. 첫 화면 핵심 이미지는 지연 로딩하지 않고, 후속 이미지는 필요시 lazy-load한다.
+- 검색·SNS 대표 이미지가 있는 페이지에는 `og:type/title/description/url/image`를 `<head>` 안에 설정한다. `og:image`는 **실제로 열리는 HTTPS 절대 URL**이고 이미지 내용이 해당 페이지·사이트와 일치해야 한다. Naver 이미지 권장사항(150×150 초과, 5KB 이상, 3:1 이하 비율)과 반복·무관 이미지의 썸네일 미노출 위험을 검사한다. 텍스트만 다른 유사 페이지 전체에 이미지를 무의미하게 복제하는 것을 품질 통과로 간주하지 않는다.
+- `twitter:card`와 관련 공유 메타는 필요시 추가한다. JSON-LD는 **사실로 입증 가능한** `WebPage`, `BreadcrumbList`, `Organization` 등의 정확한 필드만 검토한다. 위치가 불확실한 서비스에 허위 `LocalBusiness` 주소/지역별 지점·가격·평점/리뷰/빠른배송을 만들어 넣지 않는다.
+- 검색에 공개하는 모든 페이지에는 고유한 `title`·`meta description`·본문 H1, 일치하는 self-canonical, 올바른 `index/robots`를 확인하고 사이트맵 URL과 연결한다. 불필요한 `meta keywords` 반복이나 키워드 채우기는 금지한다. 개별 문서 URL을 만드는 목적이 단지 지역명 치환이라면 내용 가치 부족 위험을 별도 검토한다.
+- **빌드 검증과 실제 HTTP 검증을 분리**한다. `index.html`·지역 상세·상위 허브의 390px/1440px 스크린샷, 보이는 이미지 해상도/깨짐·URL200·alt·OG·전화버튼·가로오버플로를 확인한다. 전체 정적 HTML 파일 메타데이터/이미지 존재 검사는 전수하고 대표본은 실제 브라우저로 검수한다.
+- 사용자의 **이미지 생성 지시**가 있으면 이미지 생성·출처 검증·본문 실제 표시까지 연결해야 한다. 생성 결과를 사이트와 무관한 업무보고 인포그래픽으로 대체하거나, 한글이 깨진 이미지를 방문자에게 보여주지 않는다. 실제 상품 사진과 AI 연출 이미지를 혼용하지 않는다.
+- 이 게이트는 **신규·수정 사이트 릴리스에 적용**하며 기존 승인 운영 HTML을 자동 삭제·자동 noindex하지 않는다. 오류가 확인되면 해당 수정 배포 범위만 차단하고 이전 정상 버전으로 복구한다.
+- 공식 참고: https://searchadvisor.naver.com/guide/markup-content ; https://developers.google.com/search/docs/appearance/google-images?hl=ko ; https://developers.google.com/search/docs/essentials/spam-policies
+
 ## 단계별 완료 판정
 PLAN / POOL / GENERATED / QA / COMMITTED / DEPLOYED / LIVE_HTTP / INDEXNOW를 별도 기록한다. 단계 하나가 성공해도 전체 프로젝트 완료로 부르지 않는다.
 
