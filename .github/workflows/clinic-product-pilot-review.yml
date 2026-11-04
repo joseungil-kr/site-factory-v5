@@ -1,3 +1,4 @@
+# Customer-tone checkpoint 20261105; only six noindex samples, no production deploy.
 name: Clinic product-first six-page representative visual review only
 on:
   push:
