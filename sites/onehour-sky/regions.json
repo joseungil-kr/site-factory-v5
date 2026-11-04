@@ -1,0 +1,9 @@
+{
+  "source": "data/regions/onehour_national_city_districts.json, V4 pinned legal region list",
+  "regions": [
+    {
+      "name": "전국",
+      "kind": "service-area"
+    }
+  ]
+}
