@@ -1,0 +1,67 @@
+name: Winterbbang Seoul Gyeonggi 1804 URL generation QA
+on:
+  pull_request:
+    paths:
+      - 'sites/winterbbang/**'
+      - 'scripts/build_winterbbang_national.py'
+      - 'scripts/winterbbang_render.py'
+      - 'tests/test_winterbbang_national.py'
+      - 'docs/site-plans/winterbbang/**'
+      - 'assets/library/winterbbang/**'
+      - 'data/regions/seoul_gyeonggi_current_dong.json'
+      - '.github/workflows/winterbbang-national-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  national-noindex-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Five unit tests and V5 plan check
+        run: |
+          python -m unittest discover -s tests -p 'test_winterbbang_national.py' -v
+          python -m v5 plan-check --site winterbbang
+      - name: Generate all 1804 preview HTML, verified shared WebPs and audit
+        run: |
+          python -m scripts.build_winterbbang_national
+      - name: Verify inventory, links, output and index barriers
+        run: |
+          python - <<'PY'
+          import json,re
+          from pathlib import Path
+          out=Path('dist/winterbbang')
+          manifest=json.loads(Path('reports/winterbbang/manifest.json').read_text())
+          audit=json.loads(Path('reports/winterbbang/similarity.json').read_text())
+          assert manifest['count']==1804 and manifest['localityCount']==1732
+          assert len(manifest['pages'])==1804 and len({x['path'] for x in manifest['pages']})==1804
+          assert sum(x['type']=='district-hub' for x in manifest['pages'])==69
+          assert sum(x['type']=='province-hub' for x in manifest['pages'])==2
+          assert len(list(out.rglob('*.html')))==1805, '1804 pages + 404'
+          assert len(list((out/'assets/images').glob('*.webp')))==5
+          assert not (out/'sitemap.xml').exists()
+          assert 'Disallow: /' in (out/'robots.txt').read_text()
+          assert audit['passed'] and audit['overlapAtOrAbove49Percent']==0
+          assert audit['sampleCount']>=18 and audit['comparisons']>=30000
+          h=(out/'index.html').read_text()
+          assert 'tel:0314070103' in h and '매출총이익률' in h
+          assert not re.search(r'초도비용\s*0|월\s*100\s*만\s*원|최소\s*구매.{0,12}\d+',h)
+          assert all(x['sha256'] and x['bytes'] for x in manifest['assets'])
+          print(json.dumps({'pages':manifest['count'],'regionPages':manifest['localityCount'],
+            'hubPages':manifest['hubCount'],'images':len(manifest['assets']),
+            'simSample':audit['sampleCount'],'simComparisons':audit['comparisons'],
+            'simMax':audit['maxPair'],'previewNoindex':True},ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: winterbbang-1804-noindex-${{ github.sha }}
+          path: |
+            dist/winterbbang/
+            reports/winterbbang/manifest.json
+            reports/winterbbang/similarity.json
+          if-no-files-found: error
+          retention-days: 21

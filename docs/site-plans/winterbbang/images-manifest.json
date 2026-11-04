@@ -1,0 +1,65 @@
+{
+  "siteId": "winterbbang",
+  "version": 2,
+  "createdOn": "2026-10-29",
+  "assetsStatus": "VERIFIED_REMOTE_WEBP_BINARY_PRESENT",
+  "source": "Previously generated and cropped image files from this conversation; no image regeneration in this step",
+  "reality": "AI-generated illustrative imagery, not real store/customer/product/supply proof",
+  "usage": "same five files intended for every page; cache once and use descriptive alt text",
+  "assetDirectory": "assets/library/winterbbang",
+  "requiredBeforeBuild": "Renderer verifies and copies the five already committed WebP files into the generated preview; PC/mobile viewport QA and production release remain independent.",
+  "assets": [
+    {
+      "filename": "hero.webp",
+      "path": "assets/library/winterbbang/hero.webp",
+      "sha256": "9ece3fbcfe2c973e74e814a2beee1a3c57f2b4bb105aa1e9f8f04477844adc41",
+      "bytes": 22556,
+      "width": 800,
+      "height": 350,
+      "alt": "겨울 간식 창업을 표현한 생성형 이미지",
+      "slot": "hero"
+    },
+    {
+      "filename": "shop-in-shop.webp",
+      "path": "assets/library/winterbbang/shop-in-shop.webp",
+      "sha256": "2faccc9eeca968c3e02db91aceb62caf63cf597d81ccb735fa71efa0fe34d69d",
+      "bytes": 17496,
+      "width": 600,
+      "height": 450,
+      "alt": "기존 매장 샵인샵을 표현한 생성형 이미지",
+      "slot": "article"
+    },
+    {
+      "filename": "menu.webp",
+      "path": "assets/library/winterbbang/menu.webp",
+      "sha256": "a0ec8d32e53bd8b6aae1477b3fd79191adec62606e85024b1a212d2d1ac6ec5a",
+      "bytes": 27056,
+      "width": 600,
+      "height": 250,
+      "alt": "붕어빵·잉어빵·계란빵·십원빵을 표현한 생성형 이미지",
+      "slot": "article"
+    },
+    {
+      "filename": "street.webp",
+      "path": "assets/library/winterbbang/street.webp",
+      "sha256": "6c4d232d054070563351d32c53536ee95bb1011cbdfefdc33df9824544a40cae",
+      "bytes": 19372,
+      "width": 600,
+      "height": 400,
+      "alt": "야외 간식 판매를 표현한 생성형 이미지",
+      "slot": "article"
+    },
+    {
+      "filename": "ingredients.webp",
+      "path": "assets/library/winterbbang/ingredients.webp",
+      "sha256": "cf33a58a4707aa0bc4d4b1b0e206d077743edd11a1a1cbf0d99aa205beb4126e",
+      "bytes": 15138,
+      "width": 800,
+      "height": 333,
+      "alt": "반죽과 속재료 및 조리 장비를 표현한 생성형 이미지",
+      "slot": "article"
+    }
+  ],
+  "gitAssetCommit": "77710946d8111fd7d77eb07814e2f7825edbc6f1",
+  "gitAssetVerification": "5 remote Git Blob SHA values matched local source git-object hashes, and all local files matched this manifest SHA-256 and byte counts"
+}

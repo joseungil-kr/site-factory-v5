@@ -1,0 +1,83 @@
+name: Winterbbang domain candidate read-only preflight
+on:
+  pull_request:
+    paths:
+      - 'docs/site-plans/winterbbang/site-spec.draft.json'
+      - '.github/workflows/winterbbang-domain-readonly.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: GET-only DNS, zone, Workers route and custom-domain inventory
+        run: |
+          python - <<'PY'
+          import fnmatch, json, os, re, urllib.error, urllib.parse, urllib.request
+          token=os.environ.get('CLOUDFLARE_API_TOKEN','')
+          account=os.environ.get('CLOUDFLARE_ACCOUNT_ID','')
+          hosts=['winterbbang.nalmada.net','winterbbang.nalmada.com']
+          api='https://api.cloudflare.com/client/v4'
+          def cf_get(path):
+              if not token:
+                  return {'status':'MISSING_TOKEN'}
+              req=urllib.request.Request(api+path,headers={'Authorization':'Bearer '+token,'Accept':'application/json'},method='GET')
+              try:
+                  with urllib.request.urlopen(req,timeout=15) as res:
+                      data=json.loads(res.read().decode('utf-8'))
+                      return {'status':res.status,'success':data.get('success') is True,'result':data.get('result',[]),'pages':data.get('result_info',{}).get('total_pages',1)}
+              except urllib.error.HTTPError as e:
+                  return {'status':e.code}
+              except Exception as e:
+                  return {'status':'ERROR','errorType':type(e).__name__}
+          def public_dns(host,kind):
+              url='https://dns.google/resolve?name='+urllib.parse.quote(host,safe='')+'&type='+kind
+              try:
+                  with urllib.request.urlopen(url,timeout=10) as res:
+                      data=json.loads(res.read().decode('utf-8'))
+                      return {'status':res.status,'rcode':data.get('Status'),'answers':[{'type':a.get('type'),'data':a.get('data')} for a in data.get('Answer',[]) if a.get('type') in (1,5,28)]}
+              except urllib.error.HTTPError as e:
+                  return {'status':e.code}
+              except Exception as e:
+                  return {'status':'ERROR','errorType':type(e).__name__}
+          def host_pattern_match(pattern,host):
+              left=pattern.split('/',1)[0].lower()
+              if not left: return False
+              return fnmatch.fnmatchcase(host.lower(),left)
+          report={'mode':'GET_ONLY_NO_MUTATION','ownershipConfirmed':False,'attachAllowed':False,'candidates':[]}
+          domain_inventory=cf_get('/accounts/'+urllib.parse.quote(account,safe='')+'/workers/domains?per_page=100') if account else {'status':'MISSING_ACCOUNT_ID'}
+          domain_rows=domain_inventory.get('result',[]) if domain_inventory.get('status')==200 and domain_inventory.get('success') else []
+          for host in hosts:
+              zone_name=host.split('.',1)[1]
+              zone_response=cf_get('/zones?name='+urllib.parse.quote(zone_name,safe='')+'&per_page=50')
+              zones=zone_response.get('result',[]) if zone_response.get('status')==200 and zone_response.get('success') else []
+              zone=next((z for z in zones if z.get('name')==zone_name and z.get('status')=='active'),None)
+              item={'hostname':host,'zoneApiStatus':zone_response.get('status'),'zoneFoundInAccount':bool(zone),
+                    'publicDNS':{'A':public_dns(host,'A'),'AAAA':public_dns(host,'AAAA'),'CNAME':public_dns(host,'CNAME')},
+                    'matchingCustomDomains':[],'matchingWorkerRoutes':[],'dnsRecords':None,'routesStatus':None}
+              for d in domain_rows:
+                  hostname=str(d.get('hostname','')).lower()
+                  if hostname==host or hostname.startswith('*.') and fnmatch.fnmatchcase(host,hostname):
+                      item['matchingCustomDomains'].append({'hostname':d.get('hostname'),'service':d.get('service')})
+              if zone:
+                  dns=cf_get('/zones/'+zone['id']+'/dns_records?name='+urllib.parse.quote(host,safe='')+'&per_page=100')
+                  item['dnsRecords']={'status':dns.get('status'),'matches':[{'type':x.get('type'),'name':x.get('name'),'content':x.get('content')} for x in dns.get('result',[]) if x.get('name')==host]} if dns.get('status')==200 and dns.get('success') else {'status':dns.get('status')}
+                  routes=cf_get('/zones/'+zone['id']+'/workers/routes?per_page=100')
+                  item['routesStatus']=routes.get('status')
+                  if routes.get('status')==200 and routes.get('success'):
+                      item['matchingWorkerRoutes']=[{'pattern':x.get('pattern'),'script':x.get('script')} for x in routes.get('result',[]) if host_pattern_match(str(x.get('pattern','')),host)]
+                      if routes.get('pages',1)>1: item['routesStatus']='PAGINATED_INCOMPLETE'
+              else:
+                  item['dnsRecords']={'status':'ZONE_NOT_VISIBLE_OR_NOT_IN_ACCOUNT'}
+              item['readOnlyConflictFound']=bool(item['matchingCustomDomains'] or item['matchingWorkerRoutes'] or (item['dnsRecords'] or {}).get('matches'))
+              item['accountInventoryComplete']=domain_inventory.get('status')==200 and domain_inventory.get('success') and domain_inventory.get('pages',1)==1
+              item['conflictCheckComplete']=bool(item['accountInventoryComplete'] and zone and item['dnsRecords'].get('status')==200 and item['routesStatus']==200)
+              report['candidates'].append(item)
+          print(json.dumps(report,ensure_ascii=False,indent=2))
+          PY

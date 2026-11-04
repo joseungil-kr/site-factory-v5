@@ -1,0 +1,42 @@
+{
+  "site": "winterbbang",
+  "version": 2,
+  "updatedAt": "2026-10-29",
+  "authorization": "User explicit correction: 49% similarity threshold pass allows full 1804 URLs as indexable publication candidates; do not exclude only on generic regional-uniqueness argument. Fix unsupported prices/branches/cases instead.",
+  "domain": "https://winterbbang.nalmada.net",
+  "releaseType": "ALL_1804_INDEXABLE_CANDIDATE",
+  "indexablePathGroups": {
+    "home": 1,
+    "metropolitan": 2,
+    "districts": 69,
+    "localityNames": 1732,
+    "total": 1804
+  },
+  "candidateEligibility": {
+    "lexicalAudit": "char-5gram-jaccard <0.49, 18 fixed sampled regions vs all 1732 population",
+    "requiredOriginalCopyBlocks": 160,
+    "requiredNineUniqueLowerParagraphs": true,
+    "forbidUnsupportedLocalStorefronts": true,
+    "forbidUnverifiedPriceOrRevenueGuarantees": true,
+    "privateContractTermsNeverPublic": true,
+    "canonicalEachPath": true,
+    "sitemapAllCandidatePaths": true,
+    "exactPhone": "031-407-0103"
+  },
+  "expectedIndexNowCount": 1804,
+  "indexNow": {
+    "keyFilePath": "sites/winterbbang/indexnow-public-key.txt",
+    "keyHostedOnPublicHost": true,
+    "maxPerPost": 10000,
+    "postOnceAfterLiveQA": true,
+    "noAutomaticResubmit": true,
+    "receiptRequired": true
+  },
+  "previewHost": "sfv54-winterbbang-preview.joseungil.workers.dev",
+  "previewMustRemainNoindex": true,
+  "existingWorker": "sfv54-winterbbang-preview",
+  "routeAndDomainWritesAllowed": false,
+  "rollback": "capture prior 100% worker version before deploy; roll back on live QA error",
+  "searchDisclosure": "Lexical similarity threshold pass is a deterministic check; Google/Naver may independently assess doorway/quality and may not index. Do not claim ranking or actual index.",
+  "historicOriginalPolicy": "sites/winterbbang/search-release-scope.json = archived home-only canary rationale; this v2 scope supersedes it for next release."
+}
