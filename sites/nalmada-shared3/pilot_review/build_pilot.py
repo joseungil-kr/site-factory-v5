@@ -220,7 +220,160 @@ def product_card(info, sku):
             f'<a class="button button-primary" target="_blank" rel="noopener noreferrer" href="{detail}">상품 상세·주문</a>'
             f'<a class="button button-ghost" href="{TEL}">전화 문의</a></div></div></article>')
 
+
+# A locality detail is a different user task from a city-wide product chooser.
+# The exact address / on-site handover workflow is useful without asserting that
+# we have a physical shop or a guaranteed delivery slot in the locality.
+REGIONAL = {
+  "clinicflower": {
+    "headline":"경기도 안산시 상록구 본오동 병원·치과·한의원 개원축하화분",
+    "subtitle":"받는 장소와 관리 여건을 먼저 정하고 보내세요.",
+    "summary":"본오동 의료기관에 개업화분을 보낼 계획이라면 상품을 고르기 전에 실제 수령할 건물과 식물을 놓을 위치를 확인하세요. 같은 안산시라도 상세주소와 배송 희망일에 따라 주문 조건은 달라질 수 있습니다.",
+    "photo":"D149",
+    "sectionTitle":"본오동 의료기관으로 화분을 보낼 때 확인할 다섯 가지",
+    "topics":[
+      ("받을 주소를 끝까지 확인","받는 분이 알려준 도로명주소에 건물명, 층수, 호실을 더해 주세요. 지역명만 알고 주문하면 접수대와 별도 원장실처럼 실제 수령 위치를 구분하기 어렵습니다. 건물 안에서 어디까지 인계할 수 있는지도 함께 확인하면 좋습니다."),
+      ("화분을 놓을 자리 확인","병원 접수대에 놓으려는 화분인지, 원장실이나 대기실에 두려는지 먼저 결정하세요. 진료공간에서는 방문객과 직원이 지나가는 동선을 막지 않는 것이 중요합니다. 상품 상세에서 크기를 살펴본 후 놓을 공간과 비교해 보세요."),
+      ("식물을 돌볼 분 확인","선물하는 분은 개원일에 집중하지만 받는 의료기관은 이후에도 화분을 관리해야 합니다. 자연광이 드는 자리인지, 물주기를 맡을 사람이 있는지 확인해 두면 부담을 줄이는 데 도움이 됩니다. 품종별 관리 조건은 주문 시 함께 확인하세요."),
+      ("리본에 쓸 정식 명칭 확인","의료기관 이름에는 병원·의원·치과의원·한의원 등이 포함될 수 있습니다. 리본에는 간판이나 초대장에 적힌 정확한 상호를 사용하는 편이 좋습니다. 발신자 이름·소속과 띄어쓰기도 주문 전에 문자로 정리해 두세요."),
+      ("배송비와 인계 방식 확인","금전수 탁상용과 녹보수 소형은 상품가격이 서로 다릅니다. 받는 장소와 주문 날짜에 따라 배송비·제작 가능 여부가 달라질 수 있으므로 표시 가격만으로 최종 지출을 확정하지 마세요. 부재 시 인계할 담당자도 함께 정하면 좋습니다.")
+    ],
+    "productTitle":"본오동 선물 후보 — 탁상용 금전수와 녹보수 소형",
+    "productIntro":"사진과 판매가격으로 두 상품을 비교한 뒤, 실제 수령 공간에 놓기에 적절한지 확인해 주세요. 화분의 구체적 크기는 판매처 상품 상세에서 확인하는 것이 정확합니다.",
+    "example":"“경기도 안산시 상록구 본오동의 치과의원에 개원축하화분을 보내려고 합니다. D144 금전수와 D149 녹보수 중 놓을 자리와 배송 가능일에 맞는 상품을 안내받고 싶습니다.”",
+    "faqs":[
+      ("받는 의료기관의 층수를 아직 모르면 주문할 수 있나요?","우선 정확한 주소와 인계할 담당자를 확인해 주세요. 같은 건물에도 여러 병원·의원이 있을 수 있으므로 의료기관 이름과 층수를 함께 확인한 뒤 주문하는 편이 안전합니다."),
+      ("화분을 접수대에 바로 놓아도 되나요?","받는 곳이 지정한 자리에 인계하는 것이 우선입니다. 접수 업무 공간이 협소할 수 있으니 탁상 위에 둘지 바닥에 둘지, 실제 크기를 확인해야 합니다."),
+      ("본오동이라면 배송비가 동일한가요?","일괄적으로 같다고 말할 수 없습니다. 실제 배송지는 건물·층수까지 확인하고, 상품 종류와 날짜에 따른 추가 비용을 판매처에 문의하세요.")
+    ]
+  },
+  "clinicopen": {
+    "headline":"경기도 안산시 상록구 본오동 병원·치과·한의원 개원식 축하화분 주문",
+    "subtitle":"행사 시작 전 도착보다 수령 가능 시간 확인이 먼저입니다.",
+    "summary":"본오동 개원식에 보내는 화분은 행사일과 실제 진료 시작일이 다를 수 있다는 점부터 확인하면 좋습니다. 행사장 입구에 두는지 접수대에서 받는지에 따라 담당자·출입 시간·인계 방법이 달라질 수 있습니다.",
+    "photo":"D144",
+    "sectionTitle":"본오동 개원식 화분 주문을 위한 행사 당일 체크리스트",
+    "topics":[
+      ("개원식이 열리는 날짜부터 확정","초대장에 적힌 개원식 날짜와 실제 진료 시작일이 같은지 확인하세요. 꽃을 받을 담당자가 출근하는 시각과 행사가 시작되는 시각도 다를 수 있습니다. 날짜만 전달하면 원하는 수령 장면과 다르게 도착할 수 있습니다."),
+      ("행사장 위치와 진료실 주소 구분","개원식은 의료기관 내부 로비 또는 다른 공간에서 진행될 수 있습니다. 도로명주소와 건물명뿐 아니라 수령할 층·출입구를 확인하고, 화분을 행사장에서 직접 받아 줄 분이 있는지 알아두세요."),
+      ("수령 담당자를 한 명 정하기","행사 중 원장님은 방문객을 맞이하느라 연락이 어려울 수 있습니다. 배송 기사의 연락을 받을 직원이나 행사 담당자의 연락 방법을 미리 정리하세요. 무응답 상황에서 문 앞 방치는 대안이 아닙니다."),
+      ("리본과 행사 메시지 전달","공식 의료기관명, ‘축 개원’ 같은 짧은 축하 문구, 보내는 분의 소속과 이름을 분리해서 전달하세요. 공동 원장이나 여러 발신자가 있더라도 주문 전에 어떤 표기를 원하는지 확인하면 오탈자를 줄일 수 있습니다."),
+      ("지연·일정 변경에 대비","개원 행사 시간은 변경될 수 있고 꽃 제작 후에는 변경이 제한될 수도 있습니다. 예상 인계 시간을 조율할 수 있는지, 일정이 바뀌면 어디로 연락해야 하는지 구매 단계에서 확인해 두세요.")
+    ],
+    "productTitle":"개원식 현장에서 받을 화분 두 가지",
+    "productIntro":"D144 금전수 탁상용과 D149 녹보수 소형의 판매처 사진·가격을 비교하세요. 화분을 전달할 시간·인계할 담당자·행사 이후 비치할 공간을 함께 고려하는 것이 중요합니다.",
+    "example":"“경기도 안산시 상록구 본오동 병원 개원식에 화분을 보냅니다. 행사 시작 시각은 ○시이고, 실제 수령 가능 시간과 직원 담당자를 확인 중입니다. D144와 D149 중 주문 가능한 상품을 확인하고 싶습니다.”",
+    "faqs":[
+      ("개원식 전날 미리 보내는 것이 더 좋은가요?","현장 준비가 끝났는지에 따라 달라집니다. 미리 배송하면 공사·청소 중에 보관해야 할 수도 있으니 담당자가 수령 가능한 시간을 먼저 확인하세요."),
+      ("행사장에 담당자가 없다면 어떻게 하나요?","접수대나 다른 직원이 받을 수 있는지 수령처에 확인해야 합니다. 기사에게 임의의 장소에 두라고 요청하지 않도록 인계 방법을 사전에 정하세요."),
+      ("리본 문구는 개원식 날 바로 정해도 되나요?","제작 일정과 인쇄 준비가 필요할 수 있습니다. 공식 상호·발신자 표기는 주문 시 미리 알려주는 것이 좋으며, 수정 가능 시점도 함께 문의하세요.")
+    ]
+  },
+  "clinicpresent": {
+    "headline":"경기도 안산시 상록구 본오동 병원·치과·한의원 개업 축하화환 추천",
+    "subtitle":"실제로 세워 둘 수 있는 행사 장소인지부터 확인하세요.",
+    "summary":"본오동 의료기관 개업식에 축하화환을 보낼 때는 화환의 단수보다 건물의 반입 허용 여부가 중요할 수 있습니다. 설치 장소·수령 시간·리본 문구를 확인하고 3단 C200과 4단 C206의 구성을 비교하세요.",
+    "photo":"C206",
+    "sectionTitle":"본오동 의료기관 개업 축하화환 설치 전 점검",
+    "topics":[
+      ("꽃화환 반입이 가능한 건물인가요?","의료기관이 입주한 건물의 규정에 따라 화환을 실내에 세우지 못할 수도 있습니다. 수령처에 실내·실외 중 허용되는 위치와 화환 전체 높이를 제한하는지 확인해 주세요. 현장 허용 사실을 확인하지 않고 설치를 약속하지 않습니다."),
+      ("화환을 어디서 인계할까요?","건물 로비·1층 출입구·행사장이 서로 다른 위치에 있을 수 있습니다. 정확한 도로명주소, 층수, 지정된 반입 출입구를 주문처에 알려 주세요. 환자와 방문객이 통행하는 공간은 피할 수 있는지 확인합니다."),
+      ("3단과 4단은 가격만 다른가요?","판매처의 축하 3단 화환 C200은 59,000원, 축하 4단 화환 C206은 120,000원으로 표시돼 있습니다. 가격과 단수가 다르므로 꽃 구성과 실제 규격, 추가 배송비를 상품 상세에서 각각 비교해야 합니다. 높이·꽃 수를 임의로 확정하지 않습니다."),
+      ("사진 속 리본은 주문할 문구가 아닙니다","상품 사진에 보이는 결혼 축하 리본이나 다른 행사 문구는 화환의 구성 예시일 뿐입니다. 병원 배송이 완료된 사진이라고 소개하지 않습니다. ‘축 개원’, 공식 의료기관명, 발신자 이름으로 정확히 요청하세요."),
+      ("행사 후 회수 조건도 확인하세요","축하화환은 행사 이후 정리·회수가 필요할 수 있습니다. 판매 상품에 회수 서비스가 포함되어 있는지, 행사장 측의 별도 규정이 있는지 확인해 주세요. 포함 여부를 모른 채 무상 철수를 약속하지 않습니다.")
+    ],
+    "productTitle":"본오동 개업 행사 축하화환 — 3단 C200 / 4단 C206",
+    "productIntro":"실제 판매처의 3단·4단 화환 사진과 가격입니다. 사진의 리본은 구성 예시이며 병원 현장 배송 사진이 아닙니다. 개원식 반입이 가능한 경우에만 주문을 진행하세요.",
+    "example":"“경기도 안산시 상록구 본오동 한의원 개업식에 축하화환을 보내려고 합니다. 반입 장소는 확인 중이고, 3단 C200과 4단 C206의 규격·리본·배송비를 비교해 주문하고 싶습니다.”",
+    "faqs":[
+      ("실내 반입이 안 된다면 실외에 세우면 되나요?","실외 배치도 건물·행사장 동의를 받아야 합니다. 임의로 출입구나 보행로에 설치하지 말고, 수령처가 지정한 위치를 주문처와 협의하세요."),
+      ("병원명이 아닌 원장님 이름을 리본에 적어도 되나요?","수신 측 선호에 따라 다를 수 있습니다. 병원·치과의원·한의원의 정확한 공식 명칭과 원장 성명·직함을 확인한 뒤 표기 방법을 정해 주세요."),
+      ("오늘 바로 배송된다고 볼 수 있나요?","접수 시각·상품 제작·현장 반입 허용 여부를 종합 확인해야 합니다. 지역 이름만으로 당일배송이나 특정 시간 도착을 보장할 수 없습니다.")
+    ]
+  }
+}
+
+CSS += r"""
+.local-check{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:17px}
+.local-card{background:#fff;border:1px solid var(--border);border-radius:15px;padding:23px;min-width:0}
+.local-card:nth-child(5){grid-column:span 2}
+.local-card .n{display:inline-block;color:var(--brand2);background:var(--wash);font-size:12px;border-radius:6px;font-weight:800;padding:3px 9px}
+.local-card h3{font-size:19px;margin:13px 0 8px}
+.local-card p{margin:0;color:#465e52}
+.local-hint{color:#52655a;font-size:15px;margin:15px 0}
+@media(max-width:650px){.local-check{grid-template-columns:1fr}.local-card:nth-child(5){grid-column:auto}.local-card{padding:19px}}
+"""
+
+def render_region_detail(site,productmap):
+    meta=CONFIG[site]
+    local=REGIONAL[site]
+    region="경기도 안산시 상록구 본오동"
+    headline=local["headline"]
+    title=headline+" | 꽃이랑"
+    description=(local["summary"]+" 실제 꽃이랑 상품 사진·판매 가격·주문 링크와 전화 상담 정보를 확인하세요.")
+    first=productmap[local["photo"]]
+    steps="".join('<article class="local-card"><span class="n">CHECK '+str(i+1)+'</span><h3>'+E(h)+'</h3><p>'+E(t)+'</p></article>'
+                  for i,(h,t) in enumerate(local["topics"]))
+    cards="".join(product_card(productmap,sku) for sku in meta["products"])
+    faqs="".join('<details><summary>'+E(q)+'</summary><p>'+E(a)+'</p></details>'
+                 for q,a in local["faqs"])
+    caution=("상품 사진의 결혼식 리본은 화환 구성 예시이며 해당 의료기관으로 배송된 사진을 뜻하지 않습니다."
+             if site=="clinicpresent" else "상품 사진은 판매처 등록 제품을 보여주며 실제 수령 현장을 촬영한 사진이 아닙니다.")
+    content=f"""<!doctype html><html lang="ko"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive"><title>{E(title)}</title>
+<meta name="description" content="{E(description)}">
+<meta property="og:title" content="{E(title)}"><meta property="og:description" content="{E(description)}">
+<meta property="og:type" content="article"><meta property="og:image" content="{E(first['imageUrl'])}">
+<meta name="twitter:card" content="summary_large_image"><link rel="stylesheet" href="style.css"></head>
+<body class="theme-{E(meta['theme'])}">
+<header class="site-header"><div class="wrap">
+<a class="brand" href="#" aria-label="꽃이랑"><span>꽃이랑</span><small>{E(meta['name'])}</small></a>
+<nav class="header-nav" aria-label="화면 이동"><a href="#local" class="nav-link">수령 확인</a>
+<a href="#products" class="nav-link">상품·가격</a><a href="{TEL}" class="button button-primary">☎ 1844-0644</a></nav>
+</div></header><main>
+<section class="hero"><div class="wrap hero-layout"><div class="hero-copy">
+<span class="eyebrow">{region} · 받는 장소 중심 주문 안내</span>
+<h1>{E(headline)}</h1><h2>{E(local['subtitle'])}</h2>
+<p class="lead">{E(local['summary'])}</p>
+<div class="hero-actions">
+<a class="button button-primary" href="#local">수령·배송 확인 순서</a>
+<a class="button button-ghost" href="#products">상품 가격 비교</a></div>
+</div><figure class="hero-picture">
+<img src="{E(first['imageUrl'])}" width="500" height="500"
+alt="{E(first['name'])} 판매처 상품 사진" decoding="async" loading="eager" fetchpriority="high">
+<figcaption>{E(caution)}</figcaption>
+</figure></div></section>
+<section class="section" id="local"><div class="wrap">
+<div class="section-heading"><span class="eyebrow">LOCAL HANDOVER CHECKLIST</span>
+<h2>{E(local['sectionTitle'])}</h2>
+<p>실제 배송 가능 여부를 미리 단정하지 않고 받을 곳과 주문처가 확인할 질문을 정리했습니다.</p>
+</div><div class="local-check">{steps}</div>
+<div class="example"><strong>전화로 주문 조건 확인할 때</strong>{E(local['example'])}</div>
+</div></section>
+<section class="section alt" id="products"><div class="wrap">
+<div class="section-heading"><span class="eyebrow">VERIFIED PRODUCT OPTIONS</span>
+<h2>{E(local['productTitle'])}</h2><p>{E(local['productIntro'])}</p>
+</div><div class="product-grid">{cards}</div>
+<p class="price-note">2026년 11월 5일 판매처 확인 상품가격이며, 실제 주소·주문 시각에 따른 추가비용은 주문 단계에서 확인해 주세요.</p>
+</div></section>
+<section class="section faq" id="faq"><div class="wrap">
+<div class="section-heading"><span class="eyebrow">FAQ</span><h2>받는 장소에 관한 질문</h2></div>
+{faqs}</div></section>
+<section class="bottom-cta"><div class="wrap"><h2>{E(region)} 주문 상담</h2>
+<p>정확한 배송주소·상품코드·행사일을 알려주시면 주문 가능 여부를 확인할 수 있습니다.</p>
+<a class="button" href="{TEL}">☎ 1844-0644 전화 문의</a></div></section>
+</main><footer class="footer"><div class="wrap"><span>꽃이랑 · {E(meta["name"])}</span>
+<span>{PHONE} · 판매처 상품 상세에서 최종 금액 확인</span></div></footer>
+<div class="mobile-order"><a href="{TEL}">☎ {PHONE} 전화 주문</a></div></body></html>"""
+    assert content.count('class="product-card"')==2
+    assert region in content and "noindex,nofollow,noarchive" in content
+    assert "application/ld+json" not in content
+    return content
+
 def render_page(site,kind,productmap):
+    if kind=='bono':
+        return render_region_detail(site,productmap)
     meta=CONFIG[site]
     label,region,short = TARGETS[0 if kind=="ansan" else 1]
     headline=f'{region if kind=="bono" else short} {meta["heading"]}'
