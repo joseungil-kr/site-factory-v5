@@ -195,8 +195,11 @@ def generate_extra_pool() -> dict:
     defensive=('않습니다','못합니다','단정하지','약속하지','보장하지','임의로',
                '가정하지','무조건','확인되지 않은','달력상 개원일만',
                '현장 설치 인력이 반드시 포함','AI 연출','배송 실적 사진')
+    output['duplicatesSkippedPerSite']={}
     for site,meta in SITE_META.items():
         rows=[]
+        seen_bodies=set()
+        skipped=0
         for n,(topic,context,action,_legacyAvoid) in enumerate(meta['facts']):
             for p,(role,view) in enumerate(PERSPECTIVES):
                 for f,(kind,template) in enumerate(FRAMES):
@@ -205,13 +208,18 @@ def generate_extra_pool() -> dict:
                     body=' '.join(body.split())
                     if any(x in body for x in defensive):
                         raise ValueError('Defensive text detected in new pool: '+site+' '+topic)
+                    if body in seen_bodies:
+                        skipped+=1
+                        continue  # duplicate sentence composition isn't new useful copy
+                    seen_bodies.add(body)
                     rows.append({'id':f'{site.upper()}-{n:02d}-{p:02d}-{f:02d}',
                                  'topic':topic,'heading':f'{topic} — {kind}',
                                  'body':body,'role':role,'frame':kind,'sourceConceptNumber':n+1,
                                  'visitorToneVersion':'2026-11-05'})
-        assert len(rows)==len(meta['facts'])*len(PERSPECTIVES)*len(FRAMES)
+        assert len(rows)+skipped==len(meta['facts'])*len(PERSPECTIVES)*len(FRAMES)
         assert len({x['body'] for x in rows})==len(rows)
         output['items'][site]=rows
+        output['duplicatesSkippedPerSite'][site]=skipped
     output['count']=sum(len(x) for x in output['items'].values())
     assert output['count']>=3600
     return output
