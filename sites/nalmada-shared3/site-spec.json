@@ -73,9 +73,19 @@
     "plannedHTMLPerSite": 5302,
     "plannedTotalHTMLThreeSites": 15906,
     "requestedProductionStatus": "Draft inputs and noindex QA only until content/SEO audited",
-    "regionRecordsImported": false,
-    "reasonRegionRecordsImportedFalse": "Candidate 5034-row master was described in handover but its full raw row contents have not been recovered in this branch",
+    "regionRecordsImported": true,
     "similarityFullAuditComplete": false,
-    "indexNowApproved": false
+    "indexNowApproved": false,
+    "regionSourcePath": "data/regions/nationwide_locality_candidates_5034.json",
+    "regionSourceGitBlobSHA": "525eb4b5c9f9f046ce2bcbd96a3dcfb343be399d",
+    "regionSourceOriginalBranch": "feature/v52-wreath-region",
+    "regionSourceOriginalPath": "sites/wreath-region/regions.json",
+    "regionSourceOriginalYear": "2025-source-unverified-exact-update",
+    "observedCandidateCount": 5034,
+    "observedParentFlagMatched": 3596,
+    "observedParentFlagUnmatched": 1438,
+    "officialParentReference": "data/regions/v4_official_parent_regions_20261022.json",
+    "officialLegalCodeReference": "data/regions/v4_official_legal_codes_20261022.zip",
+    "regionSourceStatus": "SOURCE_IMPORTED_EXACT_BLOB; HTML bulk generation still pending"
   }
 }

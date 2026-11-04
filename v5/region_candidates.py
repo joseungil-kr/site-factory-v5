@@ -17,7 +17,7 @@ def rows_from_source(source: Any) -> list[Any]:
     if isinstance(source, list):
         return source
     if isinstance(source, dict):
-        for key in ("regions", "candidates", "rows", "items"):
+        for key in ("records", "regions", "candidates", "rows", "items"):
             if isinstance(source.get(key), list):
                 return source[key]
     raise ValueError("Source must be a list or an object containing a region row list")
@@ -29,11 +29,29 @@ def select_all_region_names(source: Any, *, expected_count: int | None = None) -
         raise ValueError(f"Full source not loaded: {len(rows)} != {expected_count}")
     selected = []
     for index, row in enumerate(rows, start=1):
+        parent_names = None
+        source_parts = None
+        source_match_flag = None
         if isinstance(row, str):
             region_name = row
             source_id = None
             parent = None
             parent_match = None
+        elif isinstance(row, (list, tuple)) and len(row) == 4:
+            # Historical V5 Wreath source format: [province, district, locality, v4ParentMatchFlag].
+            # A flag of 0 is NOT an exclusion instruction. Preserve all original components.
+            province, district, locality, flag = row
+            if (not all(isinstance(p, str) and p.strip() and p == p.strip()
+                        for p in (province, district, locality))
+                    or type(flag) is not int or flag not in (0, 1)):
+                raise ValueError(f"Invalid 4-field region source row #{index}")
+            region_name = " ".join((province, district, locality))
+            source_id = None
+            parent = None  # the source includes names, but no official parent code
+            parent_match = bool(flag)
+            parent_names = province + " " + district
+            source_parts = [province, district, locality]
+            source_match_flag = flag
         elif isinstance(row, dict):
             region_name = next((row[k] for k in ("displayName", "fullName", "regionName", "name")
                                 if isinstance(row.get(k), str) and row[k].strip()), None)
@@ -50,18 +68,32 @@ def select_all_region_names(source: Any, *, expected_count: int | None = None) -
             "sourceRecordId": str(source_id) if source_id is not None else f"row-{index:05d}",
             "regionName": region_name,  # exact recorded text; no inferred parent
             "parentCodeAsRecorded": parent,
+            "parentNamesAsRecorded": parent_names,
             "parentMatchedAsRecorded": parent_match,
+            "sourceMatchFlagAsRecorded": source_match_flag,
+            "sourcePartsAsRecorded": source_parts,
             "path": f"/r/{index:05d}.html",
         })
     if len(selected) != len(rows):
         raise AssertionError("Lost a source region name")
     if len({x["path"] for x in selected}) != len(rows):
         raise AssertionError("Region URL collisions")
+    flags = [x["sourceMatchFlagAsRecorded"] for x in selected
+             if x["sourceMatchFlagAsRecorded"] is not None]
+    if isinstance(source, dict) and "counts" in source:
+        declared = source["counts"]
+        if declared.get("localities") != len(rows):
+            raise ValueError("Region count does not agree with original metadata")
+        if flags and (declared.get("parentMatchesV4") != sum(flags)
+                      or declared.get("parentNotMatchedV4") != len(flags) - sum(flags)):
+            raise ValueError("Parent match flags disagree with source metadata")
     return {
         "policy": "every recorded region-name row is included; unmatched parents do not filter",
         "sourceRowCount": len(rows),
         "includedRowCount": len(selected),
         "excludedRowCount": 0,
+        "sourceMatchedParentCount": sum(flags) if flags else None,
+        "sourceUnmatchedParentCount": len(flags) - sum(flags) if flags else None,
         "records": selected,
         "parentLinkageIndependentlyVerified": False,
     }
