@@ -13,12 +13,16 @@
 
 ## 검수 및 사용
 
-정적 HTML 빌드이며 별도 외부 JS 패키지·쿠키·폼·추적기 없음. 루트의 `index.html`을 로컬 브라우저로 열거나 디렉터리에서 HTTP 서버로 열 수 있다. 파일의 이미지 주소는 상대경로다. 별도 `clinicflower-preview-single.html`은 이미지 내장 단일 HTML로 사용자 검수용이다.
+정적 HTML 빌드이며 별도 외부 JS 패키지·쿠키·폼·추적기 없음. 루트의 `index.html`을 로컬 브라우저로 열거나 디렉터리에서 HTTP 서버로 열 수 있다. 파일의 이미지 주소는 상대경로다. 별도 `clinicflower-preview-single.html`은 이미지 내장 단일 HTML로 사용자 검수용이며 별도 전달 ZIP에 포함된다. 원본 PNG는 GitHub 소스가 아닌 별도 원본 이미지 ZIP에 보관한다.
 
 ```sh
+# 원본 이미지 ZIP을 이 폴더에 압축 해제해 original-imagegen/ 배치 후
 python create_clinicflower.py
+# 아래 QA는 Python Playwright 및 /usr/bin/chromium이 있는 Linux 환경에서 실행
 python test_preview.py
 ```
+
+개별 이미지 원본 저장용 ZIP `clinicflower-v5-original-images-20261104.zip`은 개인 Library `/SiteFactory/clinicflower-transfer/`에 보존했다. 원본 생성 시각은 도구가 제공하지 않았고 임의 추정하지 않았다.
 
 **중요 배포 경계**
 

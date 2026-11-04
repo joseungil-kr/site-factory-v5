@@ -8,7 +8,7 @@ from collections import Counter
 from PIL import Image
 
 ROOT=Path(__file__).resolve().parent
-IMAGES=Path('/mnt/data/ghostwriter_images/generated')
+IMAGES=(ROOT/'original-imagegen' if (ROOT/'original-imagegen').is_dir() else Path('/mnt/data/ghostwriter_images/generated'))
 IMAGE_MAP={
  'hero.webp':('a_photorealistic_high_end_modern_clinic_lobby_in_1_batch_1.png','cc45db70-f0a4-4b34-b93d-8dbe7ecdb9fe','hero','여러 개원 축하 식물로 장식된 밝은 클리닉 로비'),
  'hospital.webp':('a_bright_clean_modern_hospital_reception_lobby_i_2_batch_2.png','9a354c7d-eb3b-4831-8882-c45604b34063','hospital','개원 축하 화분을 배치한 병원 로비 연출'),
