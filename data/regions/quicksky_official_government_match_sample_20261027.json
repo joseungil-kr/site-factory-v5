@@ -1,0 +1,116 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-10-27",
+  "purpose": "Partial primary-government sample match against pinned Quicksky mixed region-name ledger",
+  "primarySources": [
+    {
+      "sourceUrl": "https://www.code.go.kr/stdcode/regCodeL.do",
+      "description": "정부 행정표준코드관리시스템 법정동코드 목록에서 8개 코드+명칭 직접 확인",
+      "type": "official-legal-code-table"
+    },
+    {
+      "sourceUrl": "https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=127039",
+      "description": "2026.7.1. 안양시 안양8/9동 폐지, 명학/병목안 동 신설",
+      "type": "official-administrative-change"
+    }
+  ],
+  "dataEntries": [
+    {
+      "fullName": "서울특별시 종로구 청운동",
+      "officialCategory": "법정동",
+      "officialCode": "1111010100",
+      "codeVerified": true,
+      "sourceUrl": "https://www.code.go.kr/stdcode/regCodeL.do",
+      "checkedDate": "2026-10-27",
+      "nameStatus": "official-current-view"
+    },
+    {
+      "fullName": "서울특별시 종로구 신교동",
+      "officialCategory": "법정동",
+      "officialCode": "1111010200",
+      "codeVerified": true,
+      "sourceUrl": "https://www.code.go.kr/stdcode/regCodeL.do",
+      "checkedDate": "2026-10-27",
+      "nameStatus": "official-current-view"
+    },
+    {
+      "fullName": "서울특별시 종로구 궁정동",
+      "officialCategory": "법정동",
+      "officialCode": "1111010300",
+      "codeVerified": true,
+      "sourceUrl": "https://www.code.go.kr/stdcode/regCodeL.do",
+      "checkedDate": "2026-10-27",
+      "nameStatus": "official-current-view"
+    },
+    {
+      "fullName": "서울특별시 종로구 효자동",
+      "officialCategory": "법정동",
+      "officialCode": "1111010400",
+      "codeVerified": true,
+      "sourceUrl": "https://www.code.go.kr/stdcode/regCodeL.do",
+      "checkedDate": "2026-10-27",
+      "nameStatus": "official-current-view"
+    },
+    {
+      "fullName": "서울특별시 종로구 창성동",
+      "officialCategory": "법정동",
+      "officialCode": "1111010500",
+      "codeVerified": true,
+      "sourceUrl": "https://www.code.go.kr/stdcode/regCodeL.do",
+      "checkedDate": "2026-10-27",
+      "nameStatus": "official-current-view"
+    },
+    {
+      "fullName": "서울특별시 종로구 통의동",
+      "officialCategory": "법정동",
+      "officialCode": "1111010600",
+      "codeVerified": true,
+      "sourceUrl": "https://www.code.go.kr/stdcode/regCodeL.do",
+      "checkedDate": "2026-10-27",
+      "nameStatus": "official-current-view"
+    },
+    {
+      "fullName": "서울특별시 종로구 적선동",
+      "officialCategory": "법정동",
+      "officialCode": "1111010700",
+      "codeVerified": true,
+      "sourceUrl": "https://www.code.go.kr/stdcode/regCodeL.do",
+      "checkedDate": "2026-10-27",
+      "nameStatus": "official-current-view"
+    },
+    {
+      "fullName": "서울특별시 종로구 통인동",
+      "officialCategory": "법정동",
+      "officialCode": "1111010800",
+      "codeVerified": true,
+      "sourceUrl": "https://www.code.go.kr/stdcode/regCodeL.do",
+      "checkedDate": "2026-10-27",
+      "nameStatus": "official-current-view"
+    },
+    {
+      "fullName": "경기도 안양시 만안구 명학동",
+      "officialCategory": "행정동",
+      "officialCode": null,
+      "codeVerified": false,
+      "sourceUrl": "https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=127039",
+      "checkedDate": "2026-10-27",
+      "nameStatus": "official-change-2026-07-01",
+      "notes": "행정안전부 변경 공고의 신규 행정동 이름 확인, 정확한 공식 코드 원장은 별도 필요"
+    },
+    {
+      "fullName": "경기도 안양시 만안구 병목안동",
+      "officialCategory": "행정동",
+      "officialCode": null,
+      "codeVerified": false,
+      "sourceUrl": "https://www.mois.go.kr/frt/bbs/type001/commonSelectBoardArticle.do?bbsId=BBSMSTR_000000000052&nttId=127039",
+      "checkedDate": "2026-10-27",
+      "nameStatus": "official-change-2026-07-01",
+      "notes": "행정안전부 변경 공고의 신규 행정동 이름 확인, 정확한 공식 코드 원장은 별도 필요"
+    }
+  ],
+  "completeness": "Only these 10 full names have been manually compared with primary government pages, not a proof of full 1732 entries; 2 administrative codes remain unverified",
+  "prohibitions": [
+    "Do not interpret code match as business service coverage",
+    "Do not auto-index any matched region because of government name-only match"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "source": "data/regions/seoul_gyeonggi_current_dong.json, pinned 2026-10-12; root entry for home",
+  "regions": [
+    {
+      "name": "서울·경기",
+      "kind": "service-area"
+    }
+  ]
+}

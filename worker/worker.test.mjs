@@ -85,3 +85,39 @@ test('only explicitly approved Daysky hostname is indexable, and preview stays b
   const previewRobots=await adapter.fetch(new Request('https://sfv5-daysky-preview.joseungil.workers.dev/robots.txt'),staging);
   assert.match(await previewRobots.text(),/Disallow: \//);
 });
+
+test('Quicksky home-only public host allows only /; regions and index.html cannot index',async()=>{
+  const scoped={...env,V5_STAGING:'1',V5_PUBLIC_HOST:'quicksky.nalmada.net',V5_HOME_ONLY:'1'};
+  const homepage=await adapter.fetch(new Request('https://quicksky.nalmada.net/'),scoped);
+  assert.equal(homepage.status,200);
+  assert.equal(homepage.headers.get('X-Robots-Tag'),null);
+  for(const path of ['/2.html','/1733.html','/index.html','/404-test.html']) {
+    const reply=await adapter.fetch(new Request('https://quicksky.nalmada.net'+path),scoped);
+    assert.match(reply.headers.get('X-Robots-Tag'),/noindex/);
+  }
+  for(const path of ['/', '/2.html','/robots.txt']) {
+    const preview=await adapter.fetch(new Request('https://sfv5-quicksky-preview.joseungil.workers.dev'+path),scoped);
+    assert.match(preview.headers.get('X-Robots-Tag'),/noindex/);
+    if(path==='/robots.txt') assert.match(await preview.text(),/Disallow: \//);
+  }
+  const bot=await adapter.fetch(new Request('https://quicksky.nalmada.net/robots.txt'),scoped);
+  assert.equal(bot.headers.get('X-Robots-Tag'),null);
+  const map=await adapter.fetch(new Request('https://quicksky.nalmada.net/sitemap.xml'),scoped);
+  assert.equal(map.headers.get('X-Robots-Tag'),null);
+  // Unrecognized sites or mismatched public hostname never become indexable.
+  const wrong=await adapter.fetch(new Request('https://daysky.nalmada.net/'),scoped);
+  assert.match(wrong.headers.get('X-Robots-Tag'),/noindex/);
+});
+
+test('Quicksky regional release removes home-only restriction but protects preview and errors',async()=>{
+  const scoped={...env,V5_STAGING:'1',V5_PUBLIC_HOST:'quicksky.nalmada.net',V5_HOME_ONLY:'0'};
+  for(const path of ['/', '/2.html','/1733.html','/sitemap.xml']) {
+    const reply=await adapter.fetch(new Request('https://quicksky.nalmada.net'+path),scoped);
+    assert.equal(reply.headers.get('X-Robots-Tag'),null);
+    const preview=await adapter.fetch(new Request('https://sfv5-quicksky-preview.joseungil.workers.dev'+path),scoped);
+    assert.match(preview.headers.get('X-Robots-Tag'),/noindex/);
+  }
+  const error=await adapter.fetch(new Request('https://quicksky.nalmada.net/404-test.html'),scoped);
+  assert.equal(error.status,404);
+  assert.match(error.headers.get('X-Robots-Tag'),/noindex/);
+});

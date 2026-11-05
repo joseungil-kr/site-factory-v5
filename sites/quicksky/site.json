@@ -1,0 +1,78 @@
+{
+  "id": "quicksky",
+  "businessModel": "service-lead",
+  "brand": "빠른스카이",
+  "siteTitle": "서울·경기 스카이차 비용과 장비 상담",
+  "domain": "https://quicksky.nalmada.net",
+  "requestedDomain": "https://quicksky.nalmada.net",
+  "workerName": null,
+  "phone": "010-5322-1952",
+  "locale": "ko-KR",
+  "keyword": "스카이차",
+  "region": "서울·경기",
+  "serviceLabel": "스카이차",
+  "theme": "classic",
+  "status": "preview",
+  "serviceHours": "전화 상담",
+  "workTypes": [
+    "간판 설치·교체",
+    "외벽 점검·보수",
+    "유리·창호 시공 보조",
+    "외벽 페인트·도장",
+    "시설물 설치·관리",
+    "통신·전기설비 접근 보조"
+  ],
+  "imageLibrary": "daysky",
+  "imagePool": [
+    "skycar-hero.webp",
+    "skycar-facade.webp",
+    "skycar-truck.webp"
+  ],
+  "imageAssetsApproved": true,
+  "publishEnabled": false,
+  "publicIndexingApproved": false,
+  "cookiePrivacyReviewed": false,
+  "pricingPolicy": "consult-only",
+  "analytics": {
+    "enabled": false
+  },
+  "siteSearch": {
+    "enabled": false
+  },
+  "indexNow": {
+    "enabled": false,
+    "key": null
+  },
+  "staticAssetSoftLimit": 18000,
+  "source": "Owner-approved Quicksky 1733-page consultation preview and phone; exact .net custom-domain binding and noindex HTTP verified. Image use scope in docs/QUICKSKY_PHOTO_PERMISSION_20261027.json. Region content quality not yet approved for bulk indexing.",
+  "navigation": [
+    {
+      "label": "홈",
+      "href": "/"
+    }
+  ],
+  "imageApprovalEvidence": "docs/QUICKSKY_IMAGE_VISUAL_QA_20261027.md",
+  "imageApprovedSourceScope": "docs/QUICKSKY_PHOTO_PERMISSION_20261027.json",
+  "imageUsePolicy": "Only two specified owner-authorized JPG originals and three fixed WebP derivatives; images are generic skycar worksite illustrations, not a verified 1t/3.5t/5t fleet or Quicksky job.",
+  "domainOwnershipVerified": true,
+  "domainOwnershipEvidence": "docs/QUICKSKY_LIVE_CONTENT_AUDIT_20261027.md; user-authorized Cloudflare UI custom-domain binding 2026-10-27T11:15:00Z; independent HTTP Actions 40495177458",
+  "homeIndexingApproved": true,
+  "homeContentQualityApproved": true,
+  "homeBusinessFactsVerified": true,
+  "homeIndexingScope": "quicksky-home-1-20261027",
+  "homeReleaseEvidenceNeeded": [
+    "Actual operator performing consultation at supplied phone verified independently",
+    "Verified supported 1t/3.5t/5t service (owned or partner), availability and scope",
+    "Homepage people-first content independent reviewer approval, not regional bulk approval"
+  ],
+  "homeIndexingEvidence": "docs/QUICKSKY_HOME_FACTS_QUALITY_EVIDENCE_20261027.json",
+  "homeIndexingRestrictions": {
+    "indexablePaths": [
+      "/"
+    ],
+    "regionalPageCount": 1732,
+    "regionIndexability": "noindex",
+    "indexNow": "disabled until validated existing key and live receipt",
+    "previewOrigin": "workers.dev always noindex"
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "siteId": "quicksky",
+  "brand": "빠른스카이",
+  "recordType": "owner-reported-usage-permission",
+  "declarationTimeUTC": "2026-10-27T11:26:00Z",
+  "declarant": "site operator via conversation",
+  "ownerStatementOriginal": "직접 받은 사진이다. 사용권 허락받음",
+  "question": "아래 원본 사진 2장을 빠른스카이 홍보에도 사용할 권리가 있으신가요? 직접 소유하거나 사용 허락을 받은 사진인지 알려주세요.",
+  "grantedUse": "빠른스카이 홍보에 지정된 원본 두 사진 사용 허락이 있다는 사용자 직접 진술",
+  "sources": [
+    {
+      "sourceUrl": "https://skycar1day.com/images/yjsky_01.jpg",
+      "originalSHA256": "02cbe6dc46bcc19bb1dda60016392268342ee7fc62df22ae04cad7fdbdc98445",
+      "derived": [
+        {
+          "file": "skycar-facade.webp",
+          "cropTopFraction": 0.28,
+          "outputSHA256": "6671cd2a0067d42b36cdf379ea163f964db2afae9c28fc050856e03c7d53c0d0"
+        }
+      ]
+    },
+    {
+      "sourceUrl": "https://skycar1day.com/images/yjsky_02.jpg",
+      "originalSHA256": "96d39b89a3c41f1175cd8adadb054c73c619baf873ccdc1d2784007bef98ecf6",
+      "derived": [
+        {
+          "file": "skycar-hero.webp",
+          "cropTopFraction": 0.4,
+          "outputSHA256": "b8ca62cc58c46e6d192b74f5e3c7b3390ae3662b319152728b39f6bbee535729"
+        },
+        {
+          "file": "skycar-truck.webp",
+          "cropTopFraction": 0.42,
+          "outputSHA256": "1d1a9cbd4989a0699a5f47d921640942210672ae447467b79fe57dbaf8b651fd"
+        }
+      ]
+    }
+  ],
+  "provenance": "docs/DAYSKY_PHOTO_PROVENANCE.json",
+  "conditions": {
+    "permissionAssertion": "owner/operator attestation; no third-party license document examined",
+    "permissibleScope": "identified images and crop derivatives for Quicksky promotional presentation",
+    "prohibitedAssumptions": [
+      "all skycar1day.com images licensed",
+      "photographer identity independently verified",
+      "model/property releases verified",
+      "actual ownership of pictured equipment",
+      "image depicts Quicksky's own job"
+    ]
+  },
+  "recordOnly": true
+}

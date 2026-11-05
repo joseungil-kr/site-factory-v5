@@ -1,0 +1,32 @@
+name: Quicksky region evidence gap inventory (no deployment)
+on:
+  push:
+    branches: [feature/quicksky-nalmada-com-20261027]
+    paths:
+      - 'scripts/export_quicksky_region_evidence_gaps.py'
+      - 'tests/test_quicksky_region_gaps.py'
+      - '.github/workflows/quicksky-region-gaps.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check no unearned evidence passes
+        run: python -m unittest discover -s tests -p 'test_quicksky_region_gaps.py' -v
+      - name: Export exact region ledger missing evidence
+        run: python -m scripts.export_quicksky_region_evidence_gaps
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quicksky-region-evidence-gaps
+          path: |
+            reports/quicksky/region-evidence-gaps.csv
+            reports/quicksky/region-evidence-gaps-summary.json
+          if-no-files-found: error
+          retention-days: 30

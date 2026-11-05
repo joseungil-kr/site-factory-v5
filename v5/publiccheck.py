@@ -21,12 +21,20 @@ def request_url(url,timeout=35):
 
 def check(site_id):
     data=read_site(site_id);site=data['site']
-    if not site.get('domain') or not site.get('publishEnabled'):
-        raise ConfigError('Public readback requires configured domain and publishEnabled')
+    service_quicksky=(site_id=='quicksky'
+        and site.get('domain')=='https://quicksky.nalmada.net'
+        and site.get('publicIndexingScope')=='quicksky-seoul-gyeonggi-1733-20261027'
+        and site.get('publicIndexingApproved') is True
+        and site.get('imageAssetsApproved') is True
+        and site.get('contentQualityApproved') is True
+        and site.get('domainOwnershipVerified') is True)
+    if not site.get('domain') or not (site.get('publishEnabled') or service_quicksky):
+        raise ConfigError('Public readback requires approved domain and release quality/ownership evidence')
     origin=site['domain'].rstrip('/')
     manifest_file=report_dir(site_id)/'manifest.json'
     manifest=json.loads(manifest_file.read_text(encoding='utf-8'))
-    if manifest['mode']!='publish':raise ConfigError('Cannot check a preview build as production')
+    if manifest['mode']!=('public-indexing' if service_quicksky else 'publish'):
+        raise ConfigError('Public readback must match approved indexable build mode')
     pages=manifest['pages']
     from .markup import url_path
     targets=[(p['urlPath'],p['number']) for p in pages]
@@ -46,6 +54,7 @@ def check(site_id):
         return {'url':origin+path,'status':status,'errors':errs}
     with ThreadPoolExecutor(max_workers=12) as pool:
         rows=list(pool.map(probe,targets))
+    if service_quicksky and len(pages)!=1733:raise ConfigError('Quicksky public manifest missing pages')
     result={'site':site_id,'checkedAt':datetime.now(timezone.utc).isoformat(),'tested':len(rows),
             'errors':[x for x in rows if x['errors']],
             'public404Verified':next((x['status']==404 for x in rows if 'missing-v5-confirmation.html' in x['url']),False),

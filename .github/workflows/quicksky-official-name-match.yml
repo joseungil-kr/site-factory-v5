@@ -1,0 +1,42 @@
+name: Quicksky primary government regional-name evidence match
+on:
+  push:
+    branches: [feature/quicksky-nalmada-com-20261027]
+    paths:
+      - 'data/regions/quicksky_official_government_match_sample_20261027.json'
+      - 'scripts/match_quicksky_official_regions.py'
+      - '.github/workflows/quicksky-official-name-match.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  official-sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Compare precisely cited primary-government subset against all 1732 region names
+        run: |
+          python -m scripts.match_quicksky_official_regions --output reports/quicksky/official-government-match
+          python - <<'PY'
+          import json,csv
+          from pathlib import Path
+          root=Path('reports/quicksky/official-government-match')
+          result=json.loads((root/'quicksky-official-region-match-summary.json').read_text())
+          rows=list(csv.DictReader((root/'quicksky-official-region-name-match.csv').open(encoding='utf-8-sig')))
+          assert len(rows)==1732 and result['ledgerEntries']==1732
+          assert result['governmentNameAndCodeMatches']==8
+          assert result['governmentNameOnlyMatches']==2
+          assert result['notYetChecked']==1722
+          assert result['indexableRegionalPagesSupportedByThisCheck']==0
+          assert all(x['serviceCoverageProof']=='NOT_PROVIDED' for x in rows)
+          print('OFFICIAL_NAME_MATCH_READBACK_PASS',result)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: quicksky-primary-government-name-match
+          path: reports/quicksky/official-government-match/
+          if-no-files-found: error
+          retention-days: 30

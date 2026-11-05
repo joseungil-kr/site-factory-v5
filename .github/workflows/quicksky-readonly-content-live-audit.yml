@@ -1,0 +1,104 @@
+name: Quicksky live noindex and substantive copy independent read-only audit
+on:
+  push:
+    branches: [feature/quicksky-nalmada-com-20261027]
+    paths: ['.github/workflows/quicksky-readonly-content-live-audit.yml']
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Inspect actual source photos and fixed topic-by-province population
+        run: |
+          python - <<'PY'
+          import json,hashlib,collections,re
+          from pathlib import Path
+          from v5.config import read_site
+          from v5.quicksky_pages import TOPICS
+          repo=Path('.')
+          data=read_site('quicksky')
+          photos=json.loads((repo/'docs/DAYSKY_PHOTO_PROVENANCE.json').read_text())
+          groups=collections.defaultdict(list)
+          for page in data['pages'][1:]:
+              p='서울' if page['region'].startswith('서울특별시 ') else '경기'
+              groups[(page['poolTopicId'],p)].append(page)
+          names=set(TOPICS)
+          assert set(k[0] for k in groups)==names
+          assert len(data['pages'])==1733 and len(photos)==3
+          photo_report=[]
+          for meta in photos:
+              asset=repo/'assets/library/daysky'/meta['file']
+              raw=asset.read_bytes()
+              sha=hashlib.sha256(raw).hexdigest()
+              assert sha==meta['output_sha256'],meta['file']
+              assert raw[:4]==b'RIFF' and raw[8:12]==b'WEBP'
+              photo_report.append({'file':meta['file'],'source':meta['original'],
+                  'actualShaMatchesProvenance':True,'bytes':len(raw),
+                  'licenseOrNewBrandPermissionVerified':False})
+          print('QUICKSKY_PHOTO_AUDIT='+json.dumps({'assets':photo_report,
+              'uniqueOriginalSourceCount':len(set(x['original'] for x in photos)),
+              'newBrandPermissionVerified':False},ensure_ascii=False))
+          print('QUICKSKY_TOPIC_COVERAGE='+json.dumps({
+              k:{p:len(groups.get((k,p),[])) for p in ('서울','경기')} for k in sorted(names)
+              },ensure_ascii=False))
+          sample=[]
+          for topic in sorted(names):
+              for province in ('서울','경기'):
+                  candidates=groups.get((topic,province),[])
+                  if not candidates: continue
+                  p=candidates[len(candidates)//2]
+                  body=p['intro']+' '.join(s['paragraph'] for s in p['sections'])
+                  sample.append({'topic':topic,'province':province,'number':p['number'],
+                    'region':p['region'],'sections':len(p['sections']),'characters':len(body),
+                    'containsVerifiedStreetOrSiteSource':False,
+                    'serviceCapabilityEvidence':False})
+          print('QUICKSKY_SEMANTIC_SAMPLE='+json.dumps(sample,ensure_ascii=False))
+          # Static text: audit high-risk claims without treating a good score as content approval.
+          alltext=json.dumps({'site':data['site'],'services':data['services'],'pages':data['pages']},ensure_ascii=False)
+          unsafe=[x for x in ('시공 완료','100% 보장','전국 어디든 출동','15년 무사고','즉시 출동 확약') if x in alltext]
+          assert not unsafe,unsafe
+          print('QUICKSKY_CONTENT_VERDICT=TECHNICAL_QA_ONLY; locality, coverage, tonnage and usage rights are not independently verified')
+          PY
+      - name: Read-only live HTTPS, SEO and images (no Cloudflare API calls)
+        run: |
+          python - <<'PY'
+          import ssl,urllib.request,urllib.error,json
+          from xml.etree import ElementTree
+          base='https://quicksky.nalmada.net'
+          ctx=ssl.create_default_context()
+          paths=['/','/2.html','/1733.html','/1734.html','/robots.txt','/sitemap.xml',
+             '/assets/images/skycar-hero.webp','/assets/images/skycar-facade.webp',
+             '/assets/images/skycar-truck.webp']
+          results=[]
+          for path in paths:
+              req=urllib.request.Request(base+path,headers={'User-Agent':'Quicksky-ReadOnly-Live-QA/20261027'})
+              try:
+                  with urllib.request.urlopen(req,timeout=25,context=ctx) as res:
+                      status=res.status;headers=res.headers;body=res.read(500000)
+              except urllib.error.HTTPError as e:
+                  status=e.code;headers=e.headers;body=e.read(100000)
+              expected=404 if path in ('/1734.html','/sitemap.xml') else 200
+              if status!=expected:raise AssertionError((path,status,expected))
+              robots_header=headers.get('X-Robots-Tag','').lower()
+              if path.endswith('.html') and path!='/1734.html' or path=='/':
+                  html=body.decode('utf-8','replace')
+                  assert '빠른스카이' in html and '010-5322-1952' in html,path
+                  assert '<meta name="robots" content="noindex,nofollow">' in html,path
+                  assert 'rel="canonical"' not in html,path
+                  assert 'quicksky.nalmada.com' not in html,path
+                  assert 'noindex' in robots_header,path
+              if path=='/robots.txt':
+                  assert 'Disallow: /' in body.decode('utf-8','replace')
+              if path.endswith('.webp'):
+                  assert body[:4]==b'RIFF' and body[8:12]==b'WEBP',path
+              results.append({'path':path,'http':status,'noindexHeader':('noindex' in robots_header),
+                  'size':len(body)})
+          print('QUICKSKY_LIVE_READONLY_HTTP='+json.dumps(results,ensure_ascii=False))
+          print('QUICKSKY_LIVE_STATUS=DOMAIN_BOUND_AND_NOINDEX; NOT_INDEXABLE')
+          PY
