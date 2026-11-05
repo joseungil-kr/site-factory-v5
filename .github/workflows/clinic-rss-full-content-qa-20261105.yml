@@ -2,7 +2,11 @@ name: Clinic full-body RSS 3-host regression and original HTML preservation
 on:
   push:
     branches: [fix/clinic-rss-full-content-20261105]
-    paths: ['.github/workflows/clinic-rss-full-content-qa-20261105.yml']
+    paths:
+      - '.github/workflows/clinic-rss-full-content-qa-20261105.yml'
+      - 'sites/nalmada-shared3/rss_feed.py'
+      - 'sites/nalmada-shared3/build_national.py'
+      - 'tests/test_clinic_rss_feed.py'
 permissions:
   contents: read
 jobs:
