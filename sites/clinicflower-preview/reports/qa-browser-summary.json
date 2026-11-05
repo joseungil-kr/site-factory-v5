@@ -1,0 +1,67 @@
+{
+  "project": "clinicflower-preview",
+  "status": "PASS",
+  "source": "local-loopback-only",
+  "imageProvenanceTimestampEvidence": false,
+  "poolCount": 720,
+  "bodyUnique": 720,
+  "titleUnique": 720,
+  "breakpoints": [
+    {
+      "width": 390,
+      "docWidth": 390,
+      "bodyWidth": 390,
+      "phoneLinkCount": 8,
+      "loadedImageCount": 4,
+      "faq": 9,
+      "tips": 6,
+      "mobileCallDisplay": "flex"
+    },
+    {
+      "width": 1440,
+      "docWidth": 1440,
+      "bodyWidth": 1440,
+      "phoneLinkCount": 8,
+      "loadedImageCount": 4,
+      "faq": 9,
+      "tips": 6,
+      "mobileCallDisplay": "none"
+    }
+  ],
+  "http": {
+    "/": {
+      "status": 200,
+      "bytes": 12795
+    },
+    "/robots.txt": {
+      "status": 200,
+      "bytes": 26
+    },
+    "/assets/style.css": {
+      "status": 200,
+      "bytes": 7529
+    },
+    "/assets/images/hero.webp": {
+      "status": 200,
+      "bytes": 142312
+    },
+    "/assets/images/hospital.webp": {
+      "status": 200,
+      "bytes": 126444
+    },
+    "/assets/images/dental.webp": {
+      "status": 200,
+      "bytes": 111234
+    },
+    "/assets/images/oriental.webp": {
+      "status": 200,
+      "bytes": 179072
+    },
+    "/assets/images/phone.webp": {
+      "status": 200,
+      "bytes": 151492
+    }
+  },
+  "productionDeploymentVerified": false,
+  "actualEdgeStatus": "NOT_DEPLOYED"
+}
