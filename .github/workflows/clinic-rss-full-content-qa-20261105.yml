@@ -7,6 +7,7 @@ on:
       - 'sites/nalmada-shared3/rss_feed.py'
       - 'sites/nalmada-shared3/build_national.py'
       - 'tests/test_clinic_rss_feed.py'
+      - 'sites/nalmada-shared3/patch_active_rss_only.py'
 permissions:
   contents: read
 jobs:
@@ -100,10 +101,62 @@ jobs:
           Path('/tmp/clinic-rss-qa/result.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           print('CLINIC_RSS_ONLY_THREE_FILES_CHANGED_AND_15922_OTHER_FILES_BYTE_IDENTICAL')
           PY
+      # Exact pinned national source of the live 3-host Worker, not the
+      # separate 6-page product review branch used in the RSS unit regression.
+      - uses: actions/checkout@v4
+        with:
+          repository: joseungil-kr/site-factory-v5
+          ref: 32484f02e3c12e6bfcf057702041b70f66fdafe5
+          persist-credentials: false
+          path: active-source
+      - name: Prove RSS-only patch against original 32484f0 national build; no deployment
+        shell: bash
+        run: |
+          set -euo pipefail
+          python active-source/sites/nalmada-shared3/build_national.py --root active-source --output /tmp/clinic-rss-active-original --mode public --audit-json /tmp/clinic-rss-active-source.json
+          mkdir -p /tmp/clinic-rss-active-patched
+          cp -a /tmp/clinic-rss-active-original/public /tmp/clinic-rss-active-patched/public
+          python fixed/sites/nalmada-shared3/patch_active_rss_only.py --public /tmp/clinic-rss-active-patched/public --receipt /tmp/clinic-rss-qa/active-patch-receipt.json
+          python - <<'PY'
+          import json, xml.etree.ElementTree as ET
+          from pathlib import Path
+          original=Path('/tmp/clinic-rss-active-original/public')
+          patched=Path('/tmp/clinic-rss-active-patched/public')
+          hosts={'clinicflower':'clinicflower.nalmada.net',
+                 'clinicopen':'clinicopen.nalmada.net',
+                 'clinicpresent':'clinicpresent.nalmada.net'}
+          source={p.relative_to(original).as_posix():p for p in original.rglob('*') if p.is_file()}
+          after={p.relative_to(patched).as_posix():p for p in patched.rglob('*') if p.is_file()}
+          assert source.keys()==after.keys() and len(source)==15925,(len(source),len(after))
+          exceptions={f'sites/{site}/rss.xml' for site in hosts}
+          changes={k for k in source if source[k].read_bytes()!=after[k].read_bytes()}
+          assert changes==exceptions,('Unexpected active-source changes',sorted(changes))
+          content='{http://purl.org/rss/1.0/modules/content/}encoded'
+          for site,host in hosts.items():
+              name=f'sites/{site}/rss.xml'
+              old=ET.fromstring(source[name].read_bytes()).find('channel').findall('item')
+              new=ET.fromstring(after[name].read_bytes()).find('channel').findall('item')
+              assert len(old)==len(new)==50
+              assert [i.findtext('link') for i in old]==[i.findtext('link') for i in new]
+              for item in new:
+                  link=item.findtext('link')
+                  assert link==item.findtext('guid') and link.startswith('https://'+host+'/r/')
+                  assert item.findtext('description') and len(item.findtext('description'))>=120
+                  body=item.findtext(content)
+                  assert body and '<main' in body and '</main>' in body
+                  assert 'href="/' not in body and 'src="/' not in body
+                  assert item.find('pubDate') is None
+              print('CLINIC_ACTIVE_SOURCE_RSS50_PASS',host)
+          receipt=json.loads(Path('/tmp/clinic-rss-qa/active-patch-receipt.json').read_text())
+          assert set(receipt['sites'])==set(hosts)
+          assert receipt['onlyExpectedRSSModified'] is True
+          assert set(receipt['rssTargets'])==exceptions
+          print('CLINIC_ACTIVE_SOURCE_ONLY_3_RSS_CHANGED_15922_ORIGINAL_ASSETS_IDENTICAL')
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: clinic-rss-offline-qa-${{ github.run_id }}
-          path: /tmp/clinic-rss-qa/result.json
+          path: /tmp/clinic-rss-qa/
           if-no-files-found: warn
           retention-days: 60
