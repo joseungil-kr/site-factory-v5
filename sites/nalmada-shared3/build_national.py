@@ -9,6 +9,7 @@ import argparse, collections, hashlib, html, json, random, re, shutil, sys
 from pathlib import Path
 from urllib.parse import urlsplit
 from xml.etree import ElementTree as ET
+from rss_feed import create_rss
 
 SITE_META={
  'clinicflower': {
@@ -533,21 +534,24 @@ def generate(root:Path,output:Path,mode='preview',expected_total=15906):
             sitemap=ET.tostring(el,encoding='utf-8',xml_declaration=True)
             (base/'sitemap.xml').write_bytes(sitemap)
         (base/'robots.txt').write_text('User-agent: *\n'+('Allow: /\nSitemap: https://'+meta['host']+'/sitemap.xml\n' if mode=='public' else 'Disallow: /\n'),encoding='utf-8')
-        rss=ET.Element('rss',{'version':'2.0'})
-        chan=ET.SubElement(rss,'channel')
-        for k,v in [('title','꽃이랑 '+meta['short']),('link','https://'+meta['host']+'/'),('description',meta['intro']),('language','ko-KR')]:
-            ET.SubElement(chan,k).text=v
-        for pth in list(narrative)[-50:]:
-            item=ET.SubElement(chan,'item')
-            ET.SubElement(item,'title').text=next(iter(re.findall(r'<title>(.*?)</title>',pages[pth].read_text(encoding='utf-8'))),meta['short'])
-            ET.SubElement(item,'link').text='https://'+meta['host']+pth
-            ET.SubElement(item,'guid',{'isPermaLink':'true'}).text='https://'+meta['host']+pth
-        (base/'rss.xml').write_bytes(ET.tostring(rss,encoding='utf-8',xml_declaration=True))
+        # Preserve the existing 50 canonical regional URL choices exactly.
+        # RSS bodies are derived from corresponding rendered HTML, not invented
+        # feed-only excerpts or arbitrary publication timestamps.
+        rss,rss_evidence=create_rss(
+            host=meta['host'],
+            channel_title='꽃이랑 '+meta['short'],
+            channel_description=meta['intro'],
+            paths=list(narrative)[-50:],
+            page_files=pages,
+            require_public_canonical=(mode=='public'))
+        (base/'rss.xml').write_bytes(rss)
         if mode=='public':(base/(indexnow_key+'.txt')).write_text(indexnow_key,encoding='ascii')
         report['sites'][site]={'host':meta['host'],'htmlCount':len(pages),'regionalCount':len(narrative),
             'provinceHubCount':17,'districtHubCount':250,'incomingLinks':sum(incoming.values()),
             'orphans':len(orphan),'duplicateFullBodyHashes':0,'sitemapUrlCount':len(pages) if sitemap else 0,
-            'sitemapBytes':len(sitemap) if sitemap else 0,'rssItems':50,'paths':sorted(pages),
+            'sitemapBytes':len(sitemap) if sitemap else 0,'rssItems':rss_evidence['itemCount'],'rssBytes':rss_evidence['bytes'],
+             'rssHasFullBodies':rss_evidence['allItemsHaveDescription'] and rss_evidence['allItemsHaveContentEncoded'],
+             'rssHasUnverifiedDates':rss_evidence['feedHasFabricatedDate'],'paths':sorted(pages),
             'regionalNarrative':narrative}
         alln+=len(pages)
     assert alln==expected_total
