@@ -1,0 +1,105 @@
+name: Clinic full-body RSS 3-host regression and original HTML preservation
+on:
+  push:
+    branches: [fix/clinic-rss-full-content-20261105]
+    paths: ['.github/workflows/clinic-rss-full-content-qa-20261105.yml']
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          path: fixed
+      - uses: actions/checkout@v4
+        with:
+          repository: joseungil-kr/site-factory-v5
+          ref: 3fe29eeb7cbf2e7e6e6dab0412f2fd67f0b151d7
+          persist-credentials: false
+          path: baseline
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: RSS unit suite — real full body, escaping and source canonical
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd fixed
+          python -m unittest discover -s tests -p test_clinic_rss_feed.py -v
+      - name: Render new and exact old original HTML files with two isolated source checkouts
+        shell: bash
+        run: |
+          set -euo pipefail
+          python baseline/sites/nalmada-shared3/build_national.py --root baseline --output /tmp/clinic-rss-previous-build --mode public --audit-json /tmp/clinic-rss-baseline-report.json
+          python fixed/sites/nalmada-shared3/build_national.py --root fixed --output /tmp/clinic-rss-new-build --mode public --audit-json /tmp/clinic-rss-new-report.json
+      - name: Assert every non-RSS asset byte-for-byte preserved; three feeds complete and valid
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/clinic-rss-qa
+          python - <<'PY'
+          import hashlib,json,xml.etree.ElementTree as ET,urllib.parse
+          from pathlib import Path
+          old=Path('/tmp/clinic-rss-previous-build/public')
+          new=Path('/tmp/clinic-rss-new-build/public')
+          hosts={'clinicflower':'clinicflower.nalmada.net',
+                 'clinicopen':'clinicopen.nalmada.net',
+                 'clinicpresent':'clinicpresent.nalmada.net'}
+          oldFiles={p.relative_to(old).as_posix():p for p in old.rglob('*') if p.is_file()}
+          newFiles={p.relative_to(new).as_posix():p for p in new.rglob('*') if p.is_file()}
+          assert oldFiles.keys()==newFiles.keys(),(len(oldFiles),len(newFiles),'file inventory changed')
+          exceptions={f'sites/{site}/rss.xml' for site in hosts}
+          changed=[]
+          contentNS='{http://purl.org/rss/1.0/modules/content/}encoded'
+          for path in oldFiles:
+              b0=oldFiles[path].read_bytes()
+              b1=newFiles[path].read_bytes()
+              if b0 != b1: changed.append(path)
+              if path not in exceptions:
+                  assert b0 == b1,('Non-RSS asset changed',path)
+          assert set(changed)==exceptions,('Expected RSS-only delta',changed)
+          report={'sourceBase':'3fe29eeb7cbf2e7e6e6dab0412f2fd67f0b151d7',
+                  'onlyChangedPaths':sorted(changed),'otherPublicAssetsPreserved':len(oldFiles)-3,
+                  'feedChecks':[], 'checksPassed':False}
+          for site,host in hosts.items():
+              b=(new/'sites'/site/'rss.xml').read_bytes()
+              oldb=(old/'sites'/site/'rss.xml').read_bytes()
+              root=ET.fromstring(b);channel=root.find('channel');entries=channel.findall('item')
+              oldItems=ET.fromstring(oldb).find('channel').findall('item')
+              assert root.attrib['version']=='2.0' and len(entries)==len(oldItems)==50
+              assert len(b)<10_000_000
+              assert channel.findtext('link')=='https://'+host+'/'
+              assert channel.findtext('language')=='ko-KR'
+              assert channel.findtext('title') and channel.findtext('description')
+              for i,(entry,olditem) in enumerate(zip(entries,oldItems)):
+                  link=entry.findtext('link');description=entry.findtext('description')
+                  body=entry.findtext(contentNS)
+                  assert link==olditem.findtext('link'),('Changed RSS content URLs',site,i)
+                  assert link==entry.findtext('guid') and entry.find('guid').attrib['isPermaLink']=='true'
+                  assert link.startswith('https://'+host+'/r/')
+                  assert entry.findtext('title') and description and len(description)>=120
+                  assert body and '<main>' in body and '</main>' in body
+                  assert 'href="/' not in body and 'src="/' not in body
+                  assert entry.find('pubDate') is None,('No source publication timestamp exists',site,i)
+                  assert entry.find('description') is not None and entry.find(contentNS) is not None
+                  assert urllib.parse.urlsplit(link).hostname==host
+                  assert len(description)>=int(len(body)*0.15),('Incomplete item body',site,i)
+              report['feedChecks'].append({'host':host,'rssItems':len(entries),'bytes':len(b),
+                  'fullDescription':50,'fullEncodedHTML':50,'same50CanonicalURLsAsPublished':True,
+                  'verifiedXML':True,'fabricatedDates':0})
+              print('CLINIC_RSS_FULL_XML_PASS',host,len(entries),'bytes',len(b))
+          assert len(oldFiles)==len(newFiles)==15925,(len(oldFiles),len(newFiles))
+          report['checksPassed']=True
+          Path('/tmp/clinic-rss-qa/result.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+          print('CLINIC_RSS_ONLY_THREE_FILES_CHANGED_AND_15922_OTHER_FILES_BYTE_IDENTICAL')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: clinic-rss-offline-qa-${{ github.run_id }}
+          path: /tmp/clinic-rss-qa/result.json
+          if-no-files-found: warn
+          retention-days: 60
