@@ -1,0 +1,67 @@
+name: Clinic three hosts RSS live baseline read-only
+on:
+  push:
+    branches: [fix/clinic-rss-full-content-20261105]
+    paths: ['.github/workflows/clinic-rss-live-baseline-20261105.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: Read-only actual HTTPS RSS, robots, sitemap and homepage autodiscovery
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,urllib.request,urllib.error,datetime,xml.etree.ElementTree as ET
+          from pathlib import Path
+          hosts=['clinicflower.nalmada.net','clinicopen.nalmada.net','clinicpresent.nalmada.net']
+          ua='Clinic-National-Live-Readback/1'
+          allrows=[]
+          def fetch(url,bytes_limit=1600000):
+              req=urllib.request.Request(url,headers={'User-Agent':ua,'Accept':'application/rss+xml, application/xml, text/html;q=0.8,*/*;q=0.5'})
+              with urllib.request.urlopen(req,timeout=32) as r:
+                  return r.status,r.headers,r.read(bytes_limit)
+          for host in hosts:
+              base='https://'+host
+              row={'host':host}
+              for kind,path in [('rss','/rss.xml'),('sitemap','/sitemap.xml'),('robots','/robots.txt'),('home','/')]:
+                  try:
+                      status,headers,raw=fetch(base+path)
+                      row[kind+'HTTP']=status
+                      row[kind+'ContentType']=headers.get('Content-Type')
+                      if kind=='rss':
+                          feed=ET.fromstring(raw)
+                          channel=feed.find('channel')
+                          assert channel is not None
+                          entries=channel.findall('item')
+                          row['rssBytes']=len(raw)
+                          row['rssChannelTitle']=channel.findtext('title')
+                          row['rssItemCount']=len(entries)
+                          row['firstItem']={t:entries[0].findtext(t) for t in ('title','link','guid','description','pubDate')}
+                          row['itemsMissingDescription']=sum(i.find('description') is None for i in entries)
+                          row['itemsMissingContentEncoded']=sum(i.find('{http://purl.org/rss/1.0/modules/content/}encoded') is None for i in entries)
+                          row['itemsWithPubDate']=sum(i.find('pubDate') is not None for i in entries)
+                          row['guidConsistent']=all(i.findtext('guid')==i.findtext('link') for i in entries)
+                          row['sameHostLinks']=all((i.findtext('link') or '').startswith(base+'/') for i in entries)
+                      elif kind=='sitemap':
+                          rows=ET.fromstring(raw).findall('.//{*}loc')
+                          row['sitemapURLCount']=len(rows)
+                      elif kind=='home':
+                          html=raw.decode('utf-8','replace')
+                          row['rssAutodiscovery']=('href="'+base+'/rss.xml"' in html)
+                  except Exception as e:
+                      row[kind+'Error']=type(e).__name__+': '+str(e)[:220]
+              allrows.append(row)
+              print('CLINIC_CURRENT_RSS_BASELINE='+json.dumps(row,ensure_ascii=False))
+          Path('clinic-rss-live-baseline.json').write_text(json.dumps({'checkedUTC':datetime.datetime.now(datetime.timezone.utc).isoformat(),'readOnly':True,'rows':allrows},ensure_ascii=False,indent=2)+'\n',encoding='utf8')
+          assert len(allrows)==3
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: clinic-rss-live-baseline-${{ github.run_id }}
+          path: clinic-rss-live-baseline.json
+          if-no-files-found: warn
+          retention-days: 45
