@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>식자재 매입 장부</title><style><?!= include('Style'); ?></style></head>
+<body>
+<header class="top"><div class="top-inner"><div><div class="eyebrow">RESTAURANT PURCHASE LEDGER</div><h1>식자재 매입 장부</h1><p>영수증 한 장부터, 품목별 단가까지</p></div><div class="head-right"><span id="modePill" class="pill">연결 확인 중</span><button class="light head-btn" id="refreshButton" type="button">새로고침</button></div></div></header>
+<div class="shell"><nav class="tabs" aria-label="주요 메뉴"><button class="tab active" data-tab="entry">+ 매입 등록</button><button class="tab" data-tab="documents">매입 내역</button><button class="tab" data-tab="products">품목·단가</button><button class="tab" data-tab="vendors">거래처</button><button class="tab" data-tab="settings">설정·백업</button></nav>
+<div id="notice" class="notice" role="status" hidden></div>
+<main>
+<section id="panel-entry" class="panel active">
+<div class="section-head"><div><h2 id="formTitle">매입 등록</h2><p>원본 사진을 확인하고 최종 저장하세요.</p></div><button class="light" id="resetForm" type="button">새 문서</button></div>
+<div class="card"><div class="step-head"><span class="num">1</span><div><h3>사진 첨부</h3><p>휴대폰 사진 보관함에서 1장 선택 (JPG·PNG·WEBP·GIF, 최대 8MB)</p></div></div>
+<label for="imageInput" class="upload-box"><span class="upload-icon">▧</span><strong>사진 보관함에서 파일 선택</strong><span>사진을 바로 찍지 않아도 됩니다</span><input id="imageInput" type="file" accept="image/jpeg,image/png,image/webp,image/gif"></label>
+<div id="imageArea" hidden class="image-area"><img id="preview" alt="선택한 원본 사진 미리보기"><div><strong id="fileName"></strong><p class="hint">원본을 줄이거나 재압축하지 않습니다.</p><button class="light" type="button" id="ocrButton">사진에서 글자 인식</button></div></div>
+<div id="ocrStatus" class="hint"></div><details class="ocr-detail"><summary>OCR 원문 보기·직접 붙여넣기</summary><textarea id="ocrRaw" rows="6" placeholder="OCR이 읽은 글자 또는 직접 복사한 거래명세서 텍스트를 붙여넣으세요."></textarea><button id="parseButton" class="light" type="button">이 텍스트로 항목 추출</button><p class="hint">인식이 틀리거나 표가 무너질 수 있습니다. 자동 추출되지 않은 품목은 직접 추가하세요.</p></details>
+</div>
+<div class="card"><div class="step-head"><span class="num">2</span><div><h3>거래 정보 확인</h3><p>원본에서 확인한 정보만 입력합니다. 없는 항목은 비워두세요.</p></div></div>
+<div class="form-grid">
+<label>거래일<input id="date" type="date"></label><label>거래처<input id="supplier" type="text" placeholder="예: 식자재유통" maxlength="120" autocomplete="off"></label>
+<label>문서 종류<select id="type"><option>미확인</option><option>거래명세서</option><option>영수증</option><option>기타</option></select></label>
+<label>결제 상태<select id="payment"><option>미확인</option><option>미지급</option><option>지급완료</option></select></label>
+<label>공급가액<input id="supply" type="number" step="1" placeholder="미기재 시 공란"></label><label>부가세<input id="tax" type="number" step="1" placeholder="미기재 시 공란"></label>
+<label>문서 합계<input id="total" type="number" step="1" placeholder="미기재 시 공란"></label><label>연결된 기존 문서<select id="relatedId"><option value="">연결 없음</option></select></label>
+</div><label class="block-label">메모<textarea id="memo" rows="2" placeholder="반품·할인·외상 등 특별한 사항" maxlength="1500"></textarea></label>
+</div>
+<div class="card"><div class="step-head"><span class="num">3</span><div><h3>품목별 매입</h3><p>품목 이름이 같아도 규격·단위가 다르면 별도로 비교합니다.</p></div></div>
+<div id="items" class="item-list"></div><button class="light full" id="addItem" type="button">+ 품목 행 추가</button>
+<div id="warnings" class="warn-box" hidden></div><div id="duplicateWarning" class="dup-box" hidden></div>
+<div class="save-row"><button id="saveButton" class="primary" type="button">확인 후 저장</button><span id="saveHint" class="hint">자동 저장되지 않습니다.</span></div></div>
+</section>
+<section id="panel-documents" class="panel"><div class="section-head"><div><h2>매입 내역</h2><p>매입과 결제 상태를 분리해서 보여줍니다.</p></div></div>
+<div class="stat-grid"><div class="stat"><span>선택 월 매입 합계</span><strong id="monthlyTotal">—</strong></div><div class="stat"><span>문서 수</span><strong id="monthlyCount">0건</strong></div></div>
+<div class="filter-row"><label>조회 월<input id="monthFilter" type="month"></label><label>검색<input id="docSearch" type="search" placeholder="거래처·날짜·품목"></label></div><div id="docList" class="list"></div></section>
+<section id="panel-products" class="panel"><div class="section-head"><div><h2>품목별 단가 변동</h2><p>품명·규격·단위가 모두 같을 때만 비교합니다.</p></div></div><label class="wide-search">품목 검색<input id="itemSearch" type="search" placeholder="예: 양파, 돼지고기, 슈크림"></label><div id="productList" class="list"></div></section>
+<section id="panel-vendors" class="panel"><div class="section-head"><div><h2>거래처별 매입</h2><p>거래일 기준으로 합계를 계산합니다.</p></div></div><label class="wide-search">거래처 검색<input id="vendorSearch" type="search" placeholder="거래처명"></label><div id="vendorList" class="list"></div></section>
+<section id="panel-settings" class="panel"><div class="section-head"><div><h2>저장소·백업</h2><p>장부의 소유권과 백업을 직접 관리합니다.</p></div></div><div class="card"><h3>저장소 상태</h3><p id="storeState" class="hint">확인 중</p><button id="setupButton" class="primary" type="button">내 Google Drive에 저장소 초기화</button><div class="links"><a id="sheetLink" target="_blank" rel="noopener" hidden>Google 시트 열기</a><a id="folderLink" target="_blank" rel="noopener" hidden>원본 사진 폴더 열기</a></div><p class="hint">Google 계정 접근은 OAuth 동의가 필요합니다. 앱에 계정 비밀번호를 입력하지 않습니다. 첫 배포 시 접근 대상을 ‘나만’으로 설정하세요.</p></div>
+<div class="card"><h3>내보내기</h3><p>CSV에는 품목별 원장이 포함됩니다. JSON은 문서·품목 데이터 백업용이며, Google Drive 사진 파일의 실제 바이트는 포함되지 않습니다.</p><div class="action-row"><button class="light" id="csvButton" type="button">품목별 CSV 저장</button><button class="light" id="jsonButton" type="button">장부 JSON 저장</button></div><p class="hint">완전한 복구용 백업은 Google 시트 복사본과 ‘영수증 원본’ 폴더도 함께 보관하세요. JSON만으로 사진은 복구되지 않습니다.</p></div>
+<div class="card"><h3>보안·이용 안내</h3><p>운영 모드에서는 Google Apps Script의 사용자 제한을 사용합니다. 시연 모드의 데이터는 이 브라우저의 IndexedDB에만 저장되며, 다른 기기와 동기화되지 않습니다.</p><p class="hint">이 도구는 회계 신고용 장부를 자동 확정하지 않습니다. 원본과 대조 후 확정하세요.</p></div></section>
+</main></div>
+<div id="imageModal" class="modal" hidden><div class="modal-inner"><button id="closeModal" class="light modal-close" type="button">닫기</button><img id="fullImage" alt="매입 증빙 원본"></div></div>
+<script><?!= include('Core'); ?></script><script><?!= include('Client'); ?></script>
+</body></html>

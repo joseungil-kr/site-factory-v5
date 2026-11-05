@@ -1,0 +1,103 @@
+(function(){
+'use strict';
+const $=id=>document.getElementById(id),Core=globalThis.LedgerCore;
+const cloud=!!(globalThis.google&&google.script&&google.script.run);
+let docs=[],status={},editing=null,photoFile=null,previewUrl='',items=[],busy=false;
+const fields=['date','supplier','type','payment','supply','tax','total','relatedId','memo'];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nid=()=>typeof crypto!=='undefined'&&crypto.randomUUID?crypto.randomUUID():('id'+Date.now().toString(36)+Math.random().toString(36).slice(2));
+const ownNum=x=>Core.numberOrNull(x);
+const pendingItem=()=>({name:'',spec:'',unit:'',quantity:null,unitPrice:null,amount:null});
+function message(s,error){const el=$('notice');el.hidden=false;el.classList.toggle('error',!!error);el.textContent=s;el.scrollIntoView({behavior:'smooth',block:'nearest'});}
+function busySet(v){busy=!!v;for(const id of ['saveButton','ocrButton','setupButton','refreshButton'])$(id).disabled=busy;}
+function call(name,...args){if(cloud)return new Promise((resolve,reject)=>{
+  google.script.run.withSuccessHandler(resolve).withFailureHandler(reject)[name](...args);
+});return demoCall(name,...args);}
+function openDb(){return new Promise((resolve,reject)=>{const req=indexedDB.open('ingredient-ledger-demo-v1',1);req.onupgradeneeded=()=>req.result.createObjectStore('docs',{keyPath:'id'});req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
+async function demoAll(){const db=await openDb();return new Promise((resolve,reject)=>{const tx=db.transaction('docs','readonly'),req=tx.objectStore('docs').getAll();req.onsuccess=()=>{resolve(req.result.map(x=>x));db.close()};req.onerror=()=>reject(req.error)});}
+async function demoPut(x){const db=await openDb();return new Promise((resolve,reject)=>{const tx=db.transaction('docs','readwrite');tx.objectStore('docs').put(x);tx.oncomplete=()=>{db.close();resolve()};tx.onerror=()=>reject(tx.error)});}
+async function demoCall(name,...args){
+ if(name==='apiStatus')return {ready:true,demo:true};
+ if(name==='apiSetup')throw new Error('시연 파일에서는 Google 접근이 불가능합니다. Apps Script에 설치한 후 초기화하세요.');
+ if(name==='apiList')return {docs:(await demoAll()).filter(x=>x.status!=='삭제'),status:{ready:true,demo:true}};
+ if(name==='apiExtract')throw new Error('이 시연 파일에서는 Google OCR을 실행하지 않습니다. 아래 OCR 원문 입력으로 추출·수정 기능을 시험하세요.');
+ if(name==='apiSave'){
+   const data=args[0],existing=(await demoAll()).find(x=>x.id===data.doc.id);
+   if(existing&&existing.updatedAt!==data.doc.expectedUpdatedAt)throw new Error('저장된 버전이 변경되었습니다. 새로고침하세요.');
+   const now=new Date().toISOString(),id=existing?.id||data.doc.id||nid();
+   const d={...data.doc,id,items:data.items.map(x=>({...x,id:nid()})),createdAt:existing?.createdAt||now,updatedAt:now,status:'정상'};
+   delete d.expectedUpdatedAt;
+   if(data.image){d.imageId=id+'-image';d.imageName=data.image.name;d._image={data:data.image.data,mime:data.image.mime,name:data.image.name};}
+   else{d.imageId=existing?.imageId||'';d.imageName=existing?.imageName||'';d._image=existing?._image||null;}
+   await demoPut(d);return {id,updatedAt:now,photoId:d.imageId};
+ }
+ if(name==='apiDelete'){const d=(await demoAll()).find(x=>x.id===args[0]);if(!d)throw Error('문서가 없습니다.');if(d.updatedAt!==args[1])throw Error('변경된 데이터입니다. 다시 조회하세요.');d.status='삭제';d.updatedAt=new Date().toISOString();await demoPut(d);return {ok:true};}
+ if(name==='apiImage'){const d=(await demoAll()).find(x=>x.imageId===args[0]&&x.status!=='삭제');if(!d||!d._image)throw Error('이미지를 찾지 못했습니다.');return d._image;}
+ throw new Error('지원하지 않는 명령 '+name);
+}
+function getDoc(){const out={id:editing?.id||nid(),expectedUpdatedAt:editing?.updatedAt||''};for(const key of fields)out[key]=['supply','tax','total'].includes(key)?ownNum($(key).value):$(key).value;return out;}
+function setDoc(d){for(const key of fields){$(key).value=['supply','tax','total'].includes(key)?(d?.[key]??''):(d?.[key]??(key==='type'||key==='payment'?'미확인':''));}renderRelations();}
+function renderRelations(){const s=$('relatedId'),selected=s.value;s.innerHTML='<option value="">연결 없음</option>'+docs.filter(d=>d.id!==editing?.id).map(d=>`<option value="${esc(d.id)}">${esc(d.date||'날짜 미입력')} · ${esc(d.supplier||'거래처 미입력')} · ${esc(Core.won(d.total))}</option>`).join('');s.value=selected||'';}
+function reset(){editing=null;photoFile=null;if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl='';$('imageInput').value='';$('imageArea').hidden=true;$('ocrStatus').textContent='';$('ocrRaw').value='';$('formTitle').textContent='매입 등록';setDoc(null);items=[pendingItem()];renderItems();refreshWarnings();}
+function renderItems(){const el=$('items');el.innerHTML=items.map((x,i)=>`<div class="item-row" data-row="${i}"><div class="item-row-head"><span>품목 ${i+1}</span><button class="remove" type="button" data-action="remove-item" data-index="${i}">행 삭제</button></div><div class="item-fields">
+<label>품목명<input data-index="${i}" data-field="name" value="${esc(x.name)}" placeholder="예: 양파" maxlength="150"></label>
+<label>규격<input data-index="${i}" data-field="spec" value="${esc(x.spec)}" placeholder="10kg"></label>
+<label>단위<input data-index="${i}" data-field="unit" value="${esc(x.unit)}" placeholder="박스"></label>
+<label>수량<input type="number" step="any" data-index="${i}" data-field="quantity" value="${x.quantity??''}" placeholder="수량"></label>
+<label>단가<input type="number" step="any" data-index="${i}" data-field="unitPrice" value="${x.unitPrice??''}" placeholder="원"></label>
+<label>품목금액<input type="number" step="any" data-index="${i}" data-field="amount" value="${x.amount??''}" placeholder="원"></label>
+</div></div>`).join('');refreshWarnings();}
+function refreshWarnings(){if(!items.length)return;const d=getDoc(),warn=Core.audit(d,items),w=$('warnings');w.hidden=!warn.length;w.textContent=warn.length?'확인 사항\n• '+warn.join('\n• '):'';
+ const dup=Core.duplicates(d,docs),box=$('duplicateWarning');box.hidden=!dup.length;box.textContent=dup.length?'중복 가능성: 같은 날짜·거래처의 기록 '+dup.length+'건이 있습니다. 명세서와 영수증이 같은 거래일 수 있습니다. 필요한 경우 [연결된 기존 문서]에서 연결하고 저장하세요. 자동 삭제하지 않습니다.':'';
+}
+function filePayload(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({name:file.name,mime:file.type,data:String(reader.result).split(',')[1]});reader.onerror=()=>reject(new Error('사진을 읽지 못했습니다.'));reader.readAsDataURL(file);});}
+async function imageChange(){const f=$('imageInput').files?.[0];if(!f)return;if(!/^image\/(jpeg|png|webp|gif)$/.test(f.type)){message('지원하지 않는 사진 형식입니다.',true);$('imageInput').value='';return;}if(f.size>8*1024*1024){message('8MB 이하 사진을 선택해주세요.',true);$('imageInput').value='';return;}photoFile=f;if(previewUrl)URL.revokeObjectURL(previewUrl);previewUrl=URL.createObjectURL(f);$('preview').src=previewUrl;$('fileName').textContent=f.name;$('imageArea').hidden=false;$('ocrStatus').textContent='사진 선택 완료 · 저장 전에는 서버의 원본 폴더에 보관하지 않습니다.';}
+function extractFromText(text){const got=Core.extractReceipt(text);const newD=getDoc();
+ if(got.date&&!newD.date)$('date').value=got.date;
+ if(got.supplier&&!newD.supplier)$('supplier').value=got.supplier;
+ if(got.type!=='미확인'&&newD.type==='미확인')$('type').value=got.type;
+ for(const k of ['supply','tax','total'])if(got[k]!==null&&newD[k]===null)$(k).value=got[k];
+ if(got.items.length){items=got.items.map(({review,...x})=>x);renderItems();}
+ $('ocrStatus').textContent=`OCR 텍스트 분석: ${got.items.length}개 품목 후보. 원본과 대조해 주세요. ${got.warnings.join(' / ')}`;refreshWarnings();}
+async function runOcr(){if(!photoFile){message('먼저 사진을 선택해주세요.',true);return;}busySet(true);$('ocrStatus').textContent='Google Drive OCR 요청 중...';
+ try{const r=await call('apiExtract',await filePayload(photoFile));$('ocrRaw').value=r.text||'';extractFromText(r.text||'');message('OCR이 반환한 글자를 분석했습니다. 품목을 직접 대조해 수정하세요.');}
+ catch(e){message('OCR 실행 불가: '+(e.message||e),true);$('ocrStatus').textContent='원문 텍스트를 직접 붙여넣어 시험할 수 있습니다.';}finally{busySet(false);}}
+async function fetchAll(){busySet(true);try{const r=await call('apiList');docs=r.docs||[];status=r.status||{};drawAll();showStore();}
+catch(e){message('조회 실패: '+(e.message||e),true)}finally{busySet(false);}}
+function showStore(){const ready=!!status.ready;$('modePill').textContent=cloud?(ready?'내 Google 장부 연결':'Google 저장소 미설정'):'브라우저 시연 모드';$('storeState').textContent=cloud?(ready?'Google 시트와 비공개 사진 폴더가 연결되어 있습니다.':'초기화를 통해 앱 전용 폴더와 시트를 생성합니다.'):'시연 파일: 브라우저 IndexedDB에 저장합니다. Google Drive 동기화와 비공개 로그인 검증은 이 모드에서 불가능합니다.';$('setupButton').hidden=!cloud||ready;
+ const sl=$('sheetLink'),fl=$('folderLink');sl.hidden=!status.spreadsheetUrl;fl.hidden=!status.folderUrl;if(status.spreadsheetUrl)sl.href=status.spreadsheetUrl;if(status.folderUrl)fl.href=status.folderUrl;}
+async function setup(){busySet(true);try{status=await call('apiSetup');showStore();await fetchAll();message('저장소 초기화를 마쳤습니다.');}catch(e){message('저장소 초기화 실패: '+(e.message||e),true)}finally{busySet(false)}}
+function tab(name){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id==='panel-'+name));window.scrollTo({top:0,behavior:'smooth'});}
+function drawAll(){renderRelations();renderDocuments();renderProducts();renderVendors();refreshWarnings();}
+function activeDocs(){return docs.filter(d=>d.status!=='삭제').sort((a,b)=>String(b.date||'').localeCompare(String(a.date||''))||String(b.createdAt||'').localeCompare(String(a.createdAt||'')));}
+function renderDocuments(){const month=$('monthFilter').value,q=Core.norm($('docSearch').value);const all=activeDocs().filter(d=>(!month||d.date?.startsWith(month)));const results=all.filter(d=>!q||Core.norm([d.supplier,d.date,d.type,...(d.items||[]).map(x=>x.name)].join(' ')).includes(q));$('monthlyTotal').textContent=Core.won(Core.monthTotal(all,month));$('monthlyCount').textContent=all.length+'건'+(all.filter(x=>x.total==null).length?` (합계 미입력 ${all.filter(x=>x.total==null).length}건)`:'');
+ $('docList').innerHTML=results.length?results.map(d=>`<article class="list-card"><div class="list-main"><h3>${esc(d.supplier||'거래처 미입력')} <span class="tag">${esc(d.type||'미확인')}</span></h3><div class="meta">${esc(d.date||'날짜 미입력')} · ${esc(d.payment||'결제 미확인')} · 품목 ${(d.items||[]).length}개 ${d.relatedId?'· 기존 문서 연결':''}</div><p class="line-preview">${esc((d.items||[]).slice(0,4).map(x=>`${x.name||'(이름 없음)'} ${x.spec||''} ${x.unit||''}`).join(' · ')||'품목 정보 미입력')}</p></div><div class="list-side"><div class="amt">${esc(Core.won(d.total))}</div><div class="action-row"><button type="button" class="light" data-action="edit" data-id="${esc(d.id)}">수정</button>${d.imageId?`<button type="button" class="light" data-action="view" data-id="${esc(d.id)}">사진</button>`:''}<button type="button" class="light" data-action="delete" data-id="${esc(d.id)}">삭제</button></div></div></article>`).join(''):'<div class="empty">조회 조건에 맞는 매입 문서가 없습니다.</div>';
+}
+function renderProducts(){const q=$('itemSearch').value.trim();const hist=Core.history(activeDocs(),q);const groups=Core.comparableGroups(hist);$('productList').innerHTML=groups.length?groups.map(g=>{const newest=g[0],older=g.slice(1).find(x=>ownNum(x.unitPrice)!==null),last=ownNum(newest.unitPrice),previous=older?ownNum(older.unitPrice):null;const diff=last!==null&&previous!==null?last-previous:null;const priceChange=diff===null?'비교할 이전 단가 없음':`${diff>0?'▲ 상승':diff<0?'▼ 하락':'변동 없음'} ${Core.won(Math.abs(diff))} (이전 ${Core.won(previous)})`;
+ return `<article class="list-card"><div class="list-main"><h3>${esc(newest.name||'품명 미입력')} <span class="tag">${esc(newest.spec||'규격 미기재')} / ${esc(newest.unit||'단위 미기재')}</span></h3><p class="meta">${g.length}건 · 최근 거래 ${esc(newest.date||'날짜 미입력')} · ${esc(newest.supplier)}</p><p class="price-change ${diff>0?'price-up':diff<0?'price-down':''}">${esc(priceChange)}</p><details class="ocr-detail"><summary>매입 이력 보기</summary>${g.map(x=>`<p class="line-preview">${esc(x.date||'날짜 미입력')} · ${esc(x.supplier)} · 수량 ${esc(x.quantity??'—')} · 단가 ${esc(Core.won(x.unitPrice))} · ${esc(Core.won(x.amount))}</p>`).join('')}</details></div><div class="list-side"><div class="amt">${esc(Core.won(newest.unitPrice))}</div></div></article>`;}).join(''):'<div class="empty">검색할 품목 이력이 없습니다.</div>';}
+function renderVendors(){const q=Core.norm($('vendorSearch').value),by=new Map();for(const d of activeDocs()){const k=Core.norm(d.supplier||'거래처 미입력');if(!by.has(k))by.set(k,[]);by.get(k).push(d);}let arr=[...by.values()].filter(g=>Core.norm(g[0].supplier||'거래처 미입력').includes(q)).sort((a,b)=>a[0].supplier.localeCompare(b[0].supplier,'ko'));
+ $('vendorList').innerHTML=arr.length?arr.map(g=>{const sum=g.reduce((acc,x)=>acc+(ownNum(x.total)||0),0),missing=g.filter(x=>x.total==null).length;return `<article class="list-card"><div class="list-main"><h3>${esc(g[0].supplier||'거래처 미입력')}</h3><p class="meta">총 ${g.length}건 · ${esc(g[0].date||'날짜 미입력')} 최근 거래</p>${missing?`<p class="hint">합계 미입력 ${missing}건 제외</p>`:''}<details class="ocr-detail"><summary>거래 내역 보기</summary>${g.map(x=>`<p class="line-preview">${esc(x.date||'날짜 미입력')} · ${esc(x.type)} · ${esc(Core.won(x.total))} · ${esc(x.payment)}</p>`).join('')}</details></div><div class="list-side"><div class="amt">${esc(Core.won(sum))}</div></div></article>`;}).join(''):'<div class="empty">거래처 매입 기록이 없습니다.</div>';}
+async function save(){if(busy)return;const doc=getDoc();const validItems=items.map(x=>({...x}));const note=Core.audit(doc,validItems),dup=Core.duplicates(doc,docs);
+ if(note.length&&!confirm('확인할 항목이 있습니다.\n\n'+note.join('\n')+'\n\n원본과 확인했으며, 이대로 저장하시겠습니까?'))return;
+ if(dup.length&&!doc.relatedId&&!confirm('같은 거래처·날짜의 매입 문서가 '+dup.length+'건 있습니다. 중복으로 저장할 수 있습니다. 계속하시겠습니까?'))return;
+ busySet(true);try{const payload={doc,items:validItems,image:photoFile?await filePayload(photoFile):null};const r=await call('apiSave',payload);await fetchAll();reset();tab('documents');message('매입 기록을 저장했습니다. 저장 ID: '+r.id);}
+ catch(e){message('저장 실패: '+(e.message||e),true)}finally{busySet(false)}}
+function edit(id){const d=docs.find(x=>x.id===id);if(!d)return;reset();editing=d;setDoc(d);$('relatedId').value=d.relatedId||'';items=(d.items||[]).map(x=>({...x}));if(!items.length)items=[pendingItem()];renderItems();$('formTitle').textContent='매입 문서 수정';$('fileName').textContent=d.imageName||'';if(d.imageId){$('imageArea').hidden=false;$('preview').removeAttribute('src');$('preview').alt='기존 원본 사진: 아래 사진 조회 버튼으로 확인';$('ocrStatus').textContent='기존 사진을 바꾸려면 새 사진을 선택하세요. 기존 원본은 Drive에 보존됩니다.';}tab('entry');}
+async function view(id){const d=docs.find(x=>x.id===id);if(!d?.imageId)return;busySet(true);try{const im=await call('apiImage',d.imageId);$('fullImage').src=`data:${im.mime};base64,${im.data}`;$('imageModal').hidden=false;}catch(e){message('원본 사진 조회 실패: '+(e.message||e),true)}finally{busySet(false)}}
+async function removeDoc(id){const d=docs.find(x=>x.id===id);if(!d||!confirm(`${d.supplier||'거래처 미입력'} / ${d.date||''} 문서를 장부에서 숨기겠습니까? 원본 사진과 기록은 영구 삭제하지 않습니다.`))return;busySet(true);try{await call('apiDelete',id,d.updatedAt);await fetchAll();message('문서를 장부에서 숨겼습니다. 원본은 삭제하지 않았습니다.');}catch(e){message('삭제 실패: '+(e.message||e),true)}finally{busySet(false)}}
+function dl(name,content,mime){const blob=new Blob([content],{type:mime});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),5000);}
+function boot(){const now=new Date(),mm=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;$('monthFilter').value=mm;reset();
+ document.querySelectorAll('.tab').forEach(x=>x.addEventListener('click',()=>tab(x.dataset.tab)));
+ $('resetForm').onclick=()=>reset();$('imageInput').onchange=imageChange;$('ocrButton').onclick=runOcr;$('parseButton').onclick=()=>extractFromText($('ocrRaw').value);
+ $('addItem').onclick=()=>{items.push(pendingItem());renderItems()};$('saveButton').onclick=save;$('refreshButton').onclick=fetchAll;$('setupButton').onclick=setup;
+ $('items').addEventListener('input',e=>{const el=e.target,idx=Number(el.dataset.index),field=el.dataset.field;if(!field||!items[idx])return;items[idx][field]=['quantity','unitPrice','amount'].includes(field)?ownNum(el.value):el.value;refreshWarnings()});
+ document.addEventListener('click',e=>{const btn=e.target.closest('[data-action]');if(!btn)return;const a=btn.dataset.action,id=btn.dataset.id;if(a==='remove-item'){items.splice(Number(btn.dataset.index),1);if(!items.length)items.push(pendingItem());renderItems();}if(a==='edit')edit(id);if(a==='view')view(id);if(a==='delete')removeDoc(id)});
+ for(const id of fields)$(id).addEventListener('input',refreshWarnings);
+ for(const id of ['monthFilter','docSearch'])$(id).addEventListener('input',renderDocuments);$('itemSearch').addEventListener('input',renderProducts);$('vendorSearch').addEventListener('input',renderVendors);
+ $('closeModal').onclick=()=>{$('imageModal').hidden=true;$('fullImage').removeAttribute('src')};$('imageModal').addEventListener('click',e=>{if(e.target===$('imageModal'))$('closeModal').click()});
+ $('csvButton').onclick=()=>dl('매입_품목_원장.csv',Core.csvExport(docs),'text/csv;charset=utf-8');
+ $('jsonButton').onclick=()=>dl('매입_장부_메타데이터.json',JSON.stringify({format:'ingredient-ledger-v1',exportedAt:new Date().toISOString(),note:'Google Drive original image bytes are not included',docs:docs.map(d=>{const x={...d};delete x._image;return x})},null,2),'application/json;charset=utf-8');
+ fetchAll();
+}
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
+})();

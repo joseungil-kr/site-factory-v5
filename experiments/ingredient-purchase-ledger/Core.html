@@ -1,0 +1,47 @@
+(function(root){
+'use strict';
+function norm(s){return String(s??'').normalize('NFKC').replace(/\s+/g,' ').trim().toLowerCase();}
+function numberOrNull(s){if(s===null||s===undefined||String(s).trim()==='')return null;const x=Number(String(s).replace(/[₩원,\s]/g,''));return Number.isFinite(x)?x:null;}
+function won(v){return v==null||!Number.isFinite(Number(v))?'—':Number(v).toLocaleString('ko-KR')+'원';}
+function isoDate(s){let m=String(s).match(/(20\d{2})\s*[.\-/년]\s*(\d{1,2})\s*[.\-/월]\s*(\d{1,2})/);if(!m)return '';const y=+m[1],mo=+m[2],d=+m[3];const dt=new Date(Date.UTC(y,mo-1,d));return dt.getUTCFullYear()===y&&dt.getUTCMonth()+1===mo&&dt.getUTCDate()===d?`${y}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`:'';}
+function cleanAmount(s){return numberOrNull(String(s).replace(/[^0-9.,-]/g,''));}
+function extractReceipt(text){
+  const lines=String(text||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);const whole=lines.join('\n');
+  let docType='미확인';if(/거래\s*명세서?|거래\s*내역서/.test(whole))docType='거래명세서';else if(/(카드\s*매출|영수증|승인\s*번호|결제\s*금액)/.test(whole))docType='영수증';
+  const date=isoDate(whole);let supplier='';
+  const supplierLine=lines.find(x=>/^(?:공급자\s*상호|공급업체|거래처|매입처|상호)\s*[:：]/.test(x));
+  if(supplierLine)supplier=supplierLine.replace(/^.*?[:：]\s*/,'').trim().slice(0,120);
+  const findAmount=(re)=>{for(const line of lines){if(re.test(line)){const nums=line.match(/-?(?:\d{1,3}(?:,\d{3})+|\d+)/g);if(nums?.length)return cleanAmount(nums[nums.length-1]);}}return null;};
+  const supply=findAmount(/공급\s*가액|공급\s*금액/);const tax=findAmount(/부가\s*세액|부가\s*세|VAT/i);const total=findAmount(/^(?:총\s*합계|합계\s*금액|총\s*금액|결제\s*금액|받을\s*금액|합\s*계)(?:\s|[:：]|$)/);
+  const items=[];
+  for(const line of lines){
+    if(/(합계|거래처|사업자|공급자|등록번호|부가세|세액|카드번호|승인번호|전표번호|품\s*명\s+수량|수량\s+단가|전화|주소|거래일)/.test(line))continue;
+    const m=line.match(/^(.{2,65}?)\s+(\d+(?:\.\d+)?)\s+([\d,]{2,})\s+([\d,]{2,})\s*원?$/);
+    if(!m)continue;
+    const qty=numberOrNull(m[2]),price=numberOrNull(m[3]),amt=numberOrNull(m[4]);
+    if(qty==null||price==null||amt==null)continue;
+    const itemName=m[1].trim();if(/^\d+[.\-/]\d+/.test(itemName))continue;
+    const specMatch=itemName.match(/[（(]([^()（）]{1,28})[）)]\s*$/)||itemName.match(/\s(\d+(?:\.\d+)?\s*(?:kg|g|L|l|ml|개|팩|봉|박스|box))\s*$/i);
+    const spec=specMatch?specMatch[1].trim():'';
+    const base=spec?itemName.slice(0,itemName.length-specMatch[0].length).trim():itemName;
+    items.push({name:base||itemName,spec,unit:'',quantity:qty,unitPrice:price,amount:amt,review:true});
+  }
+  return {date,supplier,type:docType,supply,tax,total,payment:'미확인',items,rawText:String(text||''),warnings:['OCR 결과는 확정 데이터가 아닙니다. 원본 사진과 비교해 주세요.',...(!supplier?['거래처 인식 필요']:[]),...(!date?['거래일 인식 필요']:[]),...(!items.length?['품목 행을 자동 추출하지 못했습니다. 직접 추가해 주세요.']:[])]};
+}
+function audit(doc,items){const warnings=[];let itemSum=0,allAmounts=true;
+ for(let i=0;i<items.length;i++){const x=items[i],q=numberOrNull(x.quantity),p=numberOrNull(x.unitPrice),a=numberOrNull(x.amount);if(a===null)allAmounts=false;else itemSum+=a;if(q!==null&&p!==null&&a!==null&&Math.abs(q*p-a)>1)warnings.push(`${i+1}번 품목: 수량×단가(${won(q*p)})와 금액(${won(a)})이 다릅니다.`);}
+ const supply=numberOrNull(doc.supply),tax=numberOrNull(doc.tax),total=numberOrNull(doc.total);
+ if(supply!==null&&allAmounts&&items.length&&Math.abs(itemSum-supply)>1)warnings.push(`품목 합계 ${won(itemSum)} / 공급가액 ${won(supply)} 불일치 (할인·반품 등 확인)`);
+ if(supply!==null&&tax!==null&&total!==null&&Math.abs(supply+tax-total)>1)warnings.push(`공급가액 + 부가세 ${won(supply+tax)} / 문서 합계 ${won(total)} 불일치`);
+ if(supply===null&&total!==null&&allAmounts&&items.length&&Math.abs(itemSum-total)>1)warnings.push(`품목 합계 ${won(itemSum)} / 문서 합계 ${won(total)} 차이 (세금·할인 확인)`);
+ if(!doc.date)warnings.push('거래일 미입력');if(!doc.supplier)warnings.push('거래처 미입력');
+ return warnings;
+}
+function duplicates(doc,existing){return existing.filter(x=>x.id!==doc.id&&x.status!=='삭제'&&!!doc.date&&!!doc.supplier&&x.date===doc.date&&norm(x.supplier)===norm(doc.supplier)&&(doc.total==null||x.total==null||numberOrNull(x.total)===numberOrNull(doc.total)));}
+function monthTotal(docs,month){return docs.filter(d=>d.status!=='삭제'&&d.date?.startsWith(month)).reduce((s,d)=>s+(numberOrNull(d.total)??0),0);}
+function history(docs,query){const out=[];for(const d of docs){if(d.status==='삭제')continue;for(const item of d.items||[]){if(!norm(item.name).includes(norm(query)))continue;out.push({date:d.date,supplier:d.supplier,name:item.name,spec:item.spec||'',unit:item.unit||'',quantity:item.quantity,unitPrice:item.unitPrice,amount:item.amount,docId:d.id});}}return out.sort((a,b)=>b.date.localeCompare(a.date));}
+function comparableGroups(entries){const map=new Map();for(const x of entries){const k=[norm(x.name),norm(x.spec),norm(x.unit)].join('|');if(!map.has(k))map.set(k,[]);map.get(k).push(x)}return [...map.values()];}
+function csvCell(x){let v=String(x??'');if(/^[\s]*[=+@-]/.test(v))v="'"+v;return '"'+v.replace(/"/g,'""')+'"';}
+function csvExport(docs){const rows=[['문서ID','거래일','거래처','문서종류','결제상태','품목','규격','단위','수량','단가','품목금액','공급가액','부가세','문서합계','메모','원본파일명','연결문서ID']];for(const d of docs){if(d.status==='삭제')continue;const items=d.items?.length?d.items:[{}];for(const x of items)rows.push([d.id,d.date,d.supplier,d.type,d.payment,x.name,x.spec,x.unit,x.quantity,x.unitPrice,x.amount,d.supply,d.tax,d.total,d.memo,d.imageName,d.relatedId]);}return '\uFEFF'+rows.map(r=>r.map(csvCell).join(',')).join('\r\n');}
+const api={norm,numberOrNull,won,isoDate,extractReceipt,audit,duplicates,monthTotal,history,comparableGroups,csvExport};root.LedgerCore=api;if(typeof module!=='undefined'&&module.exports)module.exports=api;
+})(typeof globalThis!=='undefined'?globalThis:this);
