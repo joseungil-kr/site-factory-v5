@@ -3,7 +3,7 @@ from pathlib import Path
 from html import escape
 import json,hashlib,shutil,sys
 sys.path.insert(0,str(Path(__file__).resolve().parent))
-from skyquote_copy import hero,quote_sections,faq,contact,footer
+from skyquote_copy import hero,quote_sections,faq,contact,footer,price_table_html
 ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/'sites/skyquote'
 OUT=ROOT/'dist/skyquote-preview'
