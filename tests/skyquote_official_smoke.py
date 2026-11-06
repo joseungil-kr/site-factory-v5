@@ -48,8 +48,19 @@ for path in m["paths"]:
         text=" ".join(parser.parts)
         assert "작업 지점까지 높이" in text and "작업대에 오를 인원" in text
         assert "공개 이용요금" in text
-        headings=tuple(re.findall(r'<h2>(.*?)</h2>',raw))
-        assert len(headings)>=8 and len(set(headings))==len(headings),path
+        import hashlib
+        from scripts import build_skyquote_official as generator
+        key=hashlib.sha256(path.split('/')[-1].removesuffix('.html').encode()).digest()
+        expected=[]
+        for digit in key:
+            prompt=generator.PROMPTS[digit%len(generator.PROMPTS)]
+            if prompt not in expected:expected.append(prompt)
+            if len(expected)==4:break
+        assert len(expected)==4,path
+        for heading,_body in expected:
+            assert '<h2>'+heading+'</h2>' in raw,(path,heading)
+        headings=tuple(heading for heading,_body in expected)
+        assert len(set(headings))==4,path
         question_sets.add(headings)
 assert len(question_sets)>150,len(question_sets)
 print("SKYQUOTE_OFFICIAL_310_VISITOR_COPY_QA_PASS pages=310 questionSets="+str(len(question_sets))+" images=5 pricing=true links=true noindex=true")
