@@ -38,34 +38,13 @@ def main():
             continue
         district,dong=place['district'],place['dong']
         region='안산시 '+district+' '+dong
-        # Reuse the existing template, but add independent useful Q&A and conditional scenarios.
-        # The intro describes the decision task; the detailed section turns focus into
-        # an actionable request. Neither one claims observed neighbourhood conditions.
-        intro='현장 위치만으로 금액을 판단할 수 없습니다. 동일한 작업 정보와 포함 비용을 먼저 정리해 비교하세요.'
-        html=base.render(place['slug'],region,intro)
-        unique=section('견적 요청 전에 확인할 구체적인 질문',
-            '다음 조건이 실제 현장에 해당하는지 확인한 뒤 업체에 문의하세요. '+place['focus']+
-            ' 비교할 견적서마다 작업 시간·차량 사양·이동비 포함 여부를 같은 기준으로 적었나요?')
-        unique+=section('비용 차이를 만들 수 있는 현장 조건',
-            '아래 내용은 '+region+'의 실제 환경을 조사한 결과가 아닌 견적용 가정입니다. '+place['example']+
-            ' 현장 사진과 작업 계획을 전달해 해당 조건이 맞는지 먼저 확인하세요.')
-        questions=[
-          '장비를 이동 없이 고정하는 한 장소 작업과 여러 위치를 옮기는 작업은 총 대기시간과 이동비가 달라질 수 있습니다. 업체별 재배치 비용 포함 여부를 체크합니다.',
-          '시간제와 반일·하루 견적의 기준 시각이 다른 경우가 있으므로, 준비·안전점검·철수 시간이 청구시간에 들어가는지 적어 두세요.',
-          '작업물의 무게와 작업대에 오르는 인원, 작업점까지의 수평 거리를 미리 전달해야 차량 톤수만 비교하는 실수를 피할 수 있습니다.',
-          '작업 시작 전 도로·보행 구획을 확보해야 한다면 허가와 안전 유도 비용을 최종 견적에 포함하는지 분명히 확인하세요.',
-          '일정이 변경될 수 있는 작업은 예약 변경·취소 가능 시각과 회차 비용까지 같은 기준으로 문의해야 실제 총액 비교가 됩니다.',
-          '비 오는 날 또는 강풍 위험이 있는 날은 작업 가능성을 단정하지 말고 업체의 안전 중지 기준과 일정 변경 비용을 확인하세요.',
-          '차량 진입 폭과 아웃트리거를 펼칠 공간을 구분해 제시하면 현장에 도착해서야 장비를 바꾸는 위험을 줄일 수 있습니다.',
-          '고정된 장비 사진만으로 안전 가능 여부를 판정하지 말고 실제 작업할 위치와 전선·장애물 정보를 전문가에게 확인받으세요.',
-          '자재 인양과 사람 탑승은 같은 가격·안전 조건이 아닐 수 있습니다. 작업 목적과 중량을 분리해 문의해야 합니다.'
-        ]
-        # This block varies by actual comparison question, not geographic stereotypes.
-        unique+=section('견적서에 추가할 구체적인 확인 질문',questions[i%len(questions)])
-        unique+=section('견적 요청 예시 — 가격 약속이 아닌 입력 방법',
-             '작업지: '+region+' 소재 정확한 도로명주소(별도 확인). 작업 종류와 사진, 최대 높이(미터), 수평 거리(미터), '
-             '예상 작업시간, 보행자 통제 및 지지대 설치조건을 함께 전달하고 총금액의 부가세·출동·대기·야간 비용 포함 여부를 확인합니다.')
-        html=html.replace('<section><h2>문의 절차</h2>',unique+'<section><h2>문의 절차</h2>',1)
+        # Reuse the visitor-first base template and add only the two useful
+        # questions selected for this named area; never infer local geography.
+        html=base.render(place['slug'],region,'')
+        unique=section('견적 상담 전에 알려주세요',place['focus'])
+        unique+=section('현장 사진과 일정도 함께 준비해 주세요',place['example'])
+        html=html.replace('<section><h2>현장 조건을 알려주시면 견적을 안내해 드립니다</h2>',
+                          unique+'<section><h2>현장 조건을 알려주시면 견적을 안내해 드립니다</h2>',1)
         target=OUT/place['slug']
         target.parent.mkdir(parents=True,exist_ok=True)
         target.write_text(html,encoding='utf-8')
@@ -73,10 +52,10 @@ def main():
     # One additional district hub; no unverified promise of immediate dispatch.
     district='상록구'
     district_page='sangnok.html'
-    body=base.render(district_page,'안산시 '+district,
-        '상록구 상담 대상 지역에 대해서도 현장 주소·하중·도달거리·아웃트리거 공간을 먼저 확인해야 합니다.')
-    body=body.replace('<section><h2>문의 절차</h2>',section('상록구 견적 비교 준비',
-         '장비가 닿는 실제 거리와 정차 위치를 확인한 뒤 여러 견적서의 최소 이용시간, 추가대기료, 현장 이동비, 세금 포함 총액을 대조합니다. 운영업체의 지역 안내는 상담 가능지역 참고이지 최저가나 당일 배차 보장이 아닙니다.')+'<section><h2>문의 절차</h2>',1)
+    body=base.render(district_page,'안산시 '+district,'')
+    body=body.replace('<section><h2>현장 조건을 알려주시면 견적을 안내해 드립니다</h2>',
+         section('상록구 현장 상담에 필요한 정보','작업 주소와 일정, 실제 높이와 차량 정차 위치에서의 수평거리, 탑승 인원과 자재 무게를 알려주세요.')+
+         '<section><h2>현장 조건을 알려주시면 견적을 안내해 드립니다</h2>',1)
     (OUT/district_page).write_text(body,encoding='utf-8')
     generated.append(district_page)
     # Add navigable links to all original sample and newly generated pages.
