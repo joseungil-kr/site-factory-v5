@@ -13,6 +13,7 @@ on:
       - 'tests/skyquote_official_smoke.py'
       - 'tests/skyquote_public_smoke.py'
       - 'v5/rss.py'
+      - 'scripts/qa_skyquote_copy_sample.py'
       - '.github/workflows/skyquote-copy-quality-qa.yml'
   pull_request:
     paths:
@@ -81,6 +82,9 @@ jobs:
                   assert bad not in body,bad
           print('RSS_VISITOR_COPY_READ_PASS items='+str(len(feed.findall('./channel/item'))))
           PY
+      - name: Read every visitor-facing document and RSS, export 8 sampled full texts
+        run: |
+          python scripts/qa_skyquote_copy_sample.py
       - name: Chromium 390px and 1440px render of representative home, district, dong and national pages
         run: |
           python -m pip install playwright==1.56.0
