@@ -157,7 +157,7 @@ def layout(title: str, description: str, body: str, active: str = "") -> str:
         '</div></header><main id="main">' + body + '</main>'
         '<section class="bottom-cta"><div class="container bottom-cta-inner">'
         '<div><span class="eyebrow">최소 10페이지부터, 필요한 정보부터</span>'
-        '<h2>우리 업종의 검색 홈페이지를 설계해보세요.</h2>'
+        '<h2>우리 업종에 맞는 홈페이지를 상담해보세요.</h2>'
         '<p>제공 서비스와 방문 가능 지역을 알려주시면 필요한 홈페이지 구성을 함께 살펴보겠습니다.</p></div>'
         + illustration("mobile-contact.webp", "모바일에서 홈페이지와 전화 상담 정보를 확인하는 화면 예시", "bottom-illustration") +
         cta("010-2490-0555 전화 상담") +
@@ -234,8 +234,6 @@ def grouped_industry_cards(sectors: list[dict]) -> str:
 
 def related_industry_cards(item: dict, sectors: list[dict]) -> str:
     group = [x for x in sectors if x["cluster"] == item["cluster"] and x["id"] != item["id"]]
-    if len(group) < 3:
-        group.extend(x for x in sectors if x["cluster"] != item["cluster"] and x["id"] != item["id"])
     return (
         '<section class="section related-section"><div class="container narrow">'
         '<span class="eyebrow">함께 살펴볼 업종</span><h2>관련 홈페이지 제작 서비스</h2>'
@@ -267,7 +265,7 @@ def render_home(keywords: dict, pool: dict) -> str:
     body = (
         '<section class="hero"><div class="container hero-grid">'
         '<div class="hero-copy">' + kicker("지역 서비스업 홈페이지 제작") +
-        '<h1>업종별 검색 홈페이지,<br><em>페이지당 월 1,000원부터.</em></h1>'
+        '<h1>업종별 홈페이지 제작,<br><em>페이지당 월 1,000원부터.</em></h1>'
         '<p class="hero-lead">누수탐지, 하수구막힘, 이삿짐, 출장세차까지. '
         '지역 서비스업 사업자를 위한 홈페이지를 제작합니다. 최소 10페이지, 페이지당 월 1,000원으로 월 10,000원부터 이용할 수 있습니다. 업종별 고객 전용 홈페이지 주소 제공과 도메인 운영, 기본 서버 비용을 월 이용료에 포함합니다.</p>'
         '<div class="hero-actions">' + cta("제작 비용 상담하기") +
@@ -306,14 +304,14 @@ def render_home(keywords: dict, pool: dict) -> str:
         '<p>최소 10페이지, 페이지당 월 1,000원으로 월 10,000원부터 이용할 수 있습니다. 기본 홈페이지 제작, 고객 전용 주소 제공, 도메인 운영과 기본 서버 비용이 월 이용료에 포함됩니다. 부가세 적용 여부와 계약기간·수정 범위·주소 이용 조건은 계약 전에 안내합니다.</p>'
         + secondary("가격과 포함 범위", "/guide/pricing/") + '</div>'
         '<div class="price-panel">' + monthly_price_rows(pool, limit=3) +
-        '<p class="price-footnote">최소 10페이지부터 신청할 수 있습니다. 부가세 적용 여부·계약기간·수정 및 주소 이용 조건은 계약 전에 안내합니다.</p></div>'
+        '</div>'
         '</div></section>'
         '<section class="section"><div class="container"><div class="section-heading">'
         '<span class="eyebrow">자주 묻는 질문</span><h2>제작 전에 알아둘 내용</h2></div>'
         '<div class="faq-list">' + sample_faq + '</div><div class="more-link">'
         '<a href="/guide/faq/">질문 전체 보기 ↗</a></div></div></section>'
     )
-    return layout("업종별 검색 홈페이지 페이지당 월 1,000원부터 | 인터피아드",
+    return layout("업종별 홈페이지 제작 페이지당 월 1,000원부터 | 인터피아드",
                   "누수탐지, 하수구막힘, 이삿짐, 출장세차 등 지역서비스업 홈페이지. 페이지당 월 1,000원부터, 고객 전용 주소와 도메인 운영·서버비 포함. 인터피아드 010-2490-0555.",
                   body, active="home")
 
@@ -335,7 +333,7 @@ def render_sector(item: dict, data: dict, pool: dict, sectors: list[dict]) -> st
         '<section class="sub-hero"><div class="container narrow">'
         + kicker("업종별 홈페이지 제작") +
         '<h1>' + escape(data["title"]) + '<br><em>페이지당 월 1,000원부터.</em></h1>'
-        '<p class="sub-lead">' + escape(item["consultingAngle"]) + '. 서비스별 상담 질문과 작업 범위를 고객이 쉽게 확인하도록 홈페이지를 구성합니다.</p>'
+        '<p class="sub-lead">' + escape(item["consultingAngle"]) + '</p>'
         '<p class="small-note">최소 10페이지 월 10,000원부터 · 고객 전용 주소 제공·도메인 운영 및 기본 서버비 포함.</p><div class="hero-actions">'
         + cta(item["label"] + " 홈페이지 상담") + secondary("전체 업종 보기", "/#industries") +
         '</div></div></section>'
@@ -362,16 +360,16 @@ def render_pricing(pool: dict) -> str:
     body = (
         '<section class="sub-hero"><div class="container narrow">' + kicker("제작 비용 안내") +
         '<h1>최소 10페이지, 월 10,000원부터.<br><em>고객 전용 주소·서버비 포함.</em></h1>'
-        '<p class="sub-lead">페이지당 월 1,000원, 최소 10페이지부터 제작합니다. 운영사가 관리하는 업종별 도메인 아래 고객 전용 홈페이지 주소를 제공하며, 기본 홈페이지 제작·도메인 운영·기본 서버 비용을 월 이용료에 포함합니다.</p>'
+        '<p class="sub-lead">페이지당 월 1,000원, 최소 10페이지부터 제작합니다. 업종과 서비스에 맞는 고객 전용 홈페이지 주소를 제공합니다. 기본 홈페이지 제작·도메인 운영·기본 서버 비용을 월 이용료에 포함합니다.</p>'
         '</div></section><section class="section"><div class="container narrow">'
         '<div class="price-panel full"><h2>페이지 수에 따른 월 이용료</h2>' + monthly_price_rows(pool) +
         illustration("managed-domain.webp", "홈페이지 화면 구성 예시", "price-illustration") +
         '<p class="small-note">홈페이지 화면 구성 예시입니다.</p>'
-        '<p class="price-footnote">최소 10페이지부터 신청 가능하며, 월 1,000원/페이지입니다. 부가세 적용 여부·계약기간·수정 범위·홈페이지 주소 이용 조건은 계약 전에 안내합니다.</p></div>'
+        '<p class="price-footnote">표의 금액은 페이지 수에 페이지당 월 1,000원을 적용한 기준 금액입니다.</p></div>'
         '<div class="article-section"><h2>페이지 수는 어떻게 정하나요?</h2>'
         + paragraph("20페이지는 월 20,000원, 30페이지는 월 30,000원입니다. 페이지 수는 사업자가 제공하는 서비스와 실제 영업 지역, 각 페이지에 담을 정보에 맞춰 정합니다. 서비스별 고객 질문과 별도 안내가 필요한 지역을 기준으로 구성을 상담합니다.")
         + '</div><div class="article-section"><h2>주소와 서버 운영은 어떻게 제공되나요?</h2>'
-        + paragraph("기본 상품은 운영사가 관리하는 업종별 도메인 아래에 고객 전용 홈페이지 주소를 제공하는 방식입니다. 도메인 운영과 기본 서버 비용은 월 이용료에 포함됩니다. 주소 이용 기간, 계약 종료 후 처리와 소유권 조건은 계약 전에 안내합니다.")
+        + paragraph("기본 상품은 운영사가 관리하는 도메인 아래에 고객 전용 홈페이지 주소를 제공하는 방식입니다. 도메인 운영과 기본 서버 비용은 월 이용료에 포함됩니다. 주소 이용 기간, 계약 종료 후 처리와 소유권 조건은 계약 전에 안내합니다.")
         + '</div><div class="article-section"><h2>월 이용료에 포함되는 항목</h2>'
         + paragraph(pool["offerVariants"][0]) + paragraph(pool["offerVariants"][1]) +
         '</div><div class="article-section"><h2>계약 전에 확인할 조건</h2>'

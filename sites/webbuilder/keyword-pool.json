@@ -55,7 +55,7 @@
         "{동} 배관 누수 점검",
         "{시} 누수탐지 비용 문의"
       ],
-      "consultingAngle": "누수 위치와 증상, 점검 절차를 안내하는 홈페이지",
+      "consultingAngle": "누수 위치와 증상, 점검 절차를 한눈에 안내합니다.",
       "launch": true,
       "landingPath": "/industry/leak/"
     },
@@ -73,7 +73,7 @@
         "{동} 하수구 역류 점검",
         "{시} 배수관 막힘 상담"
       ],
-      "consultingAngle": "배수 위치와 역류 증상, 상담 정보를 담은 홈페이지",
+      "consultingAngle": "배수 위치와 역류 증상에 따른 상담 정보를 안내합니다.",
       "launch": true,
       "landingPath": "/industry/drain/"
     },
@@ -91,7 +91,7 @@
         "{시} 이삿짐센터 견적",
         "{동} 원룸이사 상담"
       ],
-      "consultingAngle": "이사 유형과 짐 규모, 견적 정보를 안내하는 홈페이지",
+      "consultingAngle": "이사 유형과 짐 규모, 견적에 필요한 정보를 안내합니다.",
       "launch": true,
       "landingPath": "/industry/moving/"
     },
@@ -109,7 +109,7 @@
         "{시} 소형화물 견적",
         "{동} 1톤 이하 운송 문의"
       ],
-      "consultingAngle": "적재 조건과 운송 거리, 비용 문의를 안내하는 홈페이지",
+      "consultingAngle": "적재 조건과 운송 거리, 상하차 정보를 안내합니다.",
       "launch": true,
       "landingPath": "/industry/small-freight/"
     },
@@ -127,7 +127,7 @@
         "{시} 방문세차 가격 문의",
         "{동} 정기출장세차 상담"
       ],
-      "consultingAngle": "차종과 주차 환경, 예약 방법을 안내하는 홈페이지",
+      "consultingAngle": "차종과 주차 환경, 방문 예약 방법을 안내합니다.",
       "launch": true,
       "landingPath": "/industry/mobile-carwash/"
     },
@@ -145,7 +145,7 @@
         "{시} 통돌이 세탁기 청소",
         "{동} 드럼세탁기 분해청소 문의"
       ],
-      "consultingAngle": "세탁기 유형과 청소 범위, 예약 정보를 안내하는 홈페이지",
+      "consultingAngle": "세탁기 유형과 분해 청소 범위, 예약 정보를 안내합니다.",
       "launch": true,
       "landingPath": "/industry/washer-clean/"
     },
@@ -163,7 +163,7 @@
         "{시} 건조기 내부 청소",
         "{동} 건조기 점검 상담"
       ],
-      "consultingAngle": "건조기 모델과 청소 범위, 상담 정보를 안내하는 홈페이지",
+      "consultingAngle": "건조기 모델과 내부 청소 범위, 방문 정보를 안내합니다.",
       "launch": true,
       "landingPath": "/industry/dryer-clean/"
     },
@@ -181,7 +181,7 @@
         "{시} 공실청소 견적",
         "{동} 빈집 정리 청소 상담"
       ],
-      "consultingAngle": "공실 상태와 청소 범위, 잔여 물품 처리 정보를 안내하는 홈페이지",
+      "consultingAngle": "공실 상태와 청소 범위, 잔여 물품 처리 정보를 안내합니다.",
       "launch": true,
       "landingPath": "/industry/vacant-clean/"
     },
@@ -199,7 +199,7 @@
         "{시} 사무실 정기청소 견적",
         "{동} 야간 사무실 청소 상담"
       ],
-      "consultingAngle": "청소 주기와 공간 범위, 출입 조건을 안내하는 홈페이지",
+      "consultingAngle": "청소 주기와 공간 범위, 출입 조건을 안내합니다.",
       "launch": true,
       "landingPath": "/industry/office-clean/"
     },
@@ -217,7 +217,7 @@
         "{시} 출근전 출장세차",
         "{동} 새벽 방문세차 문의"
       ],
-      "consultingAngle": "새벽 운영 시간과 주차 조건, 예약 정보를 안내하는 홈페이지",
+      "consultingAngle": "새벽 운영 시간과 주차 조건, 예약 정보를 안내합니다.",
       "launch": true,
       "landingPath": "/industry/dawn-carwash/"
     },
@@ -234,7 +234,7 @@
         "{시} 방수공사 비용 문의",
         "{동} 방수공사 상담"
       ],
-      "consultingAngle": "시공 부위와 공정, 일정 상담을 안내하는 홈페이지",
+      "consultingAngle": "시공 부위와 방수 공정, 작업 일정 정보를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -252,7 +252,7 @@
         "{시} 변기막힘 비용 문의",
         "{동} 변기막힘 상담"
       ],
-      "consultingAngle": "변기 종류와 막힘 증상, 점검 절차를 안내하는 홈페이지",
+      "consultingAngle": "변기 종류와 막힘 증상, 점검 절차를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -270,7 +270,7 @@
         "{시} 싱크대막힘 비용 문의",
         "{동} 싱크대막힘 상담"
       ],
-      "consultingAngle": "싱크대 배수 상태와 설비 구조, 상담 정보를 안내하는 홈페이지",
+      "consultingAngle": "싱크대 배수 상태와 설비 구조, 상담 정보를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -288,7 +288,7 @@
         "{시} 배관수리 비용 문의",
         "{동} 배관수리 상담"
       ],
-      "consultingAngle": "배관 종류와 보수 범위, 견적 절차를 안내하는 홈페이지",
+      "consultingAngle": "배관 종류와 보수 범위, 견적 절차를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -306,7 +306,7 @@
         "{시} 에어컨청소 비용 문의",
         "{동} 에어컨청소 상담"
       ],
-      "consultingAngle": "에어컨 형태와 청소 범위, 예약 정보를 안내하는 홈페이지",
+      "consultingAngle": "에어컨 형태와 청소 범위, 예약 정보를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -324,7 +324,7 @@
         "{시} 이사청소 비용 문의",
         "{동} 이사청소 상담"
       ],
-      "consultingAngle": "퇴실·입주 일정과 청소 범위, 견적 정보를 안내하는 홈페이지",
+      "consultingAngle": "퇴실·입주 일정과 공간별 청소 범위를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -341,7 +341,7 @@
         "{시} 입주청소 비용 문의",
         "{동} 입주청소 상담"
       ],
-      "consultingAngle": "입주 일정과 주거 형태, 청소 범위를 안내하는 홈페이지",
+      "consultingAngle": "입주 일정과 주거 형태에 맞는 청소 범위를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -359,7 +359,7 @@
         "{시} 건물청소 비용 문의",
         "{동} 건물청소 상담"
       ],
-      "consultingAngle": "공용 공간과 정기 청소 주기, 관리 정보를 안내하는 홈페이지",
+      "consultingAngle": "공용 공간과 정기 청소 주기, 관리 범위를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -377,7 +377,7 @@
         "{시} 유리창청소 비용 문의",
         "{동} 유리창청소 상담"
       ],
-      "consultingAngle": "내창·외창 구분과 층수, 작업 범위를 안내하는 홈페이지",
+      "consultingAngle": "내창·외창 구분과 층수, 작업 범위를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -394,7 +394,7 @@
         "{시} 매트리스청소 비용 문의",
         "{동} 매트리스청소 상담"
       ],
-      "consultingAngle": "매트리스 소재와 세척 방식, 건조 조건을 안내하는 홈페이지",
+      "consultingAngle": "매트리스 소재와 세척 방식, 건조 조건을 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -411,7 +411,7 @@
         "{시} 자동차실내크리닝 비용 문의",
         "{동} 자동차실내크리닝 상담"
       ],
-      "consultingAngle": "차종과 실내 소재, 오염 유형별 작업 범위를 안내하는 홈페이지",
+      "consultingAngle": "차종과 실내 소재, 오염 유형별 작업 범위를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -429,7 +429,7 @@
         "{시} 소형이사 비용 문의",
         "{동} 소형이사 상담"
       ],
-      "consultingAngle": "짐 종류와 차량·인력, 포장 범위를 안내하는 홈페이지",
+      "consultingAngle": "짐 종류와 차량·인력, 포장 범위를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -447,7 +447,7 @@
         "{시} 1톤용달 비용 문의",
         "{동} 1톤용달 상담"
       ],
-      "consultingAngle": "차량 적재 조건과 운송 범위, 상하차 지원을 안내하는 홈페이지",
+      "consultingAngle": "차량 적재 조건과 운송 범위, 상하차 지원을 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -465,7 +465,7 @@
         "{시} 퀵서비스 비용 문의",
         "{동} 퀵서비스 상담"
       ],
-      "consultingAngle": "운송 수단과 배차, 인수인계 절차를 안내하는 홈페이지",
+      "consultingAngle": "운송 수단과 배차, 인수인계 절차를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-a.json"
@@ -483,7 +483,7 @@
         "{시} 가구조립 비용 문의",
         "{동} 가구조립 상담"
       ],
-      "consultingAngle": "가구 종류와 조립 범위, 설치 조건을 안내하는 홈페이지",
+      "consultingAngle": "가구 종류와 조립 범위, 설치 조건을 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -501,7 +501,7 @@
         "{시} 도어락설치 비용 문의",
         "{동} 도어락설치 상담"
       ],
-      "consultingAngle": "문 종류와 도어락 호환성, 설치 범위를 안내하는 홈페이지",
+      "consultingAngle": "문 종류와 도어락 호환성, 설치 범위를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -518,7 +518,7 @@
         "{시} 방충망교체 비용 문의",
         "{동} 방충망교체 상담"
       ],
-      "consultingAngle": "망 종류와 창틀 상태, 교체 범위를 안내하는 홈페이지",
+      "consultingAngle": "망 종류와 창틀 상태, 교체 범위를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -536,7 +536,7 @@
         "{시} 스카이차 비용 문의",
         "{동} 스카이차 상담"
       ],
-      "consultingAngle": "차량 제원과 작업 높이, 현장 조건을 안내하는 홈페이지",
+      "consultingAngle": "차량 제원과 작업 높이, 현장 조건을 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -554,7 +554,7 @@
         "{시} 간판설치 비용 문의",
         "{동} 간판설치 상담"
       ],
-      "consultingAngle": "간판 유형과 제작·설치 범위, 상담 정보를 안내하는 홈페이지",
+      "consultingAngle": "간판 유형과 제작·설치 범위, 상담 정보를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -572,7 +572,7 @@
         "{시} 폐기물수거 비용 문의",
         "{동} 폐기물수거 상담"
       ],
-      "consultingAngle": "수거 품목과 반출 조건, 처리 절차를 안내하는 홈페이지",
+      "consultingAngle": "수거 품목과 반출 조건, 처리 절차를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -589,7 +589,7 @@
         "{시} 소형철거 비용 문의",
         "{동} 소형철거 상담"
       ],
-      "consultingAngle": "철거 공종과 현장 조건, 안전 절차를 안내하는 홈페이지",
+      "consultingAngle": "철거 공종과 현장 조건, 안전 절차를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -606,7 +606,7 @@
         "{시} 방역소독 비용 문의",
         "{동} 방역소독 상담"
       ],
-      "consultingAngle": "해충 종류와 방제 범위, 약제 안전 정보를 안내하는 홈페이지",
+      "consultingAngle": "해충 종류와 방제 범위, 약제 안전 정보를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -623,7 +623,7 @@
         "{시} 욕실리모델링 비용 문의",
         "{동} 욕실리모델링 상담"
       ],
-      "consultingAngle": "욕실 공사 범위와 자재, 공정 정보를 안내하는 홈페이지",
+      "consultingAngle": "욕실 공사 범위와 자재, 공정 정보를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -640,7 +640,7 @@
         "{시} 보일러수리 비용 문의",
         "{동} 보일러수리 상담"
       ],
-      "consultingAngle": "보일러 모델과 증상, 점검·수리 범위를 안내하는 홈페이지",
+      "consultingAngle": "보일러 모델과 증상, 점검·수리 범위를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -657,7 +657,7 @@
         "{시} 이삿짐보관 비용 문의",
         "{동} 이삿짐보관 상담"
       ],
-      "consultingAngle": "보관 기간과 물품 조건, 입출고 절차를 안내하는 홈페이지",
+      "consultingAngle": "보관 기간과 물품 조건, 입출고 절차를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -674,7 +674,7 @@
         "{시} 바닥청소 비용 문의",
         "{동} 바닥청소 상담"
       ],
-      "consultingAngle": "바닥 재질과 세척·코팅 범위, 작업 조건을 안내하는 홈페이지",
+      "consultingAngle": "바닥 재질과 세척·코팅 범위, 작업 조건을 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -691,7 +691,7 @@
         "{시} 타일청소 비용 문의",
         "{동} 타일청소 상담"
       ],
-      "consultingAngle": "타일 재질과 오염 유형, 청소·줄눈 관리 정보를 안내하는 홈페이지",
+      "consultingAngle": "타일 재질과 오염 유형, 청소·줄눈 관리 정보를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
@@ -708,7 +708,7 @@
         "{시} 저수조청소 비용 문의",
         "{동} 저수조청소 상담"
       ],
-      "consultingAngle": "저수조 용량과 급수 조건, 위생 관리 절차를 안내하는 홈페이지",
+      "consultingAngle": "저수조 용량과 급수 조건, 위생 관리 절차를 안내합니다.",
       "launch": true,
       "landingPath": null,
       "contentLedger": "industry-expansion-b.json"
