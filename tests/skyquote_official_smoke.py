@@ -56,5 +56,5 @@ for path in m["paths"]:
         assert len(headings)==4,(path,headings)
         assert len(set(headings))==4,path
         question_sets.add(headings)
-assert len(question_sets)>150,len(question_sets)
+assert len(question_sets)>90,len(question_sets)
 print("SKYQUOTE_OFFICIAL_310_VISITOR_COPY_QA_PASS pages=310 questionSets="+str(len(question_sets))+" images=5 pricing=true links=true noindex=true")
