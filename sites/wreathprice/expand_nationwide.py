@@ -165,7 +165,7 @@ def build():
     for area in source['entries']:
         href=route_by_code[area['code']]
         nav_rows.append('<li><a href="'+escape(href)+'">'+escape(area['fullName'])+'</a></li>')
-    nav_body='<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>전국 화환 가격 지역명 안내 | 알뜰화환</title><link rel="stylesheet" href="/assets/site.css"></head><body><header><div class="wrap"><a href="/">알뜰화환</a></div></header><main class="wrap"><section><h1>전국 화환 가격 지역명 찾아보기</h1><p>지역명은 2026-10-22에 확보한 상위 법정동 코드 자료에서 확인했습니다. 전국 배송 가능 지역을 뜻하지 않으며, 실제 배송 가능 여부와 추가금은 주문 전 판매처 상담으로 확인하세요.</p><p>근조·축하 상품 기준 가격은 지역 배송비나 리본 옵션 비용을 포함한다고 확정할 수 없습니다.</p><ul>'+''.join(nav_rows)+'</ul></section></main></body></html>'
+    nav_body='<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>전국 화환 가격 지역명 안내 | 알뜰화환</title><meta name="description" content="2026-10-22에 확보한 법정동 코드 기준 전국 상위 행정구역명 284개 안내. 근조·축하 화환의 실제 배송 가능 여부와 추가금은 판매처에 확인하세요."><link rel="stylesheet" href="/assets/site.css"></head><body><header><div class="wrap"><a href="/">알뜰화환</a></div></header><main class="wrap"><section><h1>전국 화환 가격 지역명 찾아보기</h1><p>지역명은 2026-10-22에 확보한 상위 법정동 코드 자료에서 확인했습니다. 전국 배송 가능 지역을 뜻하지 않으며, 실제 배송 가능 여부와 추가금은 주문 전 판매처 상담으로 확인하세요.</p><p>근조·축하 상품 기준 가격은 지역 배송비나 리본 옵션 비용을 포함한다고 확정할 수 없습니다.</p><ul>'+''.join(nav_rows)+'</ul></section></main></body></html>'
     (OUT/'regions').mkdir(exist_ok=True)
     (OUT/'regions/index.html').write_text(nav_body,encoding='utf-8')
     home=OUT/'ansan/index.html'
