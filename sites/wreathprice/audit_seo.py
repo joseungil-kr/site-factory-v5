@@ -104,7 +104,7 @@ def audit(archive):
       "sitemapPolicy":"do not publish an indexable sitemap for noindex site",
       "rssPolicy":"do not invent a dated article feed for static geographic price templates",
       "canonicalPolicy":"deliberately absent while noindex",
-      "passedGraphAudit":len(unreachable)==0 and len(broken_local)==0 and len(image_missing)==0 and len(noindex_missing)==0
+      "passedGraphAudit":len(unreachable)==0 and len(broken_local)==0 and len(image_missing)==0 and len(noindex_missing)==0 and len(desc_missing)==0 and len(missing_titles)==0
     }
     report=BASE/"SEO_AUDIT_RESULT.json"
     report.write_text(json.dumps(status,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
