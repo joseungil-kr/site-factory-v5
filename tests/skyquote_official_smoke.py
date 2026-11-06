@@ -24,8 +24,10 @@ for path in m["paths"]:
     raw=p.read_text(encoding="utf-8")
     assert 'name="robots" content="noindex,nofollow"' in raw,path
     assert raw.count("<img ")==5,path
-    assert "업계 최저가를 주장하지 않습니다" in raw or path=="national/index.html",path
-    for bad in ("업계 최저가 보장","무조건 최저가","전국 출동 가능합니다","즉시 배차 보장","업계 최저가를 주장하지 않습니다","차량 톤수만으로 안전조건을 단정하지 마세요","현장정보가 아닙니다","가격 보장 목록이 아닙니다","실제 현장의 증거가 아닙니다"):
+    assert "영진스카이 공개 이용요금" in raw or path=="national/index.html",path
+    assert "30만 원" in raw or path=="national/index.html",path
+    assert "AI 생성 설명 이미지" not in raw and "<figcaption>" not in raw,path
+    for bad in ("업계 최저가 보장","무조건 최저가","전국 출동 가능합니다","즉시 배차 보장","업계 최저가를 주장하지 않습니다","차량 톤수만으로 안전조건을 단정하지 마세요","현장정보가 아닙니다","가격 보장 목록이 아닙니다","실제 현장의 증거가 아닙니다","실제 시공·장비 보유 증명이 아닙니다","실수를 피할 수 있습니다","단정하지 마세요","기재합니다"):
         assert bad not in raw,(path,bad)
     for a in manifest["assets"]:assert Path(a["path"]).name in raw,path
     assert 'href="//' not in raw,(path,'scheme-relative URL is not allowed')
