@@ -93,7 +93,7 @@ jobs:
           server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
           threading.Thread(target=server.serve_forever,daemon=True).start()
           origin='http://127.0.0.1:'+str(server.server_port)
-          routes=['/','/danwon.html','/gojan.html','/ansan/danwon-02.html','/national/index.html','/national/kr11.html']
+          routes=['/','/danwon.html','/gojan.html','/ansan/danwon-02.html','/national/index.html','/national/1150000000.html']
           Path('reports/skyquote-copy').mkdir(parents=True,exist_ok=True)
           with sync_playwright() as p:
               browser=p.chromium.launch(headless=True)
