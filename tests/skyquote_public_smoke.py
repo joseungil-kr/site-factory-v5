@@ -42,6 +42,7 @@ def main():
         assert "작업 지점까지 높이(미터)" in content,filename
         assert content.count('loading="eager"')==1 and content.count('loading="lazy"')==4,filename
         assert 'href="//' not in content,filename
+        assert 'application/rss+xml' in content,filename
         if filename!="index.html":assert "naver-site-verification" not in content,filename
         for bad in ("업계 최저가를 주장하지 않습니다","차량 톤수만으로 작업 가능성을 보장하지 않습니다","실수를 피할 수 있습니다","기재합니다","단정하지 마세요"):
             assert bad not in content,(filename,bad)
