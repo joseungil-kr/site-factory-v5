@@ -69,11 +69,11 @@ def main():
     for record in d['entries']:
         children=sorted(by_parent.get(record['code'],[]),key=lambda x:x['fullName'])
         links_for_children=''.join('<li><a href="/national/'+escape(ch['code'])+'.html">'+escape(ch['fullName'])+' — 견적 확인 질문</a></li>' for ch in children)
-        code_note='<section><h2>공식 지역 코드와 연결</h2><p>2026년 10월 22일 확보한 법정동 코드 원장에 존재하는 지역입니다. 코드 '+escape(record['code'])+'는 행정구역 식별용이며 장비 출동·가격이나 영업지점을 증명하지 않습니다.</p>'
+        code_note='<section><h2>다른 지역의 견적 준비 안내</h2><p>작업 주소를 선택하고 높이·수평거리·예상 작업시간을 함께 준비하시면 견적 상담에 도움이 됩니다.</p>'
         if record.get('parent'):
             code_note+='<p><a href="/national/'+escape(record['parent'])+'.html">상위 지역 안내</a></p>'
         if children:
-            code_note+='<h3>하위 지역의 비교 질문</h3><ul>'+links_for_children+'</ul>'
+            code_note+='<h3>지역별 견적 안내</h3><ul>'+links_for_children+'</ul>'
         code_note+='<p><a href="/national/index.html">전국 행정구역 목록</a></p></section>'
         target=DEST/'national'/(record['code']+'.html')
         html=target.read_text(encoding='utf-8')
@@ -81,7 +81,7 @@ def main():
         target.write_text(html,encoding='utf-8')
     root=DEST/'index.html'
     homepage=root.read_text(encoding='utf-8')
-    homepage=homepage.replace('</main>','<section><h2>전국 지역명으로 견적 준비하기</h2><p>공식 행정구역명 안내이며 전국 출동 가능을 뜻하지 않습니다.</p><a href="/national/index.html">전국 행정구역별 견적 비교 질문 보기</a></section></main>',1)
+    homepage=homepage.replace('</main>','<section><h2>전국 지역명으로 견적 준비하기</h2><p>작업하실 지역을 선택해 주세요. 현장 주소와 작업 높이, 이용 시간을 알려주시면 견적 상담을 시작할 수 있습니다.</p><a href="/national/index.html">전국 행정구역별 견적 비교 질문 보기</a></section></main>',1)
     root.write_text(homepage,encoding='utf-8')
     # Group index for information discovery only; do not mislabel as service areas.
     links=''.join('<li><a href="'+x['slug']+'">'+escape(x['region'])+' — 견적 준비 안내</a></li>' for x in indices.values() if x['level']==1)
