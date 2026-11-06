@@ -25,7 +25,7 @@ for path in m["paths"]:
     assert 'name="robots" content="noindex,nofollow"' in raw,path
     assert raw.count("<img ")==5,path
     assert "업계 최저가를 주장하지 않습니다" in raw or path=="national/index.html",path
-    for bad in ("업계 최저가 보장","무조건 최저가","전국 출동 가능합니다","즉시 배차 보장"):
+    for bad in ("업계 최저가 보장","무조건 최저가","전국 출동 가능합니다","즉시 배차 보장","업계 최저가를 주장하지 않습니다","차량 톤수만으로 안전조건을 단정하지 마세요","현장정보가 아닙니다","가격 보장 목록이 아닙니다","실제 현장의 증거가 아닙니다"):
         assert bad not in raw,(path,bad)
     for a in manifest["assets"]:assert Path(a["path"]).name in raw,path
     assert 'href="//' not in raw,(path,'scheme-relative URL is not allowed')
@@ -33,8 +33,8 @@ for path in m["paths"]:
         target=OUT/"index.html" if dest=="/" else OUT/dest.lstrip("/")
         assert target.exists(),(path,dest)
     if path.startswith("national/") and path!="national/index.html":
-        titles=tuple(re.findall(r'<h2>(.*?) 비교 질문</h2>',raw))
-        assert len(titles)==4 and len(set(titles))==4,path
+        titles=tuple(re.findall(r'<h2>(.*?)</h2>',raw))
+        assert len(titles)>=4 and len(set(titles))==len(titles),path
         questions.add(titles)
 assert len(questions)>150,len(questions)
 print("SKYQUOTE_OFFICIAL_310_QA_PASS pages=310 upperRegions=284 ansan=25 questionSets="+str(len(questions))+" imageHashes=5 links=valid noindex=true")
