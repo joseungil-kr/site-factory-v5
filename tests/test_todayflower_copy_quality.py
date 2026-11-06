@@ -260,5 +260,30 @@ class TodayflowerWholeCopyAudit(unittest.TestCase):
         self.assertEqual(len(self.site_data["regions"]["regions"]), 5070)
 
 
+    def test_visitor_copy_has_no_defensive_or_internal_status_language(self):
+        banned = (
+            "보장하지 않습니다", "약속하지 않습니다", "가정하지 않습니다",
+            "가정하지 마세요", "단정하지 않습니다", "당일배송을 확정하는 화면이 아닙니다",
+            "AI 연출 이미지", "AI 생성 연출 이미지", "판매처 표시가 확인",
+            "확인된 실제 꽃 상품", "실제 상품 제작·배송 증빙이 아닙니다",
+        )
+        for page in self.pages:
+            text = " ".join([
+                page["title"], page["intro"], page["sectionLead"],
+                *[s["heading"] + " " + s["paragraph"] for s in page["sections"]],
+                *[f["q"] + " " + f["a"] for f in page["faq"]],
+            ])
+            for phrase in banned:
+                self.assertNotIn(phrase, text, (page["number"], phrase))
+
+    def test_each_pilot_page_keeps_a_clear_purchase_path(self):
+        for page in self.pages:
+            text = " ".join([page["intro"], page["sectionLead"],
+                             *[s["paragraph"] for s in page["sections"]],
+                             *[f["a"] for f in page["faq"]]])
+            self.assertTrue(page["productSkus"], page["number"])
+            self.assertIn("상품번호", text, page["number"])
+            self.assertTrue(any(word in text for word in ("주소", "수령", "배송")), page["number"])
+
 if __name__ == "__main__":
     unittest.main()
