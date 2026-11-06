@@ -51,11 +51,10 @@ def main():
             intro='작업 주소와 희망 시간을 알려주세요. 작업 지점까지 높이와 차량을 세울 자리, 예상 작업시간을 함께 준비하면 견적 상담이 수월합니다.'
             special='예상 작업시간과 한 장소·여러 장소 작업 여부를 알려주세요. 반나절 4시간·하루 8시간 공개 요금과 초과·대기 비용을 함께 확인할 수 있습니다.'
         html=base.render(slug,loc,intro)
-        blocks=['<section><h2>견적 상담에 필요한 정보</h2><p>'+escape(special)+'</p></section>']
+        blocks=[]
         for heading,body in chosen:
             blocks.append('<section><h2>'+escape(heading)+'</h2><p>'+escape(body)+'</p></section>')
-        blocks.append('<section><h2>견적 문의 예시</h2><p>'+escape(
-          '작업 예정 주소와 날짜, 작업 지점 높이와 차량 정차 위치에서의 수평거리, 탑승 인원과 자재 무게, 예상 작업시간을 알려주세요. 공개 단가의 4시간·8시간 기준과 부가세, 야간·휴일·원거리 추가 비용을 함께 확인할 수 있습니다.')+'</p></section>')
+
         html=html.replace('<section><h2>현장 조건을 알려주시면 견적을 안내해 드립니다</h2>',''.join(blocks)+'<section><h2>현장 조건을 알려주시면 견적을 안내해 드립니다</h2>',1)
         # Images remain original 5, links point to already verified operator.
         p=DEST/slug;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(html,encoding='utf-8')
@@ -69,7 +68,7 @@ def main():
     for record in d['entries']:
         children=sorted(by_parent.get(record['code'],[]),key=lambda x:x['fullName'])
         links_for_children=''.join('<li><a href="/national/'+escape(ch['code'])+'.html">'+escape(ch['fullName'])+' — 견적 확인 질문</a></li>' for ch in children)
-        code_note='<section><h2>다른 지역의 견적 준비 안내</h2><p>작업 주소를 선택하고 높이·수평거리·예상 작업시간을 함께 준비하시면 견적 상담에 도움이 됩니다.</p>'
+        code_note='<section><h2>관련 지역 안내</h2>'
         if record.get('parent'):
             code_note+='<p><a href="/national/'+escape(record['parent'])+'.html">상위 지역 안내</a></p>'
         if children:
@@ -81,7 +80,7 @@ def main():
         target.write_text(html,encoding='utf-8')
     root=DEST/'index.html'
     homepage=root.read_text(encoding='utf-8')
-    homepage=homepage.replace('</main>','<section><h2>전국 지역명으로 견적 준비하기</h2><p>작업하실 지역을 선택해 주세요. 현장 주소와 작업 높이, 이용 시간을 알려주시면 견적 상담을 시작할 수 있습니다.</p><a href="/national/index.html">전국 행정구역별 견적 비교 질문 보기</a></section></main>',1)
+    homepage=homepage.replace('</main>','<section><h2>전국 지역명으로 견적 준비하기</h2><p><a href="/national/index.html">다른 지역의 스카이차 견적 안내 보기</a></p></section></main>',1)
     root.write_text(homepage,encoding='utf-8')
     # Group index for information discovery only; do not mislabel as service areas.
     links=''.join('<li><a href="'+x['slug']+'">'+escape(x['region'])+' — 견적 준비 안내</a></li>' for x in indices.values() if x['level']==1)
