@@ -60,7 +60,7 @@ def main():
     generated.append(district_page)
     # Add navigable links to all original sample and newly generated pages.
     links=''.join('<li><a href="/'+escape(x['slug'])+'">안산시 '+escape(x['district']+' '+x['dong'])+' 스카이차 견적 비교 안내</a></li>' for x in allow)
-    link_section='<section><h2>안산시 행정동 견적 비교 안내</h2><p>기존 사업자 지역 안내와 서울·경기 원장 두 자료에 함께 나타난 22개 행정동만 수록했습니다. 상담 가능 여부·가격은 현장별 확인이 필요합니다.</p><ul>'+links+'</ul><p><a href="/danwon.html">단원구 비교 안내</a> · <a href="/sangnok.html">상록구 비교 안내</a></p></section>'
+    link_section='<section><h2>안산시 행정동 견적 비교 안내</h2><p>안산의 지역별 안내를 모았습니다. 작업할 곳을 선택하고 현장 주소·작업 높이·예상 시간을 알려주시면 견적 상담에 도움이 됩니다.</p><ul>'+links+'</ul><p><a href="/danwon.html">단원구 비교 안내</a> · <a href="/sangnok.html">상록구 비교 안내</a></p></section>'
     for path in ('index.html','danwon.html','gojan.html',district_page):
         target=OUT/path
         text=target.read_text(encoding='utf-8')
