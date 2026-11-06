@@ -1,7 +1,8 @@
 """Skyquote isolated three-region site; real .webp binaries required before deployment."""
 from pathlib import Path
 from html import escape
-import json,hashlib,shutil
+import json,hashlib,shutil,sys
+sys.path.insert(0,str(Path(__file__).resolve().parent))
 from skyquote_copy import hero,quote_sections,faq,contact,footer
 ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/'sites/skyquote'
