@@ -181,7 +181,7 @@ def _body(site,page,pages,products,links):
     snippet+='<p class="tf-coverage">상품번호와 수령 주소, 희망 날짜를 알려주시면 상품별 배송 일정과 추가 비용을 안내해 드립니다.</p></section>'
     snippet+='<section class="tf-section"><header class="tf-section-head"><h2>꽃배달 주문에 필요한 정보</h2></header>'
     snippet+='<div class="tf-check-grid"><figure class="tf-figure"><div class="tf-pack-photo">'
-    snippet+=_img(site["imagePool"][4],"꽃 선물 포장 과정을 표현한 AI 연출 이미지")
+    snippet+=_img(site["imagePool"][4],"꽃다발 포장을 준비하는 모습")
     snippet+='</div></figure>'
     snippet+='<ol class="tf-check">'
     for title,paragraph in (
