@@ -1,7 +1,7 @@
 """Verify all 310 official-code Skyquote pages for visitor-first copy and preserved provenance."""
 from pathlib import Path
 from html.parser import HTMLParser
-import json,hashlib,re
+import json,hashlib,re,importlib.util
 ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/"dist/skyquote-official-preview"
 m=json.loads((OUT/"national-manifest.json").read_text())
 regions=json.loads((ROOT/"sites/skyquote/official-upper-regions-20261022.json").read_text())
@@ -26,6 +26,8 @@ class Visible(HTMLParser):
         if t in ('style','script','head'):self.skip=max(0,self.skip-1)
     def handle_data(self,d):
         if not self.skip:self.parts.append(d)
+spec=importlib.util.spec_from_file_location("skyquote_official_generator",ROOT/"scripts"/"build_skyquote_official.py")
+generator=importlib.util.module_from_spec(spec);spec.loader.exec_module(generator)
 question_sets=set()
 for path in m["paths"]:
     raw=(OUT/path).read_text(encoding="utf-8")
@@ -49,7 +51,6 @@ for path in m["paths"]:
         assert "작업 지점까지 높이" in text and "작업대에 오를 인원" in text
         assert "공개 이용요금" in text
         import hashlib
-        from scripts import build_skyquote_official as generator
         key=hashlib.sha256(path.split('/')[-1].removesuffix('.html').encode()).digest()
         expected=[]
         for digit in key:
