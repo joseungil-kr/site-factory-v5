@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "updatedOn": "2026-10-30",
+  "purpose": "Provider acquires and operates industry-specific domains; customer websites receive individual subdomains under an appropriate verified provider-controlled parent.",
+  "offer": {
+    "minPages": 10,
+    "monthlyKRWPerPage": 1000,
+    "minMonthlyKRW": 10000,
+    "websiteCreationIncluded": true,
+    "domainCostsIncluded": true,
+    "hostingIncluded": true,
+    "customerApexDomainPurchasedIndividually": false
+  },
+  "domainInventory": [
+    {
+      "root": "nalmada.net",
+      "category": "general",
+      "status": "operator_owned_per_user_statement",
+      "ownershipProof": "requires live read-only registry/zone check before binding",
+      "example": "leak119.nalmada.net",
+      "exampleType": "illustrative_customer_host_only",
+      "configuredOrBound": false
+    },
+    {
+      "root": "leak119.net",
+      "category": "누수탐지·설비",
+      "status": "candidate_example_not_purchased_or_verified",
+      "ownershipProof": "unverified",
+      "example": "{customer-slug}.leak119.net",
+      "exampleType": "illustrative_wildcard_pattern_only",
+      "configuredOrBound": false
+    },
+    {
+      "root": "skycar24hr.com",
+      "category": "스카이차·고소작업",
+      "status": "candidate_example_not_purchased_or_verified",
+      "ownershipProof": "unverified",
+      "example": "{customer-slug}.skycar24hr.com",
+      "exampleType": "illustrative_wildcard_pattern_only",
+      "configuredOrBound": false
+    }
+  ],
+  "expansionPolicy": {
+    "rootDomains": "add as many independently verified provider-managed industry domains as operations approve; no fixed restriction to nalmada.net",
+    "procurement": "Domain selection, pricing, purchase and ownership authorization are separate operations; never infer purchase from a sample root.",
+    "provisionedCustomerHost": "unique customer slug + verified parent root; explicit reservation, route+DNS+certificate+origin readback required",
+    "perIndustryExamples": [
+      "*.leak119.net",
+      "*.skycar24hr.com"
+    ],
+    "noUnverifiedPromises": [
+      "Do not show sample host as live",
+      "Do not imply customer acquires the apex domain",
+      "Do not promise arbitrary wildcard SSL before cert/route verified",
+      "Do not mark DNS attach from git config alone"
+    ],
+    "seoAndPrivacy": "Store distinct customer fact sheets; verify business name/service regions. Hostname must not spoof unrelated businesses."
+  },
+  "cloudflare": {
+    "wildcardDNSPossible": true,
+    "workersCustomDomainWildcardSupported": false,
+    "workerRouteWildcardMayBeUsed": true,
+    "wildcardRouteNeedsProxiedDNS": true,
+    "dispatcherIfScaleJustifies": "Optional hostname-aware route+worker dispatch; not implemented or deployed",
+    "references": [
+      "https://developers.cloudflare.com/dns/manage-dns-records/reference/wildcard-dns-records/",
+      "https://developers.cloudflare.com/workers/configuration/routing/custom-domains/",
+      "https://developers.cloudflare.com/workers/configuration/routing/routes/",
+      "https://developers.cloudflare.com/cloudflare-for-platforms/workers-for-platforms/configuration/hostname-routing/"
+    ]
+  },
+  "publication": {
+    "sitePreviewNoindex": true,
+    "dnsWriteApproved": false,
+    "domainPurchaseApproved": false,
+    "workerDeploymentApproved": false,
+    "indexNowApproved": false
+  }
+}

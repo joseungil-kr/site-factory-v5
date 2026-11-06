@@ -1,0 +1,248 @@
+{
+  "checked_at": "2026-11-01T03:05:08.850610+00:00",
+  "pages": [
+    {
+      "url": "https://webbuilder.nalmada.net/",
+      "status": 200,
+      "sha256": "732fb3d396800fb2da1f06ac3d4fc7f74b9d74f173cb55a41976952a10b7093f"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/leak/",
+      "status": 200,
+      "sha256": "2645de57e778c81815adeb6017b2f7cebe7f8d425fe0509c594cec02530897ee"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/drain/",
+      "status": 200,
+      "sha256": "a7c4e40618a068f3b402b69860e8a4e75668db20b4272077977fbf2c7e92e577"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/moving/",
+      "status": 200,
+      "sha256": "3131b590d240477cb0a8e88789cacdcd0cf4cf58b6cf66bdc775bab199f95e20"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/small-freight/",
+      "status": 200,
+      "sha256": "d9c6c3442a764dd5b940be388e9c8adf0dc8a110302ccc0c19497653f8e5ec7b"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/mobile-carwash/",
+      "status": 200,
+      "sha256": "fb4d2c5d0d80d27b2394115f6600b6a11ad8887bab0c1b3d1241c693ca71b08c"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/washer-clean/",
+      "status": 200,
+      "sha256": "886e7286d0430e377884e6543a01482267034688d535ee15c61c27dd775f4fe0"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/dryer-clean/",
+      "status": 200,
+      "sha256": "12781911cca9f552b56ca7d535fa72b8beeea0f9e37bc50d1aba5a61651bb9a2"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/vacant-clean/",
+      "status": 200,
+      "sha256": "38bd4e01f24d2889748ae11b27abd7820b7d8599beaae5a6378a251710c5e707"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/office-clean/",
+      "status": 200,
+      "sha256": "6efadbd03d493a96402f36bb5a1f1186fad15dd909be9defa6b0dea7b9fc896d"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/dawn-carwash/",
+      "status": 200,
+      "sha256": "cceccc1e9295686ce464446b346ee58b8a4f8b8ea16028fde1196b564ae2f072"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/waterproof/",
+      "status": 200,
+      "sha256": "73c49443b130676d19591340a0ec0226f40448fe35b13753039ef83f0173edc6"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/toilet/",
+      "status": 200,
+      "sha256": "3a5cf52ee539ac181f5f674bea4ad295ef42dfccaa0dfab124f7dcc718faeb16"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/sink/",
+      "status": 200,
+      "sha256": "8e69f49574d408775d587979c58eda308cd0e7c2e8b0a05ea95404b305dffd26"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/pipe/",
+      "status": 200,
+      "sha256": "15f7d4f3daac9ee2ac51c6c8b72aadde96f7eab1401a55bab90eb5b64a182e82"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/aircon/",
+      "status": 200,
+      "sha256": "9dedb159d1d899f01712e83c80fb860bc8666024d57cd0f933b4631695a6259f"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/move-clean/",
+      "status": 200,
+      "sha256": "cee875b28d684afb711b8934db857a3348bb1ec993add887b6ecc16588418e37"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/newhome-clean/",
+      "status": 200,
+      "sha256": "da9cc4ef8e6b7d37b227017b8c72f527e8adb32fb6e70e0a50532045b1158cfd"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/building-clean/",
+      "status": 200,
+      "sha256": "cc16eae9b75d32271d0f0a2f9c654865558325f16c2b98650d35dea60ae0ec8f"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/glass-clean/",
+      "status": 200,
+      "sha256": "d93a484ef3d1d5cc3270c770223b418bbcb275e58422575245bebf341b70f069"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/mattress-clean/",
+      "status": 200,
+      "sha256": "e034f4da877c8cb9feb476e4d4c957ad48240305b78ca834c65194ce6248a282"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/car-detail/",
+      "status": 200,
+      "sha256": "9befd1fc81dbc06cfb9bd28fd3fd8ac5d1c4e748da88b50422181af43d3f0691"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/small-move/",
+      "status": 200,
+      "sha256": "3eb9da1e1cc80e68ce31fc05198b4fbca743453dd2df4d2f805761b68a1a78fe"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/one-ton/",
+      "status": 200,
+      "sha256": "435f4e86b6fd74730d2fbc4cff514914040477a889bd1d6d71bc8ce7bc59abdc"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/quick/",
+      "status": 200,
+      "sha256": "45a78f94b93dacd113e59631fc56b12ab790d207e4e698570f0b5cdb5efaa9fc"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/furniture/",
+      "status": 200,
+      "sha256": "598d864e7ef9cad0964186cb6008e37f9db0ed954430a26dc990b0b8871e0657"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/doorlock/",
+      "status": 200,
+      "sha256": "73a065ec00abd8fb766b7838d41b2b0f5bfc6e3fa545db8373118bd1b70de31b"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/insect-screen/",
+      "status": 200,
+      "sha256": "efcfeb1205afe4fdff4f38e18f5345e3bcd8b51c32e01468d0ae4e30029e764f"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/skycar/",
+      "status": 200,
+      "sha256": "5ddc54f9bb18b450a1fe23481e9a53f6090cc620bca6323a4c41e8dd3c0ce204"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/sign/",
+      "status": 200,
+      "sha256": "5d8de7577e4036995350508da6ddc34c39a240a0402e1ed29f9167ca5eea4167"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/waste/",
+      "status": 200,
+      "sha256": "75f8b855d58ee014a39c597249659add58d3aeec6ef53d0576c3ba09322b930b"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/demolition/",
+      "status": 200,
+      "sha256": "637b52e0059ad9231895dc9ad0be92ba11ca38fb60fb65970436ffbc693dc7a2"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/pest/",
+      "status": 200,
+      "sha256": "9f0ebc7975d99a9f08c51e2b2b4f08d0d28d7f03acd601f5a7d81c32d6b2fe85"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/bath/",
+      "status": 200,
+      "sha256": "096eb33f915bba60b6e099d2907526cf271254aed25d5d121c4dd8b6cbf958d5"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/boiler/",
+      "status": 200,
+      "sha256": "0e9273b4269a4b7ef75157c836961bf6c4e259fc24ffec2c3e4f48d5f8a3a4b0"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/storage/",
+      "status": 200,
+      "sha256": "dd83d18bb88be4d0e79f22431fb381f95d4397b79dee1902d963cd4239b57456"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/floor/",
+      "status": 200,
+      "sha256": "107489fb940634314ec91ff4852868867beb6b1d9461dfb5067934796db827a5"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/tile/",
+      "status": 200,
+      "sha256": "541fc95163fbc815b96654075260c540e9f88818938092c92f5979bc9dd218f4"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/industry/watertank/",
+      "status": 200,
+      "sha256": "3bbd59246196949980628ab658c96613283085c039f0ae5a1a5faa84a7d49bff"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/guide/pricing/",
+      "status": 200,
+      "sha256": "b743d2254ad4f50b1fe790bdca41ce939c4249332367b5733f69091867d83f85"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/guide/process/",
+      "status": 200,
+      "sha256": "8936ebcc26b8513059c5d3d9b66d1d42eecddf50dbf6ebfaff0192cc7d80dca5"
+    },
+    {
+      "url": "https://webbuilder.nalmada.net/guide/faq/",
+      "status": 200,
+      "sha256": "3e96e177c71fdb6aa47ce7de591e2816f21881adcaead382f459e977c21fa921"
+    }
+  ],
+  "images": [
+    {
+      "name": "industry-services.webp",
+      "bytes": 60906,
+      "sha256": "ec7fb5e1738fb68cada0f2b2c3890a1b0ec82ff7417ba49ac20d31101b8ba007"
+    },
+    {
+      "name": "local-search.webp",
+      "bytes": 35994,
+      "sha256": "f62fb67e7d30e29410c9cc788d00268d9eef76ea6d67b91c9a0d8909705c9f0e"
+    },
+    {
+      "name": "managed-domain.webp",
+      "bytes": 61346,
+      "sha256": "4eec60c601ed4ea340bb06cf2070e7d1f14672d8b41e2160b615388d65f1ba85"
+    },
+    {
+      "name": "mobile-contact.webp",
+      "bytes": 67088,
+      "sha256": "ef2002f7a6c90f10c709454af693032d9145a45be58b4d4379cb764e88cf3daa"
+    },
+    {
+      "name": "webbuilder-hero.webp",
+      "bytes": 126138,
+      "sha256": "aa18c3c917ea8eb4379c28473be63d6c5076b7b1e655ddea8d2988521011ea6a"
+    }
+  ],
+  "sitemap_urls": 42,
+  "public_robots": "Allow",
+  "missing_and_404_status": 404,
+  "preview": "noindex; sitemap404; robotsDisallow",
+  "source": "f7e836c2c5c4c6d482523e92045a3f66b4fce335",
+  "version": "097936ef-00b1-457c-a247-1539a8efab94"
+}
