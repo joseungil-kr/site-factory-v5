@@ -10,7 +10,18 @@
   "region": "전국",
   "theme": "modern",
   "imageLibrary": "todayflower",
-  "imagePool": [],
+  "imagePool": [
+    "hero-florist.webp",
+    "atelier-florist.webp",
+    "moment-blooms.webp",
+    "moment-leaves.webp",
+    "moment-flowers.webp",
+    "gift-bouquet.webp",
+    "opening-plant.webp",
+    "celebration-wreath.webp",
+    "condolence-wreath.webp",
+    "flower-wrapping.webp"
+  ],
   "orderBaseUrl": "https://fwith.co.kr",
   "publishEnabled": false,
   "imageAssetsApproved": false,
@@ -37,7 +48,7 @@
     "enabled": true,
     "regionCount": 5070,
     "regionalScope": "Nationwide 2026-10-22 legal-dong archive, not admin-dong or guaranteed delivery",
-    "editorialImages": 0,
+    "editorialImages": 7,
     "productKinds": [
       "bouquet",
       "plant",
@@ -52,11 +63,11 @@
       "condolence-wreath.webp",
       "flower-wrapping.webp"
     ],
-    "localEditorialImagesPerPage": 0,
-    "generatedEditorialImagesPerPage": 0,
-    "otherLocalEditorialImagesPerPage": 0,
+    "localEditorialImagesPerPage": 7,
+    "generatedEditorialImagesPerPage": 5,
+    "otherLocalEditorialImagesPerPage": 2,
     "imageLibraryFileCount": 10,
-    "responsiveImageLayout": "No local editorial images in the new candidate; existing seller product cards remain unchanged",
+    "responsiveImageLayout": "desktop 3+2, tablet 2, mobile full width",
     "highResolutionImageSize": "1448x1086",
     "pilotPagesPreserved": 3,
     "addedPages": 5037,
@@ -67,7 +78,7 @@
     "deliveryScopeNote": "Nationwide partner delivery is user-reported from V4; no legal-dong same-day service availability independently verified",
     "originalReviewedPages": 33,
     "nationwideLegalDongCount": 5067,
-    "generatedImagesStatus": "archived-in-repository-not-rendered-or-published-by-new-candidate",
+    "generatedImagesStatus": "original image files retained byte-for-byte; source provenance partial; no expanded reuse",
     "imageApprovalStatus": "not-approved-for-new-publication"
   },
   "todayflowerNational": {
