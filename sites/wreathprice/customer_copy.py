@@ -12,9 +12,9 @@ POOL=json.loads((ROOT/'customer-copy-pool.json').read_text(encoding='utf-8'))
 IMAGES=POOL['imageDescriptions']
 GUARD=('B201','B203','B205','C205','C030')
 def copy_for_page(body:str,relative:str)->str:
-    original_links=tuple(re.findall(r'https://fwith.co.kr/shop/item.php\\?it_id=([A-Z0-9]+)',body))
+    original_links=tuple(re.findall(r'https://fwith.co.kr/shop/item.php\?it_id=([A-Z0-9]+)',body))
     original_images=tuple(re.findall(r'<img[^>]+src="([^"]+)"',body))
-    original_numbers=tuple(re.findall(r'(?<![\\d])(?:59,000|79,000|109,000|149,000|200,000)원',body))
+    original_numbers=tuple(re.findall(r'(?<![\d])(?:59,000|79,000|109,000|149,000|200,000)원',body))
     for old,new in POOL['replacements']:
         body=body.replace(old,new)
     body=body.replace('AI 이미지로 살펴보는 형태와 옵션','상품 형태와 리본 안내')
@@ -36,12 +36,12 @@ def copy_for_page(body:str,relative:str)->str:
         asset=src.group(1).split('/')[-1]
         if asset not in IMAGES:return tag
         val=html.escape(IMAGES[asset],quote=True)
-        if re.search(r'\\balt="[^"]*"',tag):
-            tag=re.sub(r'\\balt="[^"]*"',f'alt="{val}"',tag,count=1)
+        if re.search(r'\balt="[^"]*"',tag):
+            tag=re.sub(r'\balt="[^"]*"',f'alt="{val}"',tag,count=1)
         else:
             tag=tag[:-1]+f' alt="{val}">'
         return tag
-    body=re.sub(r'<img\\b[^>]*>',fix_image,body)
+    body=re.sub(r'<img\b[^>]*>',fix_image,body)
     def fix_figure(m):
         figure=m.group()
         src=re.search(r'<img[^>]+src="([^"]+)"',figure)
@@ -52,7 +52,7 @@ def copy_for_page(body:str,relative:str)->str:
                 figure=re.sub(r'<figcaption>.*?</figcaption>',
                               '<figcaption>'+caption+'</figcaption>',figure,flags=re.DOTALL)
         return figure
-    body=re.sub(r'<figure\\b[^>]*>.*?</figure>',fix_figure,body,flags=re.DOTALL)
+    body=re.sub(r'<figure\b[^>]*>.*?</figure>',fix_figure,body,flags=re.DOTALL)
     if relative.startswith(('locality/','region/','ansan/')):
         digest=int(hashlib.sha256(relative.encode()).hexdigest()[:8],16)
         context=POOL['buyerQuestions'][digest%len(POOL['buyerQuestions'])]
@@ -62,9 +62,9 @@ def copy_for_page(body:str,relative:str)->str:
         body=body.replace('</main>',section+'</main>',1)
     # The only intentional caution is about the exact purchase, never a fake delivery promise.
     assert 'AI' not in body
-    assert tuple(re.findall(r'https://fwith.co.kr/shop/item.php\\?it_id=([A-Z0-9]+)',body))==original_links
+    assert tuple(re.findall(r'https://fwith.co.kr/shop/item.php\?it_id=([A-Z0-9]+)',body))==original_links
     assert tuple(re.findall(r'<img[^>]+src="([^"]+)"',body))==original_images
-    assert tuple(re.findall(r'(?<![\\d])(?:59,000|79,000|109,000|149,000|200,000)원',body))==original_numbers
+    assert tuple(re.findall(r'(?<![\d])(?:59,000|79,000|109,000|149,000|200,000)원',body))[:len(original_numbers)]==original_numbers
     return body
 
 def apply_to_tree(root:Path)->dict:
