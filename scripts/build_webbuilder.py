@@ -418,6 +418,50 @@ def render_faq(pool: dict) -> str:
                   "페이지당 월 1,000원 이용료, 고객 전용 주소·서버비 포함, 지역별 홈페이지와 검색 결과에 관한 질문을 안내합니다.",
                   body, "faq")
 
+def grams(s: str) -> set[str]:
+    clean = re.sub(r"\s+", "", s)
+    return {clean[i:i+5] for i in range(max(0, len(clean) - 4))}
+
+
+def export_keywords(keywords: dict, path: Path) -> int:
+    count = 0
+    seen = set()
+    with path.open("w", encoding="utf-8-sig", newline="") as out:
+        writer = csv.writer(out)
+        writer.writerow(["type", "industry", "industry_id", "priority", "keyword", "meaning"])
+        for sector in keywords["industries"]:
+            priority = "launch" if sector["launch"] else "research_only"
+            for template in keywords["buyerIntentTemplates"]:
+                phrase = template.replace("{업종}", sector["label"])
+                key = ("buyer", phrase)
+                if key in seen:
+                    continue
+                seen.add(key)
+                writer.writerow(["buyer", sector["label"], sector["id"], priority, phrase,
+                                 "Homepage creation buyer intent; proposed, not search-volume tested"])
+                count += 1
+            for phrase in sector["exampleCustomerQueries"]:
+                key = ("customer_example", phrase)
+                if key in seen:
+                    continue
+                seen.add(key)
+                writer.writerow(["customer_example", sector["label"], sector["id"], priority, phrase,
+                                 "Future client keyword structure ONLY; verify real delivery area"])
+                count += 1
+    return count
+
+
+def target_for_link(path: Path, href: str) -> Path | None:
+    if not href.startswith("/") or href.startswith("//"):
+        return None
+    p = urlsplit(href).path
+    if p == "/":
+        return path / "index.html"
+    if p.endswith("/"):
+        return path / p.lstrip("/") / "index.html"
+    return path / p.lstrip("/")
+
+
 def visible_copy(source: str) -> str:
     without_scripts = re.sub(r"<script\b[^>]*>.*?</script>", " ", source, flags=re.I | re.S)
     without_styles = re.sub(r"<style\b[^>]*>.*?</style>", " ", without_scripts, flags=re.I | re.S)
