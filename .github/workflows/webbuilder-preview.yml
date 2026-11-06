@@ -28,7 +28,7 @@ jobs:
       - name: Preflight site specification
         run: python -m v5 plan-check --site webbuilder
       - name: Generate preview and run unit tests
-        run: python -m unittest discover -s tests -p test_webbuilder.py -v
+        run: python -m unittest discover -s tests -p 'test_webbuilder*.py' -v
       - name: Node worker route/indexing tests
         run: node --test tests/webbuilder-worker.test.mjs
       - name: Reproduce preview and keyword export
@@ -68,5 +68,7 @@ jobs:
             reports/webbuilder/qa.json
             reports/webbuilder/keyword-candidates.csv
             reports/webbuilder/visual/
+            sites/webbuilder/copy-review-policy.json
+            sites/webbuilder/copy-review-scorecard.json
           if-no-files-found: warn
           retention-days: 7

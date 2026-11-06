@@ -45,6 +45,46 @@ class WebbuilderPreviewTest(unittest.TestCase):
             for token in forbidden:
                 self.assertNotIn(token, text, (path, token))
 
+    def test_visitor_copy_tone_and_manual_sample_policy(self):
+        import re
+        from scripts.build_webbuilder import visible_copy
+        policy = load("copy-review-policy.json")
+        self.assertEqual(policy["expectedDocuments"], 42)
+        self.assertEqual(self.qa["copyToneAudit"], "PASS")
+        self.assertEqual(self.qa["copyToneFilesChecked"], 42)
+        minimum = max(policy["minimumSampleCount"], (42 + 99) // 100)
+        self.assertGreaterEqual(len(policy["samplePaths"]), minimum)
+        self.assertEqual(len(policy["samplePaths"]), len(set(policy["samplePaths"])))
+        for path in self.html:
+            source = path.read_text(encoding="utf-8")
+            visible = visible_copy(source)
+            for phrase in policy["forbiddenPhrases"]:
+                self.assertNotIn(phrase, visible, (path, phrase))
+            for pattern in policy["forbiddenRegex"]:
+                self.assertIsNone(re.search(pattern, visible, re.I), (path, pattern))
+        self.assertIn(self.qa["copyReviewStatus"],
+                      ("PENDING_MANUAL_REVIEW", "PASS_GENERATED_SOURCE"))
+        self.assertEqual(self.qa["copyReviewSampleCount"], 11)
+        self.assertEqual(self.qa["copyReviewThreshold"], 90)
+
+    def test_manual_copy_scorecard_when_present(self):
+        import json
+        from scripts.build_webbuilder import copy_source_fingerprint
+        scorecard_path = ROOT / "sites" / "webbuilder" / "copy-review-scorecard.json"
+        if not scorecard_path.is_file():
+            self.skipTest("Manual scorecard is added after regenerated sample review")
+        policy = load("copy-review-policy.json")
+        scorecard = json.loads(scorecard_path.read_text(encoding="utf-8"))
+        self.assertEqual(scorecard["sourceFingerprint"], copy_source_fingerprint())
+        self.assertEqual(scorecard["totalDocuments"], 42)
+        self.assertEqual(set(x["path"] for x in scorecard["samples"]), set(policy["samplePaths"]))
+        self.assertGreaterEqual(min(x["score"] for x in scorecard["samples"]), 90)
+        rubric = {x["id"] for x in policy["rubric"]}
+        for sample in scorecard["samples"]:
+            self.assertEqual(set(sample["dimensions"]), rubric)
+            self.assertEqual(sum(sample["dimensions"].values()), sample["score"])
+            self.assertEqual(sample["decision"], "PASS")
+
     def test_industry_distinctness(self):
         self.assertEqual(self.qa["narrativePairsChecked"], 703)
         self.assertLess(self.qa["narrativeMaxChar5GramJaccard"], .49)
@@ -115,7 +155,8 @@ class WebbuilderPreviewTest(unittest.TestCase):
         self.assertIn("페이지당 월 1,000원부터", home)
         self.assertIn("월 10,000원", home)
         self.assertIn("최소 10페이지", home)
-        self.assertIn("업종별 도메인 확보·관리", home)
+        self.assertIn("고객 전용 홈페이지 주소", home)
+        self.assertIn("도메인 운영", home)
         self.assertIn("서버비", home)
         self.assertIn("월 이용료", pricing)
         for pages in (10, 20, 30, 50, 100):
@@ -126,8 +167,8 @@ class WebbuilderPreviewTest(unittest.TestCase):
         self.assertIn("월 30,000원", home)
         self.assertIn("월 1,000원", faq)
         self.assertIn("최소 10페이지", faq)
-        self.assertIn("도메인을 확보하고 관리해 드립니다", pricing)
-        self.assertIn("도메인을 확보하고 관리해 드립니다", faq)
+        self.assertIn("도메인 운영과 기본 서버 비용", pricing)
+        self.assertIn("도메인 운영과 기본 서버 비용", faq)
         for html_page in self.html:
             self.assertNotIn("한 장부터, 필요한 정보부터", html_page.read_text(encoding="utf-8"))
         for html_page in self.html:
@@ -189,7 +230,9 @@ class WebbuilderPreviewTest(unittest.TestCase):
 
     def test_virtual_example_disclosure_and_image_review_ledger(self):
         data = (self.out / "guide" / "pricing" / "index.html").read_text(encoding="utf-8")
-        self.assertIn("가상 홈페이지 화면 예시이며 실제 고객 작업 사례가 아닙니다", data)
+        self.assertIn("홈페이지 화면 구성 예시입니다.", data)
+        self.assertNotIn("생성형", data)
+        self.assertNotIn("AI 생성", data)
         source = ROOT / "sites" / "webbuilder" / "illustrations" / "generated"
         import json
         manifest = json.loads((source / "provenance.json").read_text(encoding="utf-8"))
