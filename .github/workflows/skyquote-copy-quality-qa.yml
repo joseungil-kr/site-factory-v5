@@ -63,7 +63,7 @@ jobs:
           from pathlib import Path
           import xml.etree.ElementTree as ET
           root=Path('dist/skyquote-public')
-          routes=['index.html','danwon.html','gojan.html','ansan/danwon-02.html','national/index.html','national/kr11.html']
+          routes=['index.html','danwon.html','gojan.html','ansan/danwon-02.html','national/index.html','national/1150000000.html']
           for route in routes:
               text=(root/route).read_text(encoding='utf-8')
               assert '영진스카이 공개 이용요금' in text or route=='national/index.html'
