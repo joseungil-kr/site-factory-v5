@@ -76,7 +76,7 @@ def main(archive):
       e(sku)+'" rel="noopener noreferrer">상품 상세·주문 조건 확인</a></td></tr>'
       for name,sku,price in ORDER_LINKS)
     catalog_note=('근조 B201·B203·B205는 2026-10-22 상품 원장 기준이며, 축하 C205·C030은 '
-      '2026-10-30 확인 기록 기준입니다. 현재 판매 가격·재고·실제 결제총액은 판매처에서 다시 확인해야 합니다.')
+      '2026-10-30 확인 기록 기준입니다. 가격과 재고는 달라질 수 있으며 최종 결제액은 판매처 주문 화면에서 확인할 수 있습니다.')
     by_province=defaultdict(list)
     for r in records:
         by_province[r['provinceCode']].append(r)
@@ -86,8 +86,8 @@ def main(archive):
         kind={'동':'동','읍':'읍','면':'면'}[r['suffix']]
         address_question=(name+' 수령 시설명과 상세 주소를 알고 계신가요?')
         schedule_question=('원하는 도착일과 수령 시설의 반입 가능 시간을 확인하셨나요?')
-        additional_question=('선택한 상품의 배송비와 리본 옵션을 포함한 최종 금액은 얼마인가요?')
-        admin_context=(parent+' 지역의 '+name+' 화환 상품을 안내합니다. 배송 가능 여부와 추가비용은 수령 시설과 상세 주소를 기준으로 확인할 수 있습니다.')
+        additional_question=('선택한 상품의 배송비와 리본 문구·옵션 비용을 포함한 최종 금액은 얼마인가요?')
+        admin_context=(name+' 화환 상품의 표시 가격을 비교할 수 있습니다. 실제 배송비는 받는 시설과 상세 주소를 기준으로 안내됩니다.')
         desc=(name+' 근조·축하 화환 상품의 기준가와 주문 조건을 살펴볼 수 있습니다. 실제 배송비와 리본 옵션은 수령지와 상품에 따라 달라질 수 있습니다.')
         pagestr=(
           '<!doctype html><html lang="ko"><head><meta charset="utf-8">'
@@ -118,13 +118,13 @@ def main(archive):
           '<a href="/localities/">전국 읍면동 목록</a> · <a href="/regions/">시·군·구 목록</a></p>'
           '</section><section><h2>실제 주문 전 확인 질문</h2>'
           '<details><summary>'+e(address_question)+'</summary>'
-          '<p>행정구역명만으로 배송지를 확정할 수 없습니다. 정확한 도로명 주소, 수령 시설명과 필요한 경우 빈소·행사장 정보를 판매처에 전달하세요. 개인정보는 이 안내 페이지에서 수집하지 않습니다.</p></details>'
+          '<p>수령 시설명과 도로명 주소, 필요한 경우 빈소·행사장 정보는 판매처 주문 과정에서 입력할 수 있습니다.</p></details>'
           '<details><summary>'+e(schedule_question)+'</summary>'
           '<p>정확한 날짜와 시간을 알려주시면 판매처에서 배송 일정을 안내합니다.</p></details>'
           '<details><summary>'+e(additional_question)+'</summary>'
           '<p>표시가에 수령지별 배송비와 리본·옵션 비용이 추가될 수 있습니다. 판매처 주문서에서 총액을 확인할 수 있습니다.</p></details>'
           '<details><summary>근조 기본형과 고급형은 무엇이 다른가요?</summary>'
-          '<p>확인된 기준가 차이는 20,000원입니다. 실제 꽃 구성·품종·크기를 가격만으로 추정하지 말고 두 상품 상세의 규격을 비교하세요.</p></details>'
+          '<p>B201 기본형은 59,000원, B203 고급형은 79,000원으로 기준가 차이는 20,000원입니다. 꽃 구성과 크기는 각각의 상품 상세를 통해 확인할 수 있습니다.</p></details>'
           '</section></main></body></html>')
         (OUT/'locality'/f"{r['code']}.html").write_text(pagestr,encoding='utf-8')
     directory=[]
