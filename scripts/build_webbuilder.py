@@ -272,7 +272,7 @@ def render_home(keywords: dict, pool: dict) -> str:
         '지역 서비스업 사업자를 위한 홈페이지를 제작합니다. 최소 10페이지, 페이지당 월 1,000원으로 월 10,000원부터 이용할 수 있습니다. 업종별 고객 전용 홈페이지 주소 제공과 도메인 운영, 기본 서버 비용을 월 이용료에 포함합니다.</p>'
         '<div class="hero-actions">' + cta("제작 비용 상담하기") +
         secondary("업종별 구성 보기", "/#industries") + '</div>'
-        '<div class="hero-note"><span>●</span> 검색 결과와 순위는 검색엔진의 평가와 검색 환경에 따라 달라집니다. '
+        '<div class="hero-note"><span>●</span> 검색 결과는 검색엔진의 평가와 검색 환경에 따라 달라집니다. 노출 시점과 순위도 검색어와 이용자 환경에 따라 달라질 수 있습니다. '
         '홈페이지는 검색에 필요한 구조와 고객이 찾는 정보를 갖춰 제작합니다.</div></div>'
         '<div class="hero-art">' + illustration("webbuilder-hero.webp", "PC와 스마트폰에서 보는 홈페이지 화면 예시", "hero-illustration") +
         '</div></div></section>'
