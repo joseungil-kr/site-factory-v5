@@ -78,7 +78,7 @@ jobs:
           PY
       - name: Deterministic 51-page scoring and sample URL audit
         run: |
-          python scripts/audit_todayflower_customer.py
+          python -m scripts.audit_todayflower_customer
       - name: Real Chromium 390 and 1440 viewport regression
         run: |
           python -m pip install --disable-pip-version-check playwright==1.56.0
