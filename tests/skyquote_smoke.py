@@ -24,11 +24,16 @@ for name in pages:
     path=OUT/name
     raw=path.read_text(encoding='utf-8')
     assert raw.count('<img ')==5,(name,raw.count('<img '))
-    assert raw.count('AI 생성 설명 이미지')==5
-    assert raw.count('loading="lazy"')==5
+    assert 'AI 생성 설명 이미지' not in raw
+    assert '<figcaption>' not in raw
+    assert raw.count('loading="lazy"')==4 and 'loading="eager"' in raw
     assert '스카이차 견적, 최저가 비교 전 확인사항 | 바른견적스카이' in raw
-    assert '업계 최저가를 주장하지 않습니다' in raw, f'Missing truthful price-comparison disclosure: {name}'
-    for unsupported_claim in ('업계 최저가 보장','무조건 최저가','최저가를 보장합니다','타사보다 무조건 저렴'):
+    assert '영진스카이 공개 이용요금' in raw
+    assert '반나절 · 4시간' in raw and '하루 · 8시간' in raw
+    assert '30만 원' in raw and '50만 원' in raw and '부가세는 별도' in raw
+    assert '작업 지점까지 높이(미터)' in raw and '수평거리' in raw
+    assert '초과·대기 시간 요금은 상담 시 확인' in raw
+    for unsupported_claim in ('AI 생성 설명 이미지 — 실제 시공','실제 현장 작업사례가 아닙니다','업계 최저가를 주장하지 않습니다','차량 톤수만으로 작업 가능성을 보장하지 않습니다','단정하지 마세요','실수를 피할 수 있습니다','보장하지 않습니다'):
         assert unsupported_claim not in raw, (name, unsupported_claim)
     assert '<meta name="robots" content="noindex,nofollow">' in raw
     assert 'href="tel:01053221952"' in raw
