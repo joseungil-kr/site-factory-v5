@@ -56,7 +56,7 @@ def main():
             blocks.append('<section><h2>'+escape(heading)+'</h2><p>'+escape(body)+'</p></section>')
         blocks.append('<section><h2>견적 문의 예시</h2><p>'+escape(
           '작업 예정 주소와 날짜, 작업 지점 높이와 차량 정차 위치에서의 수평거리, 탑승 인원과 자재 무게, 예상 작업시간을 알려주세요. 공개 단가의 4시간·8시간 기준과 부가세, 야간·휴일·원거리 추가 비용을 함께 확인할 수 있습니다.')+'</p></section>')
-        html=html.replace('<section><h2>문의 절차</h2>',''.join(blocks)+'<section><h2>문의 절차</h2>',1)
+        html=html.replace('<section><h2>현장 조건을 알려주시면 견적을 안내해 드립니다</h2>',''.join(blocks)+'<section><h2>현장 조건을 알려주시면 견적을 안내해 드립니다</h2>',1)
         # Images remain original 5, links point to already verified operator.
         p=DEST/slug;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(html,encoding='utf-8')
         indices[record['id']]={'slug':'/'+slug,'region':loc,'level':record['level'],'questions':[x[0] for x in chosen]}
