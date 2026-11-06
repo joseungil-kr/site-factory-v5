@@ -70,13 +70,13 @@ def audit(archive):
             if resolved not in paths and (OUT/resolved.lstrip("/")).is_file():continue
             if resolved not in paths:broken_local.append((key,href));continue
             adjacency[key].add(resolved);incoming[resolved]+=1
-    visited=set(); queue=collections.deque([aliases["/"]])
+    visited=set(); queue=collections.deque([aliases["/index.html"]])
     while queue:
         item=queue.popleft()
         if item in visited:continue
         visited.add(item);queue.extend(adjacency.get(item,set())-visited)
     unreachable=sorted(set(paths)-visited)
-    no_inbound=[x for x in paths if incoming[x]==0 and x!=aliases["/"]]
+    no_inbound=[x for x in paths if incoming[x]==0 and x!=aliases["/index.html"]]
     assert len(paths)==4935
     status={
       "domain":HOST,"sourceType":"verified 2026-10-22 official legal-code ZIP",
