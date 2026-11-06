@@ -28,6 +28,14 @@ def image(index, names, alt):
 def section(title, body, image_html=""):
     return f'<section class="media"><div><h2>{title}</h2>{body}</div>{image_html}</section>'
 
+def price_table_html():
+    rows="".join(f"<tr><th>{a}</th><td>{b}</td><td>{c}</td></tr>" for a,b,c in PRICE_ROWS)
+    return (
+        "<p>아래는 운영업체가 공개한 기본 단가입니다. 부가세는 별도이며 기사 인건비·유류비·기본 장비 보험료가 포함됩니다.</p>"
+        f'<div class="table"><table><thead><tr><th>장비</th><th>반나절 · 4시간</th><th>하루 · 8시간</th></tr></thead><tbody>{rows}</tbody></table></div>'
+        "<p>초과·대기 시간 요금은 상담 시 확인해 주세요. 18시 이후 야간, 휴일 작업과 원거리 운반은 사전 협의에 따라 추가 비용이 발생할 수 있습니다.</p>"
+    )
+
 def quote_sections(location, note, names, alts):
     blocks=[]
     blocks.append(section("작업 위치와 높이를 알려주세요",
@@ -40,12 +48,7 @@ def quote_sections(location, note, names, alts):
         "수평거리와 적재 조건을 함께 살펴 선택합니다.</p>"
         "<p>차량을 세울 공간과 아웃트리거를 펼칠 자리도 사진에 담아 보내주세요.</p>",
         image(3,names,alts)))
-    rows="".join(f"<tr><th>{a}</th><td>{b}</td><td>{c}</td></tr>" for a,b,c in PRICE_ROWS)
-    blocks.append(section("영진스카이 공개 이용요금",
-        "<p>아래는 운영업체가 공개한 기본 단가입니다. 부가세는 별도이며 기사 인건비·유류비·기본 장비 보험료가 포함됩니다.</p>"
-        f'<div class="table"><table><thead><tr><th>장비</th><th>반나절 · 4시간</th><th>하루 · 8시간</th></tr></thead><tbody>{rows}</tbody></table></div>'
-        "<p>초과·대기 시간 요금은 상담 시 확인해 주세요. 18시 이후 야간, 휴일 작업과 원거리 운반은 사전 협의에 따라 추가 비용이 발생할 수 있습니다.</p>",
-        image(2,names,alts)))
+    blocks.append(section("영진스카이 공개 이용요금",price_table_html(),image(2,names,alts)))
     blocks.append(section("현장 진입과 작업 공간을 확인합니다",
         "<p>차량 진입로 폭과 회전 공간, 정차 위치, 지지대를 펼칠 바닥, 주변 전선과 장애물을 알려주세요. "
         "현장 조건을 살펴 적합한 장비와 준비 사항을 상담해 드립니다.</p>"
