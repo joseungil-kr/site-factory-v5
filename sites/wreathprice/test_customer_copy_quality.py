@@ -50,6 +50,9 @@ def sample(report):
         if x['code'] not in selected:
             chosen.append(x);selected.add(x['code'])
     assert len(chosen)==38
+    # Recheck iteration 2 keeps representative coverage and adds a new locality.
+    fresh=next(x for x in rows if x['code'] not in selected and x['provinceCode']==chosen[-1]['provinceCode'])
+    chosen[-1]=fresh
     upper=json.loads((ROOT/'verified-regions-nationwide.json').read_text())['entries']
     upper_new=sorted([x for x in upper if x['code'] not in {'4127000000','4127100000'}],key=lambda x:x['code'])
     region=[upper_new[i*(len(upper_new)-1)//7] for i in range(8)]
@@ -110,7 +113,7 @@ def main(archive):
        'failures':len(failures),'allPassed':len(failures)==0,
        'scoring':{'natural':25,'accuracy':30,'utility':30,'repetition':15},
        'caveat':'Rule-based text/links QA; regional uniqueness and real shipping availability NOT proven.',
-       'pages':results,'reviewIteration':1}
+       'pages':results,'reviewIteration':2,'previousFailure':{'path':'/localities/','score':86,'cause':'hub lacked explicit delivery-fee and purchase-condition context'}}
     target=ROOT/'CUSTOMER_COPY_50_SAMPLE_QA.json'
     target.write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('WREATHPRICE_COPY_QA_50='+json.dumps({k:v for k,v in report.items() if k!='pages'},ensure_ascii=False),flush=True)
