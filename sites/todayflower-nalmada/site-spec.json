@@ -15,9 +15,9 @@
     "deliveryLimitation": "Every location requires SKU- and address-specific time/fee/cutoff confirmation"
   },
   "pageTypes": [
-    "기존 안산시 33개 검수 원본 보존",
-    "전국 법정동별 꽃다발·화분·축하화환·근조화환 주문 조건 안내",
-    "수령/부재/마감/배송비별 비확약 안내"
+    "기존 안산시 33개 대표 페이지의 문구 개선 후보",
+    "전국 법정동별 꽃다발·화분·축하화환·근조화환 상품 선택과 주문 정보 안내",
+    "수령 장소·주소·상품 비교·희망 일정·배송비 안내"
   ],
   "targetPageCount": 5070,
   "titlePattern": "{지역명} 꽃배달 당일배송, 꽃다발·화분·화환 주문 안내 | 오늘꽃배달",
@@ -35,7 +35,7 @@
   },
   "copyPoolPlan": {
     "industry": "전국 꽃배달 당일배송 가능 여부, 꽃다발·화분·축하화환·근조화환",
-    "source": "existing 33 reviewed guides + pinned legal-code ZIP 2026-10-22 + 16 explicit buyer intents and verified seller SKU catalog; no geographic delivery promises or invented service branches",
+    "source": "33개 대표 원고의 문구 개선 + 2026-10-22 고정 법정동 ZIP + 16개 구매 의도 + Todayflower 전용 고객 중심 문구 풀; 확인되지 않은 지역 배송 사실은 생성하지 않음",
     "sentenceTarget": 120,
     "regionDifferentiation": "publicly verifiable legal code/name and independent intent/order-check combinations; regional-specific delivery facts NOT independently verified",
     "risk": "Scaled local content may lack independent uniqueness/search value; preview noindex until manual QA and service coverage confirmed"
@@ -45,9 +45,10 @@
     "thresholdExclusive": 0.49,
     "sampleFraction": 0.01,
     "seed": 20261031,
-    "manualSemanticReview": true,
+    "manualSemanticReview": false,
     "expectedPopulation": 5070,
-    "note": "Large-site 1% stratified sample is not 12.8m-pair semantic review; exact full-body duplicate detection runs on all pages"
+    "note": "Large-site 1% stratified sample is not 12.8m-pair semantic review; exact full-body duplicate detection runs on all pages",
+    "manualSemanticReviewStatus": "pending fixed-seed 1% sample of 51 pages; require human score >=90/100"
   },
   "conversion": {
     "phone": "1844-0644",
@@ -55,7 +56,7 @@
     "mode": "direct SKU links to seller + phone"
   },
   "images": {
-    "source": "Five original ImageGen 1448x1086 scenes stored as large WebPs; five reusable V5 editorial assets in imagePool; seller product images loaded separately from fwith.co.kr",
+    "source": "Five 1448x1086 ImageGen-derived final WebPs and five legacy editorial assets remain archived in the repository; no local editorial image is rendered in the new candidate. Existing remote seller product cards are unchanged.",
     "approved": false,
     "visualReview": "Require actual 390px and 1440px Chromium screenshots and naturalWidth/display-box QA before public publish",
     "aiGeneratedWebP": [
@@ -65,9 +66,9 @@
       "condolence-wreath.webp",
       "flower-wrapping.webp"
     ],
-    "countPerPage": 7,
-    "aiEditorialCountPerPage": 5,
-    "otherLocalEditorialCountPerPage": 2,
+    "countPerPage": 0,
+    "aiEditorialCountPerPage": 0,
+    "otherLocalEditorialCountPerPage": 0,
     "libraryAssetCount": 10,
     "remoteSellerCardImagesPerPage": {
       "1": 8,
@@ -76,9 +77,9 @@
     },
     "originalWidth": 1448,
     "originalHeight": 1086,
-    "cssLayout": "3+2 centered at desktop, 2 columns tablet, single full-width column mobile; image width 100% with aspect ratio 4:3",
+    "cssLayout": "No local editorial images in new candidate; product-card images retain existing seller URL mapping",
     "fixedThumbnailPixelsRemoved": true,
-    "generatorPolicy": "AI-generated scenes are editorial only; seller product photographs and fulfillment evidence must not be invented; no other sites affected",
+    "generatorPolicy": "Unverified editorial images remain archived but are excluded from new candidate HTML and output assets. Existing seller product-card URLs are preserved without expansion pending exact permission record recovery.",
     "provenance": [
       {
         "path": "assets/library/todayflower/gift-bouquet.webp",
@@ -125,7 +126,9 @@
         "generatedSource": "ImageGen",
         "generationId": "52a4819a-658d-4420-bc36-a2f98de84dd7"
       }
-    ]
+    ],
+    "provenanceStatus": "PARTIAL: final WebP, dimensions, Git blob SHA and generation IDs are recorded; original source PNG, exact prompt, UTC generation timestamp and original SHA256/archive location are not yet recovered",
+    "sellerPhotoPermissionStatus": "Existing Todayflower public use preserved; exact user approval text for fwith.co.kr image reuse not recovered; no new SKU/image reuse"
   },
   "publishPolicy": {
     "mode": "preview-noindex",
@@ -135,14 +138,24 @@
     "requires": "Host binding + credential approval before index. Semantic manual review, real local fulfillment proof, seller SKU availability, allowed publishing; preview has no canonical/sitemap."
   },
   "rollout": {
-    "phase": "nationwide-pinned-legal-code-noindex",
+    "phase": "copy-refresh-noindex-candidate",
     "originalPilot": 33,
     "pinnedLegalDongCount": 5067,
     "additionalPages": 5037,
     "totalPages": 5070,
     "publicReleaseApproved": false,
-    "publicHostnameConnection": "not yet verified; no DNS or ownership change permitted in this task",
+    "publicHostnameConnection": "Existing V4 public host documented as of 2026-10-31; candidate changes do not alter DNS, Worker, or production routing",
     "numbering": "5070 content pages, 1..403 + 405..5071, reserve /404.html as error",
     "lastContentPath": "/5071.html"
+  },
+  "legacyOperationalRelease": {
+    "host": "https://todayflower.nalmada.net",
+    "sourceCommit": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+    "v4Repository": "joseungil-kr/site-factory-v4",
+    "workerVersion": "4b35c279-adfb-41e7-96f8-a82cd71e2442",
+    "githubRun": 41186459796,
+    "verifiedAt": "2026-10-31",
+    "mode": "existing public host routed through V4; V5 candidate artifact remains noindex",
+    "note": "Historical release evidence only; no current HTTP recheck or new release is implied"
   }
 }
