@@ -76,20 +76,8 @@ STYLE = r"""
 @media(max-width:390px){.tf-hero h1{font-size:31px}.tf-choose-card h3{font-size:17px}.tf-product a{font-size:11px}}
 """
 
-GENERATED_FILES = frozenset({
-    "gift-bouquet.webp", "opening-plant.webp", "celebration-wreath.webp",
-    "condolence-wreath.webp", "flower-wrapping.webp"
-})
-
 def _h(value):
     return base.h(value)
-
-def _img(path, alt, css_class="", loading="lazy", priority=False):
-    attrs = ' fetchpriority="high"' if priority else ""
-    dimensions = 'width="1448" height="1086"' if path in GENERATED_FILES else 'width="600" height="860"'
-    return (f'<img class="{_h(css_class)}" src="/assets/images/{_h(path)}"'
-            f' alt="{_h(alt)}" {dimensions} loading="{loading}"'
-            ' decoding="async"' + attrs + '>')
 
 def _head(site,page):
     path=base.url_path(page["number"])
