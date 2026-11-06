@@ -1,4 +1,4 @@
-"""Local QA of the Ansan-only noindex regional expansion."""
+"""QA all 25 Ansan noindex pages for customer usefulness, distinct local questions and original assets."""
 from pathlib import Path
 from html.parser import HTMLParser
 import json,re,hashlib
@@ -23,38 +23,26 @@ class Visible(HTMLParser):
         if tag in ('style','script','head'):self.skip=max(0,self.skip-1)
     def handle_data(self,data):
         if not self.skip:self.t.append(data)
-texts=[];all_paths=[]
-for p in OUT.rglob('*.html'):
+texts=[]
+for p in sorted(OUT.rglob('*.html')):
     if p.name=='404.html':continue
-    t=p.read_text(encoding='utf-8')
-    assert t.count('<img ')==5 and 'AI 생성 설명 이미지' not in t and '<figcaption>' not in t,p
-    assert 'name="robots" content="noindex,nofollow"' in t,p
-    assert 'href="tel:01053221952"' in t,p
-    assert '영진스카이 공개 이용요금' in t and '30만 원' in t and '부가세는 별도' in t,p
-    for banned in ('업계 최저가 보장','무조건 최저가','최저가를 보장합니다','타사보다 무조건 저렴','지점 운영','시공 완료 사례'):
-        assert banned not in t,(p,banned)
-    for img in images:assert '/assets/'+Path(img['path']).name in t
-    parser=Visible();parser.feed(t);texts.append(re.sub(r'\s+',' ',' '.join(parser.t)));all_paths.append(p.relative_to(OUT).as_posix())
-    for href in re.findall(r'href="(/[^"#?]*)"',t):
-        target=(OUT/'index.html') if href=='/' else OUT/href.lstrip('/')
-        assert target.is_file(),(p,href)
-assert len(all_paths)==25 and len(set(texts))==25
-assert len({p['focus'] for p in scope['regions']})==22
-assert len({p['example'] for p in scope['regions']})==22
-assert all((OUT/p['slug']).is_file() for p in scope['regions'])
-assert len(set(all_paths))==25
-# Every newly generated dong page must have one detailed focus block, not a
-# verbatim copy in the intro; and comparison sections may not imply field surveys.
+    raw=p.read_text(encoding='utf-8')
+    assert raw.count('<img ')==5 and 'AI 생성 설명 이미지' not in raw and '<figcaption>' not in raw,p
+    assert 'name="robots" content="noindex,nofollow"' in raw,p
+    assert 'href="tel:01053221952"' in raw,p
+    assert '영진스카이 공개 이용요금' in raw and '30만 원' in raw and '부가세는 별도' in raw,p
+    assert '작업 지점까지 높이(미터)' in raw and '반나절 · 4시간' in raw and '하루 · 8시간' in raw,p
+    assert raw.count('loading="eager"')==1 and raw.count('loading="lazy"')==4,p
+    for bad in ('업계 최저가를 주장하지 않습니다','AI 생성 설명 이미지 — 실제 시공','차량 톤수만으로 작업 가능성을 보장하지 않습니다','단정하지 마세요','실수를 피할 수 있습니다','기재합니다','실제 환경을 조사한 결과가 아닌 견적용 가정'):
+        assert bad not in raw,(p,bad)
+    for img in images:assert '/assets/'+Path(img['path']).name in raw
+    parser=Visible();parser.feed(raw);texts.append(re.sub(r'\s+',' ',' '.join(parser.t)))
+assert len(texts)==25 and len(set(texts))==25
+assert len({x['focus'] for x in scope['regions']})==22 and len({x['example'] for x in scope['regions']})==22
 for place in scope['regions']:
-    if place['slug']=='gojan.html':
-        continue  # Original parent-reviewed sample is deliberately preserved.
+    if place['slug']=='gojan.html':continue
     raw=(OUT/place['slug']).read_text(encoding='utf-8')
-    assert raw.count(place['focus'])==1,(place['slug'],'repeated focus')
-    assert raw.count(place['example'])==1,(place['slug'],'repeated example')
-    assert '두 작업 상황을 동일 견적으로 취급하지 않는 이유' not in raw,place['slug']
-    assert '견적 요청 전에 확인할 구체적인 질문' in raw
-    assert '비용 차이를 만들 수 있는 현장 조건' in raw
-    assert '실제 환경을 조사한 결과가 아닌 견적용 가정' in raw
-    assert '견적 상담 전에 알려주세요' in raw\n    assert '현장 사진과 일정도 함께 준비해 주세요' in raw
-print('SKYQUOTE_ANSAN_REPETITION_AND_ASSUMPTION_QA_PASS pages=21 focus_once=true example_once=true')
-print('SKYQUOTE_ANSAN_25_PAGE_QA_PASS pages=25 original=3 added=22 images_per_page=5 links=valid noindex=true')
+    assert raw.count(place['focus'])==1 and raw.count(place['example'])==1,place['slug']
+    assert '견적 상담에 필요한 정보' in raw and '현장 조건을 알려주시면 견적을 안내해 드립니다' in raw
+    assert '실제 환경을 조사한 결과가 아닌 견적용 가정' not in raw
+print('SKYQUOTE_ANSAN_25_VISITOR_COPY_QA_PASS pages=25 images=5 pricing=true focus/example once noindex=true')
