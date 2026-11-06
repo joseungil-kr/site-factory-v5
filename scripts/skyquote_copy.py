@@ -20,8 +20,10 @@ def hero(location):
     )
 
 def image(index, names, alt):
+    loading='eager' if index==0 else 'lazy'
+    priority=' fetchpriority="high"' if index==0 else ''
     return (f'<figure class="skyquote-illustration"><img src="/assets/{names[index]}.webp" '
-            f'loading="lazy" width="1536" height="1024" alt="{escape(alt[index])}"></figure>')
+            f'loading="{loading}"{priority} width="1536" height="1024" alt="{escape(alt[index])}"></figure>')
 
 def section(title, body, image_html=""):
     return f'<section class="media"><div><h2>{title}</h2>{body}</div>{image_html}</section>'
