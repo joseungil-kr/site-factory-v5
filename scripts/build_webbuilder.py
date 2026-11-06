@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Webbuilder: deterministic, offline-only B2B website preview generator.
+"""Webbuilder: deterministic, isolated B2B website asset generator.
 
-Uses V5's approved site-plan and visitor-copy gates, without touching shared
-site engine, V4 operations, DNS, production Workers or indexing services.
+Builds preview or explicitly selected public assets; it does not deploy, alter DNS,
+change production Workers, or submit URLs to search engines.
 """
 from __future__ import annotations
 
@@ -11,6 +11,7 @@ import csv
 import html
 import hashlib
 import json
+import math
 import re
 import shutil
 from itertools import combinations
@@ -157,8 +158,8 @@ def layout(title: str, description: str, body: str, active: str = "") -> str:
         '<section class="bottom-cta"><div class="container bottom-cta-inner">'
         '<div><span class="eyebrow">최소 10페이지부터, 필요한 정보부터</span>'
         '<h2>우리 업종의 검색 홈페이지를 설계해보세요.</h2>'
-        '<p>실제 서비스와 가능한 지역을 알려주시면 문서 구성을 함께 검토합니다.</p></div>'
-        + illustration("mobile-contact.webp", "모바일 전화 상담을 나타내는 생성형 래스터 홍보 이미지", "bottom-illustration") +
+        '<p>제공 서비스와 방문 가능 지역을 알려주시면 필요한 홈페이지 구성을 함께 살펴보겠습니다.</p></div>'
+        + illustration("mobile-contact.webp", "모바일에서 홈페이지와 전화 상담 정보를 확인하는 화면 예시", "bottom-illustration") +
         cta("010-2490-0555 전화 상담") +
         '</div></section>'
         '<footer class="site-footer"><div class="container footer-inner">'
@@ -265,47 +266,47 @@ def render_home(keywords: dict, pool: dict) -> str:
     )
     body = (
         '<section class="hero"><div class="container hero-grid">'
-        '<div class="hero-copy">' + kicker("동네 검색을 이해하는 홈페이지 제작") +
+        '<div class="hero-copy">' + kicker("지역 서비스업 홈페이지 제작") +
         '<h1>업종별 검색 홈페이지,<br><em>페이지당 월 1,000원부터.</em></h1>'
         '<p class="hero-lead">누수탐지, 하수구막힘, 이삿짐, 출장세차까지. '
-        '지역 서비스업 사장님을 위한 검색 홈페이지를 제작합니다. 최소 10페이지 월 10,000원부터 시작하며 업종별 도메인 확보·관리, 홈페이지 주소 제공, 서버비까지 포함합니다.</p>'
+        '지역 서비스업 사업자를 위한 홈페이지를 제작합니다. 최소 10페이지, 페이지당 월 1,000원으로 월 10,000원부터 이용할 수 있습니다. 업종별 고객 전용 홈페이지 주소 제공과 도메인 운영, 기본 서버 비용을 월 이용료에 포함합니다.</p>'
         '<div class="hero-actions">' + cta("제작 비용 상담하기") +
         secondary("업종별 구성 보기", "/#industries") + '</div>'
-        '<div class="hero-note"><span>●</span> 검색엔진 노출·순위는 보장하지 않습니다. '
-        '서비스 범위와 문서 품질을 먼저 확인합니다.</div></div>'
-        '<div class="hero-art">' + illustration("webbuilder-hero.webp", "반응형 홈페이지와 스마트폰 생성형 이미지 기반 원본 래스터 사진", "hero-illustration") +
+        '<div class="hero-note"><span>●</span> 검색 결과와 순위는 검색엔진의 평가와 검색 환경에 따라 달라집니다. '
+        '홈페이지는 검색에 필요한 구조와 고객이 찾는 정보를 갖춰 제작합니다.</div></div>'
+        '<div class="hero-art">' + illustration("webbuilder-hero.webp", "PC와 스마트폰에서 보는 홈페이지 화면 예시", "hero-illustration") +
         '</div></div></section>'
         '<section class="stats-strip"><div class="container strip-grid">'
         '<div><strong>월 10,000원부터</strong><span>최소 10페이지 · 페이지당 월 1,000원</span></div>'
-        '<div><strong>도메인까지 관리</strong><span>업종 맞춤 주소 확보·관리 제공</span></div>'
-        '<div><strong>지역 맞춤</strong><span>실제 서비스 범위에 맞춰 구성</span></div>'
+        '<div><strong>고객 전용 주소</strong><span>업종별 도메인 운영·기본 서버비 포함</span></div>'
+        '<div><strong>지역 맞춤</strong><span>방문 가능 지역과 서비스 범위 반영</span></div>'
         '</div></section>'
         '<section id="industries" class="section"><div class="container">'
         '<div class="section-heading"><span class="eyebrow">업종별 홈페이지 제작</span>'
-        '<h2>어떤 일을 하시는 사장님인가요?</h2>'
-        '<p>서로 다른 서비스를 같은 광고 문구로 채우지 않습니다. 업종의 고객 문의 흐름부터 분리합니다.</p>'
+        '<h2>어떤 서비스를 제공하시나요?</h2>'
+        '<p>업종마다 고객이 찾는 정보가 다릅니다. 각 서비스의 상담 내용과 이용 조건을 반영해 홈페이지를 구성합니다.</p>'
         '</div><div class="industry-categories">' + grouped_industry_cards(sectors) + '</div></div></section>'
         '<section class="section section-muted"><div class="container feature-grid">'
-        '<div><span class="eyebrow">왜 지역 검색 페이지인가요?</span><h2>동 이름보다 중요한 건<br>고객이 찾는 답입니다.</h2>'
+        '<div><span class="eyebrow">지역 검색에 필요한 정보</span><h2>지역명보다 중요한 건<br>고객이 찾는 답입니다.</h2>'
         + paragraph(pool["heroVariants"][2]) + paragraph(pool["localStrategyVariants"][0])
         + secondary("제작 절차 확인하기", "/guide/process/") +
-        '</div><div class="feature-panel">' + illustration("local-search.webp", "지역 검색을 표현한 생성 이미지 기반 지역 지도 자료", "feature-illustration") +
+        '</div><div class="feature-panel">' + illustration("local-search.webp", "지역별 서비스 정보를 살펴보는 화면 예시", "feature-illustration") +
         '<div class="feature-row"><b>01</b>'
-        '<div><strong>실제 서비스 지역</strong><span>방문 가능한 동·시 기준으로 안내</span></div></div>'
+        '<div><strong>방문 가능 지역</strong><span>실제 출장 가능한 시·군·구와 동 안내</span></div></div>'
         '<div class="feature-row"><b>02</b><div><strong>업종별 유용한 정보</strong>'
         '<span>가격 결정 요소, 상담 질문, 업무 범위</span></div></div>'
         '<div class="feature-row"><b>03</b><div><strong>검색·연락 구조</strong>'
-        '<span>고유 제목, 모바일 문서, 전화 버튼</span></div></div></div>'
+        '<span>고유 제목, 모바일 화면, 전화 연결</span></div></div></div>'
         '</div></section>'
         '<section class="section"><div class="container"><div class="section-heading">'
-        '<span class="eyebrow">제작 절차</span><h2>작게 검증하고, 필요한 만큼 확장합니다.</h2>'
+        '<span class="eyebrow">제작 절차</span><h2>서비스에 맞춰 순서대로 제작합니다.</h2>'
         '</div><div class="step-grid">' + steps + '</div></div></section>'
         '<section class="section section-muted"><div class="container pricing-grid">'
         '<div><span class="eyebrow">월 이용료 안내</span><h2>페이지 수만큼<br>월 이용료를 계산하세요.</h2>'
-        '<p>최소 10페이지 월 10,000원부터입니다. 기본 홈페이지 제작, 업종별 도메인 확보·관리, 고객 전용 주소와 서버 운영비를 포함합니다. 세부 이용 조건은 계약 전에 안내합니다.</p>'
+        '<p>최소 10페이지, 페이지당 월 1,000원으로 월 10,000원부터 이용할 수 있습니다. 기본 홈페이지 제작, 고객 전용 주소 제공, 도메인 운영과 기본 서버 비용이 월 이용료에 포함됩니다. 부가세 적용 여부와 계약기간·수정 범위·주소 이용 조건은 계약 전에 안내합니다.</p>'
         + secondary("가격과 포함 범위", "/guide/pricing/") + '</div>'
         '<div class="price-panel">' + monthly_price_rows(pool, limit=3) +
-        '<p class="price-footnote">최소 10페이지부터 신청할 수 있습니다. 부가세·계약기간·수정 및 주소 이용 조건은 계약 전에 안내합니다.</p></div>'
+        '<p class="price-footnote">최소 10페이지부터 신청할 수 있습니다. 부가세 적용 여부·계약기간·수정 및 주소 이용 조건은 계약 전에 안내합니다.</p></div>'
         '</div></section>'
         '<section class="section"><div class="container"><div class="section-heading">'
         '<span class="eyebrow">자주 묻는 질문</span><h2>제작 전에 알아둘 내용</h2></div>'
@@ -313,14 +314,13 @@ def render_home(keywords: dict, pool: dict) -> str:
         '<a href="/guide/faq/">질문 전체 보기 ↗</a></div></div></section>'
     )
     return layout("업종별 검색 홈페이지 페이지당 월 1,000원부터 | 인터피아드",
-                  "누수탐지, 하수구막힘, 이삿짐, 출장세차 등 지역서비스업 홈페이지. 페이지당 월 1,000원부터, 운영사 업종별 도메인 제공·서버비 포함. 인터피아드 010-2490-0555.",
+                  "누수탐지, 하수구막힘, 이삿짐, 출장세차 등 지역서비스업 홈페이지. 페이지당 월 1,000원부터, 고객 전용 주소와 도메인 운영·서버비 포함. 인터피아드 010-2490-0555.",
                   body, active="home")
-
 
 def render_sector(item: dict, data: dict, pool: dict, sectors: list[dict]) -> str:
     values = [data["intro"], data["problem"], data["structure"], data["conversion"], data["difference"]]
-    heads = ["고객이 실제로 궁금해하는 것", "지역 서비스 페이지에서 피할 실수",
-             "홈페이지에 담을 고유한 정보", "문의로 연결되는 구성", "비슷한 검색어와 구별되는 점"]
+    heads = ["고객이 찾는 정보", "자주 묻는 상황", "홈페이지에 담을 내용",
+             "상담에 필요한 정보", "서비스별 안내 포인트"]
     sections = "".join(
         '<section class="article-section"><span class="article-index">' + f"{i:02d}" +
         '</span><h2>' + escape(heads[i-1]) + '</h2>' + paragraph(value) + '</section>'
@@ -331,59 +331,56 @@ def render_sector(item: dict, data: dict, pool: dict, sectors: list[dict]) -> st
         '<li>' + escape(x) + '</li>'
         for x in item["exampleCustomerQueries"]
     )
-    other = [x for x in pool["examples"] if x["industry"] == item["label"]]
-    sample_note = escape(other[0]["point"]) if other else "업종별 고객 검색어 유형을 설명하기 위한 문구 예시입니다."
     body = (
         '<section class="sub-hero"><div class="container narrow">'
-        + kicker("업종별 지역검색 홈페이지 제작") +
+        + kicker("업종별 홈페이지 제작") +
         '<h1>' + escape(data["title"]) + '<br><em>페이지당 월 1,000원부터.</em></h1>'
-        '<p class="sub-lead">' + escape(item["consultingAngle"]) + ' 실제 제공 서비스를 기준으로 고객 질문과 상담 흐름을 설명하는 홈페이지를 설계합니다.</p>'
-        '<p class="small-note">최소 10페이지 월 10,000원부터 · 업종별 도메인 확보·관리 및 서버비 포함.</p><div class="hero-actions">'
+        '<p class="sub-lead">' + escape(item["consultingAngle"]) + '. 서비스별 상담 질문과 작업 범위를 고객이 쉽게 확인하도록 홈페이지를 구성합니다.</p>'
+        '<p class="small-note">최소 10페이지 월 10,000원부터 · 고객 전용 주소 제공·도메인 운영 및 기본 서버비 포함.</p><div class="hero-actions">'
         + cta(item["label"] + " 홈페이지 상담") + secondary("전체 업종 보기", "/#industries") +
         '</div></div></section>'
         '<section class="section"><div class="container article-layout">'
         '<article class="article">' + sections + '</article>'
-        '<aside class="article-aside"><div class="aside-box"><span class="eyebrow">사업자 확인 목록</span>'
-        '<h2>실제 서비스 정보부터</h2>' + illustration("industry-services.webp", "설비·청소·운송·설치 서비스를 나타내는 생성형 래스터 홍보 이미지", "aside-illustration") +
+        '<aside class="article-aside"><div class="aside-box"><span class="eyebrow">홈페이지에 담을 정보</span>'
+        '<h2>상담 전에 확인할 내용</h2>' + illustration("industry-services.webp", "설비·청소·운송·설치 서비스 안내 이미지", "aside-illustration") +
         '<ul class="check-list">' + checklist + '</ul>'
         '<a class="aside-phone" href="tel:' + TEL + '">' + PHONE + ' 상담하기 ↗</a></div></aside>'
         '</div></section>'
         '<section class="section section-muted"><div class="container narrow">'
-        '<span class="eyebrow">고객사 홈페이지에 적용할 키워드 형태</span>'
-        '<h2>실제 서비스 지역을 확인한 뒤 문서화합니다.</h2>'
+        '<span class="eyebrow">검색어 구성 예시</span>'
+        '<h2>서비스 지역과 검색 의도에 맞춰 구성합니다.</h2>'
         '<ul class="keyword-chips">' + sample_queries + '</ul>'
-        '<p class="small-note">' + sample_note +
-        ' 이 키워드는 설명을 위한 문구 예시이며 검색량·순위 또는 해당 지역 업체의 존재를 보증하지 않습니다.</p>'
+        '<p class="small-note">업종명과 실제 서비스 지역을 조합한 검색어 예시입니다. 페이지에는 사업자가 제공하는 서비스와 방문 가능 지역을 반영합니다.</p>'
         '</div></section>' + related_industry_cards(item, sectors)
     )
     return layout(data["title"] + " 페이지당 월 1,000원부터 | 인터피아드",
-                  item["label"] + " 사업자용 지역검색 홈페이지 제작. " + item["consultingAngle"] +
+                  item["label"] + " 홈페이지 제작 안내. " + item["consultingAngle"] +
                   ". 인터피아드 010-2490-0555.",
                   body)
-
 
 def render_pricing(pool: dict) -> str:
     body = (
         '<section class="sub-hero"><div class="container narrow">' + kicker("제작 비용 안내") +
-        '<h1>최소 10페이지, 월 10,000원부터.<br><em>업종별 맞춤 주소·서버비 포함.</em></h1>'
-        '<p class="sub-lead">페이지당 월 1,000원, 최소 10페이지부터 제작합니다. 업종별 맞춤 도메인을 확보하고 관리해 드리며, 기본 홈페이지 제작·주소 제공·서버 운영비까지 포함합니다.</p>'
+        '<h1>최소 10페이지, 월 10,000원부터.<br><em>고객 전용 주소·서버비 포함.</em></h1>'
+        '<p class="sub-lead">페이지당 월 1,000원, 최소 10페이지부터 제작합니다. 운영사가 관리하는 업종별 도메인 아래 고객 전용 홈페이지 주소를 제공하며, 기본 홈페이지 제작·도메인 운영·기본 서버 비용을 월 이용료에 포함합니다.</p>'
         '</div></section><section class="section"><div class="container narrow">'
         '<div class="price-panel full"><h2>페이지 수에 따른 월 이용료</h2>' + monthly_price_rows(pool) +
-        illustration("managed-domain.webp", "가상 홈페이지 화면 예시, 실제 고객사례가 아닌 생성형 이미지", "price-illustration") +
-        '<p class="small-note">이 이미지는 생성형 가상 홈페이지 화면 예시이며 실제 고객 작업 사례가 아닙니다.</p>'
-        '<p class="price-footnote">최소 10페이지부터 신청 가능하며, 월 1,000원/페이지입니다. 계약기간·부가세·수정 및 홈페이지 주소 이용 조건은 상담 시 안내합니다.</p></div>'
-        '<div class="article-section"><h2>한 도시의 모든 동도 같은 금액인가요?</h2>'
-        + paragraph("시마다 동 개수는 서로 다릅니다. 20~30페이지를 이용하는 경우 월 2만~3만원이지만, 해당 시 전체 동을 반드시 같은 월 이용료로 구성할 수 있다는 뜻은 아닙니다. 실제 서비스 가능 지역과 페이지 구성을 확인해 필요한 수를 산정합니다.")
-        + '</div><div class="article-section"><h2>도메인·서버 운영은 어떻게 하나요?</h2>'
-        + paragraph("인터피아드가 업종별 맞춤 도메인을 확보하고 관리해 드립니다. 홈페이지 주소 제공 및 기본 서버 운영비가 월 이용료에 포함되어 고객이 도메인을 별도로 구매하실 필요가 없습니다. 제공 주소의 이용 기간과 소유권 등 세부 조건은 계약 전에 안내합니다.")
-        + '</div><div class="article-section"><h2>제작단가가 낮을 수 있는 이유</h2>'
+        illustration("managed-domain.webp", "홈페이지 화면 구성 예시", "price-illustration") +
+        '<p class="small-note">홈페이지 화면 구성 예시입니다.</p>'
+        '<p class="price-footnote">최소 10페이지부터 신청 가능하며, 월 1,000원/페이지입니다. 부가세 적용 여부·계약기간·수정 범위·홈페이지 주소 이용 조건은 계약 전에 안내합니다.</p></div>'
+        '<div class="article-section"><h2>페이지 수는 어떻게 정하나요?</h2>'
+        + paragraph("20페이지는 월 20,000원, 30페이지는 월 30,000원입니다. 페이지 수는 사업자가 제공하는 서비스와 실제 영업 지역, 각 페이지에 담을 정보에 맞춰 정합니다. 서비스별 고객 질문과 별도 안내가 필요한 지역을 기준으로 구성을 상담합니다.")
+        + '</div><div class="article-section"><h2>주소와 서버 운영은 어떻게 제공되나요?</h2>'
+        + paragraph("기본 상품은 운영사가 관리하는 업종별 도메인 아래에 고객 전용 홈페이지 주소를 제공하는 방식입니다. 도메인 운영과 기본 서버 비용은 월 이용료에 포함됩니다. 주소 이용 기간, 계약 종료 후 처리와 소유권 조건은 계약 전에 안내합니다.")
+        + '</div><div class="article-section"><h2>월 이용료에 포함되는 항목</h2>'
         + paragraph(pool["offerVariants"][0]) + paragraph(pool["offerVariants"][1]) +
-        '</div></div></section>'
+        '</div><div class="article-section"><h2>계약 전에 확인할 조건</h2>'
+        + paragraph("부가세 적용 여부, 계약기간, 수정 범위, 주소 이용 및 계약 종료 후 처리 조건은 계약 전에 안내합니다. 세부 내용은 상담과 계약서에서 확인할 수 있습니다.")
+        + '</div></div></section>'
     )
     return layout("홈페이지 최소 10페이지 월 10,000원부터 비용 안내 | 인터피아드",
-                  "업종별 홈페이지 페이지당 월 1,000원, 업종별 맞춤 주소와 서버비 포함. 10~100페이지 월 이용료 및 계약 조건을 안내합니다.",
+                  "업종별 홈페이지 페이지당 월 1,000원, 고객 전용 주소와 도메인 운영·서버비 포함. 10~100페이지 월 이용료 및 계약 조건을 안내합니다.",
                   body, "pricing")
-
 
 def render_process(pool: dict) -> str:
     steps = "".join(
@@ -392,18 +389,17 @@ def render_process(pool: dict) -> str:
         for i, x in enumerate(pool["steps"], 1)
     )
     body = (
-        '<section class="sub-hero"><div class="container narrow">' + kicker("지역 서비스업 제작 과정") +
-        '<h1>동네 검색에 필요한 정보를,<br><em>확인하고 나눠서 제작합니다.</em></h1>'
-        '<p class="sub-lead">업종별 서비스 내용과 실제 영업 범위를 먼저 확인해 불필요한 유사 문서가 쌓이지 않도록 합니다.</p>'
+        '<section class="sub-hero"><div class="container narrow">' + kicker("홈페이지 제작 과정") +
+        '<h1>서비스와 지역을 정리해,<br><em>필요한 홈페이지를 만듭니다.</em></h1>'
+        '<p class="sub-lead">고객이 찾는 정보와 사업자의 운영 범위를 반영해 페이지를 구성합니다.</p>'
         '</div></section><section class="section"><div class="container narrow process-list">'
-        + steps + '<div class="article-section"><h2>검색 노출은 별도 검증 항목입니다.</h2>'
+        + steps + '<div class="article-section"><h2>검색 결과 확인 안내</h2>'
         + paragraph(pool["qualityVariants"][8]) +
         '</div></div></section>'
     )
-    return layout("업종별 지역검색 홈페이지 제작 과정 | 인터피아드",
-                  "업종 확인, 실제 서비스 가능 지역, 고유 콘텐츠, 모바일 전화 연결, 검색 상태 관측까지 지역 업체 홈페이지 제작 절차.",
+    return layout("업종별 홈페이지 제작 과정 | 인터피아드",
+                  "서비스 확인, 방문 가능 지역, 업종별 콘텐츠, 모바일 전화 연결과 공개 후 검색 상태 확인까지 홈페이지 제작 절차를 안내합니다.",
                   body, "process")
-
 
 def render_faq(pool: dict) -> str:
     faq = "".join(
@@ -413,58 +409,68 @@ def render_faq(pool: dict) -> str:
     )
     body = (
         '<section class="sub-hero"><div class="container narrow">' + kicker("제작 상담 전 확인") +
-        '<h1>홈페이지 제작과 검색 노출,<br><em>어디까지 가능한가요?</em></h1>'
-        '<p class="sub-lead">가격, 서버, 도메인, 검색 결과와 실제 서비스 자료에 관한 자주 묻는 질문을 모았습니다.</p>'
+        '<h1>홈페이지 제작,<br><em>궁금한 내용을 확인하세요.</em></h1>'
+        '<p class="sub-lead">월 이용료, 홈페이지 주소, 페이지 구성, 검색 결과와 운영 조건에 관한 질문을 안내합니다.</p>'
         '</div></section><section class="section"><div class="container narrow">'
         '<div class="faq-list">' + faq + '</div></div></section>'
     )
-    return layout("홈페이지 제작·SEO 자주 묻는 질문 | 인터피아드",
-                  "페이지당 월 1,000원 이용료, 업종별 주소·서버비 포함, 지역별 홈페이지와 검색 노출에 대한 질문을 안내합니다.",
+    return layout("홈페이지 제작 자주 묻는 질문 | 인터피아드",
+                  "페이지당 월 1,000원 이용료, 고객 전용 주소·서버비 포함, 지역별 홈페이지와 검색 결과에 관한 질문을 안내합니다.",
                   body, "faq")
 
-
-def grams(s: str) -> set[str]:
-    clean = re.sub(r"\s+", "", s)
-    return {clean[i:i+5] for i in range(max(0, len(clean) - 4))}
-
-
-def export_keywords(keywords: dict, path: Path) -> int:
-    count = 0
-    seen = set()
-    with path.open("w", encoding="utf-8-sig", newline="") as out:
-        writer = csv.writer(out)
-        writer.writerow(["type", "industry", "industry_id", "priority", "keyword", "meaning"])
-        for sector in keywords["industries"]:
-            priority = "launch" if sector["launch"] else "research_only"
-            for template in keywords["buyerIntentTemplates"]:
-                phrase = template.replace("{업종}", sector["label"])
-                key = ("buyer", phrase)
-                if key in seen:
-                    continue
-                seen.add(key)
-                writer.writerow(["buyer", sector["label"], sector["id"], priority, phrase,
-                                 "Homepage creation buyer intent; proposed, not search-volume tested"])
-                count += 1
-            for phrase in sector["exampleCustomerQueries"]:
-                key = ("customer_example", phrase)
-                if key in seen:
-                    continue
-                seen.add(key)
-                writer.writerow(["customer_example", sector["label"], sector["id"], priority, phrase,
-                                 "Future client keyword structure ONLY; verify real delivery area"])
-                count += 1
-    return count
+def visible_copy(source: str) -> str:
+    without_scripts = re.sub(r"<script\b[^>]*>.*?</script>", " ", source, flags=re.I | re.S)
+    without_styles = re.sub(r"<style\b[^>]*>.*?</style>", " ", without_scripts, flags=re.I | re.S)
+    alts = " ".join(re.findall(r'\balt="([^"]*)"', without_styles))
+    text = re.sub(r"<[^>]+>", " ", without_styles)
+    return " ".join((html.unescape(text) + " " + html.unescape(alts)).split())
 
 
-def target_for_link(path: Path, href: str) -> Path | None:
-    if not href.startswith("/") or href.startswith("//"):
-        return None
-    p = urlsplit(href).path
-    if p == "/":
-        return path / "index.html"
-    if p.endswith("/"):
-        return path / p.lstrip("/") / "index.html"
-    return path / p.lstrip("/")
+def copy_source_fingerprint() -> str:
+    paths = [
+        ROOT / "scripts" / "build_webbuilder.py",
+        SITE / "copy-review-policy.json",
+        SITE / "copy-pool.json",
+        SITE / "industry-expansion-a.json",
+        SITE / "industry-expansion-b.json",
+        SITE / "keyword-pool.json",
+    ]
+    digest = hashlib.sha256()
+    for path in paths:
+        digest.update(str(path.relative_to(ROOT)).encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(path.read_bytes())
+    return digest.hexdigest()
+
+
+def audit_webbuilder_copy(pages: dict[str, str], expected: int, policy: dict) -> list[str]:
+    errors = []
+    sample_paths = policy.get("samplePaths", [])
+    minimum = max(int(policy.get("minimumSampleCount", 1)),
+                  math.ceil(expected * float(policy.get("minimumSampleRate", 0.01))))
+    if len(sample_paths) < minimum:
+        errors.append("manual review sample below 1% minimum")
+    if len(sample_paths) != len(set(sample_paths)):
+        errors.append("duplicate manual review sample path")
+    for url_path in sample_paths:
+        relative = "index.html" if url_path == "/" else url_path.strip("/") + "/index.html"
+        if relative not in pages:
+            errors.append("manual review sample missing " + url_path)
+    for relative, source in pages.items():
+        visible = visible_copy(source)
+        for phrase in policy.get("forbiddenPhrases", []):
+            if phrase in visible:
+                errors.append(relative + ": forbidden customer copy phrase: " + phrase)
+        for pattern in policy.get("forbiddenRegex", []):
+            if re.search(pattern, visible, flags=re.I):
+                errors.append(relative + ": forbidden customer copy pattern: " + pattern)
+    for url_path, phrases in policy.get("requiredByPath", {}).items():
+        relative = "index.html" if url_path == "/" else url_path.strip("/") + "/index.html"
+        visible = visible_copy(pages.get(relative, ""))
+        for phrase in phrases:
+            if phrase not in visible:
+                errors.append(relative + ": required customer disclosure missing: " + phrase)
+    return errors
 
 
 def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) -> dict:
@@ -473,6 +479,9 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
     if len(pages) != expected or expected != 42:
         raise ValueError("Unexpected page count")
     errors = []
+    policy = load("copy-review-policy.json")
+    copy_errors = audit_webbuilder_copy(pages, expected, policy)
+    errors.extend("Webbuilder copy gate " + item for item in copy_errors)
     titles = set()
     total_links = 0
     image_refs = 0
@@ -539,8 +548,6 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
         errors.append("preview sitemap prohibited")
     if (out / "robots.txt").read_text() != "User-agent: *\nDisallow: /\n":
         errors.append("robots.txt drift")
-    if errors:
-        raise ValueError("; ".join(errors[:8]))
     narratives = {key: "".join(str(item.get(f, "")) for f in
                   ("intro", "problem", "structure", "conversion", "difference"))
                   for key, item in pool["industry"].items()}
@@ -551,7 +558,45 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
         similarities.append((score, a, b))
     max_pair = max(similarities) if similarities else (0.0, None, None)
     if max_pair[0] >= .49:
-        raise ValueError("Sector prose >=0.49 Jaccard: " + str(max_pair))
+        errors.append("Sector prose >=0.49 Jaccard: " + str(max_pair))
+    fingerprint = copy_source_fingerprint()
+    scorecard_path = SITE / policy.get("scorecardFile", "copy-review-scorecard.json")
+    review_status = "PENDING_MANUAL_REVIEW"
+    review_minimum_score = None
+    live_verification = "UNVERIFIED"
+    minimum_sample = max(int(policy.get("minimumSampleCount", 1)),
+                         math.ceil(expected * float(policy.get("minimumSampleRate", 0.01))))
+    if scorecard_path.is_file():
+        scorecard = json.loads(scorecard_path.read_text(encoding="utf-8"))
+        samples = scorecard.get("samples", [])
+        expected_paths = set(policy["samplePaths"])
+        sample_paths = [x.get("path") for x in samples]
+        scores = [int(x.get("score", 0)) for x in samples]
+        rubric_ids = {x["id"] for x in policy["rubric"]}
+        if scorecard.get("status") != "complete":
+            errors.append("manual copy scorecard is not complete")
+        if scorecard.get("totalDocuments") != expected:
+            errors.append("manual copy scorecard document count mismatch")
+        if len(samples) < minimum_sample or set(sample_paths) != expected_paths or len(sample_paths) != len(set(sample_paths)):
+            errors.append("manual copy scorecard sample coverage mismatch")
+        if scorecard.get("sourceFingerprint") != fingerprint:
+            errors.append("manual copy scorecard source fingerprint is stale")
+        if not scores or min(scores) < int(policy["scoreThreshold"]):
+            errors.append("manual copy score below required threshold")
+        for sample in samples:
+            dimensions = sample.get("dimensions", {})
+            if set(dimensions) != rubric_ids or sum(int(v) for v in dimensions.values()) != int(sample.get("score", -1)):
+                errors.append("manual copy score breakdown mismatch: " + str(sample.get("path")))
+            if sample.get("decision") != "PASS":
+                errors.append("manual copy sample not passed: " + str(sample.get("path")))
+            if sample.get("url") != DOMAIN + sample.get("path", ""):
+                errors.append("manual copy sample URL mismatch: " + str(sample.get("path")))
+        if not errors:
+            review_status = "PASS_GENERATED_SOURCE"
+            review_minimum_score = min(scores)
+            live_verification = scorecard.get("liveVerification", "UNVERIFIED")
+    if errors:
+        raise ValueError("; ".join(errors[:8]))
     return {"pages": len(pages), "titleUnique": len(titles), "linksChecked": total_links,
             "imageFiles": 5, "imageReferences": image_refs, "imagesSource": "generated-raster-WebP-derived-from-3-original-PNGs",
             "brokenLinks": 0, "previewNoindex": True, "sitemap": False,
@@ -562,7 +607,12 @@ def check_output(out: Path, pages: dict[str, str], pool: dict, expected: int) ->
             "minimumPages": 10, "minimumMonthlyKRW": 10000,
             "domainAndHostingIncluded": True, "domainModel": "provider-managed-multi-industry-domains",
             "candidateIndustryDomainsPurchased": False, "fullContractTermsConfirmed": False,
-            "domainDeployed": False, "indexNowSubmitted": False}
+            "domainDeployed": False, "indexNowSubmitted": False,
+            "copyToneAudit": "PASS", "copyToneFilesChecked": len(pages),
+            "copyReviewStatus": review_status, "copyReviewSampleCount": len(policy["samplePaths"]),
+            "copyReviewThreshold": int(policy["scoreThreshold"]),
+            "copyReviewMinimumScore": review_minimum_score,
+            "copyLiveVerification": live_verification, "copySourceFingerprint": fingerprint}
 
 
 def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT, mode: str = "preview") -> dict:
@@ -611,9 +661,9 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT, mode: str =
     faq = (out / "guide" / "faq" / "index.html").read_text(encoding="utf-8")
     if ('페이지당 월 1,000원부터' not in home
             or '최소 10페이지 월 10,000원' not in home
-            or '도메인 확보·관리' not in home
-            or '도메인을 확보하고 관리해 드립니다' not in guide
-            or '도메인을 확보하고 관리해 드립니다' not in faq):
+            or '고객 전용 홈페이지 주소 제공' not in home
+            or '도메인 운영과 기본 서버 비용' not in guide
+            or '도메인 운영과 기본 서버 비용' not in faq):
         raise ValueError("Monthly minimum or customer-focused domain service messaging missing")
     for preview in out.rglob("*.html"):
         customer_html = preview.read_text(encoding="utf-8")
