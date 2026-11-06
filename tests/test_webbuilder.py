@@ -85,6 +85,29 @@ class WebbuilderPreviewTest(unittest.TestCase):
             self.assertEqual(sum(sample["dimensions"].values()), sample["score"])
             self.assertEqual(sample["decision"], "PASS")
 
+    def test_related_industry_links_remain_in_same_cluster(self):
+        import re
+        from scripts.build_webbuilder import related_industry_cards
+        keywords = load("keyword-pool.json")
+        sectors = [x for x in keywords["industries"] if x["launch"]]
+        for item in sectors:
+            markup = related_industry_cards(item, sectors)
+            linked_ids = re.findall(r'href="/industry/([^/]+)/"', markup)
+            expected = [x["id"] for x in sectors
+                        if x["cluster"] == item["cluster"] and x["id"] != item["id"]][:3]
+            self.assertEqual(linked_ids, expected, item["id"])
+
+    def test_industry_descriptions_are_specific_sentences(self):
+        keywords = load("keyword-pool.json")
+        sectors = [x for x in keywords["industries"] if x["launch"]]
+        angles = [x["consultingAngle"] for x in sectors]
+        self.assertEqual(len(angles), 38)
+        self.assertEqual(len(set(angles)), 38)
+        for item in sectors:
+            self.assertTrue(item["consultingAngle"].endswith("합니다."), item["id"])
+            for query in item["exampleCustomerQueries"]:
+                self.assertTrue("{동}" in query or "{시}" in query, (item["id"], query))
+
     def test_industry_distinctness(self):
         self.assertEqual(self.qa["narrativePairsChecked"], 703)
         self.assertLess(self.qa["narrativeMaxChar5GramJaccard"], .49)

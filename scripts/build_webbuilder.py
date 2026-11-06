@@ -373,7 +373,7 @@ def render_pricing(pool: dict) -> str:
         + '</div><div class="article-section"><h2>월 이용료에 포함되는 항목</h2>'
         + paragraph(pool["offerVariants"][0]) + paragraph(pool["offerVariants"][1]) +
         '</div><div class="article-section"><h2>계약 전에 확인할 조건</h2>'
-        + paragraph("부가세 적용 여부, 계약기간, 수정 범위, 주소 이용 및 계약 종료 후 처리 조건은 계약 전에 안내합니다. 세부 내용은 상담과 계약서에서 확인할 수 있습니다.")
+        + paragraph("부가세 적용 여부, 계약기간, 수정 범위, 주소 이용 조건과 계약 종료 후 처리 방식은 계약 전에 안내합니다. 세부 내용은 상담과 계약서에서 확인할 수 있습니다.")
         + '</div></div></section>'
     )
     return layout("홈페이지 최소 10페이지 월 10,000원부터 비용 안내 | 인터피아드",
