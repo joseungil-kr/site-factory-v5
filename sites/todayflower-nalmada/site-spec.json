@@ -56,7 +56,7 @@
     "mode": "direct SKU links to seller + phone"
   },
   "images": {
-    "source": "Five 1448x1086 ImageGen-derived final WebPs and five legacy editorial assets remain archived in the repository; no local editorial image is rendered in the new candidate. Existing remote seller product cards are unchanged.",
+    "source": "Five original ImageGen 1448x1086 scenes stored as large WebPs; five reusable V5 editorial assets in imagePool; seller product images loaded separately from fwith.co.kr",
     "approved": false,
     "visualReview": "Require actual 390px and 1440px Chromium screenshots and naturalWidth/display-box QA before public publish",
     "aiGeneratedWebP": [
@@ -66,9 +66,9 @@
       "condolence-wreath.webp",
       "flower-wrapping.webp"
     ],
-    "countPerPage": 0,
-    "aiEditorialCountPerPage": 0,
-    "otherLocalEditorialCountPerPage": 0,
+    "countPerPage": 7,
+    "aiEditorialCountPerPage": 5,
+    "otherLocalEditorialCountPerPage": 2,
     "libraryAssetCount": 10,
     "remoteSellerCardImagesPerPage": {
       "1": 8,
@@ -77,9 +77,9 @@
     },
     "originalWidth": 1448,
     "originalHeight": 1086,
-    "cssLayout": "No local editorial images in new candidate; product-card images retain existing seller URL mapping",
+    "cssLayout": "3+2 centered at desktop, 2 columns tablet, single full-width column mobile; image width 100% with aspect ratio 4:3",
     "fixedThumbnailPixelsRemoved": true,
-    "generatorPolicy": "Unverified editorial images remain archived but are excluded from new candidate HTML and output assets. Existing seller product-card URLs are preserved without expansion pending exact permission record recovery.",
+    "generatorPolicy": "Retain original 7 editorial image references, without claiming actual product or delivery evidence; incomplete source proof recorded separately.",
     "provenance": [
       {
         "path": "assets/library/todayflower/gift-bouquet.webp",
