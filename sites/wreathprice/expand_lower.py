@@ -152,6 +152,9 @@ def main(archive):
         '화환 상품 기준가를 살펴보세요. 지역별 배송 가능 여부는 미확인입니다.</p>'
         '<a href="/localities/">전국 읍면동 목록 보기</a></section></main>')
     home.write_text(text,encoding='utf-8')
+    from customer_copy import apply_to_tree
+    copy_result=apply_to_tree(OUT)
+    assert copy_result['html']==4935
     report={'mode':'noindex-official-2026-10-22-archive','archiveSHA256':EXPECTED_SHA,
       'sourceRows':len(lines)-1,'activeRows':len(allactive),'eligibleEupMyeonDong':len(eligible),
       'verifiedParentLocalities':len(records),'unmatched':excluded,
@@ -159,7 +162,7 @@ def main(archive):
       'localityDirectory':1,'grandTotalHTML':303+len(records),
       'verifiedDeliveryAreas':0,'regionalServiceClaims':False,'uniqueContentProven':False,'regionalShippingEvidenceCount':0,
       'copyReusedAcrossLocalities':True,'faqBasedOnVerifiedLocalityNameAndGeneralPurchaseQuestions':True,
-      'indexable':False,'canonical':False,'sitemap':False,'localities':records}
+      'indexable':False,'canonical':False,'sitemap':False,'customerCopyNormalization':copy_result,'localities':records}
     (OUT/'localities-audit.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     print('WREATHPRICE_LOWER_OFFICIAL_BUILD_PASS '+json.dumps({k:v for k,v in report.items() if k!='localities'},ensure_ascii=False),flush=True)
     return report
