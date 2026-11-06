@@ -43,6 +43,6 @@ for place in scope['regions']:
     if place['slug']=='gojan.html':continue
     raw=(OUT/place['slug']).read_text(encoding='utf-8')
     assert raw.count(place['focus'])==1 and raw.count(place['example'])==1,place['slug']
-    assert '견적 상담에 필요한 정보' in raw and '현장 조건을 알려주시면 견적을 안내해 드립니다' in raw
+    assert '견적 상담 전에 알려주세요' in raw and '현장 사진과 일정도 함께 준비해 주세요' in raw
     assert '실제 환경을 조사한 결과가 아닌 견적용 가정' not in raw
 print('SKYQUOTE_ANSAN_25_VISITOR_COPY_QA_PASS pages=25 images=5 pricing=true focus/example once noindex=true')
