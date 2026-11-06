@@ -18,8 +18,8 @@ KINDS = (
 STYLE = r"""
 .tf-layout{--pine:#174a3d;--mint:#f1f7ef;--pink:#f8eee9;--line:#e4e9e3;color:#213d33;font-family:system-ui,-apple-system,'Malgun Gothic',sans-serif}
 .tf-shell{max-width:1160px;margin:auto;padding-inline:22px}.tf-layout a{text-underline-offset:3px}
-.tf-hero{background:linear-gradient(108deg,#f9f7f1 12%,#e8f3e9 95%);padding:46px 0 38px}
-.tf-hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:42px;align-items:center}
+.tf-hero{background:linear-gradient(108deg,#f9f7f1 12%,#e8f3e9 95%);padding:54px 0 48px}.tf-hero-inner{max-width:920px}
+.tf-hero-grid{display:block}
 .tf-kicker{display:block;font-size:12px;color:#568575;font-weight:800;letter-spacing:.12em}
 .tf-hero h1{font-size:clamp(32px,3.35vw,46px);line-height:1.27;letter-spacing:-.046em;word-break:keep-all;overflow-wrap:break-word;margin:14px 0 18px;color:#174636}
 .tf-lead{font-size:17px;line-height:1.9;color:#445f53;max-width:600px}
@@ -67,8 +67,8 @@ STYLE = r"""
 @media(max-width:980px){.tf-story-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.tf-story-item,.tf-story-item:nth-child(4),.tf-story-item:nth-child(5){grid-column:auto}}
 @media(max-width:740px){.tf-story-grid{grid-template-columns:minmax(0,1fr);gap:15px}.tf-story-item{padding:12px}.tf-story-item img{width:100%;height:auto}.tf-story-item figcaption{font-size:14px}}
 @media(max-width:950px){.tf-product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tf-hero-grid{gap:21px}}
-@media(max-width:740px){.tf-shell{padding-inline:16px}.tf-hero{padding:29px 0}.tf-hero-grid,.tf-check-grid{grid-template-columns:1fr}
-.tf-hero h1{font-size:36px}.tf-lead{font-size:15px}.tf-hero-photo{height:270px}.tf-choose{grid-template-columns:1fr;gap:12px}
+@media(max-width:740px){.tf-shell{padding-inline:16px}.tf-hero{padding:29px 0}.tf-hero-grid,.tf-check-grid{display:block}
+.tf-hero h1{font-size:36px}.tf-lead{font-size:15px}.tf-choose{grid-template-columns:1fr;gap:12px}
 .tf-choose-card{display:block}.tf-choose-card img{display:none}
 .tf-choose-card-body{padding:16px}.tf-articles{grid-template-columns:1fr}.tf-product-grid{gap:9px}
 .tf-product-copy{padding:11px}.tf-product h4{font-size:14px}.tf-product-price{font-size:18px}
@@ -92,31 +92,30 @@ def _img(path, alt, css_class="", loading="lazy", priority=False):
             ' decoding="async"' + attrs + '>')
 
 def _head(site,page):
-    number=page["number"]
-    path=base.url_path(number)
-    original=base.head(site,page["title"],page["intro"],path,"/assets/images/"+site["imagePool"][0])
-    return original.replace("</head>","<style>"+STYLE+"</style></head>")
+    path=base.url_path(page["number"])
+    original=base.head(site,page["title"],page["intro"],path,"")
+    # No approved representative image is currently available for social metadata.
+    return original.replace('<meta property="og:image" content="">','').replace(
+        "</head>","<meta property=\"og:type\" content=\"website\"></head>"
+    )
 
 def _hero(site,page):
-    picture=_img(site["imagePool"][0],"꽃다발 선물을 주제로 한 AI 연출 이미지","tf-hero-visual","eager",True)
-    return ('<section class="tf-hero"><div class="tf-shell tf-hero-grid"><div>'
+    return ('<section class="tf-hero"><div class="tf-shell tf-hero-inner">'
             '<span class="tf-kicker">'+_h(page["heroTag"])+'</span>'
             '<h1>'+_h(page["title"])+'</h1>'
             '<p class="tf-lead">'+_h(page["intro"])+'</p>'
-            '<div class="tf-actions"><a class="tf-action" href="tel:18440644">배송 가능 시간 상담</a>'
-            '<a class="tf-action secondary" href="#products">실제 상품·가격 보기</a></div>'
-            '</div><figure class="tf-figure"><div class="tf-hero-photo">'+picture+'</div>'
-            '<figcaption class="tf-img-caption">AI 연출 이미지 · 실제 판매 상품의 사진과 구성은 아래 상품에서 확인하세요.</figcaption>'
-            '</figure></div></section>')
+            '<div class="tf-actions"><a class="tf-action" href="tel:18440644">배송 일정 상담</a>'
+            '<a class="tf-action secondary" href="#products">상품 비교하기</a></div>'
+            '</div></section>')
 
 def _choices(site):
     rows=(
-        ("꽃다발","기념일·감사·응원의 선물. 받는 사람의 취향과 수령 가능한 시간을 확인하세요.",site["imagePool"][1]),
-        ("개업화분","매장·사무실에 놓을 공간과 관리 조건, 실제 크기를 살펴보세요.",site["imagePool"][2]),
-        ("축하·근조화환","행사장 반입·장례식장 빈소명과 리본 문구를 구분해 준비하세요.",site["imagePool"][3])
+        ("꽃다발","기념일·감사·응원의 선물. 받는 분의 취향과 원하는 색감, 포장 분위기를 골라보세요."),
+        ("개업화분","매장·사무실에 놓을 공간과 채광, 관리할 사람에 맞춰 크기를 선택하세요."),
+        ("축하·근조화환","행사와 조문 목적에 맞는 종류를 고르고, 리본 문구와 수령 위치를 정리해 주세요.")
     )
     result=[]
-    for title,desc,_pic in rows:
+    for title,desc in rows:
         result.append('<article class="tf-choose-card">'
                       '<div class="tf-choose-card-body"><h3>'+_h(title)+'</h3>'
                       '<p>'+_h(desc)+'</p></div></article>')
@@ -131,14 +130,14 @@ def _product_cards(products,selected):
         cards=[]
         for p in entries:
             sku=_h(p["sku"]);order=_h(p["orderUrl"])
-            # V4 seller-original image URL, not AI editorials or promised delivered-order photos.
             image=_h(p.get("imageUrl",""))
-            pic=(f'<img src="{image}" alt="{_h(p["name"])} · 판매처 상품 이미지"'
+            pic=(f'<img src="{image}" alt="{_h(p["name"])} 상품 사진"'
                  ' width="500" height="500" loading="lazy" decoding="async">') if image else ""
+            price=(f'{p["referencePrice"]:,}원' if isinstance(p.get("referencePrice"),int)
+                   else "상품 상세에서 가격 확인")
             cards.append('<article class="tf-product">'+pic+'<div class="tf-product-copy">'
                          '<small>'+sku+'</small><h4>'+_h(p["name"])+'</h4>'
-                         '<p class="tf-product-price">'+f'{p["referencePrice"]:,}'+'원</p>'
-                         '<p class="tf-product-date">판매처 표시가 확인 '+_h(p["referenceDate"])+'</p>'
+                         '<p class="tf-product-price">'+_h(price)+'</p>'
                          '<a target="_blank" rel="noopener noreferrer" href="'+order+'">상품 상세·주문 확인</a>'
                          '</div></article>')
         sections.append('<div class="tf-group"><h3>'+_h(label)+'</h3>'
@@ -146,84 +145,41 @@ def _product_cards(products,selected):
                         '<div class="tf-product-grid">'+"".join(cards)+'</div></div>')
     return "".join(sections)
 
-def _story(site):
-    """Five newly generated, locally bundled AI-topic images; not item photos."""
-    captions=(
-        ("gift-bouquet.webp", "꽃다발 선물", "분홍 꽃다발을 표현한 AI 연출 이미지"),
-        ("opening-plant.webp", "개업화분", "실내 식물 화분을 표현한 AI 연출 이미지"),
-        ("celebration-wreath.webp", "축하화환", "축하 꽃장식을 표현한 AI 연출 이미지"),
-        ("condolence-wreath.webp", "근조화환", "흰 조의 꽃장식을 표현한 AI 연출 이미지"),
-        ("flower-wrapping.webp", "꽃 포장", "꽃다발 포장 과정을 표현한 AI 연출 이미지"),
-    )
-    assert set(p for p,_,_ in captions) <= set(site["imagePool"])
-    items=[]
-    for photo,label,alt in captions:
-        items.append('<figure class="tf-story-item">'
-                     +_img(photo,alt,loading="lazy")
-                     +'<figcaption>'+_h(label)+'</figcaption></figure>')
-    return '<div class="tf-story-grid">'+"".join(items)+'</div>'
-
 def _body(site,page,pages,products,links):
     snippet='<div class="tf-layout">'+_hero(site,page)+'<main id="main" class="tf-shell">'
-    snippet+='<section class="tf-section" id="choices"><header class="tf-section-head"><h2>꽃다발·화분·화환, 용도에 맞게 선택</h2>'
+    snippet+='<section class="tf-section" id="choices"><header class="tf-section-head"><h2>꽃다발·화분·화환, 목적에 맞게 선택</h2>'
     snippet+='<p class="tf-section-desc">'+_h(page["sectionLead"])+'</p></header>'+_choices(site)+'</section>'
-    snippet+='<section class="tf-section"><header class="tf-section-head"><h2>꽃 선물을 준비하는 다섯 장면</h2><p class="tf-section-desc">AI 생성 연출 이미지로 용도를 살펴보세요. 실제 판매 상품 사진이나 배송완료 사진은 아닙니다.</p></header>'+_story(site)+'</section>'
-    snippet+='<section class="tf-section"><header class="tf-section-head"><h2>지역과 상황에 맞는 주문 판단</h2></header>'
+    snippet+='<section class="tf-section"><header class="tf-section-head"><h2>지역과 상황에 맞는 주문 정보</h2></header>'
     snippet+='<div class="tf-articles">'+base.article_body(page)+'</div></section>'
-    snippet+='<section class="tf-section" id="products"><header class="tf-section-head"><h2>확인된 실제 꽃 상품·가격</h2>'
-    snippet+='<p class="tf-section-desc">상품별 표시 금액은 주문 전 다시 확인해 주세요. 지역·시간·옵션에 따라 최종 금액은 달라질 수 있습니다.</p></header>'
+    snippet+='<section class="tf-section" id="products"><header class="tf-section-head"><h2>상품별 사진·가격·주문 링크</h2>'
+    snippet+='<p class="tf-section-desc">상품 사진과 표시가격을 비교하고, 상세 페이지에서 현재 판매가·옵션·배송비를 확인한 뒤 주문할 수 있습니다.</p></header>'
     snippet+=_product_cards(products,page["productSkus"])
-    snippet+='<p class="tf-coverage">당일배송을 확정하는 화면이 아닙니다. 배송 가능한 날짜·마감시각·상품 준비·지역 추가요금은 선택한 상품의 판매처에서 확인해야 합니다.</p></section>'
-    snippet+='<section class="tf-section"><header class="tf-section-head"><h2>오늘 받을 꽃, 주문 전 체크리스트</h2></header>'
-    snippet+='<div class="tf-check-grid"><figure class="tf-figure"><div class="tf-pack-photo">'
-    snippet+=_img(site["imagePool"][4],"꽃 선물 포장 과정을 표현한 AI 연출 이미지")
-    snippet+='</div><figcaption class="tf-img-caption">연출 이미지로 실제 상품 제작·배송 증빙이 아닙니다.</figcaption></figure>'
+    snippet+='<p class="tf-coverage">원하는 날짜와 수령 주소를 알려주시면 상품별 배송 가능 일정과 추가 배송비를 안내해 드립니다.</p></section>'
+    snippet+='<section class="tf-section"><header class="tf-section-head"><h2>주문에 필요한 정보</h2></header>'
     snippet+='<ol class="tf-check">'
     for title,paragraph in (
-        ("① 상품·SKU 선택","판매처 상품 화면에서 사진·규격·표시가와 포장·옵션을 확인합니다."),
-        ("② 수령 주소·담당자 확인","도로명 주소와 건물·호실, 실제로 꽃을 받을 사람의 연락처를 준비합니다."),
-        ("③ 배송 시각·마감 문의","오늘 수령 가능 여부와 주문 마감·수령 가능 시간대를 결제 전에 상담합니다."),
-        ("④ 지역 배송비·최종 금액","추가배송비, 상품 구성과 최종 결제금액을 판매처에서 확인합니다."),
-        ("⑤ 카드·리본 문구","기념일 카드 또는 축하·근조 리본의 받는 이름과 보내는 명의를 대조합니다."),
+        ("① 상품 선택","꽃다발·화분·화환 중 선물 목적에 맞는 상품을 고르고 SKU를 정리해 주세요."),
+        ("② 수령 정보","받는 분의 이름과 연락처, 도로명 주소·건물명·층·호실을 준비해 주세요."),
+        ("③ 희망 일정","원하는 날짜와 시간대를 알려주시면 상품 준비 일정과 전달 가능 시간을 안내해 드립니다."),
+        ("④ 최종 금액","상품 상세에서 현재 판매가와 옵션, 배송 주소에 적용되는 배송비를 확인해 주세요."),
+        ("⑤ 카드·리본","받는 분과 보내는 분의 이름, 카드·리본 문구를 구분해 적어 주세요."),
     ):
         snippet+='<li><strong>'+_h(title)+'</strong>'+_h(paragraph)+'</li>'
-    snippet+='</ol></div></section>'
+    snippet+='</ol></section>'
     snippet+='<section class="tf-section tf-faq"><header class="tf-section-head"><h2>지역 꽃배달 FAQ</h2></header>'
     snippet+=base.faq_markup(page)+'</section>'
     snippet+='<section class="tf-section"><header class="tf-section-head"><h2>다른 지역 주문 안내</h2></header><nav class="tf-related" aria-label="지역별 관련 글">'
-    # The 33-page pilot showed every other link; nationwide pages must not
-    # produce 5,000 sibling links per document (millions of duplicate links).
     if len(pages)<=50:
         suggested=[p for p in pages if p["number"]!=page["number"]]
     else:
-        # The reserved /404.html must stay an actual HTTP 404 document:
-        # page numbering jumps from 403 to 405 for this site only.
         index=page["number"]-1 if page["number"]<404 else page["number"]-2
         positions={0,1,2,3}
         positions.update(range(max(0,index-2),min(len(pages),index+3)))
-        # Include a few useful adjacent legal-code entries without pretending
-        # any particular street, venue or local florist has been verified.
         suggested=[pages[i] for i in sorted(positions) if i!=index][:8]
-    snippet+=''.join('<a href="'+_h(base.url_path(p["number"]))+'">'+_h(p["region"])+' 꽃배달 확인</a>' for p in suggested)
+    snippet+=''.join('<a href="'+_h(base.url_path(p["number"]))+'">'+_h(p["region"])+' 꽃배달 안내</a>' for p in suggested)
     snippet+='</nav></section>'
-    snippet+='<section class="tf-order" id="order"><h2>상품번호·배송지를 준비해 상담하세요</h2><p>실제 주문과 결제는 꽃이랑 판매처에서 진행됩니다. 1844-0644로 당일 가능 여부를 확인하세요.</p>'
-    snippet+='<div class="tf-actions"><a class="tf-action" href="tel:18440644">전화 상담</a>'
-    snippet+='<a class="tf-action secondary" href="https://fwith.co.kr" target="_blank" rel="noopener noreferrer">꽃이랑 상품 전체 보기</a></div></section>'
-    if len(pages)>100:
-        # Indexed by contiguous page numbers; avoid sorting 5,070 pages for
-        # every generated HTML document. Other site renderers are unchanged.
-        current=page["number"]
-        index=current-1 if current<404 else current-2
-        start=max(0,min(index-3,len(pages)-7))
-        numbers=(pages[i]["number"] for i in range(start,min(len(pages),start+7)))
-        nav=''.join(
-            ('<span aria-current="page" class="active">'+str(n)+'</span>')
-            if n==current else
-            ('<a href="'+_h(base.url_path(n))+'" aria-label="'+str(n)+'번 페이지">'+str(n)+'</a>')
-            for n in numbers)
-        snippet+='<nav class="pagination" aria-label="다른 글 페이지">'+nav+'</nav>'
-    else:
-        snippet+=base.render_pagination(pages,page["number"])
+    snippet+='<section class="tf-order" id="order"><h2>상품번호와 배송지를 준비해 상담하세요</h2><p>상품번호, 받으실 주소, 희망 날짜를 알려주시면 주문 상담을 도와드립니다.</p>'
+    snippet+='<div class="tf-actions"><a class="tf-action" href="tel:18440644">전화 상담 1844-0644</a></div></section>'
     snippet+='</main></div>'
     return snippet
 
