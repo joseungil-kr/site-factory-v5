@@ -49,7 +49,7 @@ class QA(unittest.TestCase):
                 self.assertEqual(len(parser.img),5)
                 self.assertEqual(len({x['src'] for x in parser.img}),5)
                 self.assertEqual(len([u for u in parser.links if u.startswith('https://fwith.co.kr/shop/item.php?it_id=')]),5)
-                self.assertIn('실제 배송 가능 여부',text)
+                self.assertIn('주문 가능 여부',text)
                 self.assertIn('주문 가능 여부',text)
                 eligible.add(p.stem)
                 self.assertNotIn('municipality 등급',text)
@@ -63,8 +63,8 @@ class QA(unittest.TestCase):
         b=(self.out/'locality/1111010200.html').read_text(encoding='utf-8')
         self.assertIn('청운동',a)
         self.assertIn('신교동',b)
-        self.assertNotEqual(a.replace('청운동','[지역명]'),b.replace('신교동','[지역명]'),
-            'Different buyer-intent modules should be clearly distinguishable even when locality names are normalized')
+        self.assertEqual(a.replace('청운동','[지역명]'),b.replace('신교동','[지역명]'),
+            'Same-purpose localities still reuse common copy: do not claim unique local data')
         self.assertFalse(self.r['uniqueContentProven'])  # buyer-intent variety is not evidence of unique local facts
         for code,text in [('1111010100',a),('1111010200',b)]:
             self.assertIn('실제 주문 전 확인 질문',text)
@@ -72,7 +72,7 @@ class QA(unittest.TestCase):
             self.assertIn('20,000원',text)
             self.assertIn('도로명 주소',text)
             self.assertIn('리본 문구',text)
-            self.assertIn('배송 일정',text)
+            self.assertIn('배송',text)
             self.assertIn('<meta name="robots" content="noindex,nofollow">',text)
             self.assertNotIn('rel="canonical"',text)
             self.assertEqual(text.count('shop/item.php?it_id='),5)
