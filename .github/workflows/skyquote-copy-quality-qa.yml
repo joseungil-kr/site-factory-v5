@@ -29,6 +29,9 @@ on:
       - '.github/workflows/skyquote-copy-quality-qa.yml'
 permissions:
   contents: read
+concurrency:
+  group: skyquote-copy-quality-qa
+  cancel-in-progress: true
 jobs:
   quality:
     runs-on: ubuntu-latest
