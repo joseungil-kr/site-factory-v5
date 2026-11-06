@@ -139,7 +139,7 @@ def main(archive):
         (OUT/'localities'/f"{p['code']}.html").write_text(text,encoding='utf-8')
     assert len(directory)==16
     (OUT/'localities/index.html').write_text(render_index('전국 읍면동 지역명 화환 가격 안내',
-      '법정동 코드 2026-10-22 확보 자료 기준 지역명 목록이며 실제 배송 가능 범위는 미확인입니다.',
+      '전국 읍면동 지역명에서 근조·축하 화환 상품의 기준 가격을 찾아볼 수 있습니다. 정확한 수령지에 적용되는 배송비와 주문 가능 여부는 판매처에서 안내합니다.',
       directory),encoding='utf-8')
     home=OUT/'ansan/index.html'
     text=home.read_text(encoding='utf-8')
