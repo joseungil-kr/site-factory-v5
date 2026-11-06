@@ -54,8 +54,8 @@ def main():
         blocks=['<section><h2>견적 상담에 필요한 정보</h2><p>'+escape(special)+'</p></section>']
         for heading,body in chosen:
             blocks.append('<section><h2>'+escape(heading)+' 비교 질문</h2><p>'+escape(body)+'</p></section>')
-        blocks.append('<section><h2>동일 조건 견적 요청 문장 예시</h2><p>'+escape(
-          '작업 예정지 '+loc+'의 정확한 현장 주소는 별도로 전달합니다. 장비 도달 높이·수평거리·하중·정차면·예상 작업시간·준비 및 철수 시간에 대해 차량/기사/이동/대기/야간/부가세 포함 여부를 구분한 견적을 요청합니다.')+'</p><p>어느 업체가 최저가인지는 실제 동조건 견적을 확보하기 전에는 알 수 없습니다.</p></section>')
+        blocks.append('<section><h2>견적 문의 예시</h2><p>'+escape(
+          '작업 예정 주소와 날짜, 작업 지점 높이와 차량 정차 위치에서의 수평거리, 탑승 인원과 자재 무게, 예상 작업시간을 알려주세요. 공개 단가의 4시간·8시간 기준과 부가세, 야간·휴일·원거리 추가 비용을 함께 확인할 수 있습니다.')+'</p></section>')
         html=html.replace('<section><h2>문의 절차</h2>',''.join(blocks)+'<section><h2>문의 절차</h2>',1)
         # Images remain original 5, links point to already verified operator.
         p=DEST/slug;p.parent.mkdir(parents=True,exist_ok=True);p.write_text(html,encoding='utf-8')
@@ -86,7 +86,7 @@ def main():
     # Group index for information discovery only; do not mislabel as service areas.
     links=''.join('<li><a href="'+x['slug']+'">'+escape(x['region'])+' — 견적 준비 안내</a></li>' for x in indices.values() if x['level']==1)
     page=DEST/'national/index.html'
-    page.write_text('<!doctype html><html lang="ko"><meta charset="utf-8"><meta name="robots" content="noindex,nofollow"><title>전국 행정구역별 스카이차 견적 확인사항 | 바른견적스카이</title><link rel="stylesheet" href="/assets/style.css"><style>img{max-width:100%;height:auto}main{overflow-wrap:anywhere}figure{margin:12px 0}</style><main><h1>전국 행정구역별 견적 비교 준비</h1><p>이 목록은 CC-BY 행정구역 정보로, 스카이차 업체의 전국 출동 범위·현장 작업사례 또는 가격 보장 목록이 아닙니다.</p><p>아래 다섯 이미지는 AI 생성 견적 설명용으로 실제 현장의 증거가 아닙니다.</p>'+''.join(base.photo(i) for i in range(5))+'<ul>'+links+'</ul><a href="/">안산시 검수 페이지</a></main></html>',encoding='utf-8')
+    page.write_text('<!doctype html><html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex,nofollow"><title>전국 지역별 스카이차 견적 안내 | 바른견적스카이</title><link rel="stylesheet" href="/assets/style.css"><style>img{max-width:100%;height:auto}main{overflow-wrap:anywhere}figure{margin:12px 0}</style></head><body><header><strong>바른견적스카이</strong><span>현장에 맞는 장비와 요금 상담</span></header><main><h1>전국 지역별 스카이차 견적 안내</h1><p>작업을 계획한 지역을 선택해 주세요. 정확한 현장 주소와 작업 내용을 알려주시면 이동거리와 이용 조건을 함께 상담할 수 있습니다.</p>'+''.join(base.photo(i) for i in range(5))+'<ul>'+links+'</ul><p><a href="/">안산시 지역 안내</a> · <a href="tel:01053221952">전화 상담 010-5322-1952</a></p></main></body></html>',encoding='utf-8')
     assert not (DEST/'sitemap.xml').exists()
     urls=[p.relative_to(DEST).as_posix() for p in DEST.rglob('*.html') if p.name!='404.html']
     assert len(urls)==310,(len(urls),len(indices))
