@@ -22,6 +22,7 @@ def render_index(title,intro,links):
     return ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
       '<meta name="viewport" content="width=device-width,initial-scale=1">'
       '<meta name="robots" content="noindex,nofollow"><title>'+e(title)+'</title>'
+      '<meta name="description" content="'+e(intro[:155])+'">'
       '<link rel="stylesheet" href="/assets/site.css"></head><body>'
       '<header><div class="wrap"><a href="/">알뜰화환 가격 안내</a></div></header>'
       '<main class="wrap"><section><h1>'+e(title)+'</h1><p>'+e(intro)+'</p>'
