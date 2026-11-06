@@ -43,7 +43,7 @@ def audit(archive):
     assert len(pages)==4935
     paths={"/"+p.relative_to(OUT).as_posix():p for p in pages}
     # Original Worker aliases: '/' serves the approved Ansan pilot.
-    aliases={"/":"/ansan/index.html"}
+    aliases={"/index.html":"/ansan/index.html"}
     title_seen=collections.Counter();desc_missing=[];orphan_links=[];broken_local=[]
     noindex_missing=[];canonicals=[];image_missing=[];missing_titles=[];duplicate_h1=[]
     headings=set();unique_external=collections.Counter()
