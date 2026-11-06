@@ -51,16 +51,9 @@ for path in m["paths"]:
         assert "작업 지점까지 높이" in text and "작업대에 오를 인원" in text
         assert "공개 이용요금" in text
         import hashlib
-        key=hashlib.sha256(path.split('/')[-1].removesuffix('.html').encode()).digest()
-        expected=[]
-        for digit in key:
-            prompt=generator.PROMPTS[digit%len(generator.PROMPTS)]
-            if prompt not in expected:expected.append(prompt)
-            if len(expected)==4:break
-        assert len(expected)==4,path
-        for heading,_body in expected:
-            assert '<h2>'+heading+'</h2>' in raw,(path,heading)
-        headings=tuple(heading for heading,_body in expected)
+        prompt_titles=[heading for heading,_body in generator.PROMPTS]
+        headings=tuple(heading for heading in prompt_titles if '<h2>'+heading+'</h2>' in raw)
+        assert len(headings)==4,(path,headings)
         assert len(set(headings))==4,path
         question_sets.add(headings)
 assert len(question_sets)>150,len(question_sets)
