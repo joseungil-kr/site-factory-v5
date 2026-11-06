@@ -23,7 +23,7 @@ def main():
     homepage=(OUT/"index.html").read_text(encoding="utf-8")
     assert homepage.count(expected)==1 and homepage.count("naver-site-verification")==1
     assert homepage.index("<head>")<homepage.index(expected)<homepage.index("</head>")
-    for filename in m["paths"]:
+    assert (OUT/"rss.xml").is_file()\n    feed=ET.parse(OUT/"rss.xml").getroot()\n    feed_items=feed.findall('./channel/item')\n    assert 1 <= len(feed_items) <= 50\n    for item in feed_items:\n        body=item.findtext('description') or ''\n        assert 'AI 생성 설명 이미지' not in body and '실제 시공·장비 보유 증명이 아닙니다' not in body\n        assert '영진스카이 공개 이용요금' in body\n        assert '30만 원' in body\n        assert '작업 지점까지 높이(미터)' in body\n    for filename in m["paths"]:
         content=(OUT/filename).read_text(encoding="utf-8")
         h=H();h.feed(content)
         url="https://skyquote.nalmada.net"+("/" if filename=="index.html" else "/"+filename)
@@ -33,7 +33,7 @@ def main():
         assert content.count('<img ')==5,filename
         assert 'href="//' not in content,filename
         if filename!="index.html":assert "naver-site-verification" not in content,filename
-        assert not any(bad in content for bad in ('최저가를 보장합니다','전국 출동 가능합니다','업계 최저가 보장')),filename
+        assert not any(bad in content for bad in ('최저가를 보장합니다','전국 출동 가능합니다','업계 최저가 보장','업계 최저가를 주장하지 않습니다','차량 톤수만으로 작업 가능성을 보장하지 않습니다','단정하지 마세요','실수를 피할 수 있습니다')),filename
     imgs=json.loads((ROOT/"sites/skyquote/assets-manifest.json").read_text())["assets"]
     for x in imgs:
         path=OUT/"assets"/Path(x["path"]).name
