@@ -2,12 +2,17 @@ name: Todayflower 5070-page customer-copy and isolated noindex QA
 on:
   push:
     branches: [site/todayflower-nalmada-pilot-20261030]
-    paths: ['.github/workflows/todayflower-pilot-qa.yml']
+    paths:
+      - '.github/workflows/todayflower-pilot-qa.yml'
+      - 'sites/todayflower-nalmada/**'
+      - 'v5/todayflower*.py'
+      - 'tests/test_todayflower*.py'
+      - 'scripts/audit_todayflower_customer.py'
 permissions:
   contents: read
 concurrency:
   group: todayflower-customer-copy-noindex-only
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   review:
     runs-on: ubuntu-latest
@@ -105,7 +110,7 @@ jobs:
                           assert page.locator('a[href^="https://fwith.co.kr/shop/item.php?it_id="]').count()>=4,(width,route)
                           for anchor in ('choices','products','order'):
                               assert page.locator('#'+anchor).count()==1,(width,route)
-                          page.screenshot(path=str(shots/(route.strip('/').replace('.html','') or 'home')+'-'+str(width)+'.png'),full_page=True)
+                          page.screenshot(path=str(shots/((route.strip('/').replace('.html','') or 'home')+'-'+str(width)+'.png')),full_page=True)
                           rows.append({'width':width,'route':route,'http':resp.status,'editorialImages':7,'noOverflow':True})
                           page.close()
                       context.close()
