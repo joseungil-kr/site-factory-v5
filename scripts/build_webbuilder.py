@@ -704,7 +704,8 @@ def build(out: Path = DEFAULT_OUTPUT, report: Path = DEFAULT_REPORT, mode: str =
     guide = (out / "guide" / "pricing" / "index.html").read_text(encoding="utf-8")
     faq = (out / "guide" / "faq" / "index.html").read_text(encoding="utf-8")
     if ('페이지당 월 1,000원부터' not in home
-            or '최소 10페이지 월 10,000원' not in home
+            or '최소 10페이지' not in home
+            or '월 10,000원' not in home
             or '고객 전용 홈페이지 주소 제공' not in home
             or '도메인 운영과 기본 서버 비용' not in guide
             or '도메인 운영과 기본 서버 비용' not in faq):
