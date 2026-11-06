@@ -1,0 +1,68 @@
+name: Todayflower read-only public, preview, RSS and seller HTTP probe
+on:
+  push:
+    branches: [site/todayflower-nalmada-pilot-20261030]
+    paths: ['.github/workflows/todayflower-readonly-live.yml']
+permissions:
+  contents: read
+jobs:
+  read-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - name: GET-only verification without Cloudflare credentials or deploy
+        run: |
+          python - <<'PY'
+          import json,re,urllib.request,urllib.error,xml.etree.ElementTree as ET
+          from html.parser import HTMLParser
+          from html import unescape
+          class Text(HTMLParser):
+              def __init__(self):super().__init__();self.data=[]
+              def handle_data(self,s):self.data.append(s.strip())
+          def fetch(u):
+              req=urllib.request.Request(u,headers={'User-Agent':'TodayflowerReadOnlyReview/1'})
+              try:
+                  with urllib.request.urlopen(req,timeout=22) as r:
+                      raw=r.read(3000000)
+                      return {'status':r.status,'headers':dict(r.headers),'raw':raw,'final':r.url}
+              except urllib.error.HTTPError as e:
+                  return {'status':e.code,'headers':dict(e.headers),'raw':e.read(6000),'final':u}
+              except Exception as e:
+                  return {'status':None,'headers':{},'raw':b'','final':u,'error':type(e).__name__+': '+str(e)[:180]}
+          base='https://todayflower.nalmada.net'
+          urls=[base+path for path in ('/','/28.html','/34.html','/5071.html','/robots.txt','/sitemap.xml','/rss.xml')]
+          urls+=['https://sfv56-todayflower-preview.joseungil.workers.dev'+p for p in ('/','/robots.txt','/sitemap.xml','/rss.xml')]
+          skus=('G067','G073','D144','D149','C200','C206','B201','B205')
+          urls+=['https://fwith.co.kr/shop/item.php?it_id='+sku for sku in skus]
+          summary=[]
+          for u in urls:
+              x=fetch(u);t=x['raw'].decode('utf-8','replace')
+              row={'url':u,'status':x['status'],'robotsHeader':x['headers'].get('X-Robots-Tag'),
+                  'length':len(x['raw'])}
+              if x.get('error'):row['error']=x['error']
+              if u.endswith('.html') or u==base+'/':
+                  row['naverVerificationCount']=t.count('name="naver-site-verification"')
+                  row['hasCorrectHomeTag']='d970eeb70abc7b36cbcc02fadd9362c5c57fcb46' in t if u==base+'/' else None
+                  row['canonicalCount']=t.count('rel="canonical"')
+                  row['noindex']= 'noindex' in t.lower()
+                  row['hasProductLink']='https://fwith.co.kr/shop/item.php?it_id=' in t
+              if u.endswith('sitemap.xml') and x['status']==200:
+                  try:
+                      root=ET.fromstring(x['raw'])
+                      row['sitemapCount']=len(root.findall('{http://www.sitemaps.org/schemas/sitemap/0.9}url'))
+                  except Exception as e:row['sitemapParseError']=str(e)
+              if u.endswith('rss.xml') and x['status']==200:
+                  row['rssRoot']='rss' in t[:100].lower()
+              if 'it_id=' in u and x['status']==200:
+                  h=Text();h.feed(t)
+                  content=' '.join(h.data)
+                  candidates=re.findall(r'판매가격.{0,120}?([0-9][0-9,]{2,})원',content)
+                  row['currentPriceCandidates']=candidates[:3]
+                  row['buyControl']='바로구매' in content
+              summary.append(row)
+              print('TODAYFLOWER_LIVE_PROBE '+json.dumps(row,ensure_ascii=False),flush=True)
+          core=[x for x in summary if x['url'] in [base+'/',base+'/28.html',base+'/34.html',base+'/5071.html']]
+          if not all(x['status']==200 for x in core):raise SystemExit('FAIL: public site HTTP not confirmed')
+          if not all(x.get('canonicalCount')==1 for x in core):raise SystemExit('FAIL: public canonical missing')
+          print('TODAYFLOWER_READONLY_HTTP_CORE_PASS; RSS and seller results above may require follow-up')
+          PY
