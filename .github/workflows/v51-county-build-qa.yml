@@ -7,6 +7,7 @@ on:
       - 'scripts/county_copy_pools.py'
       - 'v5/purpose_render.py'
       - 'scripts/verify_county_independent_html.py'
+      - 'scripts/package_county_ownerprivate_trial.py'
       - 'tests/test_v51_county_selected_skus.py'
       - 'v5/audit.py'
       - 'assets/library/county-funeral-ownerprivate-test/**'
@@ -31,6 +32,9 @@ jobs:
           python -m v5 build --site county-funeral-ownerprivate-test --mode preview
           python -m v5 audit --site county-funeral-ownerprivate-test
           python -m scripts.verify_county_independent_html --dir dist/county-funeral-ownerprivate-test
+      - name: Assemble deterministic owner-private Sites ZIP without publishing
+        run: |
+          python -m scripts.package_county_ownerprivate_trial
       - name: Compare planned county names with generated page manifest and record trials
         run: |
           python - <<'PY'
@@ -61,4 +65,16 @@ jobs:
             reports/county-funeral-ownerprivate-test/manifest.json
             artifacts/v51-county-independent-html-audit.json
           if-no-files-found: warn
+          retention-days: 14
+
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: county-ownerprivate-95-static-zip-NOT-DEPLOYED
+          path: |
+            artifacts/county-funeral-ownerprivate-95-pages.zip
+            artifacts/county-funeral-ownerprivate-95-pages.sha256
+            artifacts/county-funeral-ownerprivate-95-pages-manifest.json
+            artifacts/v51-county-independent-html-audit.json
+          if-no-files-found: error
           retention-days: 14
