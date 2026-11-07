@@ -2,7 +2,12 @@ name: Todayflower diagnostic 51 actual HTML content and full RSS QA (no publish)
 on:
   push:
     branches: [site/todayflower-nalmada-pilot-20261030]
-    paths: ['.github/workflows/todayflower-content-diagnostic-20261107.yml']
+    paths:
+      - '.github/workflows/todayflower-content-diagnostic-20261107.yml'
+      - 'v5/todayflower*.py'
+      - 'sites/todayflower-nalmada/pages.json'
+      - 'scripts/build_todayflower_rss.py'
+      - 'scripts/audit_todayflower_customer.py'
 permissions:
   contents: read
 jobs:
