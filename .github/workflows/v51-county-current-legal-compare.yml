@@ -1,0 +1,69 @@
+name: V5.1 county current official code snapshot comparison read-only — no deploy
+on:
+  push:
+    branches: [site/v51-county-funeral-ownerprivate-20261107]
+    paths: ['.github/workflows/v51-county-current-legal-compare.yml']
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Attempt official full-code download and compare active county codes with 2026-10-22 snapshot
+        run: |
+          mkdir -p artifacts/v51-county-current-legal
+          python - <<'PY'
+          import urllib.request,urllib.error,urllib.parse,json,zipfile,io,csv,datetime,hashlib,re
+          from pathlib import Path
+          date=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          url='https://www.code.go.kr/etc/codeFullDown.do'
+          result={'checkedUTC':date,'source':url,'method':'POST-READ-ONLY-DOWNLOAD','verifiedLatestNames':False,
+                  'oldSnapshot':'data/regions/v4_official_parent_regions_20261022.json','retrievalError':None}
+          old=json.loads(Path(result['oldSnapshot']).read_text(encoding='utf-8'))
+          old_codes={x['code']:x['fullName'] for x in old['regions'] if x['level']=='municipality' and x['name'].endswith('군') and x['sourceStatus']=='존재'}
+          result['oldCountyCount']=len(old_codes);assert len(old_codes)==82
+          try:
+            payload=urllib.parse.urlencode({'codeseId':'법정동코드'}).encode()
+            req=urllib.request.Request(url,data=payload,method='POST',
+                 headers={'User-Agent':'Mozilla/5.0 (compatible; SiteFactory-ReadOnly-County-Review/1.0)',
+                          'Content-Type':'application/x-www-form-urlencoded'})
+            with urllib.request.urlopen(req,timeout=25) as r:
+              blob=r.read(16000000);result['httpStatus']=r.status
+              result['contentType']=r.headers.get('Content-Type','')
+            result['bytes']=len(blob);result['SHA256']=hashlib.sha256(blob).hexdigest()
+            if not zipfile.is_zipfile(io.BytesIO(blob)):
+              raise ValueError('Official download did not return ZIP; no current county conclusion')
+            with zipfile.ZipFile(io.BytesIO(blob)) as z:
+              names=z.namelist()
+              assert len(names)>=1
+              data=z.read(names[0]).decode('cp949')
+            rows=list(csv.reader(io.StringIO(data),delimiter='\\t'))
+            assert any('법정동코드' in str(x) for x in rows[:3])
+            current={}
+            for record in rows[1:]:
+              if len(record)<3:continue
+              code,name,active=record[0].strip(),record[1].strip(),record[2].strip()
+              if active=='존재' and name.split(' ')[-1].endswith('군') and re.fullmatch(r'\\d{10}',code):
+                current[code]=name
+            assert len(current)>=75,'Unexpectedly few county entries, likely wrong source schema'
+            result['currentActiveCountyCount']=len(current)
+            result['addedCodes']=sorted(set(current)-set(old_codes))
+            result['removedCodes']=sorted(set(old_codes)-set(current))
+            result['renamedCodes']=[{'code':k,'snapshot':v,'current':current[k]} for k,v in old_codes.items() if k in current and v!=current[k]]
+            result['verifiedLatestNames']=True
+            result['matchesOldSnapshot']=(current==old_codes)
+          except Exception as err:
+            result['retrievalError']=type(err).__name__+': '+str(err)[:300]
+          Path('artifacts/v51-county-current-legal/compare.json').write_text(json.dumps(result,ensure_ascii=False,indent=2)+'\n')
+          print('V51_COUNTY_OFFICIAL_COMPARE='+json.dumps({k:v for k,v in result.items() if k not in ('addedCodes','removedCodes','renamedCodes')},ensure_ascii=False),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v51-county-current-legal-compare-no-deploy
+          path: artifacts/v51-county-current-legal/compare.json
+          retention-days: 14
+          if-no-files-found: error
