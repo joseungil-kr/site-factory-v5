@@ -3,7 +3,7 @@ import json,re,unittest
 from pathlib import Path
 from scripts.build_county_funeral_trial_inputs import main as generate,ID,SITE,PRICES
 from scripts.county_copy_pools import product_skus_in_text,listed_prices_in_text
-from v5.config import read_site
+from v5.config import read_site,ConfigError
 from v5.purpose_render import assemble
 
 class CountySelectedSkuContract(unittest.TestCase):
@@ -40,6 +40,25 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertGreater(int(p['townshipCount']),0)
                 if len(selected)<4:
                     self.assertFalse(any(x in text for x in ('네 상품만 비교한','같은 등급으로 간주하지 않습니다')))
+    def test_real_product_card_headings_and_current_prices(self):
+        from scripts.build_county_trial_review_only import main as render_review, OUT
+        render_review()
+        from html.parser import HTMLParser
+        for p in self.data['pages']:
+            if p['pageType']!='county':
+                continue
+            page_file=OUT/('index.html' if p['number']==1 else str(p['number'])+'.html')
+            body=page_file.read_text(encoding='utf-8')
+            a=assemble(p,self.plan['purposePools'],self.data['products'])
+            self.assertEqual(body.count('data-product-sku='),len(p['productSkus']),p['number'])
+            for sku in p['productSkus']:
+                expected=format(PRICES[sku],',')+'원'
+                self.assertIn('data-product-sku="'+sku+'"',body,p['number'])
+                self.assertIn(expected,body,p['number'])
+            self.assertIn('읍·면',body,p['number'])
+            self.assertNotIn('네 상품만 비교한',body)
+            self.assertNotIn('공개 페이지에 개인정보를 적지 않습니다',body)
+            self.assertNotIn('현재 확보된 가격자료만으로 알 수 없습니다',body)
     def test_three_regression_pages(self):
         pages={p['number']:p for p in self.data['pages']}
         for n in (14,38,90):
@@ -54,9 +73,13 @@ class CountySelectedSkuContract(unittest.TestCase):
         pool['sections'].append({'slot':'bad','heading':'잘못된 비교','paragraph':'B201 59,000원, B205 109,000원'})
         p=next(x for x in self.data['pages'] if x.get('purpose')=='budget-entry')
         self.assertNotIn('B205',p['productSkus'])
-        assembled=assemble(p,{'bad-test':pool},self.data['products']) if False else None
-        text=pool['sections'][-1]['paragraph']
-        self.assertFalse(product_skus_in_text(text).issubset(set(p['productSkus'])))
+        altered={**p,'purpose':'bad-test'}
+        with self.assertRaisesRegex(ConfigError,'off-card SKU'):
+            assemble(altered,{'bad-test':pool},self.data['products'])
+        bad_price=json.loads(json.dumps(pool))
+        bad_price['sections'][-1]['paragraph']='허용된 상품 이외의 149,000원 표시가'
+        with self.assertRaisesRegex(ConfigError,'off-card price'):
+            assemble(altered,{'bad-test':bad_price},self.data['products'])
 
 if __name__=='__main__':
     unittest.main(verbosity=2)
