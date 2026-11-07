@@ -56,6 +56,10 @@ def read_site(site_id: str):
     if root.parent != SITES.resolve() or not root.is_dir():
         raise ConfigError(f"Unknown site: {site_id}")
     site = read_json(root/'site.json')
+    spec_path=root/'site-spec.json'
+    spec=read_json(spec_path) if spec_path.is_file() else {}
+    if not isinstance(spec,dict):raise ConfigError('Invalid site plan')
+    v51_plan=spec.get('version')==2
     if site.get('businessModel') == 'service-lead':
         from .service_model import read_service_site
         return read_service_site(site_id,site,root)
@@ -124,8 +128,14 @@ def read_site(site_id: str):
             img=check_https_url(p['imageUrl'],'product.imageUrl')
             if img.netloc.lower()!=order_origin.netloc.lower():
                 raise ConfigError('Product image outside approved seller origin')
-        if not isinstance(p['referencePrice'],int) or p['referencePrice']<=0:
+        price=p.get('referencePrice')
+        if v51_plan and price is None and p.get('priceConfirmed') is not True:
+            pass  # No invented price: product link remains available.
+        elif type(price) is not int or price<=0:
             raise ConfigError('Invalid product reference price')
+        if v51_plan and p.get('priceConfirmed') is True:
+            if not p.get('priceEvidence') or not re.fullmatch(r'\d{4}-\d{2}-\d{2}',str(p.get('priceCheckedOn',''))):
+                raise ConfigError('Confirmed product price needs evidence and checked date')
     for page in pages:
         if any(sku not in by_sku for sku in page['productSkus']):
             raise ConfigError(f"Missing SKU for page {page['id']}")

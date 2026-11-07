@@ -27,6 +27,9 @@ class SharedReleaseTests(unittest.TestCase):
                     'workerName': self.worker, 'deliveryMode': 'shared-static', 'publishEnabled': True,
                     'imagePool': ['photo.svg'], 'analytics': {'enabled': False}}
             spec = initial_spec(site_id, 'Brand', 'flower', 'Seoul', '1844-0644')
+            # These fixtures exercise the existing legacy release contract.
+            # V5.1 research/purpose requirements have their own tests.
+            spec['version'] = 1
             spec.update(domain=domain, approved=True, businessModel='webshop',
                         serviceScope={'region': 'Seoul', 'granularity': 'city'}, pageTypes=['city'],
                         targetPageCount=2, titlePattern='{region} flower', urlPattern='/{number}.html',

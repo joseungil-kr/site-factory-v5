@@ -1,6 +1,6 @@
 [project]
 name = "site-factory-v5"
-version = "0.3.0"
+version = "5.1.0"
 description = "Independent reusable static website factory"
 requires-python = ">=3.11"
 license = {text = "Proprietary - owner-maintained source"}

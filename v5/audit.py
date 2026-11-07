@@ -18,6 +18,7 @@ class Scan(HTMLParser):
         super().__init__(convert_charrefs=True)
         self.refs=[];self.alts=[];self.links=[];self.meta=[];self.titles=0;self.h1s=0
         self.in_article=False;self.articles=[];self.current=[]
+        self.in_jsonld=False;self.jsonld=[];self._schema=''
     def handle_starttag(self,tag,attrs):
         a=dict(attrs)
         if tag=='a' and a.get('href'):
@@ -30,11 +31,16 @@ class Scan(HTMLParser):
         if tag=='title':self.titles+=1
         if tag=='h1':self.h1s+=1
         if tag=='meta':self.meta.append(a)
+        if tag=='script' and a.get('type')=='application/ld+json':
+            self.in_jsonld=True;self._schema=''
         if tag=='article' and 'article-content' in a.get('class',''):
             self.in_article=True
     def handle_endtag(self,tag):
+        if tag=='script' and self.in_jsonld:
+            self.in_jsonld=False;self.jsonld.append(self._schema)
         if tag=='article' and self.in_article:self.in_article=False
     def handle_data(self,text):
+        if self.in_jsonld:self._schema+=text
         if self.in_article:self.articles.append(text)
 
 
@@ -62,6 +68,15 @@ def resolved_reference(ref):
 
 def audit(site_id, *,output:Path|None=None,write_report=True):
     data=read_site(site_id);site=data['site']
+    from .config import ROOT
+    plan_path=ROOT/'sites'/site_id/'site-spec.json'
+    plan=json.loads(plan_path.read_text(encoding='utf-8')) if plan_path.is_file() else {}
+    purpose_mode=plan.get('version')==2
+    if purpose_mode:
+        from .purpose_render import assemble, regional_index
+        service=site.get('businessModel')=='service-lead'
+        data={**data,'pages':[assemble(p,plan['purposePools'],data['services'] if service else data['products'],service=service) for p in data['pages']]}
+        region_index=regional_index(data['pages'])
     out=(output or target_dir(site_id)).resolve()
     errors=[];warnings=[]
     if not out.exists():
@@ -74,6 +89,9 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
     extracted={}
     for file in html_pages:
         scan=Scan();content=file.read_text(encoding='utf-8');scan.feed(content)
+        for raw in scan.jsonld:
+            try:json.loads(raw)
+            except (ValueError,TypeError):errors.append(f'Invalid JSON-LD: {file.name}')
         if scan.titles!=1 or scan.h1s!=1:errors.append(f'Invalid document outline: {file.name}')
         if any(alt is None for alt in scan.alts):errors.append(f'Image missing alt: {file.name}')
         meta={r.get('name'):r.get('content') for r in scan.meta}
@@ -97,6 +115,23 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
     for p in data['pages']:
         file=markup.filename(p['number'])
         html=(out/file).read_text(encoding='utf-8')
+        if purpose_mode and site.get('businessModel')!='service-lead':
+            from .purpose_render import assemble, schema
+            assembled=assemble(p,plan['purposePools'],data['products'])
+            expected_schema=schema(site,assembled,data['products'],region_index)
+            # Only indexable builds have canonical/JSON-LD. Compare complete JSON
+            # emitted by the same validated inputs, not merely script existence.
+            if '<link rel="canonical"' in html:
+                index_site={**site,'publishEnabled':True}
+                expected_schema=schema(index_site,assembled,data['products'],region_index)
+                if expected_schema not in html:errors.append('V5.1 JSON-LD mismatch: '+file)
+            for sku in assembled['productSkus']:
+                if f'data-product-sku="{markup.h(sku)}"' not in html:
+                    errors.append('V5.1 product card missing: '+file+' '+sku)
+        elif purpose_mode and '<link rel="canonical"' in html:
+            from .purpose_render import service_schema
+            expected_schema=service_schema({**site,'publicIndexingApproved':True},p)
+            if expected_schema not in html:errors.append('V5.1 service JSON-LD mismatch: '+file)
         numbers=markup.pagination(data['pages'],p['number'])
         for n in numbers:
             if n==p['number']:

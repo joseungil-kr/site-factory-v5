@@ -83,11 +83,24 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
     from .audit import audit
     from .site_plan import require_site_plan
     require_site_plan(site_id)
-    data=read_site(site_id);site=data['site']
+    data=read_site(site_id);site=data['site'];raw_data=data
+    plan_path=ROOT/'sites'/site_id/'site-spec.json'
+    plan=json.loads(plan_path.read_text(encoding='utf-8')) if plan_path.is_file() else {}
+    purpose_mode=plan.get('version',1)>=2
+    if purpose_mode:
+        from .purpose_render import assemble, regional_index
+        service=site.get('businessModel')=='service-lead'
+        catalog=data['services'] if service else data['products']
+        data={**data,'pages':[assemble(p,plan['purposePools'],catalog,service=service) for p in data['pages']],
+              'v51Plan':plan}
+        region_index=regional_index(data['pages'])
     if site.get('status')=='draft' or not data['pages']:
         raise ConfigError('Draft site is not buildable until pages, products and images are approved')
     if mode not in ('preview','publish','public-indexing'):
         raise ConfigError('Mode must be preview, public-indexing, or publish')
+    if purpose_mode and mode in ('publish','public-indexing'):
+        from .review_gate import assert_review
+        assert_review(raw_data,plan)
     if site.get('businessModel') == 'service-lead' and mode not in ('preview','public-indexing'):
         raise ConfigError('Service sites support preview and explicitly approved indexing only')
     if mode=='public-indexing':
@@ -130,9 +143,17 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
             if site.get('businessModel') == 'service-lead':
                 from . import service_markup
                 renderer=service_markup.home if page['number']==1 else service_markup.detail
-                rendered=renderer(rendering_site,page,data['pages'],data['services'],data['rates'])
+                if purpose_mode:
+                    from .purpose_render import render_service
+                    rendered=render_service(rendering_site,page,data['pages'],data['services'],data['rates'],plan['purposePools'],region_index)
+                else:
+                    rendered=renderer(rendering_site,page,data['pages'],data['services'],data['rates'])
             else:
-                rendered=(markup.home if page['number']==1 else markup.detail)(rendering_site,page,data['pages'],data['products'],data['links'])
+                if purpose_mode:
+                    from .purpose_render import render
+                    rendered=render(rendering_site,page,data['pages'],data['products'],data['links'],plan['purposePools'],region_index)
+                else:
+                    rendered=(markup.home if page['number']==1 else markup.detail)(rendering_site,page,data['pages'],data['products'],data['links'])
             from .addons import enhance_html
             rendered=enhance_html(rendered,rendering_site,page['number'])
             _write_file(tmp,markup.filename(page['number']),rendered)
@@ -143,6 +164,10 @@ def build(site_id:str, *,output:Path|None=None,reports:Path|None=None,mode:str='
             _write_file(tmp,'search-index.json',json.dumps(entries,ensure_ascii=False,separators=(',',':')))
         for item in data['special']:
             if item.get('enabled',True):
+                if purpose_mode and item.get('type')=='calculator':
+                    from .purpose_render import _has_proof
+                    if any(not _has_proof(p,'price') for p in data['products']):
+                        raise ConfigError('V5.1 calculator requires verified prices for every listed product')
                 _write_file(tmp,item['path'],markup.special_page(rendering_site,item,data['products'],data['links']))
         if site.get('businessModel') == 'service-lead':
             from . import service_markup

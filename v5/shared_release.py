@@ -95,6 +95,9 @@ def promote_service(output, data):
             raise ConfigError('Service preview SEO differs from the existing renderer contract')
         location = origin + url_path(page['number'])
         metadata = '<meta name="robots" content="index,follow"><link rel="canonical" href="' + h(location) + '">'
+        if data.get('v51PurposeMode'):
+            from .purpose_render import service_schema
+            metadata += service_schema({**site,'publicIndexingApproved':True},page)
         if page['number'] == 1 and site.get('naverSiteVerification'):
             token = site['naverSiteVerification']
             if not isinstance(token, str) or not re.fullmatch(r'[0-9a-fA-F]{40}', token):
@@ -255,6 +258,9 @@ def prepare(site_ids, destination, worker_name, *, previous=None):
             check = validate_plan(spec, site_id)
             if not check['ready'] or spec.get('publishPolicy', {}).get('mode') != 'publish':
                 raise ConfigError('Shared production requires an approved publish site plan')
+            if spec.get('version')==2:
+                from .review_gate import assert_review
+                assert_review(data,spec)
             if spec['targetPageCount'] != len(data['pages']):
                 raise ConfigError('Production page count differs from approved site plan')
             if site.get('workerName') != worker_name:
@@ -292,9 +298,15 @@ def prepare(site_ids, destination, worker_name, *, previous=None):
             from .visitor_copy import require_clean_html
             require_clean_html(original)
             prepared = work / (site_id + '-prepared'); shutil.copytree(original, prepared)
+            rendered_data=data
+            if spec.get('version')==2:
+                from .purpose_render import assemble as assemble_purpose_page
+                selected=data['services'] if service else data['products']
+                rendered_data={**data,'v51PurposeMode':True,
+                               'pages':[assemble_purpose_page(p,spec['purposePools'],selected,service=service) for p in data['pages']]}
             if service:
-                promote_service(prepared, data)
-            add_feed(prepared, data)
+                promote_service(prepared, rendered_data)
+            add_feed(prepared, rendered_data)
             if service:
                 from .audit import audit
                 publication_audit = audit(site_id, output=prepared, write_report=False)

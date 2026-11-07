@@ -15,6 +15,8 @@ class SiteCreationPlanningGate(unittest.TestCase):
                     copyPoolPlan={"industry":"flower","source":"new","sentenceTarget":600},
                     conversion={"mode":"phone","phone":"1844-0644"},
                     images={"source":"owner","approved":True},
+                    research={k:[{"source":"https://example.org/evidence","checkedOn":"2026-11-07"}] for k in ("topic","price","order")},
+                    purposePools={"equipment":{"serviceIds":["truck"],"introductions":["{region} 상담"],"sections":[{"slot":"choice","heading":"안내","paragraph":"작업 상담"},{"slot":"order","heading":"주문","paragraph":"전화 상담"}],"faqs":[{"q":"어떻게 주문하나요?","a":"전화로 상담합니다."}]}},
                     publishPolicy={"mode":"review","indexNow":False},approved=True)
         self.assertTrue(validate_plan(spec,"new-flower")["ready"])
     def test_legacy_site_unaffected(self):

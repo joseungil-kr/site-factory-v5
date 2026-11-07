@@ -16,6 +16,8 @@ def main(argv=None):
     cmds.add_parser('dashboard')
     planning=cmds.add_parser('plan-check')
     planning.add_argument('--site',required=True)
+    review=cmds.add_parser('review-sample')
+    review.add_argument('--site',required=True)
     metrics=cmds.add_parser('analytics-report')
     metrics.add_argument('--site',required=True)
     metrics.add_argument('--days',type=int,default=7)
@@ -70,6 +72,19 @@ def main(argv=None):
             result=check_site(args.site)
             print(json.dumps(result,ensure_ascii=False,indent=2))
             if not result['ready']:return 3
+        elif args.command=='review-sample':
+            from .config import ROOT,read_site,read_json,validate_site_id
+            from .review_gate import review_digest,sample_ids
+            from .site_plan import require_site_plan
+            from .purpose_render import assemble
+            validate_site_id(args.site);require_site_plan(args.site)
+            plan=read_json(ROOT/'sites'/args.site/'site-spec.json')
+            if plan.get('version')!=2:raise ConfigError('Review sampling applies to V5.1 plans')
+            data=read_site(args.site);service=data['site'].get('businessModel')=='service-lead'
+            catalog=data['services'] if service else data['products']
+            for page in data['pages']:assemble(page,plan['purposePools'],catalog,service=service)
+            print(json.dumps({'site':args.site,'population':len(data['pages']),
+                              'inputDigest':review_digest(data,plan),'sampleIds':sample_ids(data['pages'])},ensure_ascii=False,indent=2))
         elif args.command=='build':
             from .engine import build
             data=build(args.site,mode=args.mode)
