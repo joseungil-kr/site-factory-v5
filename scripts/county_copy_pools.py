@@ -194,7 +194,10 @@ def expanded_pools(base):
             'paragraph':'이 페이지에서 비교하는 상품은 '+names+
                 '입니다. 기준 가격은 2026-11-07 판매처 표시를 따르며 꽃 구성·실물 규격과 옵션은 각 상품 상세에서 확인할 수 있습니다.'
         }]
-        allowed_prices={format(catalog_price[sku],',')+'원' for sku in skus}
+        prices=[catalog_price[sku] for sku in skus]
+        # Permit clearly calculated price *differences*, not prices of unlisted products.
+        allowed_prices={format(x,',')+'원' for x in prices}
+        allowed_prices.update(format(abs(x-y),',')+'원' for x in prices for y in prices if x!=y)
         for slot in ('order','ribbon','delivery','information'):
             candidates=[]
             for item in base[group]['sections']:
