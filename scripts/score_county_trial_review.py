@@ -87,6 +87,7 @@ def evaluate():
         'failures':[x for x in scored if x['score']<90],
         'allPassed':all(x['score']>=90 for x in scored),
         'humanIndependentAuditVerified':False,
+        'reviewIteration':2,'previousFailure':{'runId':42364589632,'failedPaths':['/16.html','/22.html','/25.html','/77.html'],'score':81},
         'noPublicDeployment':True,
         'scores':scored}
     target=Path('artifacts/v51-county-current-quality.json')
