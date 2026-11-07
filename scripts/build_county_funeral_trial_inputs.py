@@ -218,11 +218,11 @@ def main():
   assert names
   scope=__import__('copy').deepcopy(province)
   joined='·'.join(names)
-  scope['introductions']=[p['fullName']+'의 군 지역 '+joined+' 근조화환 상품 안내입니다. 상품별 표시가는 전국 공통 판매처 기준이며 수령지 배송 조건은 주문에서 확인합니다.']
+  scope['introductions']=[p['fullName']+'에서 '+str(len(names))+'개 군 지역 근조화환의 표시가와 주문 절차를 비교할 수 있습니다. 수령지의 실제 배송 조건은 주문 과정에서 확인할 수 있습니다.']
   scope['sections'].append({'slot':'covered-counties',
     'heading':p['fullName']+'의 군 지역 검색',
-    'paragraph':p['fullName']+' 원장에 기록된 '+str(len(names))+'개 군은 '+joined+'입니다. 선택한 군의 실제 장례식장명과 빈소, 도로명 주소를 입력하면 상품 주문 조건을 확인할 수 있습니다.'})
-  selection=(names[0]+'에 있는 수령 시설의 주소와 장례식장명을 준비해 B201·B202·B205·B206의 상품을 비교할 수 있습니다.' if len(names)==1 else joined+'에서 실제 수령 군을 선택한 다음 장례식장 주소와 B201·B202·B205·B206의 상품 상세를 함께 살펴볼 수 있습니다.')
+    'paragraph':p['fullName']+'의 군 지역 목록은 '+joined+'입니다. 2026-10-22에 확보한 법정동 코드 기준 명칭이며, 군 페이지에서 받는 시설명과 주소를 따로 확인할 수 있습니다.'})
+  selection=(names[0]+'의 수령 시설명과 주소를 준비한 다음 B201·B202·B205·B206의 가격과 주문조건을 볼 수 있습니다.' if len(names)==1 else '목록에서 해당 군을 선택하고 장례식장명과 빈소·주소를 확인한 다음 B201·B202·B205·B206의 주문조건을 비교할 수 있습니다.')
   scope['sections'].append({'slot':'county-selection',
     'heading':'군 지역 선택과 상품 주문',
     'paragraph':selection})
