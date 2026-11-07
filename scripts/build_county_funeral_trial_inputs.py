@@ -150,15 +150,15 @@ def main():
     'verifiedLive':False,'imageUseApproved':False,
     'verifiedSource':sku=='B205'})
  assert all(x['imageUseApproved'] is False for x in products)
- OUT.mkdir(parents=True,exist_ok=True)
- dump(OUT/'site.json',site)
- dump(OUT/'pages.json',pages)
- dump(OUT/'products.json',products)
- dump(OUT/'links.json',[])
- dump(OUT/'special-pages.json',[])
- dump(OUT/'regions.json',{'source':'pinned 2026-10-22 official code ZIP','regions':region_list})
- dump(OUT/'site-spec.json',spec)
- dump(OUT/'county-plan-evidence.json',{'sourceFile':str(SRC.relative_to(ROOT)),
+ SITE.mkdir(parents=True,exist_ok=True)
+ dump(SITE/'site.json',site)
+ dump(SITE/'pages.json',pages)
+ dump(SITE/'products.json',products)
+ dump(SITE/'links.json',[])
+ dump(SITE/'special-pages.json',[])
+ dump(SITE/'regions.json',{'source':'pinned 2026-10-22 official code ZIP','regions':region_list})
+ dump(SITE/'site-spec.json',spec)
+ dump(SITE/'county-plan-evidence.json',{'sourceFile':str(SRC.relative_to(ROOT)),
    'sourceRetrievedOn':'2026-10-22','sourceBlobSHA':'13d43fc3f2492b29b1680858235fe0ac0cd10580',
    'countyCount':len(counties),'provinceCount':len(provinces),'targetCount':len(pages),
    'countyCodes':[x['code'] for x in counties],
