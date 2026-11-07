@@ -253,6 +253,13 @@ def expanded_pools(base):
                 if len(skus)!=4 and any(word in text for word in ('네 상품','네 가지','네 개','4개')):
                     continue
                 pool['sections'].append(item)
+        # Official administrative fact genuinely differs by county and helps the
+        # visitor distinguish the exact receiving 읍/면 for delivery-fee questions.
+        pool['sections'].append({
+            'slot':'verified-townships',
+            'heading':'{county} 수령지의 읍·면 찾기',
+            'paragraph':'2026-11-07 재확인한 법정동 코드에 {county}의 읍·면 {townshipCount}곳이 기록돼 있습니다: {townships}. 장례식장의 주소가 속하는 읍·면을 확인하면 판매처의 군별 배송비 표와 실제 주문서 금액을 비교하기 편리합니다. 이 명단은 배송 가능 여부의 확인 자료가 아니라 행정구역 안내입니다.'
+        })
         # These two intent sections have a different purpose from the introduction.
         pool['sections'].extend([
             {'slot':'decision-context','heading':heading,'paragraph':paragraph},
