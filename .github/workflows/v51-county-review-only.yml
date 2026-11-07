@@ -4,6 +4,8 @@ on:
     branches: [site/v51-county-funeral-ownerprivate-20261107]
     paths:
       - 'scripts/build_county_trial_review_only.py'
+      - 'scripts/verify_county_independent_html.py'
+      - 'tests/test_v51_county_selected_skus.py'
       - 'scripts/county_copy_pools.py'
       - 'scripts/build_county_funeral_trial_inputs.py'
       - '.github/workflows/v51-county-review-only.yml'
@@ -23,6 +25,7 @@ jobs:
           python -m py_compile scripts/build_county_funeral_trial_inputs.py scripts/build_county_trial_review_only.py scripts/county_copy_pools.py
           python -m scripts.build_county_funeral_trial_inputs
           python -m scripts.build_county_trial_review_only
+          python -m scripts.verify_county_independent_html --dir dist/unreleased-county-funeral-ownerprivate-test
       - name: Independently assert safe scope, all local links and no deployables
         run: |
           python - <<'PY'
@@ -49,5 +52,6 @@ jobs:
             dist/unreleased-county-funeral-ownerprivate-test/
             reports/county-funeral-ownerprivate-test/review-only.json
             sites/county-funeral-ownerprivate-test/county-plan-evidence.json
+            artifacts/v51-county-independent-html-audit.json
           if-no-files-found: warn
           retention-days: 14
