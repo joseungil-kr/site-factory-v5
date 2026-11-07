@@ -88,7 +88,9 @@ def assemble(page, pools, products, *, service=False):
         body=' '.join([assembled['intro']]+
             [s['heading']+' '+s['paragraph'] for s in assembled['sections']]+
             [f['q']+' '+f['a'] for f in assembled['faq']])
-        named=set(re.findall(r'\bB\d{3}\b',body))
+        # County-only, Unicode-suffix-aware extraction.
+        from scripts.county_copy_pools import product_skus_in_text,listed_prices_in_text
+        named=product_skus_in_text(body)
         allowed=set(selected)
         if named-allowed:
             raise ConfigError('county-v51 off-card SKU in copy: '+str(sorted(named-allowed)))
@@ -96,7 +98,7 @@ def assemble(page, pools, products, *, service=False):
         allowed_amounts={format(price,',')+'원' for price in amounts if type(price) is int}
         allowed_amounts|={format(abs(x-y),',')+'원' for x in amounts for y in amounts
                           if type(x) is int and type(y) is int and x!=y}
-        seen_prices=set(re.findall(r'\b\d{1,3}(?:,\d{3})+원\b',body))
+        seen_prices=listed_prices_in_text(body)
         if seen_prices-allowed_amounts:
             raise ConfigError('county-v51 off-card price in copy: '+str(sorted(seen_prices-allowed_amounts)))
         if assembled['intro'] in [x['paragraph'] for x in assembled['sections']]:
@@ -256,7 +258,12 @@ def render(site,page,pages,products,links,pools,region_index=None):
             products_html(products,page['productSkus'],site.get('id'))+'</div></section>'+markup.article_body(page)+
             '<section class="faq"><h2>자주 묻는 질문</h2>'+markup.faq_markup(page)+'</section>'+
             regional_navigation(page,pages,region_index)+markup.phone_buttons(site)+markup.render_pagination(pages,page['number'])+
-            '</main>'+markup.footer(site,links,page))
+            '</main>'+(
+                markup.footer(site,links,page).replace(
+                    '축하와 응원의 마음을 전하는 안내 서비스',
+                    '조의를 전하는 근조화환 상품·주문 안내')
+                if site.get('id')=='county-funeral-ownerprivate-test'
+                else markup.footer(site,links,page)))
 
 
 def render_service(site,page,pages,services,rates,pools,region_index=None):
