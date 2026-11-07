@@ -4,6 +4,7 @@ on:
     branches: [site/v51-county-funeral-ownerprivate-20261107]
     paths:
       - 'scripts/build_county_funeral_trial_inputs.py'
+      - 'scripts/county_copy_pools.py'
       - 'v5/purpose_render.py'
       - 'v5/audit.py'
       - 'assets/library/county-funeral-ownerprivate-test/**'
