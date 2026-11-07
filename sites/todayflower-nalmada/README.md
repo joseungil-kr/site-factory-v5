@@ -1,5 +1,15 @@
 # 오늘꽃배달 — 전국 5,070개 페이지 공개 운영 (2026-10-31)
 
+## 2026-11-07 최신 운영과 작업자1 후보 상태
+
+- **운영 RSS 복구 완료:** https://todayflower.nalmada.net/rss.xml — RSS 2.0 / 전체 본문 50개 / HTTP200. [V4 배포·16화면 QA #42339345069](https://github.com/joseungil-kr/site-factory-v4/actions/runs/42339345069), [별도 HTTP 재검증 #42340191357](https://github.com/joseungil-kr/site-factory-v5/actions/runs/42340191357) PASS.
+- **현재 실제 Worker 버전:** `da6d6007-38b1-4ddd-8c65-76cefb15da24`; 옛 전국 공개 HTML·이미지 소스 `0ca5705aa12950da571f089b2d4ac7256111f77e` 보존, RSS만 증분 배포. 비공개 workers.dev는 RSS404/noindex 유지.
+- **방문자 문구 개선 후보는 배포 보류:** 16개 상황별 POOL 576블록·대표 33개 원고 교정은 브랜치에 있지만 최신 전국 QA 49% 미만 불합격(약 54.08%), 51개 사전평가 중 2개 85점. 기존 5,070페이지 공개 HTML은 새 후보로 교체하지 않음.
+- URL별 점수·재현 근거: [qa/customer-review-51-20261107.json](qa/customer-review-51-20261107.json). 상세 분리 보고: [QA_CUSTOMER_COPY_RSS_STATUS_20261107.md](QA_CUSTOMER_COPY_RSS_STATUS_20261107.md).
+- 아래 2026-10-31 자료와 Worker 버전은 **역사적 출시 기록**이며 현재 활성 버전으로 간주하지 않는다.
+
+---
+
 **현재 실서버 공개 URL:** https://todayflower.nalmada.net/  
 **전국 사이트맵:** https://todayflower.nalmada.net/sitemap.xml (5,070 URL)  
 **Worker 비노출 URL:** https://sfv56-todayflower-preview.joseungil.workers.dev/ (noindex)
