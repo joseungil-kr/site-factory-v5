@@ -55,7 +55,7 @@ def similarity(left,right,metric='char-5gram-jaccard'):
         return len(a&b)/len(a|b) if a|b else 1.0
     if metric=='char-3gram-cosine':
         from math import sqrt
-        normalized=lambda text:re.sub(r'\\s+','',text).lower()
+        normalized=lambda text:re.sub(r'\s+','',text).lower()
         def count(text):
             v=normalized(text)
             return Counter(v[i:i+3] for i in range(max(0,len(v)-2)))
