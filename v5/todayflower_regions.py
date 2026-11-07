@@ -86,11 +86,15 @@ def _make_page(code,name,number):
     details=SCENE_DETAILS[intent]
     assert set(details)=={"selection","receiver","delivery"}
     seed=code+":todayflower:buyer-intent-v2"
+    # Separate per-page/per-intent permutation avoids repeating clusters
+    # without adding unrelated text or inventing local facts.
+    orders={}
+    for group,items in details.items():
+        assert len(items)==6 and len(set(items))==6
+        orders[group]=sorted(items,key=lambda value:hashlib.sha256(
+            (seed+":"+group+":"+value).encode("utf-8")).digest())
     def one(group, offset):
-        items=details[group]
-        assert len(items)>=6
-        base=int.from_bytes(hashlib.sha256((seed+":"+group).encode()).digest()[:8],"big")%len(items)
-        return items[(base+offset)%len(items)]
+        return orders[group][offset]
     sections=[
         {"heading":intent+" 상품과 선택 기준",
          "paragraph":products+" "+one("selection",0)+" "+one("selection",2)},
