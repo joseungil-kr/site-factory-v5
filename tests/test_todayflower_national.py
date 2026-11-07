@@ -106,6 +106,35 @@ class TodayflowerNationalTest(unittest.TestCase):
         self.assertEqual(checked,5070)
         self.assertEqual(len(seen_articles),5070)
 
+    def test_no_unrelated_intents_in_any_new_regional_article(self):
+        # The old unrestricted copy pool introduced Daebu-specific fees on
+        # Seoul/Mokpo pages and funeral/venue clauses in birthday content.
+        forbidden = {
+            "생일 꽃다발": ("장례식장", "빈소", "근조", "발인", "대부 지역", "축하화환"),
+            "개업 축하화분": ("장례식장", "빈소", "근조", "발인", "대부 지역"),
+            "축하화환": ("장례식장", "빈소", "근조", "발인", "대부 지역"),
+            "조문 근조화환": ("생일", "개업화분", "축하화환", "공연", "대부 지역"),
+            "사무실 화분": ("장례식장", "빈소", "근조", "발인", "대부 지역"),
+            "기념일 꽃 선물": ("장례식장", "빈소", "근조", "발인", "대부 지역"),
+            "감사 꽃다발": ("장례식장", "빈소", "근조", "발인", "대부 지역"),
+        }
+        from v5.todayflower_copy_pool import SCENE_DETAILS, SCENARIOS
+        self.assertEqual(set(SCENE_DETAILS), {entry[0] for entry in SCENARIOS})
+        self.assertEqual(len(self.pages[33:]),5037)
+        for page in self.pages[33:]:
+            body=" ".join([page["intro"]]
+                          +[s["paragraph"] for s in page["sections"]]
+                          +[f["a"] for f in page["faq"]])
+            with self.subTest(page=page["number"], intent=page["topic"]):
+                for phrase in forbidden.get(page["topic"], ("대부 지역",)):
+                    self.assertNotIn(phrase,body)
+                for block in [page["intro"]]+[s["paragraph"] for s in page["sections"]]:
+                    self.assertGreaterEqual(len(block),45)
+                self.assertEqual(len(set(s["paragraph"] for s in page["sections"])),4)
+                self.assertNotIn("코드는 2026",body)
+                self.assertNotIn("약속하지 않습니다",body)
+                self.assertNotIn("AI 연출",body)
+
     def test_fixed_stratified_similarity_and_rendered_samples(self):
         # Same deterministic sample strategy as v5.audit; full-population
         # duplicate hashes are checked above but semantic review is limited.
