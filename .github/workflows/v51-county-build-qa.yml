@@ -22,7 +22,7 @@ jobs:
       - name: Generate only new county trial input (existing sites untouched)
         run: |
           python -m py_compile scripts/build_county_funeral_trial_inputs.py
-          python scripts/build_county_funeral_trial_inputs.py
+          python -m scripts.build_county_funeral_trial_inputs
       - name: Validate V5.1 complete county HTML, product links, noindex and ancestry
         run: |
           python -m v5 build --site county-funeral-ownerprivate-test --mode preview
