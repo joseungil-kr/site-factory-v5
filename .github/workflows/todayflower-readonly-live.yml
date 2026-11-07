@@ -52,7 +52,19 @@ jobs:
                       row['sitemapCount']=len(root.findall('{http://www.sitemaps.org/schemas/sitemap/0.9}url'))
                   except Exception as e:row['sitemapParseError']=str(e)
               if u.endswith('rss.xml') and x['status']==200:
-                  row['rssRoot']='rss' in t[:100].lower()
+                  try:
+                      feed=ET.fromstring(x['raw'])
+                      entries=feed.find('channel').findall('item')
+                      row['rssItemCount']=len(entries)
+                      row['rssFullBodyCount']=sum(
+                          bool(item.findtext('{http://purl.org/rss/1.0/modules/content/}encoded'))
+                          for item in entries)
+                      row['rssUniqueUrls']=len({item.findtext('link') for item in entries})
+                      row['rssBodyHasMain']=all(
+                          (item.findtext('{http://purl.org/rss/1.0/modules/content/}encoded') or '')
+                            .startswith('<main id="main"') for item in entries)
+                  except Exception as e:
+                      row['rssParseError']=str(e)
               if 'it_id=' in u and x['status']==200:
                   h=Text();h.feed(t)
                   content=' '.join(h.data)
@@ -64,5 +76,17 @@ jobs:
           core=[x for x in summary if x['url'] in [base+'/',base+'/28.html',base+'/34.html',base+'/5071.html']]
           if not all(x['status']==200 for x in core):raise SystemExit('FAIL: public site HTTP not confirmed')
           if not all(x.get('canonicalCount')==1 for x in core):raise SystemExit('FAIL: public canonical missing')
-          print('TODAYFLOWER_READONLY_HTTP_CORE_PASS; RSS and seller results above may require follow-up')
+          publicRSS=next(x for x in summary if x['url']==base+'/rss.xml')
+          previewRSS=next(x for x in summary if x['url'].endswith('.workers.dev/rss.xml'))
+          sitemap=next(x for x in summary if x['url']==base+'/sitemap.xml')
+          home=next(x for x in summary if x['url']==base+'/')
+          assert publicRSS['status']==200 and publicRSS.get('rssItemCount')==50,publicRSS
+          assert publicRSS.get('rssFullBodyCount')==50 and publicRSS.get('rssUniqueUrls')==50,publicRSS
+          assert publicRSS.get('rssBodyHasMain') is True,publicRSS
+          assert previewRSS['status']==404 and 'noindex' in (previewRSS.get('robotsHeader') or '').lower(),previewRSS
+          assert sitemap['status']==200 and sitemap.get('sitemapCount')==5070,sitemap
+          assert home.get('naverVerificationCount')==1 and home.get('hasCorrectHomeTag'),home
+          sellers=[x for x in summary if 'it_id=' in x['url']]
+          assert len(sellers)==8 and all(x['status']==200 and x.get('buyControl') for x in sellers),sellers
+          print('TODAYFLOWER_READONLY_AFTER_RSS_DEPLOY_PASS',len(core),50,5070,len(sellers))
           PY
