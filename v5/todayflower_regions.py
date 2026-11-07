@@ -123,23 +123,27 @@ def _make_page(code,name,number):
     else:
         compare=(f"상품 카드의 {PRODUCT_LABELS[choices[0]]}({choices[0]})은 "
                  "상품 상세 사진·규격·표시가격을 함께 살펴보고 선택할 수 있습니다.")
+    # Separate a concrete decision from address and checkout guidance.
+    # The permutation is derived from the legal code, not invented local facts.
+    # Use different scenario slots in each section and FAQ; avoid copying the
+    # same fixed blocks into every page under the same intent.
     sections=[
         {"heading":intent+" 상품과 선택 기준",
-         "paragraph":products+" "+one("selection",0)},
+         "paragraph":products+" "+one("selection",0)+" "+one("selection",7)},
         {"heading":"수령 주소와 인계 담당자",
-         "paragraph":one("receiver",0)+" "+one("receiver",2)},
+         "paragraph":one("receiver",1)+" "+one("receiver",8)+" "+one("receiver",10)},
         {"heading":"상품 사진·규격·옵션 비교",
-         "paragraph":one("selection",4)+" "+compare},
+         "paragraph":one("selection",5)+" "+compare+" "+one("selection",9)},
         {"heading":"배송 일정과 최종 결제금액",
-         "paragraph":one("delivery",0)+" "+one("delivery",2)}
+         "paragraph":one("delivery",0)+" "+one("delivery",3)+" "+one("delivery",10)}
     ]
     faqs=[
         {"q":f"{name}에서 "+q1,
-         "a":response+" "+one("delivery",4)},
+         "a":one("delivery",5)+" "+one("receiver",6)},
         {"q":q2,
-         "a":one("selection",3)+" "+one("selection",5)},
+         "a":one("selection",2)+" "+one("selection",11)},
         {"q":f"{name} 꽃배달을 주문할 때 어떤 정보를 준비하면 좋나요?",
-         "a":one("receiver",4)+" "+one("delivery",1)}
+         "a":one("receiver",4)+" "+one("delivery",7)}
     ]
 
     return {
