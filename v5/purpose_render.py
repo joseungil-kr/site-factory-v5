@@ -15,6 +15,15 @@ from . import markup
 def _chosen(items, page, slot):
     if not isinstance(items, list) or not items:
         raise ConfigError(f'purpose pool missing {slot}')
+    # Isolated county prototype: repeat occurrences of a legitimate buying purpose
+    # cover different useful buyer questions rather than selecting the same copy.
+    # All other V5.1 sites retain the original deterministic hash selection.
+    if page.get('siteVariantPolicy')=='county-v51' and slot.startswith('section:') and len(items)>1:
+        index=page.get('variantIndex')
+        if type(index) is not int or index<0:
+            raise ConfigError('county-v51 requires nonnegative variantIndex')
+        offset=int.from_bytes(hashlib.sha256(slot.encode()).digest()[:4],'big')
+        return items[(index+offset)%len(items)]
     digest = hashlib.sha256((page['id'] + ':' + slot).encode()).digest()
     return items[int.from_bytes(digest[:8], 'big') % len(items)]
 
