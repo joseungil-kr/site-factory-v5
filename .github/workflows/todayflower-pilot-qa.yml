@@ -8,6 +8,7 @@ on:
       - 'v5/todayflower*.py'
       - 'tests/test_todayflower*.py'
       - 'scripts/audit_todayflower_customer.py'
+      - 'scripts/build_todayflower_rss.py'
 permissions:
   contents: read
 concurrency:
@@ -38,7 +39,7 @@ jobs:
           PY
       - name: Validate Todayflower production generator and current tests
         run: |
-          python -m py_compile v5/todayflower_regions.py v5/todayflower_markup.py v5/todayflower_copy_pool.py scripts/audit_todayflower_customer.py
+          python -m py_compile v5/todayflower_regions.py v5/todayflower_markup.py v5/todayflower_copy_pool.py scripts/audit_todayflower_customer.py scripts/build_todayflower_rss.py
           python -m unittest discover -s tests -p test_todayflower_pilot.py -v
           python -m unittest discover -s tests -p test_todayflower_copy_quality.py -v
           python -m unittest discover -s tests -p test_todayflower_national.py -v
@@ -75,6 +76,32 @@ jobs:
                   assert phrase not in text,(p,phrase)
               assert '<meta property="og:image" content="https://todayflower.nalmada.net/assets/images/' in text,p
           print('TODAYFLOWER_ALL_5070_NO_INDEX_OUTPUT_AND_COPY_GATE_PASS')
+          PY
+      - name: Generate and validate 50 full-content RSS items from actual HTML
+        run: |
+          python -m scripts.build_todayflower_rss
+          python - <<'PY'
+          import xml.etree.ElementTree as ET,hashlib
+          from pathlib import Path
+          rss=Path('dist/todayflower-nalmada/rss.xml')
+          assert rss.is_file()
+          root=ET.fromstring(rss.read_bytes())
+          assert root.tag=='rss' and root.attrib.get('version')=='2.0'
+          channel=root.find('channel')
+          items=channel.findall('item')
+          assert len(items)==50 and len(set(i.findtext('link') for i in items))==50
+          ns='{http://purl.org/rss/1.0/modules/content/}encoded'
+          for i in items:
+              url=i.findtext('link')
+              assert url==i.findtext('guid') and url.startswith('https://todayflower.nalmada.net/')
+              assert i.find('pubDate') is None
+              body=i.findtext(ns)
+              assert body.startswith('<main id="main"') and body.endswith('</main>')
+              assert 'https://fwith.co.kr/shop/item.php?it_id=' in body
+              assert len(body)>4000
+              assert i.findtext('description') and len(i.findtext('description'))>30
+          assert not Path('dist/todayflower-nalmada/sitemap.xml').exists()
+          print('TODAYFLOWER_RSS_50_ACTUAL_HTML_FULL_CONTENT_VALID',len(items),len(rss.read_bytes()))
           PY
       - name: Deterministic 51-page scoring and sample URL audit
         run: |
