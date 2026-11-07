@@ -1,0 +1,66 @@
+name: Todayflower diagnostic 51 actual HTML content and full RSS QA (no publish)
+on:
+  push:
+    branches: [site/todayflower-nalmada-pilot-20261030]
+    paths: ['.github/workflows/todayflower-content-diagnostic-20261107.yml']
+permissions:
+  contents: read
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build Todayflower isolated preview only
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          site=json.loads(Path('sites/todayflower-nalmada/site.json').read_text())
+          assert site['id']=='todayflower-nalmada'
+          assert site['publishEnabled'] is False and site['indexNow']['enabled'] is False
+          PY
+          python -m v5 build --site todayflower-nalmada --mode preview
+      - name: Record national similarity report (do not hide failures)
+        continue-on-error: true
+        run: |
+          python -m v5 audit --site todayflower-nalmada
+      - name: Generate and validate RSS from candidate HTML
+        run: |
+          python -m scripts.build_todayflower_rss
+      - name: Record exact 51 chosen pages and individual scores
+        run: |
+          python -m scripts.audit_todayflower_customer
+      - name: Publish candidate artifacts for independent reading, not public hosting
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-diagnostic-${{ github.sha }}
+          path: |
+            reports/todayflower-nalmada/
+            dist/todayflower-nalmada/
+          if-no-files-found: warn
+          retention-days: 14
+      - name: Fail closed when similarity audit or full 1pct human signoff remains incomplete
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('reports/todayflower-nalmada')
+          audit=json.loads((root/'audit.json').read_text())
+          sample=json.loads((root/'customer-review-sample.json').read_text())
+          print('TODAYFLOWER_DIAGNOSTIC_SUMMARY',json.dumps({
+            'pageCount':audit['similarityPopulation'],
+            'sampleCount':sample['sampleSize'],
+            'maxSimilarity':audit['maxBodyChar5gramJaccard'],
+            'below90Auto':len(sample['below90']),
+            'humanSignoff':sample['humanReadThrough'],
+            'errors':audit['errors']
+          },ensure_ascii=False))
+          assert not audit['errors'], 'Whole-site similarity gate is still failing'
+          assert sample['humanReadThrough']=='PASS', 'Human 51-page reading approval missing'
+          PY
