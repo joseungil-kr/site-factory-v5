@@ -167,10 +167,27 @@ def expanded_pools(base):
     output=dict(base)
     for name,group,skus,heading,paragraph,other_title,other_paragraph in INTENTS:
         pool=copy.deepcopy(base[group])
-        pool['introductions']=[paragraph]+pool['introductions']
+        # Buyer-intent variants have a precisely selected SKU subset.
+        # Do not select generic intros promising links for all four products.
+        pool['introductions']=[paragraph]
         pool['sections'].extend([
             {'slot':'decision-context','heading':heading,'paragraph':paragraph},
             {'slot':'decision-action','heading':other_title,'paragraph':other_paragraph}])
+        # Keep choice/information paragraphs aligned with selected product cards.
+        # Comparing other SKUs without a card made the final customer copy misleading.
+        import re
+        selected=set(skus)
+        filtered=[]
+        for section in pool['sections']:
+            if section['slot'] in ('choice','information'):
+                mentioned=set(re.findall(r'B\\d{3}',section['paragraph']))
+                if mentioned and not mentioned.issubset(selected):
+                    continue
+            filtered.append(section)
+        for slot,text in (('choice',paragraph),('information',other_paragraph)):
+            if not any(x['slot']==slot for x in filtered):
+                filtered.append({'slot':slot,'heading':heading if slot=='choice' else other_title,'paragraph':text})
+        pool['sections']=filtered
         pool['productSkus']=list(dict.fromkeys(skus))
         output[name]=pool
     return output
