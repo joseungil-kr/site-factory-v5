@@ -76,7 +76,7 @@ SLOTS={
  ],
  'information':[
   ('상품번호로 재확인','주문 전 B201, B202, B205, B206 중 선택한 상품번호를 확인해 판매처에 전달하면 비슷한 상품명으로 인한 혼동을 줄일 수 있습니다.'),
-  ('실물 구성 확인','꽃 품종과 수량, 실제 높이·너비는 판매처의 상품별 상세 설명에서 확인할 수 있습니다.'),
+  ('실물 구성 확인','꽃 품종과 수량, 높이·너비는 상품별 상세 설명과 판매처 주문 옵션에서 비교할 수 있습니다.'),
   ('사진의 의미','형태 안내 이미지는 판매 상품 실물 사진과 차이가 있을 수 있습니다. 판매처의 상품 상세에 표시된 사진과 구성 정보를 확인해 선택할 수 있습니다.'),
   ('수령 정보와 결제','받는 장례식장과 빈소 정보, 연락 가능한 방법과 희망 날짜를 준비한 다음 주문서에서 상품과 배송비를 확인할 수 있습니다.'),
   ('리본 문구 확인 경로','주문 과정에서 리본의 조의 문구와 보내는 분 이름을 입력할 수 있습니다. 입력한 내용을 판매처 주문내역에서 다시 검토할 수 있습니다.'),
@@ -163,14 +163,31 @@ INTENTS=[
   '빈소 정보와 문구','시설명·빈소 번호와 리본의 조의 문구는 서로 다른 항목으로 정리해 전달하면 주문 내용 확인이 수월합니다.')
 ]
 def product_skus_in_text(text):
-    """Extract B201/B202/B205/B206 with one correctly escaped word boundary."""
+    """Read B-prefixed SKU codes even with Korean particles attached.
+
+    Unicode \\b is not a SKU boundary: B201과 and B206의 must be captured.
+    Do not silently split a longer Latin/alphanumeric SKU into a known code.
+    """
     import re
-    return set(re.findall(r'\bB\d{3}\b', text))
+    return set(re.findall(r'(?<![A-Za-z0-9])B[0-9]{3}(?![0-9])', text))
 
 
 def listed_prices_in_text(text):
+    """Return comma-normalized KRW amounts, including 원+Korean endings.
+
+    Both 59,000원입니다 and 59000원으로 are amounts. Relative price
+    differences remain allowed only if selected-card prices imply them.
+    """
     import re
-    return set(re.findall(r'\b\d{1,3}(?:,\d{3})+원\b', text))
+    pattern=r'(?<![0-9,])(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]{4,})원(?![0-9])'
+    results=set()
+    for item in re.findall(pattern, text):
+        try:
+            amount=int(item[:-1].replace(',', ''))
+        except ValueError:
+            raise AssertionError("Invalid KRW price token")
+        results.add(f'{amount:,}원')
+    return results
 
 
 def expanded_pools(base):
@@ -185,8 +202,9 @@ def expanded_pools(base):
         pool['productSkus']=list(dict.fromkeys(skus))
         # Distinct introduction, not a duplicated decision-context paragraph.
         pool['introductions']=[
-            '{county} 근조화환은 '+heading+'을 중심으로 '+str(len(skus))+
-            '개 상품을 살펴볼 수 있습니다. 배송비와 리본 옵션은 수령지에 따라 주문에서 안내됩니다.'
+            '{county} 근조화환을 선택할 때는 '+heading+'에 필요한 '+
+            str(len(skus))+'개 상품의 표시가격과 주문 조건을 비교할 수 있습니다. '+
+            '배송비는 수령지에 따라 주문 단계에서 안내됩니다.'
         ]
         names=' · '.join(sku+' '+format(catalog_price[sku],',')+'원' for sku in skus)
         prices=[catalog_price[sku] for sku in skus]
@@ -230,10 +248,10 @@ def expanded_pools(base):
             ('수령 시설 확인','장례식장명과 정확한 주소를 함께 전달하면 해당 주문의 배송 여부와 수령 일정을 확인하는 데 도움이 됩니다.')
           ],
           'information':[
-            ('상품 상세 비교','상품 코드가 다른 근조화환은 상세페이지의 사진·설명·주문옵션을 각각 비교할 수 있습니다. 사진에 없는 꽃 품종과 규격은 여기서 추측하지 않습니다.'),
+            ('상품 상세 비교','상품코드가 다른 근조화환은 판매처 상세페이지에서 꽃 구성·규격과 주문 옵션을 각각 비교할 수 있습니다.'),
             ('기준가의 확인 시점','표시된 가격은 2026-11-07 판매처 화면에서 확인한 금액입니다. 재고와 최종 결제액은 실제 주문 시점의 판매처 정보가 기준입니다.'),
             ('주문 링크의 역할','원하는 화환을 선택하면 해당 상품의 판매처 주문 페이지로 연결됩니다. 지역 안내 페이지에는 별도 결제 입력란을 두지 않습니다.'),
-            ('형태 참고 이미지','형태 안내용 도형은 실제 판매 상품 사진과 다를 수 있습니다. 실물 상품 이미지를 사용할 권리는 아직 확인되지 않아 판매처의 상세를 통해 비교할 수 있습니다.'),
+            ('형태 참고 이미지','아래 도형은 근조화환의 형태를 살펴보기 위한 그림입니다. 주문 상품의 사진과 구성은 연결된 판매처 상세페이지에서 확인하실 수 있습니다.'),
             ('상품 구성 문의','상품의 높이·폭, 꽃 수량과 종류는 판매처 상품 상세 설명으로 확인할 수 있습니다. 상품별 규격과 꽃 구성은 판매처 상세에 적힌 정보를 기준으로 선택할 수 있습니다.')
           ]
         }
