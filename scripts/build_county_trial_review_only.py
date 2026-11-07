@@ -94,8 +94,24 @@ def main():
   for b in rendered[i+1:]:
    score=similarity(a['body'],b['body'],'char-5gram-jaccard')
    if score>max_pair[0]:max_pair=(score,a['path'],b['path'])
- sample_paths=['/','/2.html','/3.html']+[x['path'] for x in rendered if x['purpose'].startswith('budget-') and x['id'].startswith('county-')][:2]+[x['path'] for x in rendered if x['purpose'].startswith('venue-') and x['id'].startswith('county-')][:2]+[x['path'] for x in rendered if x['purpose'].startswith('ribbon-') and x['id'].startswith('county-')][:2]
- assert len(sample_paths)==9 and len(set(sample_paths))==9
+ # Deliberate editorial coverage: nationwide, all county-bearing provinces,
+ # one county per province, and every actual 18 buying-intent variant.
+ from math import ceil
+ root=[p for p in pages if p['pageType']=='national']
+ province_rows=sorted([p for p in pages if p['pageType']=='province'],key=lambda x:x['officialCode'])
+ county_rows=sorted([p for p in pages if p['pageType']=='county'],key=lambda x:x['number'])
+ ids={x['id'] for x in root+province_rows}
+ for region in province_rows:
+  first=next(c for c in county_rows if c['parentPageId']==region['id'])
+  ids.add(first['id'])
+ for purpose in sorted({x['purpose'] for x in county_rows}):
+  first=next(c for c in county_rows if c['purpose']==purpose)
+  ids.add(first['id'])
+ selected=sorted([p for p in pages if p['id'] in ids],key=lambda x:x['number'])
+ sample_paths=['/' if p['number']==1 else '/'+markup.filename(p['number']) for p in selected]
+ assert len(sample_paths)>=max(1,ceil(len(pages)*.01)) and len(sample_paths)==len(set(sample_paths))
+ assert {x['pageType'] for x in selected}=={'national','province','county'}
+ assert len({x['purpose'] for x in selected if x['pageType']=='county'})==18
  sample=[]
  for p in sample_paths:
   row=next(x for x in rendered if x['path']==p)
@@ -107,7 +123,7 @@ def main():
   'provinceCount':12,'byPurpose':dict(counts),'pagesReachableFromHome':len(reached),
   'orphanCount':len(targets-reached),'missingInternalLinks':0,
   'allNoindex':True,'publicSitemapProduced':False,'rssProduced':False,'indexNowSubmitted':False,
-  'privateSitemapAuditCount':95,'qualityGateApproved':False,
+  'privateSitemapAuditCount':95,'sampleCount':len(sample_paths),'qualityGateApproved':False,
   'strictThreshold':0.49,'maxSimilarity':max_pair,
   'sample':sample,'draftOnly':True}
  REPORT.parent.mkdir(parents=True,exist_ok=True)
