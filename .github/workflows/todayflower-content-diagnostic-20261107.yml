@@ -19,17 +19,40 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Build Todayflower isolated preview only
-        continue-on-error: true
+      - name: Render exact Todayflower page template to diagnostic-only output
         run: |
           python - <<'PY'
-          import json
           from pathlib import Path
-          site=json.loads(Path('sites/todayflower-nalmada/site.json').read_text())
-          assert site['id']=='todayflower-nalmada'
-          assert site['publishEnabled'] is False and site['indexNow']['enabled'] is False
+          from v5.config import ROOT,read_site
+          from v5 import markup
+          from v5.engine import _copy_static,_write_file
+          from v5.addons import enhance_html
+          import json
+          site_id='todayflower-nalmada'
+          data=read_site(site_id)
+          site=data['site']
+          assert site['id']==site_id and site['publishEnabled'] is False
+          assert site['indexNow']['enabled'] is False
+          out=ROOT/'dist'/site_id
+          assert not out.exists(), 'Do not overwrite an existing production artifact'
+          (out/'assets/images').mkdir(parents=True)
+          _copy_static(site,out)
+          rendering={**site,'publishEnabled':False,'publicIndexingApproved':False}
+          for page in data['pages']:
+              fn=markup.home if page['number']==1 else markup.detail
+              html=fn(rendering,page,data['pages'],data['products'],data['links'])
+              html=enhance_html(html,rendering,page['number'])
+              _write_file(out,markup.filename(page['number']),html)
+          _write_file(out,'404.html',markup.error_page(rendering,data['links']))
+          _write_file(out,'robots.txt','User-agent: *\nDisallow: /\n')
+          assert len(list(out.glob('*.html')))==5071
+          # Deliberately not a release build: the strict semantic similarity
+          # audit remains failing and must not be bypassed for deployment.
+          (ROOT/'reports'/site_id).mkdir(parents=True,exist_ok=True)
+          (ROOT/'reports'/site_id/'DIAGNOSTIC_NOT_RELEASE.txt').write_text(
+              'Generated for exact source reading only; original build similarity gate still applies.\n')
+          print('TODAYFLOWER_DIAGNOSTIC_RENDERED_5070_NOT_PUBLISHABLE')
           PY
-          python -m v5 build --site todayflower-nalmada --mode preview
       - name: Record national similarity report (do not hide failures)
         continue-on-error: true
         run: |
