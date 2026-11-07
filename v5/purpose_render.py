@@ -22,8 +22,16 @@ def _chosen(items, page, slot):
 def _text(value, page):
     if not isinstance(value, str) or not value.strip():
         raise ConfigError('purpose pool text must be nonempty')
-    # Only a known, escaped-at-rendering placeholder is interpolated.
-    return value.replace('{region}', page['region'])
+    # Known page variables only; renderers escape the assembled text.
+    # Unknown variables fail instead of leaking template syntax to customers.
+    allowed={'region':page.get('region'),'county':page.get('county'),
+             'province':page.get('province'),'parentRegion':page.get('parentRegion')}
+    def replace(match):
+        key=match.group(1)
+        if key not in allowed or not isinstance(allowed[key],str) or not allowed[key].strip():
+            raise ConfigError(f'unknown or missing purpose placeholder: {key}')
+        return allowed[key]
+    return re.sub(r'\\{([A-Za-z][A-Za-z0-9]*)\\}',replace,value)
 
 
 def assemble(page, pools, products, *, service=False):
@@ -42,11 +50,21 @@ def assemble(page, pools, products, *, service=False):
     faqs = pool.get('faqs')
     if not isinstance(sections, list) or not isinstance(faqs, list) or not faqs:
         raise ConfigError('purpose pool needs sections and FAQs')
+    # Preserve every distinct supported slot; the old choice/order-only loop
+    # silently discarded delivery, ribbon, budget and venue sections.
+    slots=[]
+    for item in sections:
+        if not isinstance(item,dict) or not isinstance(item.get('slot'),str) or not item['slot'].strip():
+            raise ConfigError('purpose section requires a named slot')
+        if item['slot'] not in slots: slots.append(item['slot'])
+    if not {'choice','order'}.issubset(slots):
+        raise ConfigError('purpose pool needs choice and order slots')
+    slots=['choice','order']+[x for x in slots if x not in ('choice','order')]
     resolved_sections=[]
-    for slot in ('choice','order'):
-        section=_chosen([s for s in sections if isinstance(s,dict) and s.get('slot')==slot],page,'section:'+slot)
+    for slot in slots:
+        section=_chosen([x for x in sections if x['slot']==slot],page,'section:'+slot)
         resolved_sections.append({'heading':_text(section.get('heading'),page),
-                                  'paragraph':_text(section.get('paragraph'),page)})
+                                  'paragraph':_text(section.get('paragraph'),page),'slot':slot})
     if any(not isinstance(f,dict) or not f.get('q') or not f.get('a') for f in faqs):
         raise ConfigError('invalid purpose pool FAQ')
     ordered_faq=sorted(enumerate(faqs),key=lambda pair:hashlib.sha256((page['id']+':faq:'+str(pair[0])).encode()).digest())
@@ -103,12 +121,13 @@ def schema(site, page, products, region_index=None):
         graph.append({'@type':'FAQPage','@id':url+'#faq','mainEntity':[
             {'@type':'Question','name':f['q'],'acceptedAnswer':{'@type':'Answer','text':f['a']}}
             for f in page['faq']]})
-    parent=region_index[0].get(page.get('parentPageId')) if region_index else None
-    if parent:
+    ancestry=regional_ancestors(page,region_index) if region_index else []
+    if ancestry:
+        chain=ancestry+[page]
         graph.append({'@type':'BreadcrumbList','@id':url+'#breadcrumb','itemListElement':[
-            {'@type':'ListItem','position':1,'name':parent['region'],
-             'item':site['domain'].rstrip('/')+markup.url_path(parent['number'])},
-            {'@type':'ListItem','position':2,'name':page['region'],'item':url}]})
+            {'@type':'ListItem','position':i,'name':node['region'],
+             'item':site['domain'].rstrip('/')+markup.url_path(node['number'])}
+            for i,node in enumerate(chain,1)]})
     raw=json.dumps({'@context':'https://schema.org','@graph':graph},ensure_ascii=False,separators=(',',':'))
     return '<script type="application/ld+json">'+raw.replace('<',r'\u003c').replace('>',r'\u003e').replace('&',r'\u0026')+'</script>'
 
@@ -142,12 +161,28 @@ def regional_index(pages):
     return by_id,children
 
 
+def regional_ancestors(page,index):
+    """Return the exact explicitly linked parent chain from root to parent."""
+    by_id=index[0]
+    chain=[]
+    seen={page['id']}
+    node=page
+    while node.get('parentPageId'):
+        parent=by_id.get(node['parentPageId'])
+        if parent is None or parent['id'] in seen:
+            raise ConfigError('invalid or cyclic regional ancestry')
+        chain.append(parent)
+        seen.add(parent['id'])
+        node=parent
+    return list(reversed(chain))
+
+
 def regional_navigation(page,pages,index=None):
     # Parent relationships must be supplied explicitly, never inferred from names.
     by_id,children_by_parent=index if index is not None else regional_index(pages)
     parent=by_id.get(page.get('parentPageId'))
     children=children_by_parent.get(page['id'],[])
-    links=([parent] if parent else [])+children
+    links=regional_ancestors(page,(by_id,children_by_parent))+children
     if not links:return ''
     return '<nav aria-label="관련 지역"><h2>관련 지역</h2>'+''.join(
         '<a href="'+markup.h(markup.url_path(p['number']))+'">'+markup.h(p['region'])+'</a>' for p in links)+'</nav>'
@@ -168,9 +203,10 @@ def render(site,page,pages,products,links,pools,region_index=None):
         markup.h(site['domain'].rstrip('/')+path)+'">' if site.get('domain') and
         (site.get('publishEnabled') or site.get('publicIndexingApproved')) else '')
     head=head.replace('</head>',style+og+schema(site,page,products,region_index)+'</head>')
-    parent=region_index[0].get(page.get('parentPageId'))
-    breadcrumb=('<nav aria-label="현재 위치"><a href="'+markup.h(markup.url_path(parent['number']))+'">'+
-                markup.h(parent['region'])+'</a> <span>›</span> <span>'+markup.h(page['region'])+'</span></nav>' if parent else '')
+    ancestors=regional_ancestors(page,region_index)
+    breadcrumb=('<nav aria-label="현재 위치">'+''.join(
+                '<a href="'+markup.h(markup.url_path(node['number']))+'">'+markup.h(node['region'])+'</a> <span>›</span> '
+                for node in ancestors)+'<span>'+markup.h(page['region'])+'</span></nav>' if ancestors else '')
     return (head+markup.header(site)+'<main id="main" class="container document-page">'
             +breadcrumb+'<header><h1>'+markup.h(page['title'])+'</h1><p>'+markup.h(page['intro'])+'</p></header>'
             '<section class="recommendations"><h2>상품과 가격</h2><div class="product-list">'+
