@@ -173,6 +173,7 @@ def main():
                {'heading':'주문 요청','paragraph':'받는 시설명과 주소를 확인할 수 있습니다.'}],
    'faq':[],'pageType':'county','officialCode':c['code'],
    'shippingEvidence':SOURCE_SHIPPING.get(c['code']),
+   'siteVariantPolicy':'county-v51','variantIndex':i//len(county_intents()),
    'townships':'·'.join(township_names),'townshipCount':str(len(township_names)),
    'officialTownshipCodes':[x[0] for x in lower]})
  assert len(pages)==PAGES_TOTAL
