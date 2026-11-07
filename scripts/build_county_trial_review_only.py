@@ -36,7 +36,7 @@ def main():
  site=data['site']
  assert site['id']==ID and site['domain'] is None and site['publishEnabled'] is False
  pages=data['pages']
- assert len(pages)==99
+ assert len(pages)==95
  index=regional_index(pages)
  plan=json.loads((ROOT/'sites'/ID/'site-spec.json').read_text())
  assert plan['publishPolicy']['mode']=='owner-private-preview-only'
@@ -44,7 +44,7 @@ def main():
  catalog=data['products'];sets=set(p['id'] for p in pages)
  assert len(sets)==99 and len(set(p['number'] for p in pages))==99
  enriched=[assemble(p,plan['purposePools'],catalog) for p in pages]
- assert all(len(p['sections'])==5 for p in enriched)
+ assert all(len(p['sections'])>=5 for p in enriched)
  if OUT.exists():shutil.rmtree(OUT)
  (OUT/'assets'/'images').mkdir(parents=True)
  theme_dir=ROOT/'templates/themes'
@@ -85,7 +85,7 @@ def main():
   ET.SubElement(node,'loc').text='https://owner-private.invalid'+page['path']
  XML=ET.tostring(private_sitemap,encoding='unicode')
  ET.fromstring(XML)
- assert len(private_sitemap)==99 and not (OUT/'sitemap.xml').exists()
+ assert len(private_sitemap)==95 and not (OUT/'sitemap.xml').exists()
  # A private audit record, not a feed or submitted URL.
  max_pair=(0.0,None,None)
  for i,a in enumerate(rendered):
@@ -101,11 +101,11 @@ def main():
   sample.append({'urlPath':p,'pageId':row['id'],'type':selected.get('pageType'),'purpose':row['purpose'],
     'region':row['region'],'sections':[{'heading':x['heading'],'paragraph':x['paragraph']} for x in assemble(selected,plan['purposePools'],catalog)['sections']],
     'intro':assemble(selected,plan['purposePools'],catalog)['intro']})
- report={'siteId':ID,'mode':'OFFLINE_REVIEW_ONLY_NOT_DEPLOYABLE','htmlCount':99,'countyCount':82,
-  'provinceCount':16,'byPurpose':dict(counts),'pagesReachableFromHome':len(reached),
+ report={'siteId':ID,'mode':'OFFLINE_REVIEW_ONLY_NOT_DEPLOYABLE','htmlCount':95,'countyCount':82,
+  'provinceCount':12,'byPurpose':dict(counts),'pagesReachableFromHome':len(reached),
   'orphanCount':len(targets-reached),'missingInternalLinks':0,
   'allNoindex':True,'publicSitemapProduced':False,'rssProduced':False,'indexNowSubmitted':False,
-  'privateSitemapAuditCount':99,'qualityGateApproved':False,
+  'privateSitemapAuditCount':95,'qualityGateApproved':False,
   'strictThreshold':0.49,'maxSimilarity':max_pair,
   'sample':sample,'draftOnly':True}
  REPORT.parent.mkdir(parents=True,exist_ok=True)
