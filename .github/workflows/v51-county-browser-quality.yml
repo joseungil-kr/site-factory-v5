@@ -4,6 +4,12 @@ on:
     branches: [site/v51-county-funeral-ownerprivate-20261107]
     paths:
       - '.github/workflows/v51-county-browser-quality.yml'
+      - 'scripts/build_county_funeral_trial_inputs.py'
+      - 'scripts/county_copy_pools.py'
+      - 'scripts/build_county_trial_review_only.py'
+      - 'scripts/score_county_trial_review.py'
+      - 'v5/purpose_render.py'
+      - 'tests/test_v51_county_selected_skus.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -19,7 +25,8 @@ jobs:
         with: {node-version: '22'}
       - name: Pin site scope and test V5.1 regressions in place
         run: |
-          python -m unittest tests.test_v51_county_regressions tests.test_v51_purpose_render tests.test_v51_review_gate -v
+          python -m unittest tests.test_v51_county_regressions tests.test_v51_purpose_render tests.test_v51_review_gate tests.test_v51_county_selected_skus -v
+          python -m scripts.score_county_trial_review
           python -m scripts.build_county_funeral_trial_inputs
           python -m v5 build --site county-funeral-ownerprivate-test --mode preview
           python -m v5 audit --site county-funeral-ownerprivate-test
@@ -96,6 +103,9 @@ jobs:
         if: always()
         with:
           name: v51-county-offline-browser-proofs-not-deployed
-          path: artifacts/county-v51-browser/
+          path: |
+            artifacts/county-v51-browser/
+            artifacts/v51-county-current-quality.json
+            reports/county-funeral-ownerprivate-test/review-only.json
           retention-days: 14
           if-no-files-found: warn
