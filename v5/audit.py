@@ -49,9 +49,21 @@ def grams(s,n=5):
     return set(value[i:i+n] for i in range(max(0,len(value)-n+1)))
 
 
-def similarity(left,right):
-    a,b=grams(left),grams(right)
-    return len(a&b)/len(a|b) if a|b else 1.0
+def similarity(left,right,metric='char-5gram-jaccard'):
+    if metric=='char-5gram-jaccard':
+        a,b=grams(left,5),grams(right,5)
+        return len(a&b)/len(a|b) if a|b else 1.0
+    if metric=='char-3gram-cosine':
+        from math import sqrt
+        normalized=lambda text:re.sub(r'\\s+','',text).lower()
+        def count(text):
+            v=normalized(text)
+            return Counter(v[i:i+3] for i in range(max(0,len(v)-2)))
+        a,b=count(left),count(right)
+        top=sum(v*b.get(k,0) for k,v in a.items())
+        base=sqrt(sum(v*v for v in a.values())*sum(v*v for v in b.values()))
+        return top/base if base else (1.0 if not a and not b else 0.0)
+    raise ValueError('Unsupported similarity metric: '+str(metric))
 
 
 def resolved_reference(ref):
@@ -144,13 +156,20 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
         if p.get('searchKeyword',site['keyword']) not in p['title']:warnings.append(f'Unexpected keyword in title: {file}')
         if len(p['intro'])+sum(len(s['paragraph']) for s in p['sections'])<250:
             warnings.append(f'Thin sample content: {file}')
-    # Whole-population exact duplicate guard; pinned stratified 1% similarity
-    # gate for large projects, explicitly NOT a complete semantic review.
+    # Whole-population identical-body guard; for V5.1 compare using the
+    # exact metric/threshold/fraction specified by the approved plan.
     full_pages=data['pages']
     all_bodies={p['id']:' '.join([p['intro']]+[x['paragraph'] for x in p['sections']]) for p in full_pages}
     counts=Counter(hashlib.sha256(v.encode('utf-8')).hexdigest() for v in all_bodies.values())
     if max(counts.values(),default=0)>1:
         errors.append('Exact repeated regional article body detected')
+    similarity_config=(plan.get('similarityAudit') or {}) if purpose_mode else {}
+    sim_metric=similarity_config.get('metric','char-5gram-jaccard')
+    sim_limit=similarity_config.get('thresholdExclusive',0.49)
+    fraction=similarity_config.get('sampleFraction',0.01)
+    if sim_metric not in ('char-5gram-jaccard','char-3gram-cosine') or not (0<sim_limit<1) or not (0<fraction<=1):
+        errors.append('Invalid similarity policy')
+        sim_metric,sim_limit,fraction='char-5gram-jaccard',0.49,0.01
     similarity_mode='complete'
     if len(full_pages)>300:
         by_topic={}
@@ -158,20 +177,22 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
             by_topic.setdefault(p.get('searchKeyword',site['keyword']),[]).append(p)
         selected=[]
         for topic,rows in sorted(by_topic.items()):
-            n=max(1,ceil(len(rows)*0.01))
-            selected.extend(sorted(rows,key=lambda x:hashlib.sha256(('v5-dong-similarity-v1:'+x['id']).encode()).digest())[:n])
+            n=max(1,ceil(len(rows)*fraction))
+            selected.extend(sorted(rows,key=lambda x:hashlib.sha256(('v51-similarity:'+x['id']).encode()).digest())[:n])
         selected=sorted(selected,key=lambda x:x['number'])
-        similarity_mode='fixed-stratified-1pct'
-        warnings.append('Similarity calculated on pinned 1% stratified sample, not complete pairs; independent semantic review required before indexable publication')
+        similarity_mode='fixed-stratified-'+str(fraction)
+        warnings.append('Similarity sample is stratified; independent full content review required')
     else:
         selected=full_pages
     content_pairs=[]
     for i,p in enumerate(selected):
         a=all_bodies[p['id']]
         for q in selected[i+1:]:
-            content_pairs.append((similarity(a,all_bodies[q['id']]),p['number'],q['number']))
+            content_pairs.append((similarity(a,all_bodies[q['id']],sim_metric),p['number'],q['number']))
     max_sim=max(content_pairs,default=(0,0,0))
-    if max_sim[0]>=0.49:errors.append(f'Body similarity over 49%: {max_sim}')
+    if max_sim[0]>=sim_limit:
+        errors.append(f'Body similarity over {sim_limit:.1%} ({sim_metric}): {max_sim}')
+
     robots_text=(out/'robots.txt').read_text(encoding='utf-8')
     indexable='Allow: /' in robots_text
     if not indexable:
