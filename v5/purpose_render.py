@@ -78,10 +78,30 @@ def assemble(page, pools, products, *, service=False):
     if any(not isinstance(f,dict) or not f.get('q') or not f.get('a') for f in faqs):
         raise ConfigError('invalid purpose pool FAQ')
     ordered_faq=sorted(enumerate(faqs),key=lambda pair:hashlib.sha256((page['id']+':faq:'+str(pair[0])).encode()).digest())
-    return {**page, 'intro': _text(_chosen(pool.get('introductions'), page, 'intro'), page),
+    assembled={**page, 'intro': _text(_chosen(pool.get('introductions'), page, 'intro'), page),
             'sections': resolved_sections,
             'faq': [{'q': _text(f.get('q'), page), 'a': _text(f.get('a'), page)}
                     for _,f in ordered_faq[:min(5,len(ordered_faq))]]}
+    if page.get('siteVariantPolicy')=='county-v51' and not service:
+        # A build cannot silently show B205 or 109,000원 on a page with only
+        # B201/B202 cards. Compare all rendered customer-facing text.
+        body=' '.join([assembled['intro']]+
+            [s['heading']+' '+s['paragraph'] for s in assembled['sections']]+
+            [f['q']+' '+f['a'] for f in assembled['faq']])
+        named=set(re.findall(r'\bB\d{3}\b',body))
+        allowed=set(selected)
+        if named-allowed:
+            raise ConfigError('county-v51 off-card SKU in copy: '+str(sorted(named-allowed)))
+        amounts={catalog[sku].get('referencePrice') for sku in selected}
+        allowed_amounts={format(price,',')+'원' for price in amounts if type(price) is int}
+        allowed_amounts|={format(abs(x-y),',')+'원' for x in amounts for y in amounts
+                          if type(x) is int and type(y) is int and x!=y}
+        seen_prices=set(re.findall(r'\b\d{1,3}(?:,\d{3})+원\b',body))
+        if seen_prices-allowed_amounts:
+            raise ConfigError('county-v51 off-card price in copy: '+str(sorted(seen_prices-allowed_amounts)))
+        if assembled['intro'] in [x['paragraph'] for x in assembled['sections']]:
+            raise ConfigError('county-v51 duplicated introduction as section')
+    return assembled
 
 
 def _has_proof(product, kind, site_id=None):
