@@ -66,6 +66,12 @@ def similarity(left,right,metric='char-5gram-jaccard'):
     raise ValueError('Unsupported similarity metric: '+str(metric))
 
 
+def similarity_violation(score:float,threshold_exclusive:float)->bool:
+    """The configured maximum is exclusive; equality fails."""
+    if not 0 < threshold_exclusive < 1:
+        raise ValueError('Invalid similarity threshold')
+    return score >= threshold_exclusive
+
 def resolved_reference(ref):
     if not ref or ref.startswith(('#','mailto:','tel:','data:')):
         return None
@@ -190,7 +196,7 @@ def audit(site_id, *,output:Path|None=None,write_report=True):
         for q in selected[i+1:]:
             content_pairs.append((similarity(a,all_bodies[q['id']],sim_metric),p['number'],q['number']))
     max_sim=max(content_pairs,default=(0,0,0))
-    if max_sim[0]>=sim_limit:
+    if similarity_violation(max_sim[0],sim_limit):
         errors.append(f'Body similarity over {sim_limit:.1%} ({sim_metric}): {max_sim}')
 
     robots_text=(out/'robots.txt').read_text(encoding='utf-8')
