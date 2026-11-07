@@ -189,22 +189,62 @@ def expanded_pools(base):
             '개 상품을 살펴볼 수 있습니다. 배송비와 리본 옵션은 수령지에 따라 주문에서 안내됩니다.'
         ]
         names=' · '.join(sku+' '+format(catalog_price[sku],',')+'원' for sku in skus)
-        pool['sections']=[{
-            'slot':'choice','heading':'선택한 근조상품 '+str(len(skus))+'종',
-            'paragraph':'이 페이지에서 비교하는 상품은 '+names+
-                '입니다. 기준 가격은 2026-11-07 판매처 표시를 따르며 꽃 구성·실물 규격과 옵션은 각 상품 상세에서 확인할 수 있습니다.'
-        }]
         prices=[catalog_price[sku] for sku in skus]
-        # Permit clearly calculated price *differences*, not prices of unlisted products.
         allowed_prices={format(x,',')+'원' for x in prices}
         allowed_prices.update(format(abs(x-y),',')+'원' for x in prices for y in prices if x!=y)
-        # Only two reusable service-oriented slots. Four generic slots made every
-        # county text nearly identical without helping users choose.
-        for slot in ('order','delivery'):
-            candidates=[]
+        first,last=skus[0],skus[-1]
+        pool['sections']=[
+            {'slot':'choice','heading':'선택 가능한 근조상품과 표시가',
+             'paragraph':'이 페이지의 상품은 '+names+'입니다. 2026-11-07 판매처 표시가이며 주문지별 배송비와 리본 옵션이 결제에 반영될 수 있습니다.'},
+            {'slot':'choice','heading':'기준가격별 선택',
+             'paragraph':first+' '+format(catalog_price[first],',')+'원과 '+last+' '+format(catalog_price[last],',')+'원을 비교할 수 있습니다. 상품별 형태와 실제 구성은 각 주문 상세에 표시된 내용을 확인할 수 있습니다.'},
+            {'slot':'choice','heading':'상품코드별 구매 확인',
+             'paragraph':names+' 중 원하는 상품코드를 선택할 수 있습니다. 같은 가격이어도 상품명이 다를 수 있어 실제 판매처 상세의 구성과 옵션을 비교하는 것이 좋습니다.'},
+            {'slot':'choice','heading':'예산과 배송비',
+             'paragraph':names+'이 해당 페이지에서 주문 링크를 제공하는 상품입니다. 표시가에 배송지별 추가비용이 적용되는지는 상세주소를 지정한 뒤 결제 화면에서 확인할 수 있습니다.'}
+        ]
+        # Each shared slot covers a distinct practical part of a purchase, so the
+        # deterministic choice is not merely an adjective shuffle for SEO.
+        additional={
+          'order':[
+            ('장례식장 주소','{county}에 있는 장례식장의 공식 명칭과 도로명 주소, 빈소 번호가 있으면 함께 전달할 수 있습니다. 비슷한 이름의 시설을 구분하는 데 도움이 됩니다.'),
+            ('희망 수령 날짜','빈소에 근조화환을 전달할 희망일과 시간대를 정하고 받는 장소를 함께 지정할 수 있습니다. 판매처의 실제 접수 가능 시간을 기준으로 주문이 진행됩니다.'),
+            ('주문 담당자와 리본 명의','주문 연락 담당자와 화환 리본에 표시할 보내는 이름은 구분해서 입력할 수 있습니다. 회사·단체 명의라면 정확한 표기를 준비할 수 있습니다.'),
+            ('시설 반입 위치','실제 수령 시설의 화환 반입 위치나 설치 조건이 있다면 주문 전에 판매처에 알려 배송 방식과 반입 가능 형태를 상담할 수 있습니다.'),
+            ('빈소 정보','받는 시설에 여러 빈소가 있다면 고인·빈소 번호와 수령 시설 주소를 구분해 준비할 수 있습니다. 결제 내용은 판매처 주문 화면에서 확인합니다.'),
+            ('상품 선택 후 주문','상품코드를 먼저 고르고 시설명·주소·수령 날짜를 주문서에 입력할 수 있습니다. 선택한 상품과 받는 장소가 일치하는지 결제 전에 확인할 수 있습니다.')
+          ],
+          'ribbon':[
+            ('조의 문구와 발신인','근조 리본의 조의 문구와 보내는 사람·단체의 명칭은 서로 다른 항목입니다. 실제 인쇄 표기는 판매처 주문 옵션에 입력할 수 있습니다.'),
+            ('보내는 단체명','회사나 단체가 화환을 보낼 때 사용할 정식 명칭을 준비할 수 있습니다. 주문 연락처와 리본에 적는 명의는 다르게 입력할 수 있습니다.'),
+            ('리본 수정 문의','리본 인쇄 전 문구와 이름의 맞춤법을 검토할 수 있습니다. 제작 진행 상태에 따른 변경 가능 여부는 판매처에서 안내합니다.'),
+            ('리본 추가금','리본 인쇄·옵션 비용이 별도로 표시되면 상품 표시가와 구분해 결제 총액을 확인할 수 있습니다.'),
+            ('문구와 수령지','리본에 적는 조의 문구 외에 받는 장례식장과 빈소를 별도 입력하면 전달 장소와 발신인을 구분할 수 있습니다.')
+          ],
+          'delivery':[
+            ('군별 배송비 확인','상품 상세의 배송비 안내는 수령지 읍·면에 따라 달라질 수 있습니다. 정확한 주소를 기준으로 주문 시 적용 금액을 확인할 수 있습니다.'),
+            ('추가비용 계산','배송료와 리본 선택비용은 상품 기준가와 구분됩니다. 판매처 결제 화면에서 실제 합계가 안내됩니다.'),
+            ('배송 요청 시각','희망하는 도착 시간대와 실제로 접수 가능한 시간은 다를 수 있습니다. 장례식장 주소·날짜를 판매처에 전달하면 일정을 확인할 수 있습니다.'),
+            ('정확한 읍면 주소','같은 군의 배송지라도 읍·면과 상세 주소가 다르면 배송비가 달라질 수 있습니다. 정확한 수령 장소로 주문비용을 계산할 수 있습니다.'),
+            ('배송비 결제 방식','판매처 상품 페이지는 배송비를 주문 시 결제하는 방식으로 안내합니다. 배송지에 따른 실제 추가금은 주문 과정에서 확인할 수 있습니다.'),
+            ('수령 시설 확인','장례식장명과 정확한 주소를 함께 전달하면 해당 주문의 배송 여부와 수령 일정을 확인하는 데 도움이 됩니다.')
+          ],
+          'information':[
+            ('상품 상세 비교','상품 코드가 다른 근조화환은 상세페이지의 사진·설명·주문옵션을 각각 비교할 수 있습니다. 사진에 없는 꽃 품종과 규격은 여기서 추측하지 않습니다.'),
+            ('기준가의 확인 시점','표시된 가격은 2026-11-07 판매처 화면에서 확인한 금액입니다. 재고와 최종 결제액은 실제 주문 시점의 판매처 정보가 기준입니다.'),
+            ('주문 링크의 역할','원하는 화환을 선택하면 해당 상품의 판매처 주문 페이지로 연결됩니다. 지역 안내 페이지에는 별도 결제 입력란을 두지 않습니다.'),
+            ('형태 참고 이미지','형태 안내용 도형은 실제 판매 상품 사진과 다를 수 있습니다. 실물 상품 이미지를 사용할 권리는 아직 확인되지 않아 판매처의 상세를 통해 비교할 수 있습니다.'),
+            ('상품 구성 문의','상품의 높이·폭, 꽃 수량과 종류는 판매처 상품 상세 설명으로 확인할 수 있습니다. 현재 원장에서 확정된 수치를 임의로 기재하지 않습니다.')
+          ]
+        }
+        for slot in ('order','ribbon','delivery','information'):
+            options=[]
             for item in base[group]['sections']:
-                if item['slot']!=slot:
-                    continue
+                if item['slot']==slot:
+                    options.append(copy.deepcopy(item))
+            options.extend({'slot':slot,'heading':title,'paragraph':body}
+                for title,body in additional[slot])
+            for item in options:
                 text=item['heading']+' '+item['paragraph']
                 if not product_skus_in_text(text).issubset(selected):
                     continue
@@ -212,16 +252,8 @@ def expanded_pools(base):
                     continue
                 if len(skus)!=4 and any(word in text for word in ('네 상품','네 가지','네 개','4개')):
                     continue
-                candidates.append(copy.deepcopy(item))
-            if not candidates:
-                fallback={
-                    'order':('장례식장 수령지 입력','{county}에서 받을 장례식장명과 상세 주소·빈소·희망 도착일은 판매처 주문 과정에서 전달할 수 있습니다.'),
-                    'delivery':('배송비와 리본 옵션','상품 표시가 외에 수령지 배송비와 리본 옵션 비용이 추가될 수 있습니다. 실제 주문서에서 총액을 확인할 수 있습니다.')
-                }
-                title,text=fallback[slot]
-                candidates=[{'slot':slot,'heading':title,'paragraph':text}]
-            pool['sections'].extend(candidates)
-        # These sections are substantive, not shuffled locality adjectives.
+                pool['sections'].append(item)
+        # These two intent sections have a different purpose from the introduction.
         pool['sections'].extend([
             {'slot':'decision-context','heading':heading,'paragraph':paragraph},
             {'slot':'decision-action','heading':other_title,'paragraph':other_paragraph}
