@@ -91,7 +91,7 @@ def main():
   'titlePattern':'{county} 근조화환 가격·상품 선택','urlPattern':'/{number}.html',
   'keywordGroups':{'primary':['군 근조화환','근조화환 가격'],'secondary':['화환 추가 배송비','근조 리본 문구']},
   'copyPoolPlan':{'industry':'condolence-flower','source':'pinned-fwith-2026-11-07','sentenceTarget':5},
-  'similarityAudit':{'metric':'char-3gram-cosine','thresholdExclusive':0.49,'sampleFraction':0.01,'seed':20261107},
+  'similarityAudit':{'metric':'char-5gram-jaccard','thresholdExclusive':0.49,'sampleFraction':0.01,'seed':20261107},
   'conversion':{'mode':'shop','phone':'1844-0644','orderUrl':'https://fwith.co.kr/shop/item.php?it_id=B201'},
   'images':{'source':'original CSS+SVG decoration only','approved':False},
   'publishPolicy':{'mode':'owner-private-preview-only','indexNow':False},
