@@ -21,6 +21,8 @@ ET.register_namespace("atom", ATOM)
 
 
 class Main(HTMLParser):
+    VOID = frozenset(("area", "base", "br", "col", "embed", "hr", "img",
+                      "input", "link", "meta", "param", "source", "track", "wbr"))
     def __init__(self):
         super().__init__(convert_charrefs=False)
         self.depth = 0
@@ -30,7 +32,7 @@ class Main(HTMLParser):
         attr = dict(attrs)
         if self.depth == 0 and tag == "main" and attr.get("id") == "main":
             self.depth = 1
-        elif self.depth:
+        elif self.depth and tag not in self.VOID:
             self.depth += 1
         if self.depth:
             raw = self.get_starttag_text()
@@ -41,7 +43,7 @@ class Main(HTMLParser):
             self.buffer.append(self.get_starttag_text())
 
     def handle_endtag(self, tag):
-        if self.depth:
+        if self.depth and tag not in self.VOID:
             self.buffer.append("</" + tag + ">")
             self.depth -= 1
 
