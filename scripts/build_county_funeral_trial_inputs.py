@@ -64,7 +64,7 @@ def main():
   num=len(pages)+1;pnums[p['code']]=num
   pages.append({'id':'province-'+p['code'],'number':num,'region':p['fullName'],'county':'관내 군 지역',
     'province':p['fullName'],'parentRegion':'전국','parentPageId':'national',
-    'purpose':'province','title':p['fullName']+' 근조화환 군 지역별 상품과 가격',
+    'purpose':'province-'+p['code'],'title':p['fullName']+' 근조화환 군 지역별 상품과 가격',
     'productSkus':list(PRICES),'intro':p['fullName']+' 근조화환 선택 안내입니다.',
     'sections':[{'heading':'상품','paragraph':'상품 가격과 구성 확인'},
                 {'heading':'주문','paragraph':'받는 시설 확인'}],
@@ -137,6 +137,20 @@ def main():
  province['introductions']=['{province} 관내 군 지역 근조화환의 상품 가격과 수령 시설별 주문 안내를 확인할 수 있습니다.']
  spec['purposePools']['national']=national
  spec['purposePools']['province']=province
+ # Only counties attested by the pinned official parent ledger are listed.
+ for p in provinces:
+  names=[c['name'] for c in counties if c['parent']==p['code']]
+  assert names
+  scope=__import__('copy').deepcopy(province)
+  joined='·'.join(names)
+  scope['introductions']=[p['fullName']+'의 군 지역 '+joined+' 근조화환 상품 안내입니다. 상품별 표시가는 전국 공통 판매처 기준이며 수령지 배송 조건은 주문에서 확인합니다.']
+  scope['sections'].append({'slot':'covered-counties',
+    'heading':p['fullName']+'의 군 지역 검색',
+    'paragraph':p['fullName']+' 원장에 기록된 '+str(len(names))+'개 군은 '+joined+'입니다. 선택한 군의 실제 장례식장명과 빈소, 도로명 주소를 입력하면 상품 주문 조건을 확인할 수 있습니다.'})
+  scope['sections'].append({'slot':'county-selection',
+    'heading':'군 지역 선택과 상품 주문',
+    'paragraph':joined+' 중 받는 장소를 선택하고 B201·B202·B205·B206의 상품 상세를 비교할 수 있습니다. 광역 이름만 입력하기보다 실제 군·장례식장 주소를 함께 사용합니다.'})
+  spec['purposePools']['province-'+p['code']]=scope
  result=validate_plan(spec,ID)
  assert result['ready'],result['errors']
  site={
