@@ -1,4 +1,4 @@
-"""Build inputs for a new isolated V5.1 99-page county condolence wreath trial.
+"""Build inputs for a new isolated V5.1 95-page county condolence wreath trial.
 
 Only writes the new site's paths. No existing site, production release, Access
 policy, secret, DNS, or Cloudflare API access. A private protected deployment
@@ -35,7 +35,7 @@ PROVINCE_PURCHASE_FOCUSES={
     "한 개 군 지역의 주문 흐름",
     "이 목록에는 기장군 한 곳만 포함됩니다. 광역 지역을 추가로 선택할 필요 없이 실제 수령 시설명을 정하고 주문 링크로 이동할 수 있습니다. B201과 B202는 기준가가 같아 상세 구성 차이를 먼저 비교하는 방식이 적합합니다.",
     "수령지 입력 항목",
-    "장례식장 이름뿐 아니라 주소와 빈소·희망일이 주문 내용에 반영되어야 합니다. 지정한 장소의 추가 배송비를 확인한 뒤 최종 합계를 비교할 수 있습니다. 홈페이지에 군 전체의 동일 요금이나 당일 도착 문구를 작성하지 않습니다."
+    "장례식장 이름뿐 아니라 주소와 빈소·희망일이 주문 내용에 반영되어야 합니다. 지정한 장소의 추가 배송비를 확인한 뒤 최종 합계를 비교할 수 있습니다. 배송 요금과 주문 가능 시각은 수령 시설의 실제 주소를 기준으로 안내됩니다."
   ],
   "2700000000": [
     "두 군 중 받는 곳 선택",
@@ -222,9 +222,10 @@ def main():
   scope['sections'].append({'slot':'covered-counties',
     'heading':p['fullName']+'의 군 지역 검색',
     'paragraph':p['fullName']+' 원장에 기록된 '+str(len(names))+'개 군은 '+joined+'입니다. 선택한 군의 실제 장례식장명과 빈소, 도로명 주소를 입력하면 상품 주문 조건을 확인할 수 있습니다.'})
+  selection=(names[0]+'에 있는 수령 시설의 주소와 장례식장명을 준비해 B201·B202·B205·B206의 상품을 비교할 수 있습니다.' if len(names)==1 else joined+'에서 실제 수령 군을 선택한 다음 장례식장 주소와 B201·B202·B205·B206의 상품 상세를 함께 살펴볼 수 있습니다.')
   scope['sections'].append({'slot':'county-selection',
     'heading':'군 지역 선택과 상품 주문',
-    'paragraph':joined+' 중 받는 장소를 선택하고 B201·B202·B205·B206의 상품 상세를 비교할 수 있습니다. 광역 이름만 입력하기보다 실제 군·장례식장 주소를 함께 사용합니다.'})
+    'paragraph':selection})
   focus=PROVINCE_PURCHASE_FOCUSES[p['code']]
   scope['sections'].extend([
    {'slot':'purchase-focus','heading':focus[0],'paragraph':focus[1]},
