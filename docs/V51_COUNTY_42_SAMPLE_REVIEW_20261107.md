@@ -65,7 +65,7 @@
 | 42 | `/95.html` | 전북특별자치도 부안군 / venue-form | 93 | venue-form 구매 목적. 부안군 수령지의 읍·면 찾기 / 3단화환 반입 조건 / 대체 상품 문의. SKU 카드 2개와 본문 가격 일치, 수령지 선택 안내 확인. 공통 옵션 설명 반복 감점. |
 
 ## 기술검증 (현재 배포와 분리)
-- 최신 시안 빌드 source `ae7845a22ed069498354fd05fd1f87f248d1d552`; [최종 strict build run 42364369254](https://github.com/joseungil-kr/site-factory-v5/actions/runs/42364369254)에서는 95페이지 × 4,465쌍 최대 char-5gram Jaccard **43.371%**(기준 **49% 미만**), 고아·내부 링크 오류 0. 이후 수정은 검사·보고·스타일 범위로 소스 생성·구매 목적 핵심은 보존됨.
+- 최신 생성기 문구 소스 `35a37c4afc0c6e2a59563ad8c025a2a7ab93a7fe`; [최종 동일 콘텐츠 strict build run 42364698170](https://github.com/joseungil-kr/site-factory-v5/actions/runs/42364698170)에서는 95페이지 × 4,465쌍 최대 char-5gram Jaccard **43.371%**(기준 **49% 미만**), 고아·내부 링크 오류 0. 이후 수정은 검사·보고·스타일 범위로 소스 생성·구매 목적 핵심은 보존됨.
 - [run 42364863130](https://github.com/joseungil-kr/site-factory-v5/actions/runs/42364863130)에서 V5.1 32개 테스트, 95개 오프라인 렌더, 상품별 가격·링크, **26개 Chromium 스크린샷 (390/1440)** 및 82개 상품 카드 검증 성공. 관련 지역 링크 간 최소 간격 6px, 상품별 날짜·SKU 참고 안내도 검사. Artifact **13571695221**.
 - 사이트 ID: `county-funeral-ownerprivate-test`; 95페이지 = 전국1 + 광역12 + 군82. 2026-11-07 code.go.kr 공식 ZIP SHA-256 `44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd` 재확인, 82개 군 동일.
 - 판매처 상품 B201/B202/B205/B206의 표시가와 ‘배송비 주문 시 결제’ 문구 2026-11-07 HTTP200 검증: [run 42361620276](https://github.com/joseungil-kr/site-factory-v5/actions/runs/42361620276). 이미지 권리 미확인으로 원본 사진 미복제, 자체 SVG만 사용.
