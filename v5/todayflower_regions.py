@@ -104,11 +104,25 @@ def _make_page(code,name,number):
         return orders[group][offset]
     skus=PRODUCT_SETS[int.from_bytes(
         hashlib.sha256((seed+":sku").encode()).digest()[:2],"big")%len(PRODUCT_SETS)]
-    choices=sorted(skus,key=lambda sku:hashlib.sha256(
+    # Named examples must match the buyer intent, not merely any SKU in the
+    # multiproduct card set. Never suggest a condolence wreath for a birthday.
+    preferred={
+       "생일 꽃다발":"G", "기념일 꽃 선물":"G", "감사 꽃다발":"G",
+       "개업 축하화분":"D", "사무실 화분":"D",
+       "축하화환":"C", "행사장 꽃 반입":"C",
+       "조문 근조화환":"B"
+    }.get(intent)
+    candidates=[sku for sku in skus if sku.startswith(preferred)] if preferred else list(skus)
+    assert candidates
+    choices=sorted(candidates,key=lambda sku:hashlib.sha256(
         (seed+":compare:"+sku).encode("utf-8")).digest())
-    compare=(f"연결된 상품 카드에서 {PRODUCT_LABELS[choices[0]]}({choices[0]})과 "
-             f"{PRODUCT_LABELS[choices[1]]}({choices[1]})의 사진과 표시가격을 "
-             "비교해 보세요. 원하는 크기와 상품 종류는 각 상세 화면에서 살펴볼 수 있습니다.")
+    if len(choices)>1:
+        compare=(f"연결된 상품 카드에서 {PRODUCT_LABELS[choices[0]]}({choices[0]})과 "
+                 f"{PRODUCT_LABELS[choices[1]]}({choices[1]})의 사진·규격·표시가격을 "
+                 "비교해 보세요. 원하는 옵션은 각 상세 화면에서 살펴볼 수 있습니다.")
+    else:
+        compare=(f"상품 카드의 {PRODUCT_LABELS[choices[0]]}({choices[0]})은 "
+                 "상품 상세 사진·규격·표시가격을 함께 살펴보고 선택할 수 있습니다.")
     sections=[
         {"heading":intent+" 상품과 선택 기준",
          "paragraph":products+" "+one("selection",0)},
