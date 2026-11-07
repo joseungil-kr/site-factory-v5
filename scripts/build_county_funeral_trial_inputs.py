@@ -107,11 +107,27 @@ def dump(path,obj):
  path.write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 def pool(title,intro,choice,delivery,extra,faq):
+ # Each FAQ answer must address the question's buying intent; the previous
+ # shared address-only answer was irrelevant for budget and ribbon questions.
+ if '예산' in title:
+  answer=('표시된 상품가를 카드별로 비교해 예산에 맞는 근조화환을 고를 수 있습니다. '
+          '리본 선택비와 실제 수령 주소에 적용되는 배송비는 주문 화면에서 함께 확인합니다.')
+ elif '리본' in title:
+  answer=('상품을 정하신 뒤 주문서의 리본 문구와 보내는 명의 항목에 각각 적을 내용을 '
+          '준비해 주세요. 인쇄 가능 글자 수와 옵션은 판매처에서 확인할 수 있습니다.')
+ elif '장례식장' in title or '수령' in title:
+  answer=('받는 장례식장의 정확한 명칭, 빈소, 주소와 현장 담당자 정보를 준비해 주세요. '
+          '화환 반입 가능 여부와 전달 일정은 해당 시설 및 판매처의 안내를 확인하면 됩니다.')
+ else:
+  answer=('상품 카드에서 표시가격과 상세 링크를 살펴본 뒤 받는 군과 장례식장 주소, '
+          '희망 날짜를 입력해 주문 시 적용되는 배송비와 수령 조건을 확인할 수 있습니다.')
  return {'productSkus':list(PRICES),
   'introductions':purpose_intros(title,intro),
   'sections':purpose_sections(title,choice,delivery,extra),
-  'faqs':[{'q':'상품 가격에 배송비가 포함되나요?','a':'판매처는 주문 시 배송비를 결제하도록 안내합니다. 군·읍·면별 추가금과 총액은 수령지 확인 후 결정됩니다.'},
-          {'q':faq,'a':'받는 시설명과 상세 주소, 희망 수령시간을 판매처에 전달하면 실제 접수 조건을 확인할 수 있습니다.'}]}
+  'faqs':[{'q':'상품 가격에 배송비가 포함되나요?',
+           'a':'판매처는 배송비를 주문 시 결제하도록 안내합니다. 실제 적용 금액과 총액은 받는 시설의 상세주소를 입력한 뒤 확인할 수 있습니다.'},
+          {'q':faq,'a':answer}]}
+
 def main():
  data=json.loads(SRC.read_text(encoding='utf-8'))
  assert data['retrievedOn']=='2026-10-22'
