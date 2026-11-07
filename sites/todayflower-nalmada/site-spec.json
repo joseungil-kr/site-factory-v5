@@ -35,10 +35,11 @@
   },
   "copyPoolPlan": {
     "industry": "전국 꽃배달 당일배송 가능 여부, 꽃다발·화분·축하화환·근조화환",
-    "source": "33개 대표 원고의 문구 개선 + 2026-10-22 고정 법정동 ZIP + 16개 구매 의도 + Todayflower 전용 고객 중심 문구 풀; 확인되지 않은 지역 배송 사실은 생성하지 않음",
-    "sentenceTarget": 120,
+    "source": "Todayflower 16 buyer-intent scenarios with 576 intent-scoped selection, recipient and checkout sentences in v5/todayflower_copy_pool.py; no unrestricted mixing of Daebu delivery, funeral and birthday advice.",
+    "sentenceTarget": 576,
     "regionDifferentiation": "publicly verifiable legal code/name and independent intent/order-check combinations; regional-specific delivery facts NOT independently verified",
-    "risk": "Scaled local content may lack independent uniqueness/search value; preview noindex until manual QA and service coverage confirmed"
+    "risk": "Original 5,070 page count preserved; site-wide 49% char-5gram similarity gate still FAIL at 54.082% on verified sample (2026-11-07); local address-specific delivery facts absent; DO NOT deploy new copy before quality approval.",
+    "generationSource": "v5/todayflower_regions.py::_make_page; deterministic intent and region-code-bound choices, existing original 33 pages preserved"
   },
   "similarityAudit": {
     "metric": "char-5gram-jaccard",
@@ -48,7 +49,9 @@
     "manualSemanticReview": false,
     "expectedPopulation": 5070,
     "note": "Large-site 1% stratified sample is not 12.8m-pair semantic review; exact full-body duplicate detection runs on all pages",
-    "manualSemanticReviewStatus": "pending fixed-seed 1% sample of 51 pages; require human score >=90/100"
+    "manualSemanticReviewStatus": "BLOCKED: full 51/5070 machine prescreen and page readback produced, but latest 49% similarity gate fails; 90-point final independent editorial verification not met",
+    "latestAttempt": "2026-11-07",
+    "latestMeasuredMax": 0.54082
   },
   "conversion": {
     "phone": "1844-0644",
@@ -138,7 +141,7 @@
     "requires": "Host binding + credential approval before index. Semantic manual review, real local fulfillment proof, seller SKU availability, allowed publishing; preview has no canonical/sitemap."
   },
   "rollout": {
-    "phase": "copy-refresh-noindex-candidate",
+    "phase": "draft-content-revision-failed-quality-gate-no-production-deploy",
     "originalPilot": 33,
     "pinnedLegalDongCount": 5067,
     "additionalPages": 5037,
@@ -146,7 +149,17 @@
     "publicReleaseApproved": false,
     "publicHostnameConnection": "Existing V4 public host documented as of 2026-10-31; candidate changes do not alter DNS, Worker, or production routing",
     "numbering": "5070 content pages, 1..403 + 405..5071, reserve /404.html as error",
-    "lastContentPath": "/5071.html"
+    "lastContentPath": "/5071.html",
+    "rssOnlyOperationalUpdate": {
+      "deployed": true,
+      "date": "2026-11-07",
+      "oldContentSourceSHA": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "verificationRun": 42339345069,
+      "workerVersion": "da6d6007-38b1-4ddd-8c65-76cefb15da24",
+      "url": "https://todayflower.nalmada.net/rss.xml",
+      "items": 50,
+      "note": "Separate approved old-site RSS-only public deployment. Draft copy on this V5 branch NOT live."
+    }
   },
   "legacyOperationalRelease": {
     "host": "https://todayflower.nalmada.net",
