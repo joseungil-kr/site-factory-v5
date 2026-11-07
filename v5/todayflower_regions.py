@@ -38,7 +38,7 @@ PRODUCT_SETS=(
     ("G067","D144","D149","C200","B201","B205"),
     ("G073","D144","D149","C200","C206","B201"),
 )
-from .todayflower_copy_pool import SCENARIOS, ADDRESS, CHOICE, CHECKOUT, PREPARATION
+from .todayflower_copy_pool import SCENARIOS, SCENE_DETAILS
 
 def _pick(items, seed):
     value=int.from_bytes(hashlib.sha256(seed.encode("utf-8")).digest()[:8],"big")
@@ -78,35 +78,39 @@ def legal_regions(root:Path):
     return tuple(regions)
 
 def _make_page(code,name,number):
-    scenario=SCENARIOS[int.from_bytes(hashlib.sha256(("todayflower:"+code).encode()).digest()[:8],"big")%len(SCENARIOS)]
+    # Region identity is sourced from pinned legal codes. Regional delivery
+    # availability is never inferred from region existence.
+    scenario=SCENARIOS[int.from_bytes(
+        hashlib.sha256(("todayflower:"+code).encode()).digest()[:8],"big")%len(SCENARIOS)]
     intent,focus,products,q1,q2,response=scenario
-    label=name
-    seed=code+":todayflower:delivery"
-    intro=(f"{label} 꽃배달을 찾고 계신가요? {focus} "
-           "상품번호와 받으실 주소, 희망 날짜를 알려주시면 주문 상담을 도와드립니다.")
+    details=SCENE_DETAILS[intent]
+    assert set(details)=={"selection","receiver","delivery"}
+    seed=code+":todayflower:buyer-intent-v2"
+    def one(group, offset):
+        items=details[group]
+        assert len(items)>=6
+        base=int.from_bytes(hashlib.sha256((seed+":"+group).encode()).digest()[:8],"big")%len(items)
+        return items[(base+offset)%len(items)]
     sections=[
-        {"heading":intent+" 상품 선택",
-         "paragraph":focus+" "+products+" "+_pick(CHOICE,seed+":choice")
-            +" "+_pick(PREPARATION,seed+":customer-intent")},
-        {"heading":"받으실 주소와 연락처 준비",
-         "paragraph":_pick(ADDRESS,seed+":address")+" "+_pick(ADDRESS,seed+":alternative-address")
-            +" "+_pick(PREPARATION,seed+":recipient-condition")},
-        {"heading":"상품 구성·크기·옵션 비교",
-         "paragraph":_pick(CHOICE,seed+":product")+" "+_pick(ADDRESS,seed+":method")
-            +" "+_pick(CHOICE,seed+":second-choice")+" "+_pick(PREPARATION,seed+":product-specific-check")},
-        {"heading":"희망 일정과 최종 결제금액",
-         "paragraph":_pick(CHECKOUT,seed+":checkout")+" "+_pick(CHECKOUT,seed+":after")
-            +" "+_pick(CHECKOUT,seed+":final-condition")+" "+_pick(PREPARATION,seed+":checkout-validation")},
+        {"heading":intent+" 상품과 선택 기준",
+         "paragraph":products+" "+one("selection",0)+" "+one("selection",2)},
+        {"heading":"수령 주소와 인계 담당자",
+         "paragraph":one("receiver",0)+" "+one("receiver",2)},
+        {"heading":"상품 사진·규격·옵션 비교",
+         "paragraph":one("selection",4)+" "+one("selection",1)},
+        {"heading":"배송 일정과 최종 결제금액",
+         "paragraph":one("delivery",0)+" "+one("delivery",2)}
     ]
     faqs=[
-        {"q":f"{label}에서 "+q1,
-         "a":response+" "+_pick(CHECKOUT,seed+":first-faq")},
+        {"q":f"{name}에서 "+q1,
+         "a":response+" "+one("delivery",4)},
         {"q":q2,
-         "a":products+" "+_pick(CHOICE,seed+":second-faq")},
-        {"q":f"{label} 꽃배달을 주문할 때 어떤 정보를 준비하면 좋나요?",
-         "a":_pick(ADDRESS,seed+":third-faq")+" "+_pick(CHECKOUT,seed+":third-faq-condition")},
+         "a":one("selection",3)+" "+one("selection",5)},
+        {"q":f"{name} 꽃배달을 주문할 때 어떤 정보를 준비하면 좋나요?",
+         "a":one("receiver",4)+" "+one("delivery",1)}
     ]
-    skus=PRODUCT_SETS[int.from_bytes(hashlib.sha256((seed+":sku").encode()).digest()[:2],"big")%len(PRODUCT_SETS)]
+    skus=PRODUCT_SETS[int.from_bytes(
+        hashlib.sha256((seed+":sku").encode()).digest()[:2],"big")%len(PRODUCT_SETS)]
     return {
         "id":"today-national-"+code,
         "number":number,
@@ -114,13 +118,13 @@ def _make_page(code,name,number):
         "topic":intent,
         "searchKeyword":"꽃배달 당일배송",
         "title":name+" 꽃배달 당일배송 | "+intent+"·상품 선택·주문 안내",
-        "intro":intro,
+        "intro":name+" 꽃배달을 준비하신다면 "+focus,
         "heroTag":name+" · "+intent,
-        "sectionLead":"꽃다발·화분·화환 중 목적에 맞는 상품을 고르고, 상품번호와 수령 주소를 알려주시면 주문 상담을 도와드립니다.",
+        "sectionLead":"원하는 상품번호와 수령 주소, 희망일을 알려주시면 접수 가능한 일정과 비용을 안내받을 수 있습니다.",
         "sections":sections,
         "productSkus":list(skus),
         "faq":faqs,
-        "evidenceScope":"2026-10-22 pinned legal-code snapshot; no per-address delivery promise",
+        "evidenceScope":"2026-10-22 pinned legal-code snapshot; no per-address delivery promise"
     }
 
 def expand(site,pages,regions,root:Path):
