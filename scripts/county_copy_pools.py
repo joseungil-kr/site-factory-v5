@@ -162,36 +162,80 @@ INTENTS=[
   '근조 리본에 적는 보내는 명의와 화환을 받을 장례식장 주소는 서로 다릅니다. 한 번의 주문에서 두 정보를 혼동 없이 기록할 수 있습니다.',
   '빈소 정보와 문구','시설명·빈소 번호와 리본의 조의 문구는 서로 다른 항목으로 정리해 전달하면 주문 내용 확인이 수월합니다.')
 ]
+def product_skus_in_text(text):
+    """Extract B201/B202/B205/B206 with one correctly escaped word boundary."""
+    import re
+    return set(re.findall(r'\bB\d{3}\b', text))
+
+
+def listed_prices_in_text(text):
+    import re
+    return set(re.findall(r'\b\d{1,3}(?:,\d{3})+원\b', text))
+
+
 def expanded_pools(base):
+    """Keep every displayed SKU/price in the chosen product cohort."""
     import copy
+    catalog_price={'B201':59000,'B202':59000,'B205':109000,'B206':149000}
     output=dict(base)
     for name,group,skus,heading,paragraph,other_title,other_paragraph in INTENTS:
+        selected=set(skus)
+        assert selected and selected<=set(catalog_price)
         pool=copy.deepcopy(base[group])
-        # Buyer-intent variants have a precisely selected SKU subset.
-        # Do not select generic intros promising links for all four products.
-        pool['introductions']=[paragraph]
+        pool['productSkus']=list(dict.fromkeys(skus))
+        # Distinct introduction, not a duplicated decision-context paragraph.
+        pool['introductions']=[
+            '{county} 근조화환은 '+heading+'을 중심으로 '+str(len(skus))+
+            '개 상품을 살펴볼 수 있습니다. 배송비와 리본 옵션은 수령지에 따라 주문에서 안내됩니다.'
+        ]
+        names=' · '.join(sku+' '+format(catalog_price[sku],',')+'원' for sku in skus)
+        pool['sections']=[{
+            'slot':'choice','heading':'선택한 근조상품 '+str(len(skus))+'종',
+            'paragraph':'이 페이지에서 비교하는 상품은 '+names+
+                '입니다. 기준 가격은 2026-11-07 판매처 표시를 따르며 꽃 구성·실물 규격과 옵션은 각 상품 상세에서 확인할 수 있습니다.'
+        }]
+        allowed_prices={format(catalog_price[sku],',')+'원' for sku in skus}
+        for slot in ('order','ribbon','delivery','information'):
+            candidates=[]
+            for item in base[group]['sections']:
+                if item['slot']!=slot:
+                    continue
+                text=item['heading']+' '+item['paragraph']
+                if not product_skus_in_text(text).issubset(selected):
+                    continue
+                if not listed_prices_in_text(text).issubset(allowed_prices):
+                    continue
+                if len(skus)!=4 and any(word in text for word in ('네 상품','네 가지','네 개','4개')):
+                    continue
+                candidates.append(copy.deepcopy(item))
+            if not candidates:
+                fallback={
+                    'order':('수령시설·주문 확인','{county}의 장례식장명과 주소, 빈소와 희망 수령일을 판매처에 전달하면 주문 조건을 확인할 수 있습니다.'),
+                    'ribbon':('리본 문구와 보내는 이름','조의 문구와 개인·단체의 보내는 이름은 선택한 상품의 주문 옵션에서 확인할 수 있습니다.'),
+                    'delivery':('정확한 배송비 안내','군 지역 배송비에는 읍·면별 차이가 있을 수 있습니다. 수령 시설의 상세 주소를 기준으로 실제 요금을 확인할 수 있습니다.'),
+                    'information':('실물 구성 확인','꽃의 종류와 크기, 리본 옵션 등은 선택한 상품의 상세정보에서 확인할 수 있습니다.')
+                }
+                title,text=fallback[slot]
+                candidates=[{'slot':slot,'heading':title,'paragraph':text}]
+            pool['sections'].extend(candidates)
         pool['sections'].extend([
             {'slot':'decision-context','heading':heading,'paragraph':paragraph},
-            {'slot':'decision-action','heading':other_title,'paragraph':other_paragraph}])
-        # Keep choice/information paragraphs aligned with selected product cards.
-        # Comparing other SKUs without a card made the final customer copy misleading.
-        import re
-        selected=set(skus)
-        filtered=[]
-        for section in pool['sections']:
-            if section['slot'] in ('choice','information'):
-                mentioned=set(re.findall(r'B\\d{3}',section['paragraph']))
-                if mentioned and not mentioned.issubset(selected):
-                    continue
-            filtered.append(section)
-        for slot,text in (('choice',paragraph),('information',other_paragraph)):
-            if not any(x['slot']==slot for x in filtered):
-                filtered.append({'slot':slot,'heading':heading if slot=='choice' else other_title,'paragraph':text})
-        pool['sections']=filtered
-        pool['productSkus']=list(dict.fromkeys(skus))
+            {'slot':'decision-action','heading':other_title,'paragraph':other_paragraph}
+        ])
+        for item in pool['sections']:
+            text=item['heading']+' '+item['paragraph']
+            assert product_skus_in_text(text).issubset(selected),(name,text)
+            assert listed_prices_in_text(text).issubset(allowed_prices),(name,text)
+            if len(skus)!=4:
+                assert not any(word in text for word in ('네 상품','네 가지','네 개','4개')),(name,text)
+        assert paragraph not in pool['introductions'][0]
         output[name]=pool
     return output
+
+
 def county_intents():
     return [x[0] for x in INTENTS]
+
+
 def skus_for(purpose):
     return next(x[2] for x in INTENTS if x[0]==purpose)
