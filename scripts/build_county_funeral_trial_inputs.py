@@ -10,6 +10,7 @@ from pathlib import Path
 from collections import Counter
 from v5.site_plan import initial_spec,validate_plan
 from v5.config import ROOT
+from scripts.county_copy_pools import purpose_intros,purpose_sections
 
 ID='county-funeral-ownerprivate-test'
 SITE=ROOT/'sites'/ID
@@ -23,25 +24,15 @@ PRODUCTS=[
  ('B206','근조화환 B206',149000),
 ]
 PURPOSES=['budget','venue','ribbon']
-SOURCE_SHIPPING={
- '1271000000':{'fee':10000,'scope':'담양군 표기','exception':'읍·면 상세 배송료 별도 확인'},
- '4182000000':{'fee':10000,'scope':'가평군 표기','exception':'설악면 20,000원 별도 표기'},
- '4380000000':{'fee':10000,'scope':'단양군 표기','exception':'상세 수령지 확인 필요'}
-}
+SOURCE_SHIPPING={}  # Seller B201 county fee applicability was not independently parsed into verified SKU-specific records.
 def dump(path,obj):
  path.parent.mkdir(parents=True,exist_ok=True)
  path.write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 def pool(title,intro,choice,delivery,extra,faq):
  return {'productSkus':list(PRICES),
-  'introductions':[intro],
-  'sections':[
-    {'slot':'choice','heading':title,'paragraph':choice},
-    {'slot':'order','heading':'수령시설과 주문 조건','paragraph':'{county}의 실제 장례식장명, 상세 주소와 수령 희망일을 주문 시 전달하면 배송 일정과 추가요금을 확인할 수 있습니다.'},
-    {'slot':'ribbon','heading':'리본 문구와 명의','paragraph':'조의 문구와 보내는 분의 이름 또는 단체명을 확인할 수 있습니다. 리본 비용과 포함 여부는 주문 단계에서 안내됩니다.'},
-    {'slot':'delivery','heading':'배송비와 최종 결제액','paragraph':delivery},
-    {'slot':'information','heading':'실제 주문 확인','paragraph':extra}
-  ],
+  'introductions':purpose_intros(title,intro),
+  'sections':purpose_sections(title,choice,delivery,extra),
   'faqs':[{'q':'상품 가격에 배송비가 포함되나요?','a':'판매처는 주문 시 배송비를 결제하도록 안내합니다. 군·읍·면별 추가금과 총액은 수령지 확인 후 결정됩니다.'},
           {'q':faq,'a':'받는 시설명과 상세 주소, 희망 수령시간을 판매처에 전달하면 실제 접수 조건을 확인할 수 있습니다.'}]}
 def main():
@@ -57,7 +48,7 @@ def main():
  # No claims that this old snapshot is the currently effective official naming.
  county_codes={x['code'] for x in counties}
  # A seller table quote is only attached when its official county code matches.
- assert all(code in county_codes for code in SOURCE_SHIPPING), 'Seller fee example references an unknown county'
+ assert not SOURCE_SHIPPING, 'Never publish unverified county delivery fees'
  pages=[]
  root={'id':'national','number':1,'region':'전국','county':'전국','province':'전국','parentRegion':'전국',
        'purpose':'budget','title':'전국 군 근조화환 가격과 상품 안내','productSkus':list(PRICES),
@@ -100,7 +91,7 @@ def main():
   'titlePattern':'{county} 근조화환 가격·상품 선택','urlPattern':'/{number}.html',
   'keywordGroups':{'primary':['군 근조화환','근조화환 가격'],'secondary':['화환 추가 배송비','근조 리본 문구']},
   'copyPoolPlan':{'industry':'condolence-flower','source':'pinned-fwith-2026-11-07','sentenceTarget':5},
-  'similarityAudit':{'metric':'char-3gram-cosine','thresholdExclusive':0.97,'sampleFraction':0.1,'seed':20261107},
+  'similarityAudit':{'metric':'char-3gram-cosine','thresholdExclusive':0.49,'sampleFraction':0.01,'seed':20261107},
   'conversion':{'mode':'shop','phone':'1844-0644','orderUrl':'https://fwith.co.kr/shop/item.php?it_id=B201'},
   'images':{'source':'original CSS+SVG decoration only','approved':False},
   'publishPolicy':{'mode':'owner-private-preview-only','indexNow':False},
@@ -163,6 +154,7 @@ def main():
    'countyCount':len(counties),'provinceCount':len(provinces),'targetCount':len(pages),
    'countyCodes':[x['code'] for x in counties],
    'deliveryFeeSpecificCases':SOURCE_SHIPPING,
+   'shippingEvidenceState':'No county-specific amount accepted until exact B201 source rows, 읍/면 exceptions and checkout calculation are verified',
    'priceReadback':'User confirmed HTTP 200 2026-11-07 08:49 UTC; assistant web direct readback B205 only',
    'imageUsage':'Only new owned simple SVG illustration. No seller image copied.',
    'privateDeploymentReady':False,'productionHost':None})
