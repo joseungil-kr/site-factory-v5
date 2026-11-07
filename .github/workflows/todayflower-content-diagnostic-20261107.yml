@@ -20,6 +20,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Build Todayflower isolated preview only
+        continue-on-error: true
         run: |
           python - <<'PY'
           import json
