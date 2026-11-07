@@ -107,6 +107,12 @@ def main():
  for purpose in sorted({x['purpose'] for x in county_rows}):
   first=next(c for c in county_rows if c['purpose']==purpose)
   ids.add(first['id'])
+ # Previously missed eight off-card SKU defects must be in the editorial
+ # sample even when the purpose-stratified selection would not include them.
+ required_regression_numbers=(15,18,28,42,47,63,66,67)
+ for number in required_regression_numbers:
+  witness=next(p for p in county_rows if p['number']==number)
+  ids.add(witness['id'])
  # After a failed content audit, include one previously unreviewed county.
  fresh=next(c for c in reversed(county_rows) if c['id'] not in ids)
  ids.add(fresh['id'])
