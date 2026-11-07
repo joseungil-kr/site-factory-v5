@@ -123,8 +123,11 @@ def products_html(products, selected, site_id=None):
                if _has_proof(p,'image',site_id) else '')
         price=('<p class="product-price">'+format(p['referencePrice'],',')+'원</p>'
                if _has_proof(p,'price') else '')
+        note=('<p class="product-note">상품번호 '+markup.h(sku)+
+              ' · 기준가 확인 2026-11-07 · 꽃의 상세 구성·규격은 판매처 상품정보에서 볼 수 있습니다.</p>'
+              if site_id=='county-funeral-ownerprivate-test' else '')
         rows.append('<article class="product" data-product-sku="'+markup.h(sku)+'">'+image+
-                    '<div class="product-copy"><h3>'+markup.h(p['name'])+'</h3>'+price+'</div>'+
+                    '<div class="product-copy"><h3>'+markup.h(p['name'])+'</h3>'+price+note+'</div>'+
                     '<a data-track-event="shop" class="button btn-outline" target="_blank" '
                     'rel="noopener noreferrer" href="'+markup.h(p['orderUrl'])+'">상품 보러가기 ↗</a></article>')
     return ''.join(rows)
@@ -229,6 +232,16 @@ def render(site,page,pages,products,links,pools,region_index=None):
            '.product-price{font-weight:700}.document-page>header{padding:25px 0}'
            '@media(max-width:520px){.product{flex-wrap:wrap}.product img{width:96px;height:96px}'
            '.product .button{white-space:normal}}</style>')
+    if site.get('id')=='county-funeral-ownerprivate-test':
+        style=style.replace('</style>',(
+          '.document-page nav[aria-label="관련 지역"]{display:flex;flex-wrap:wrap;gap:9px 12px;align-items:center}'
+          '.document-page nav[aria-label="관련 지역"] h2{width:100%;margin-bottom:0}'
+          '.document-page nav[aria-label="관련 지역"] a{display:inline-flex;padding:8px 12px;'
+          'border:1px solid #d9e2d6;border-radius:8px;line-height:1.35;text-decoration:none}'
+          '.document-page nav[aria-label="현재 위치"] a{display:inline-block;margin-right:7px}'
+          '.product-note{font-size:.88rem;line-height:1.5;color:#425547;margin-top:8px}'
+          '@media(max-width:520px){.product .button{width:100%;text-align:center;min-height:44px}}'
+          '</style>'))
     og=('<meta property="og:type" content="website"><meta property="og:url" content="'+
         markup.h(site['domain'].rstrip('/')+path)+'">' if site.get('domain') and
         (site.get('publishEnabled') or site.get('publicIndexingApproved')) else '')
