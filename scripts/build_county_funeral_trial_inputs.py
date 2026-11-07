@@ -5,7 +5,7 @@ policy, secret, DNS, or Cloudflare API access. A private protected deployment
 cannot be inferred from a robots noindex flag.
 """
 from __future__ import annotations
-import json,hashlib,re,argparse
+import json,hashlib,re,argparse,zipfile,io,csv
 from pathlib import Path
 from collections import Counter
 from v5.site_plan import initial_spec,validate_plan
@@ -15,6 +15,8 @@ from scripts.county_copy_pools import purpose_intros,purpose_sections,expanded_p
 ID='county-funeral-ownerprivate-test'
 SITE=ROOT/'sites'/ID
 SRC=ROOT/'data/regions/v4_official_parent_regions_20261022.json'
+ZIP_SRC=ROOT/'data/regions/v4_official_legal_codes_20261022.zip'
+OFFICIAL_ZIP_SHA='44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd'
 PAGES_TOTAL=95
 PRICES={'B201':59000,'B202':59000,'B205':109000,'B206':149000}
 PRODUCTS=[
@@ -114,6 +116,14 @@ def main():
  data=json.loads(SRC.read_text(encoding='utf-8'))
  assert data['retrievedOn']=='2026-10-22'
  parents=data['regions']
+ assert ZIP_SRC.is_file()
+ assert hashlib.sha256(ZIP_SRC.read_bytes()).hexdigest()==OFFICIAL_ZIP_SHA, 'Official frozen legal-code archive changed'
+ with zipfile.ZipFile(ZIP_SRC) as zp:
+  members=zp.namelist()
+  assert len(members)==1
+  legal_rows=list(csv.reader(io.StringIO(zp.read(members[0]).decode('cp949')),delimiter=chr(9)))
+ assert legal_rows[0][:3]==['법정동코드','법정동명','폐지여부']
+ active_lower=[row for row in legal_rows[1:] if len(row)>=3 and row[2].strip()=='존재' and row[1].strip().split()[-1].endswith(('읍','면'))]
  counties=[x for x in parents if x['level']=='municipality' and x['name'].endswith('군') and x['sourceStatus']=='존재']
  all_provinces=[x for x in parents if x['level']=='province' and x['sourceStatus']=='존재']
  county_parent_codes={c['parent'] for c in counties}
@@ -146,6 +156,12 @@ def main():
     'faq':[],'pageType':'province','officialCode':p['code']})
  for i,c in enumerate(sorted(counties,key=lambda x:x['code'])):
   p=prov_by_code[c['parent']]
+  lower=[(row[0].strip(),row[1].strip().split()[-1])
+         for row in active_lower
+         if row[0].startswith(c['code'][:5]) and row[1].strip().startswith(c['fullName']+' ')]
+  lower.sort()
+  township_names=[item[1] for item in lower]
+  assert len(township_names)>0 and len(set(township_names))==len(township_names),(c['code'],c['fullName'],township_names)
   purpose=county_intents()[i%len(county_intents())]
   num=len(pages)+1
   pages.append({'id':'county-'+c['code'],'number':num,'region':c['fullName'],
@@ -156,7 +172,9 @@ def main():
    'sections':[{'heading':'상품 선택','paragraph':'같은 상품 유형의 표시가를 확인할 수 있습니다.'},
                {'heading':'주문 요청','paragraph':'받는 시설명과 주소를 확인할 수 있습니다.'}],
    'faq':[],'pageType':'county','officialCode':c['code'],
-   'shippingEvidence':SOURCE_SHIPPING.get(c['code'])})
+   'shippingEvidence':SOURCE_SHIPPING.get(c['code']),
+   'townships':'·'.join(township_names),'townshipCount':str(len(township_names)),
+   'officialTownshipCodes':[x[0] for x in lower]})
  assert len(pages)==PAGES_TOTAL
  assert all(x['pageType']!='county' or x['id']!='national' for x in pages)
  region_list=[{'name':x['region'],'code':x.get('officialCode','national'),'level':x['pageType']} for x in pages]
