@@ -1,0 +1,759 @@
+{
+  "site": "https://todayflower.nalmada.net",
+  "sourceGitHubWorkflowRun": 42340029743,
+  "sourceBranch": "site/todayflower-nalmada-pilot-20261030",
+  "sampleMethod": "deterministic 51/5070, representative/boundary/province/intent",
+  "sampleSize": 51,
+  "population": 5070,
+  "scoringMethod": "mechanical prescreen plus actual char-5gram cross-document similarity; NOT independent human editorial scores",
+  "categoryMax": {
+    "natural": 25,
+    "accuracy": 30,
+    "helpful": 30,
+    "repetition": 15
+  },
+  "manualReadThrough": "PENDING",
+  "productionReleaseApproved": false,
+  "fullSiteSimilarityGate": {
+    "thresholdExclusive": 0.49,
+    "observedMaximum": 0.54082,
+    "status": "FAIL",
+    "strictAuditRun": 42340029743
+  },
+  "failingItems": [
+    {
+      "url": "https://todayflower.nalmada.net/564.html",
+      "score": 85,
+      "reason": [
+        "지역별 본문이 다른 표본과 너무 유사함: 51.93%",
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/3603.html",
+      "score": 85,
+      "reason": [
+        "지역별 본문이 다른 표본과 너무 유사함: 51.93%",
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    }
+  ],
+  "results": [
+    {
+      "url": "https://todayflower.nalmada.net/",
+      "score": 100,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 30,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.21263,
+      "reason": [
+        "본문·상품·주문 정보에서 정량 선별 위험 없음"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/2.html",
+      "score": 100,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 30,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.14238,
+      "reason": [
+        "본문·상품·주문 정보에서 정량 선별 위험 없음"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/3.html",
+      "score": 100,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 30,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.04128,
+      "reason": [
+        "본문·상품·주문 정보에서 정량 선별 위험 없음"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/28.html",
+      "score": 100,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 30,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.21263,
+      "reason": [
+        "본문·상품·주문 정보에서 정량 선별 위험 없음"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/29.html",
+      "score": 100,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 30,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.15584,
+      "reason": [
+        "본문·상품·주문 정보에서 정량 선별 위험 없음"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/34.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.32955,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/276.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.28,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/311.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.11111,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/403.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.16984,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/405.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.38283,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/564.html",
+      "score": 85,
+      "categories": {
+        "natural": 21,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 7
+      },
+      "nearSimilarity": 0.51927,
+      "reason": [
+        "지역별 본문이 다른 표본과 너무 유사함: 51.93%",
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/585.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.11982,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/817.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.16875,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/921.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.34846,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/1087.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.34866,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/1096.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.14562,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/1156.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.42407,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/1180.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.31022,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/1365.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.32955,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/1627.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.16875,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/1742.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.36106,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/1845.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.38704,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/1904.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.33808,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/1954.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.42407,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/2145.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.37838,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/2292.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.27718,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/2327.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.28227,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/2387.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.34359,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/2500.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.25727,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/2685.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.26316,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/2719.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.31842,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/2822.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.26316,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/2883.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.38283,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/2919.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.3172,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/3092.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.34866,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/3390.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.36807,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/3484.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.16984,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/3521.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.3172,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/3594.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.28146,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/3603.html",
+      "score": 85,
+      "categories": {
+        "natural": 21,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 7
+      },
+      "nearSimilarity": 0.51927,
+      "reason": [
+        "지역별 본문이 다른 표본과 너무 유사함: 51.93%",
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/3937.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.31022,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/3986.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.32136,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/4195.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.31903,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/4315.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.313,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/4354.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.34359,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/4437.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.33114,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/4668.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.38704,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/4854.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.19436,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/4886.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.35786,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/4916.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.37838,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    },
+    {
+      "url": "https://todayflower.nalmada.net/5071.html",
+      "score": 97,
+      "categories": {
+        "natural": 25,
+        "accuracy": 30,
+        "helpful": 27,
+        "repetition": 15
+      },
+      "nearSimilarity": 0.35786,
+      "reason": [
+        "지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨"
+      ]
+    }
+  ]
+}
