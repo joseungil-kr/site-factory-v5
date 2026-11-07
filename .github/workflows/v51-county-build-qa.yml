@@ -1,4 +1,4 @@
-name: V5.1 county funeral 99-page isolated build and review — NO DEPLOY
+name: V5.1 county funeral 95-page isolated build and review — NO DEPLOY
 on:
   push:
     branches: [site/v51-county-funeral-ownerprivate-20261107]
@@ -37,14 +37,14 @@ jobs:
           pages=json.loads((site/'pages.json').read_text())
           manifest=json.loads(Path('reports/county-funeral-ownerprivate-test/manifest.json').read_text())
           dist=Path('dist/county-funeral-ownerprivate-test')
-          assert len(pages)==99 and manifest['pageCount']==99
+          assert len(pages)==95 and manifest['pageCount']==95
           assert sum(p.get('pageType')=='county' for p in pages)==82
           assert len({p['officialCode'] for p in pages if p.get('pageType')=='county'})==82
           assert all((dist/('index.html' if p['number']==1 else str(p['number'])+'.html')).exists() for p in pages)
           assert (dist/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
           assert not (dist/'sitemap.xml').exists()
-          report={'siteId':'county-funeral-ownerprivate-test','pageCount':99,'countyCount':82,
-           'provinceCount':16,'previewOnly':True,'ownerPrivateDeployed':False,'publicIndexed':False}
+          report={'siteId':'county-funeral-ownerprivate-test','pageCount':95,'countyCount':82,
+           'provinceCount':12,'previewOnly':True,'ownerPrivateDeployed':False,'publicIndexed':False}
           Path('county-trial-build-qa.json').write_text(json.dumps(report,ensure_ascii=False,indent=2))
           print('V51_COUNTY_ISOLATED_BUILD_QA='+json.dumps(report,ensure_ascii=False))
           PY
