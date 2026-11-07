@@ -1,4 +1,4 @@
-name: V5.1 county offline-only 99 HTML review — no deploy
+name: V5.1 county offline-only 95 HTML review — no deploy
 on:
   push:
     branches: [site/v51-county-funeral-ownerprivate-20261107]
@@ -18,7 +18,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with: {python-version: '3.12'}
-      - name: Generate only isolated trial input and exactly 99 offline noindex HTML
+      - name: Generate only isolated trial input and exactly 95 offline noindex HTML
         run: |
           python -m py_compile scripts/build_county_funeral_trial_inputs.py scripts/build_county_trial_review_only.py scripts/county_copy_pools.py
           python -m scripts.build_county_funeral_trial_inputs
@@ -30,21 +30,21 @@ jobs:
           import json,xml.etree.ElementTree as ET
           root=Path('dist/unreleased-county-funeral-ownerprivate-test')
           pages=list(root.glob('*.html'))
-          assert len(pages)==99
+          assert len(pages)==95
           assert not (root/'sitemap.xml').exists()
           assert not (root/'rss.xml').exists()
           assert (root/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
           plan=json.loads(Path('sites/county-funeral-ownerprivate-test/county-plan-evidence.json').read_text())
           audit=json.loads(Path('reports/county-funeral-ownerprivate-test/review-only.json').read_text())
           assert plan['privateDeploymentReady'] is False and audit['qualityGateApproved'] is False
-          assert audit['htmlCount']==99 and audit['missingInternalLinks']==0 and audit['orphanCount']==0
+          assert audit['htmlCount']==95 and audit['missingInternalLinks']==0 and audit['orphanCount']==0
           assert audit['allNoindex'] and audit['publicSitemapProduced'] is False
           print('V51_COUNTY_OFFLINE_REVIEW_GATED_COUNT_PASS')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: county-99-review-only-nonpublic-not-deployed
+          name: county-95-review-only-nonpublic-not-deployed
           path: |
             dist/unreleased-county-funeral-ownerprivate-test/
             reports/county-funeral-ownerprivate-test/review-only.json
