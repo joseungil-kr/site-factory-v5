@@ -17,7 +17,7 @@ from v5.config import ROOT
 ID = "county-funeral-ownerprivate-test"
 SKU = re.compile(r"(?<![A-Za-z0-9])B[0-9]{3}(?![0-9])")
 PRICE = re.compile(r"(?<![0-9,])(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]{4,})원(?![0-9])")
-VISUAL_REFERENCE = re.compile(r"(?:아래|위|옆|다음)\\s*(?:에\\s*있는\\s*)?(?:그림|도형|이미지|사진)|(?:아래|위|다음)\\s*자료\\s*(?:에서|를)")
+VISUAL_REFERENCE = re.compile(r"(?:아래|위|옆|다음)\s*(?:에\s*있는\s*)?(?:그림|도형|이미지|사진)|(?:아래|위|다음)\s*자료\s*(?:에서|를)")
 BAD = (
     "축하와 응원의 마음을 전하는 안내 서비스",
     "실물 상품 이미지를 사용할 권리는 아직 확인되지",
