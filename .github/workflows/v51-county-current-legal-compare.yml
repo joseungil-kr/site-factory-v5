@@ -41,13 +41,13 @@ jobs:
               names=z.namelist()
               assert len(names)>=1
               data=z.read(names[0]).decode('cp949')
-            rows=list(csv.reader(io.StringIO(data),delimiter='\\t'))
+            rows=list(csv.reader(io.StringIO(data),delimiter=chr(9)))
             assert any('법정동코드' in str(x) for x in rows[:3])
             current={}
             for record in rows[1:]:
               if len(record)<3:continue
               code,name,active=record[0].strip(),record[1].strip(),record[2].strip()
-              if active=='존재' and name.split(' ')[-1].endswith('군') and re.fullmatch(r'\\d{10}',code):
+              if active=='존재' and name.split(' ')[-1].endswith('군') and len(code)==10 and code.isdigit():
                 current[code]=name
             assert len(current)>=75,'Unexpectedly few county entries, likely wrong source schema'
             result['currentActiveCountyCount']=len(current)
