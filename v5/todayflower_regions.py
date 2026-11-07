@@ -90,7 +90,7 @@ def _make_page(code,name,number):
     # without adding unrelated text or inventing local facts.
     orders={}
     for group,items in details.items():
-        assert len(items)==6 and len(set(items))==6
+        assert len(items)==12 and len(set(items))==12
         orders[group]=sorted(items,key=lambda value:hashlib.sha256(
             (seed+":"+group+":"+value).encode("utf-8")).digest())
     def one(group, offset):
