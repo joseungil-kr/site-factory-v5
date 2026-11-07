@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="480" viewBox="0 0 960 480" role="img" aria-label="근조화환 형태를 단순화한 자체 제작 선화">
+<rect width="960" height="480" rx="32" fill="#f5f5f1"/>
+<g fill="none" stroke="#32624d" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+<ellipse cx="480" cy="192" rx="130" ry="132"/><path d="M480 325v94M444 420h72"/>
+<path d="M380 125q32-35 72-34M510 95q47-5 73 44M588 204q-4 65-56 88M405 292q-48-34-51-98"/>
+<path d="M455 144c-26-32-56-20-55 6 0 20 30 28 54 6 22 24 52 13 52-7 0-24-31-34-51-5Z"/>
+<path d="M503 226c-27-31-58-16-55 8 2 21 29 29 54 5 20 24 50 14 51-5 1-24-28-37-50-8Z"/>
+</g><g fill="#a8c3a6"><circle cx="404" cy="210" r="23"/><circle cx="545" cy="151" r="22"/><circle cx="481" cy="77" r="18"/><circle cx="572" cy="246" r="19"/><circle cx="433" cy="276" r="17"/></g>
+<path fill="#e5e0d0" d="M340 279 480 244 623 279 605 335 480 303 355 335Z"/><path d="M355 300 480 274 605 300" stroke="#bdab80" stroke-width="3" fill="none"/>
+</svg>
