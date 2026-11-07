@@ -18,10 +18,10 @@ SRC=ROOT/'data/regions/v4_official_parent_regions_20261022.json'
 PAGES_TOTAL=95
 PRICES={'B201':59000,'B202':59000,'B205':109000,'B206':149000}
 PRODUCTS=[
- ('B201','근조화환 B201',59000),
+ ('B201','근조 3단 화환',59000),
  ('B202','근조화환 B202',59000),
- ('B205','근조 특대 3단 화환 B205',109000),
- ('B206','근조화환 B206',149000),
+ ('B205','근조 특대 3단 화환',109000),
+ ('B206','근조 특특대 3단 화환',149000),
 ]
 PURPOSES=['budget','venue','ribbon']
 PROVINCE_PURCHASE_FOCUSES={
@@ -172,7 +172,7 @@ def main():
   'conversion':{'mode':'shop','phone':'1844-0644','orderUrl':'https://fwith.co.kr/shop/item.php?it_id=B201'},
   'images':{'source':'original CSS+SVG decoration only','approved':False},
   'publishPolicy':{'mode':'owner-private-preview-only','indexNow':False},
-  'research':{'topic':[{'source':'https://www.code.go.kr/stdcode/regCodeL.do','checkedOn':'2026-10-22'}],
+  'research':{'topic':[{'source':'https://www.code.go.kr/etc/codeFullDown.do','checkedOn':'2026-11-07'}],
    'price':[{'source':'https://fwith.co.kr/shop/item.php?it_id=B201','checkedOn':'2026-11-07'}],
    'order':[{'source':'https://fwith.co.kr/shop/item.php?it_id=B205','checkedOn':'2026-11-07'}]},
   'purposePools':expanded_pools({
@@ -250,10 +250,10 @@ def main():
  for sku,name,price in PRODUCTS:
   products.append({'sku':sku,'name':name,'referencePrice':price,
     'referenceDate':'2026-11-07','priceConfirmed':True,
-    'priceEvidence':'User-supplied independent HTTP 200 seller readback on 2026-11-07 08:49 UTC; '+('additional web readback for B205' if sku=='B205' else 'assistant direct web readback incomplete'),
+    'priceEvidence':'2026-11-07 09:53 UTC direct read-only HTTP200 SKU and listed price and 주문시 배송비 결제; source run 42361620276',
     'priceCheckedOn':'2026-11-07','orderUrl':'https://fwith.co.kr/shop/item.php?it_id='+sku,
     'verifiedLive':False,'imageUseApproved':False,
-    'verifiedSource':sku=='B205'})
+    'verifiedSource':True})
  assert all(x['imageUseApproved'] is False for x in products)
  SITE.mkdir(parents=True,exist_ok=True)
  dump(SITE/'site.json',site)
@@ -264,12 +264,12 @@ def main():
  dump(SITE/'regions.json',{'source':'pinned 2026-10-22 official code ZIP','regions':region_list})
  dump(SITE/'site-spec.json',spec)
  dump(SITE/'county-plan-evidence.json',{'sourceFile':str(SRC.relative_to(ROOT)),
-   'sourceRetrievedOn':'2026-10-22','sourceBlobSHA':'13d43fc3f2492b29b1680858235fe0ac0cd10580',
+   'sourceRetrievedOn':'2026-10-22','currentOfficialComparedUTC':'2026-11-07T10:01:16Z','currentOfficialReadbackRun':42362139861,'currentOfficialArchiveMatches':True,'sourceArchiveSHA256':'44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd','sourceBlobSHA':'13d43fc3f2492b29b1680858235fe0ac0cd10580',
    'countyCount':len(counties),'provinceCount':len(provinces),'excludedProvincesWithoutCounty':[p['fullName'] for p in all_provinces if p['code'] not in county_parent_codes],'targetCount':len(pages),
    'countyCodes':[x['code'] for x in counties],
    'deliveryFeeSpecificCases':SOURCE_SHIPPING,
    'shippingEvidenceState':'No county-specific amount accepted until exact B201 source rows, 읍/면 exceptions and checkout calculation are verified',
-   'priceReadback':'User confirmed HTTP 200 2026-11-07 08:49 UTC; assistant web direct readback B205 only',
+   'priceReadback':'2026-11-07 09:53 UTC independent HTTP200 four SKU price/delivery readback, GitHub run 42361620276',
    'imageUsage':'Only new owned simple SVG illustration. No seller image copied.',
    'privateDeploymentReady':False,'productionHost':None})
  print('V51_COUNTY_TRIAL_INPUTS_BUILT='+json.dumps({'siteId':ID,'totalPages':len(pages),
