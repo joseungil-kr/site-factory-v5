@@ -6,6 +6,8 @@ on:
       - 'scripts/build_county_funeral_trial_inputs.py'
       - 'scripts/county_copy_pools.py'
       - 'v5/purpose_render.py'
+      - 'scripts/verify_county_independent_html.py'
+      - 'tests/test_v51_county_selected_skus.py'
       - 'v5/audit.py'
       - 'assets/library/county-funeral-ownerprivate-test/**'
       - '.github/workflows/v51-county-build-qa.yml'
@@ -28,6 +30,7 @@ jobs:
         run: |
           python -m v5 build --site county-funeral-ownerprivate-test --mode preview
           python -m v5 audit --site county-funeral-ownerprivate-test
+          python -m scripts.verify_county_independent_html --dir dist/county-funeral-ownerprivate-test
       - name: Compare planned county names with generated page manifest and record trials
         run: |
           python - <<'PY'
@@ -56,5 +59,6 @@ jobs:
             county-trial-build-qa.json
             reports/county-funeral-ownerprivate-test/audit.json
             reports/county-funeral-ownerprivate-test/manifest.json
+            artifacts/v51-county-independent-html-audit.json
           if-no-files-found: warn
           retention-days: 14
