@@ -107,6 +107,9 @@ def main():
  for purpose in sorted({x['purpose'] for x in county_rows}):
   first=next(c for c in county_rows if c['purpose']==purpose)
   ids.add(first['id'])
+ # After a failed content audit, include one previously unreviewed county.
+ fresh=next(c for c in reversed(county_rows) if c['id'] not in ids)
+ ids.add(fresh['id'])
  selected=sorted([p for p in pages if p['id'] in ids],key=lambda x:x['number'])
  sample_paths=['/' if p['number']==1 else '/'+markup.filename(p['number']) for p in selected]
  assert len(sample_paths)>=max(1,ceil(len(pages)*.01)) and len(sample_paths)==len(set(sample_paths))
