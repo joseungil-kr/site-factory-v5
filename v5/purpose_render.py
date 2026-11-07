@@ -31,7 +31,7 @@ def _text(value, page):
         if key not in allowed or not isinstance(allowed[key],str) or not allowed[key].strip():
             raise ConfigError(f'unknown or missing purpose placeholder: {key}')
         return allowed[key]
-    return re.sub(r'\\{([A-Za-z][A-Za-z0-9]*)\\}',replace,value)
+    return re.sub(r'\{([A-Za-z][A-Za-z0-9]*)\}',replace,value)
 
 
 def assemble(page, pools, products, *, service=False):
