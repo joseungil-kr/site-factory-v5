@@ -14,6 +14,7 @@ import re
 
 from v5.config import read_site, ROOT
 from v5 import markup
+from v5.audit import similarity
 
 SITE = "todayflower-nalmada"
 ORIGIN = "https://todayflower.nalmada.net"
@@ -149,11 +150,40 @@ def main():
                                    for s in page["sections"]],
                        "faq":[{"q":f["q"],"a":f["a"]} for f in page["faq"]]},
         })
+
+    # The original mechanical checks missed 49%-plus near-duplicate
+    # regional articles. Apply a separate *document-to-document* score.
+    # This is a prescreen penalty, not a substitute for human reading.
+    for i,a in enumerate(rows):
+        text_a=" ".join([a["excerpt"]["intro"]]
+                        +[x["text"] for x in a["excerpt"]["sections"]])
+        nearest=(0.0,None)
+        for j,b in enumerate(rows):
+            if i==j:
+                continue
+            text_b=" ".join([b["excerpt"]["intro"]]
+                            +[x["text"] for x in b["excerpt"]["sections"]])
+            sxy=similarity(text_a,text_b)
+            if sxy>nearest[0]:
+                nearest=(sxy,b["url"])
+        a["nearestSampleSimilarity"]=round(nearest[0],5)
+        a["nearestSampleUrl"]=nearest[1]
+        if nearest[0]>=.49:
+            a["categories"]["natural"]=max(0,a["categories"]["natural"]-4)
+            a["categories"]["repetition"]=max(0,a["categories"]["repetition"]-8)
+            a["reason"]=[x for x in a["reason"] if x!="본문·상품·주문 정보에서 정량 선별 위험 없음"]
+            a["reason"].append(
+                "지역별 본문이 다른 표본과 너무 유사함: "+str(round(nearest[0]*100,2))+"%")
+        if a["number"]>33 and "no per-address delivery promise" in pages[a["number"]-2 if a["number"]>=405 else a["number"]-1].get("evidenceScope",""):
+            a["categories"]["helpful"]=max(0,a["categories"]["helpful"]-3)
+            a["reason"]=[x for x in a["reason"] if x!="본문·상품·주문 정보에서 정량 선별 위험 없음"]
+            a["reason"].append("지역별 배송조건은 확인되지 않아 상담 중심으로 안내됨")
+        a["score"]=sum(a["categories"].values())
         print("TODAYFLOWER_SAMPLE_SCORE "+json.dumps({
-          "url":ORIGIN+path,"score":total,
-          "natural":cats["natural"],"accuracy":cats["accuracy"],
-          "helpful":cats["helpful"],"repetition":cats["repetition"],
-          "reason":notes},ensure_ascii=False),flush=True)
+          "url":a["url"],"score":a["score"],
+          "categories":a["categories"],"nearSimilarity":a["nearestSampleSimilarity"],
+          "reason":a["reason"]},ensure_ascii=False),flush=True)
+
     report={
         "site":ORIGIN,"fullPopulation":len(pages),"sampleSize":len(rows),
         "stratifiedBy":["original sample","boundary","province","buyer intent"],
