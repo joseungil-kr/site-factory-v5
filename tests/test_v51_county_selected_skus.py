@@ -124,6 +124,40 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertEqual(set(row['visibleProseSKUs'])-set(skus),set())
                 self.assertFalse(row['offCardPrices'])
 
+    def test_six_missing_picture_routes_rebuilt_from_pool(self):
+        from scripts.build_county_trial_review_only import main as render_review, OUT
+        from scripts.verify_county_independent_html import validate_one
+        render_review()
+        bad_text="아래 도형은 근조화환의 형태를 살펴보기 위한 그림입니다"
+        good_text="연결된 판매처 상품 상세페이지에서 근조화환 사진과 구성 안내를 확인할 수 있습니다."
+        pages={p["number"]:p for p in self.data["pages"]}
+        for number in (26,67,69,73,77,86):
+            with self.subTest(path=f"/{number}.html"):
+                path=OUT/f"{number}.html"
+                actual=path.read_text(encoding="utf-8")
+                self.assertIn(good_text,actual)
+                self.assertNotIn(bad_text,actual)
+                row=validate_one(path,pages[number]["productSkus"])
+                self.assertFalse(row["errors"],row)
+                self.assertEqual(row["mainImages"],0)
+                self.assertEqual(row["mainSvgs"],0)
+                self.assertFalse(row["visualReferences"])
+
+    def test_independent_html_rejects_invented_picture_pointer(self):
+        import tempfile
+        from scripts.build_county_trial_review_only import main as render_review, OUT
+        from scripts.verify_county_independent_html import validate_one
+        render_review()
+        original=(OUT/"26.html").read_text(encoding="utf-8")
+        good="연결된 판매처 상품 상세페이지에서 근조화환 사진과 구성 안내를 확인할 수 있습니다."
+        bad="아래 도형은 근조화환의 형태를 살펴보기 위한 그림입니다."
+        self.assertIn(good,original)
+        with tempfile.TemporaryDirectory() as tmp:
+            altered=Path(tmp)/"26.html"
+            altered.write_text(original.replace(good,bad,1),encoding="utf-8")
+            row=validate_one(altered,["B201","B202"])
+            self.assertTrue(any("Nonexistent inline visual reference" in e for e in row["errors"]),row)
+
     def test_refuse_nonselected_fixture(self):
         pool=json.loads(json.dumps(self.plan['purposePools']['budget-entry']))
         pool['sections'].append({'slot':'bad','heading':'잘못된 비교','paragraph':'B201 59,000원, B205 109,000원'})

@@ -104,6 +104,9 @@ def evaluate():
         total=nscore+fscore+utility+repetition
         reasons=[
              '주제: '+p['purpose']+' · 핵심 문단: '+', '.join(x['heading'] for x in assembled['sections'][-2:]),
+             '실제 HTML 본문 시각자료 '+str(independent_page['mainImages'])+'개 사진 / '+
+                  str(independent_page['mainSvgs'])+'개 SVG; 없는 이미지 지칭 '+
+                  str(independent_page['visualReferences'] or '없음'),
              '실제 HTML 상품 카드 '+', '.join(independent_page['cards'])+
                   ' / 표시가 '+', '.join(str(independent_page['cardPrices'].get(sku))+'원' for sku in p['productSkus'])+
                   ' / 본문 불일치 '+str(independent_page['errors'] or '없음'),
@@ -119,6 +122,9 @@ def evaluate():
              'components':{'natural':nscore,'accuracy':fscore,'purchaseUtility':utility,'repetition':repetition},
              'reasons':reasons,'flags':bad_words,'offCardSKUs':bad_sku,'offCardPrices':bad_price,
              'independentHTML':{'sha256':independent_page['htmlSHA256'],
+                               'mainImages':independent_page['mainImages'],
+                               'mainSvgs':independent_page['mainSvgs'],
+                               'visualReferences':independent_page['visualReferences'],
                                'errors':independent_page['errors'],
                                'cards':independent_page['cards']},
              'faqAssessment':qa_checks,
@@ -135,7 +141,11 @@ def evaluate():
         'failures':[x for x in scored if x['score']<90],
         'allPassed':all(x['score']>=90 for x in scored),
         'humanIndependentAuditVerified':False,
-        'reviewIteration':2,'previousFailure':{'runId':42364589632,'failedPaths':['/16.html','/22.html','/25.html','/77.html'],'score':81},
+        'reviewIteration':3,
+        'priorVisualReferenceMiss':{'contentSHA':'ce03c008880d544c630e8fe16a1bc6ba8d15782e',
+             'paths':['/26.html','/67.html','/69.html','/73.html','/77.html','/86.html'],
+             'priorScoreNotReusable':True},
+        'previousFailure':{'runId':42364589632,'failedPaths':['/16.html','/22.html','/25.html','/77.html'],'score':81},
         'noPublicDeployment':True,
         'scores':scored}
     target=Path('artifacts/v51-county-current-quality.json')

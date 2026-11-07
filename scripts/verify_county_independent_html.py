@@ -17,6 +17,7 @@ from v5.config import ROOT
 ID = "county-funeral-ownerprivate-test"
 SKU = re.compile(r"(?<![A-Za-z0-9])B[0-9]{3}(?![0-9])")
 PRICE = re.compile(r"(?<![0-9,])(?:[0-9]{1,3}(?:,[0-9]{3})+|[0-9]{4,})원(?![0-9])")
+VISUAL_REFERENCE = re.compile(r"(?:아래|위|옆|다음)\\s*(?:에\\s*있는\\s*)?(?:그림|도형|이미지|사진)|(?:아래|위|다음)\\s*자료\\s*(?:에서|를)")
 BAD = (
     "축하와 응원의 마음을 전하는 안내 서비스",
     "실물 상품 이미지를 사용할 권리는 아직 확인되지",
@@ -32,6 +33,8 @@ class RenderedMain(HTMLParser):
         self.main = False
         self.card = None
         self.pricing = False
+        self.main_images = 0
+        self.main_svgs = 0
         self.prose = []
         self.cards = []
         self.card_prices = {}
@@ -43,6 +46,10 @@ class RenderedMain(HTMLParser):
             self.main = True
         if not self.main:
             return
+        if tag == "img":
+            self.main_images += 1
+        elif tag == "svg":
+            self.main_svgs += 1
         if tag == "article" and a.get("data-product-sku"):
             self.card = a["data-product-sku"]
             self.cards.append(self.card)
@@ -83,6 +90,9 @@ def validate_one(path: Path, selected=None):
         failures.append(f"Card order differs from source {doc.cards} != {selected}")
     cards=set(doc.cards)
     prose=" ".join(doc.prose)
+    visual_references=VISUAL_REFERENCE.findall(prose)
+    if visual_references and doc.main_images + doc.main_svgs == 0:
+        failures.append("Nonexistent inline visual reference: " + ", ".join(sorted(set(visual_references))))
     claimed=set(SKU.findall(prose))
     extra=sorted(claimed-cards)
     if extra:failures.append("Off-card SKU in actual visible HTML: "+",".join(extra))
@@ -116,7 +126,9 @@ def validate_one(path: Path, selected=None):
     return {
         "path":path.name,"cards":doc.cards,"visibleProseSKUs":sorted(claimed),
         "offCardSKUs":extra,"offCardPrices":unsupported,"cardPrices":prices,
-        "proseCharacters":len(prose),"htmlSHA256":hashlib.sha256(html.encode("utf-8")).hexdigest(),
+        "proseCharacters":len(prose),"mainImages":doc.main_images,
+        "mainSvgs":doc.main_svgs,"visualReferences":visual_references,
+        "htmlSHA256":hashlib.sha256(html.encode("utf-8")).hexdigest(),
         "errors":failures,
     }
 
