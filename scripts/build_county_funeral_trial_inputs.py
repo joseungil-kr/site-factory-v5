@@ -56,7 +56,8 @@ def main():
  assert all(x['parent'] in prov_by_code for x in counties)
  # No claims that this old snapshot is the currently effective official naming.
  county_codes={x['code'] for x in counties}
- assert all(code in county_codes for code in SOURCE_SHIPPING)==False if False else True
+ # A seller table quote is only attached when its official county code matches.
+ assert all(code in county_codes for code in SOURCE_SHIPPING), 'Seller fee example references an unknown county'
  pages=[]
  root={'id':'national','number':1,'region':'전국','county':'전국','province':'전국','parentRegion':'전국',
        'purpose':'budget','title':'전국 군 근조화환 가격과 상품 안내','productSkus':list(PRICES),
