@@ -25,7 +25,8 @@ def _text(value, page):
     # Known page variables only; renderers escape the assembled text.
     # Unknown variables fail instead of leaking template syntax to customers.
     allowed={'region':page.get('region'),'county':page.get('county'),
-             'province':page.get('province'),'parentRegion':page.get('parentRegion')}
+             'province':page.get('province'),'parentRegion':page.get('parentRegion'),
+             'townships':page.get('townships'),'townshipCount':page.get('townshipCount')}
     def replace(match):
         key=match.group(1)
         if key not in allowed or not isinstance(allowed[key],str) or not allowed[key].strip():
