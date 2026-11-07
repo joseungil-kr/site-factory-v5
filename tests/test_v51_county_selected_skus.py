@@ -16,6 +16,16 @@ class CountySelectedSkuContract(unittest.TestCase):
         self.assertEqual(product_skus_in_text('B201 59,000원, B205 109,000원'),{'B201','B205'})
         self.assertEqual(listed_prices_in_text('B201 59,000원, B205 109,000원'),{'59,000원','109,000원'})
         self.assertEqual(product_skus_in_text('그냥 가격을 비교합니다'),set())
+        # Unicode word boundaries lose tokens when followed by Korean particles.
+        self.assertEqual(product_skus_in_text('B201과 B205는 B206의'),{'B201','B205','B206'})
+        self.assertEqual(product_skus_in_text('B201·B202, B205/B206을'),{'B201','B202','B205','B206'})
+        self.assertEqual(product_skus_in_text('XB201 AB202'),set())
+        self.assertEqual(product_skus_in_text('B299를'),{'B299'})
+        self.assertEqual(listed_prices_in_text('59,000원입니다. 149,000원으로'),
+                         {'59,000원','149,000원'})
+        self.assertEqual(listed_prices_in_text('59000원도 50,000원 차이입니다.'),
+                         {'59,000원','50,000원'})
+        self.assertEqual(listed_prices_in_text('가격 정보를 확인합니다.'),set())
     def test_all_82_county_pages_selected_skus_and_prices(self):
         rows=[p for p in self.data['pages'] if p['pageType']=='county']
         self.assertEqual(len(rows),82)
@@ -59,6 +69,29 @@ class CountySelectedSkuContract(unittest.TestCase):
             self.assertNotIn('네 상품만 비교한',body)
             self.assertNotIn('공개 페이지에 개인정보를 적지 않습니다',body)
             self.assertNotIn('현재 확보된 가격자료만으로 알 수 없습니다',body)
+    def test_korean_attached_skus_and_prices_fail_in_assembler(self):
+        sample=next(p for p in self.data['pages'] if p.get('purpose')=='budget-entry')
+        pool=json.loads(json.dumps(self.plan['purposePools']['budget-entry']))
+        invalid={**sample,'purpose':'kor-boundary-test'}
+        # Bad SKU is attached to Hangul; strict assembler must not miss it.
+        pool['sections'].append({'slot':'unsafe_korean_sku','heading':'가격 비교',
+                                 'paragraph':'B201과 B205는 B206의 구성과 다릅니다.'})
+        with self.assertRaisesRegex(ConfigError,'off-card SKU'):
+            assemble(invalid,{'kor-boundary-test':pool},self.data['products'])
+        # No invalid SKU, but a disallowed price is attached to a Korean suffix.
+        pool['sections'][-1]['paragraph']='59,000원입니다. 149,000원으로 변경하실 수 있습니다.'
+        with self.assertRaisesRegex(ConfigError,'off-card price'):
+            assemble(invalid,{'kor-boundary-test':pool},self.data['products'])
+
+    def test_correct_price_difference_stays_allowed(self):
+        sample=next(p for p in self.data['pages'] if p.get('purpose')=='budget-upgrade')
+        pool=json.loads(json.dumps(self.plan['purposePools']['budget-upgrade']))
+        pool['sections'].append({'slot':'valid_difference','heading':'상품 간 가격 차이',
+                                 'paragraph':'B201과 B205는 표시가격이 50,000원 차이입니다.'})
+        altered={**sample,'purpose':'difference-test'}
+        result=assemble(altered,{'difference-test':pool},self.data['products'])
+        self.assertIn('50,000원',result['sections'][-1]['paragraph'])
+
     def test_three_regression_pages(self):
         pages={p['number']:p for p in self.data['pages']}
         for n in (14,38,90):
