@@ -61,7 +61,7 @@ def main():
   destination=markup.filename(p['number'])
   write(OUT/destination,html);targets.add('/' if p['number']==1 else '/'+destination)
   rendered.append({'id':p['id'],'purpose':p['purpose'],'path':'/' if p['number']==1 else '/'+destination,
-                   'region':p['region'],'body':p['intro']+' '+' '.join(x['paragraph'] for x in assemble(p,plan['purposePools'],catalog)['sections'])})
+                   'region':p['region'],'body':assemble(p,plan['purposePools'],catalog)['intro']+' '+' '.join(x['paragraph'] for x in assemble(p,plan['purposePools'],catalog)['sections'])})
  write(OUT/'robots.txt','User-agent: *\nDisallow: /\n')
  counts=Counter(p['purpose'] for p in rendered)
  links={}
