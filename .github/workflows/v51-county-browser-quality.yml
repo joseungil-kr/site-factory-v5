@@ -1,0 +1,98 @@
+name: V5.1 county strictly offline browser and regression QA — no deploy
+on:
+  push:
+    branches: [site/v51-county-funeral-ownerprivate-20261107]
+    paths:
+      - '.github/workflows/v51-county-browser-quality.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Pin site scope and test V5.1 regressions in place
+        run: |
+          python -m unittest tests.test_v51_county_regressions tests.test_v51_purpose_render tests.test_v51_review_gate -v
+          python -m scripts.build_county_funeral_trial_inputs
+          python -m v5 build --site county-funeral-ownerprivate-test --mode preview
+          python -m v5 audit --site county-funeral-ownerprivate-test
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          d=Path('dist/county-funeral-ownerprivate-test')
+          pages=json.loads(Path('sites/county-funeral-ownerprivate-test/pages.json').read_text())
+          assert len(pages)==95 and len(list(d.glob('*.html')))==96
+          assert not (d/'sitemap.xml').exists() and not (d/'rss.xml').exists()
+          assert (d/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
+          print('V51_COUNTY_OFFLINE_REGRESSION_PASS')
+          PY
+      - name: Install Chromium, no publishing
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Render 8 preview paths at 390 and 1440, inspect navigation and product links
+        run: |
+          mkdir -p artifacts/county-v51-browser
+          (cd dist/county-funeral-ownerprivate-test && python -m http.server 8766 --bind 127.0.0.1) >/tmp/county-only-http.log 2>&1 &
+          PID=$!
+          trap 'kill $PID || true' EXIT
+          node - <<'JS'
+          const {chromium}=require('playwright'),fs=require('fs');
+          (async()=>{
+            const pages=JSON.parse(fs.readFileSync('sites/county-funeral-ownerprivate-test/pages.json','utf8'));
+            const ids=[1,2,3,5,13,14,20,27]; // national, two provinces, one province, three different county intents
+            const expected={};
+            for(const p of pages)expected[p.number]=p;
+            const browser=await chromium.launch({headless:true});
+            const results=[];
+            for(const [mode,w] of [['mobile',390],['desktop',1440]]){
+              const page=await browser.newPage({viewport:{width:w,height:900}});
+              for(const number of ids){
+                const path=number===1?'/':'/'+number+'.html';
+                const res=await page.goto('http://127.0.0.1:8766'+path,{waitUntil:'domcontentloaded',timeout:30000});
+                if(!res||res.status()!==200)throw Error('HTTP '+path+' '+res?.status());
+                const check=await page.evaluate(()=>{
+                  const products=[...document.querySelectorAll('[data-product-sku]')];
+                  const anchors=[...document.querySelectorAll('nav[aria-label="현재 위치"] a[href]')];
+                  return {
+                    title:document.title,h1:document.querySelector('h1')?.innerText,
+                    width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
+                    overflow:document.documentElement.scrollWidth>innerWidth,
+                    noindex:document.querySelector('meta[name=robots]')?.content,
+                    canonicals:document.querySelectorAll('link[rel=canonical]').length,
+                    productSkus:products.map(x=>x.getAttribute('data-product-sku')),
+                    usableLinks:products.map(x=>{const a=x.querySelector('a[href]');if(!a)return false;const b=a.getBoundingClientRect();return b.width>50&&b.height>=20&&b.left>=0&&b.right<=innerWidth&&a.href.startsWith('https://fwith.co.kr/shop/item.php?it_id=')}),
+                    breadcrumbs:anchors.length,images:document.images.length,
+                    visibleHeading:(document.querySelector('h1')?.getBoundingClientRect().width||0)>0
+                  };
+                });
+                const ref=expected[number];
+                if(check.overflow||check.noindex!=='noindex,nofollow'||check.canonicals||
+                   !check.visibleHeading||JSON.stringify(check.productSkus)!==JSON.stringify(ref.productSkus)||
+                   check.usableLinks.some(x=>!x)||
+                   check.breadcrumbs!==(ref.pageType==='county'?2:ref.pageType==='province'?1:0))
+                   throw Error('BROWSER_QA '+JSON.stringify({path,mode,check,expectedSkus:ref.productSkus}));
+                await page.screenshot({path:'artifacts/county-v51-browser/'+mode+'-'+number+'.png',fullPage:true});
+                results.push({path,mode,pageType:ref.pageType,purpose:ref.purpose,...check});
+              }
+              await page.close();
+            }
+            await browser.close();
+            fs.writeFileSync('artifacts/county-v51-browser/qa.json',JSON.stringify({passed:true,mode:'OFFLINE_LOCALHOST_ONLY_NO_DEPLOY',results},null,2));
+            console.log('V51_COUNTY_LOCALHOST_BROWSER_PASS '+JSON.stringify({screenshots:results.length,productCards:results.reduce((a,r)=>a+r.productSkus.length,0),privateDeployment:false}));
+          })().catch(e=>{console.error(e);process.exit(1)})
+          JS
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v51-county-offline-browser-proofs-not-deployed
+          path: artifacts/county-v51-browser/
+          retention-days: 14
+          if-no-files-found: warn
