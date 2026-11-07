@@ -68,6 +68,11 @@ jobs:
                 const check=await page.evaluate(()=>{
                   const products=[...document.querySelectorAll('[data-product-sku]')];
                   const anchors=[...document.querySelectorAll('nav[aria-label="현재 위치"] a[href]')];
+                  const related=[...document.querySelectorAll('nav[aria-label="관련 지역"] a[href]')];
+                  const gaps=related.slice(1).map((link,i)=>{
+                    const prev=related[i].getBoundingClientRect(),cur=link.getBoundingClientRect();
+                    return cur.top>prev.top+3?9:cur.left-prev.right;
+                  });
                   return {
                     title:document.title,h1:document.querySelector('h1')?.innerText,
                     width:innerWidth,scrollWidth:document.documentElement.scrollWidth,
@@ -77,7 +82,9 @@ jobs:
                     productSkus:products.map(x=>x.getAttribute('data-product-sku')),
                     prices:products.map(x=>x.querySelector('.product-price')?.innerText.trim()||''),
                     usableLinks:products.map(x=>{const a=x.querySelector('a[href]');if(!a)return false;const b=a.getBoundingClientRect();return b.width>50&&b.height>=20&&b.left>=0&&b.right<=innerWidth&&a.href.startsWith('https://fwith.co.kr/shop/item.php?it_id=')}),
-                    breadcrumbs:anchors.length,images:document.images.length,
+                    breadcrumbs:anchors.length,relatedRegionLinks:related.length,
+                    minimumRelatedGap:Math.min(9,...gaps),images:document.images.length,
+                    productNotes:products.map(x=>x.querySelector('.product-note')?.innerText||''),
                     visibleHeading:(document.querySelector('h1')?.getBoundingClientRect().width||0)>0
                   };
                 });
@@ -86,7 +93,8 @@ jobs:
                 if(check.prices.some((price,i)=>price!==actualPrice[check.productSkus[i]]))throw Error('MISMATCHED_PRICE '+JSON.stringify({path,mode,check}));
                 if(check.overflow||check.noindex!=='noindex,nofollow'||check.canonicals||
                    !check.visibleHeading||JSON.stringify(check.productSkus)!==JSON.stringify(ref.productSkus)||
-                   check.usableLinks.some(x=>!x)||
+                   check.usableLinks.some(x=>!x)||check.minimumRelatedGap<6||
+                   check.productNotes.some(x=>!x.includes('상품번호')||!x.includes('판매처'))||
                    check.breadcrumbs!==(ref.pageType==='county'?2:ref.pageType==='province'?1:0))
                    throw Error('BROWSER_QA '+JSON.stringify({path,mode,check,expectedSkus:ref.productSkus}));
                 await page.screenshot({path:'artifacts/county-v51-browser/'+mode+'-'+number+'.png',fullPage:true});
