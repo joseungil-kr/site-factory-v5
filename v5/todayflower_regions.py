@@ -31,6 +31,13 @@ EXPECTED_ORIGINAL=33
 EXPECTED_NEW=5037
 EXPECTED_TOTAL=5070
 ORDER_KINDS=("bouquet","plant","celebration","condolence")
+PRODUCT_LABELS={
+    "G067":"가을산책 꽃다발", "G073":"시크릿가든 꽃다발",
+    "D144":"금전수 탁상용", "D149":"녹보수 소형",
+    "C200":"축하 3단 화환", "C206":"축하 4단 화환",
+    "B201":"근조 3단 화환", "B205":"근조 특대 3단 화환"
+}
+
 PRODUCT_SETS=(
     ("G067","G073","D144","D149","C200","B201"),
     ("G073","D144","D149","C206","B201","B205"),
@@ -95,13 +102,20 @@ def _make_page(code,name,number):
             (seed+":"+group+":"+value).encode("utf-8")).digest())
     def one(group, offset):
         return orders[group][offset]
+    skus=PRODUCT_SETS[int.from_bytes(
+        hashlib.sha256((seed+":sku").encode()).digest()[:2],"big")%len(PRODUCT_SETS)]
+    choices=sorted(skus,key=lambda sku:hashlib.sha256(
+        (seed+":compare:"+sku).encode("utf-8")).digest())
+    compare=(f"연결된 상품 카드에서 {PRODUCT_LABELS[choices[0]]}({choices[0]})과 "
+             f"{PRODUCT_LABELS[choices[1]]}({choices[1]})의 사진과 표시가격을 "
+             "비교해 보세요. 원하는 크기와 상품 종류는 각 상세 화면에서 살펴볼 수 있습니다.")
     sections=[
         {"heading":intent+" 상품과 선택 기준",
          "paragraph":products+" "+one("selection",0)},
         {"heading":"수령 주소와 인계 담당자",
          "paragraph":one("receiver",0)+" "+one("receiver",2)},
         {"heading":"상품 사진·규격·옵션 비교",
-         "paragraph":one("selection",4)+" "+one("selection",1)},
+         "paragraph":one("selection",4)+" "+compare},
         {"heading":"배송 일정과 최종 결제금액",
          "paragraph":one("delivery",0)+" "+one("delivery",2)}
     ]
@@ -113,8 +127,7 @@ def _make_page(code,name,number):
         {"q":f"{name} 꽃배달을 주문할 때 어떤 정보를 준비하면 좋나요?",
          "a":one("receiver",4)+" "+one("delivery",1)}
     ]
-    skus=PRODUCT_SETS[int.from_bytes(
-        hashlib.sha256((seed+":sku").encode()).digest()[:2],"big")%len(PRODUCT_SETS)]
+
     return {
         "id":"today-national-"+code,
         "number":number,
