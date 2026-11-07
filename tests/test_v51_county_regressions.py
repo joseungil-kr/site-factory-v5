@@ -39,11 +39,12 @@ class CountyV51Fixes(unittest.TestCase):
     _text('{'+missing+'} 근조화환',broken)
   with self.assertRaisesRegex(ConfigError,'unknown or missing'):
    _text('{unknown} 근조화환',self.page)
-  rendered=render(self.site,self.page,[self.page],[self.product],[],self.pools)
+  parent={**self.page,'id':'province','number':2,'region':'충청북도','parentPageId':None}
+  rendered=render(self.site,self.page,[parent,self.page],[self.product],[],self.pools)
   self.assertNotRegex(rendered,r'\\{(?:region|county|province|parentRegion|unknown)\\}')
   self.assertIn('단양군에서 사용 목적에 맞는',rendered)
  def test_cosine_unicode_whitespace_and_numeric_threshold_boundaries(self):
-  for spaced in ['a b c','a\\tb\\tc','a\\nb\\nc','a  \\t b \\n c']:
+  for spaced in ['a b c','a\tb\tc','a\nb\nc','a  \t b \n c']:
    with self.subTest(spaced=repr(spaced)):
     self.assertEqual(similarity(spaced,'abc','char-3gram-cosine'),1.0)
   self.assertAlmostEqual(similarity('abcde','abcdf','char-3gram-cosine'),2/3,places=12)
