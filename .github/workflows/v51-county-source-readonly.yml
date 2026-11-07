@@ -1,0 +1,65 @@
+name: V5.1 county seller and administrative source evidence read-only — no deploy
+on:
+  push:
+    branches: [site/v51-county-funeral-ownerprivate-20261107]
+    paths: ['.github/workflows/v51-county-source-readonly.yml']
+permissions:
+  contents: read
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Read current official listing and four seller product details, fail closed on unknown facts
+        run: |
+          mkdir -p artifacts/v51-county-evidence
+          python - <<'PY'
+          import urllib.request,urllib.error,re,json,hashlib,datetime,html
+          from pathlib import Path
+          now=datetime.datetime.now(datetime.timezone.utc).isoformat()
+          sources=[('official','https://www.code.go.kr/stdcode/regCodeL.do?menuNo=101010100010')]
+          for sku in ('B201','B202','B205','B206'):
+              sources.append((sku,'https://fwith.co.kr/shop/item.php?it_id='+sku))
+          expected={'B201':'59,000','B202':'59,000','B205':'109,000','B206':'149,000'}
+          items=[]
+          for key,url in sources:
+              result={'sourceId':key,'url':url,'checkedAtUTC':now,'httpStatus':None,'verifiedFacts':[],'uncertainty':[]}
+              try:
+                  req=urllib.request.Request(url,headers={'User-Agent':'Mozilla/5.0 (compatible; SiteFactory-V51-ReadOnly-Evidence/1.0)'})
+                  with urllib.request.urlopen(req,timeout=22) as r:
+                      raw=r.read(1500000);result['httpStatus']=r.status
+                  text=raw.decode('utf-8','replace')
+                  content=html.unescape(re.sub('<[^>]*>',' ',text))
+                  content=re.sub(r'\\s+',' ',content)
+                  result['bodySHA256']=hashlib.sha256(raw).hexdigest()
+                  if key=='official':
+                      result['verifiedFacts'].append('Official legal-code listing HTML fetched')
+                      m=re.search(r'총\\s*(\\d[\\d,]*)건',content)
+                      if m:result['activeCodeListingCount']=m.group(1)
+                  else:
+                      result['priceTextFound']=expected[key] in content
+                      result['deliveryAtCheckoutTextFound']='주문시 결제' in content or '주문 시 결제' in content
+                      result['skuTextFound']=key in content
+                      if all([result['priceTextFound'],result['deliveryAtCheckoutTextFound'],result['skuTextFound']]):
+                          result['verifiedFacts'].append('SKU, matching listed price and 배송비 주문시 결제 visible in fetched HTML')
+                      else:
+                          result['uncertainty'].append('At least one product statement not independently extracted')
+              except Exception as exc:
+                  result['uncertainty'].append(type(exc).__name__+': '+str(exc)[:180])
+              items.append(result)
+          out={'mode':'READ_ONLY_SOURCE_CHECK_NO_DEPLOY','checkedAtUTC':now,'results':items,
+               'historicalOfficialSnapshot':'2026-10-22, 82 county names from pinned V4 code table',
+               'privateDeploymentReady':False,'productImageUsageApproved':False,
+               'note':'Partial HTTP fetching does not certify national administrative count, delivery fee or image copyright.'}
+          Path('artifacts/v51-county-evidence/receipt.json').write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n')
+          print('V51_COUNTY_LIVE_SOURCE_READBACK='+json.dumps([{k:v for k,v in item.items() if k not in ('bodySHA256',)} for item in items],ensure_ascii=False),flush=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: v51-county-official-seller-readonly-not-published
+          path: artifacts/v51-county-evidence/receipt.json
+          if-no-files-found: error
+          retention-days: 14
