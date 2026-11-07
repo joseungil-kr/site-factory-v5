@@ -183,7 +183,7 @@ def main():
  spec.update({
   'approved':True,'domain':'https://county-funeral-ownerprivate.invalid','businessModel':'webshop',
   'serviceScope':{'region':'전국','granularity':'county','facilities':None},
-  'pageTypes':['national','province','county'],'targetPageCount':99,
+  'pageTypes':['national','province','county'],'targetPageCount':95,
   'titlePattern':'{county} 근조화환 가격·상품 선택','urlPattern':'/{number}.html',
   'keywordGroups':{'primary':['군 근조화환','근조화환 가격'],'secondary':['화환 추가 배송비','근조 리본 문구']},
   'copyPoolPlan':{'industry':'condolence-flower','source':'pinned-fwith-2026-11-07','sentenceTarget':5},
