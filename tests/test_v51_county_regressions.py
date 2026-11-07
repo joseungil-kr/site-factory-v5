@@ -41,8 +41,10 @@ class CountyV51Fixes(unittest.TestCase):
    _text('{unknown} 근조화환',self.page)
   parent={**self.page,'id':'province','number':2,'region':'충청북도','parentPageId':None}
   rendered=render(self.site,self.page,[parent,self.page],[self.product],[],self.pools)
-  self.assertNotRegex(rendered,r'\\{(?:region|county|province|parentRegion|unknown)\\}')
+  self.assertNotRegex(rendered,r'\{(?:region|county|province|parentRegion|unknown)\}')
   self.assertIn('단양군에서 사용 목적에 맞는',rendered)
+  with self.assertRaises(AssertionError):
+   self.assertNotRegex('{county} 근조화환',r'\{(?:region|county|province|parentRegion|unknown)\}')
  def test_cosine_unicode_whitespace_and_numeric_threshold_boundaries(self):
   for spaced in ['a b c','a\tb\tc','a\nb\nc','a  \t b \n c']:
    with self.subTest(spaced=repr(spaced)):
