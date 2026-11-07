@@ -97,7 +97,7 @@ def _make_page(code,name,number):
         return orders[group][offset]
     sections=[
         {"heading":intent+" 상품과 선택 기준",
-         "paragraph":products+" "+one("selection",0)+" "+one("selection",2)},
+         "paragraph":products+" "+one("selection",0)},
         {"heading":"수령 주소와 인계 담당자",
          "paragraph":one("receiver",0)+" "+one("receiver",2)},
         {"heading":"상품 사진·규격·옵션 비교",
