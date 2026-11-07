@@ -42,7 +42,7 @@ def main():
  assert plan['publishPolicy']['mode']=='owner-private-preview-only'
  assert plan['similarityAudit']=={'metric':'char-5gram-jaccard','thresholdExclusive':0.49,'sampleFraction':0.01,'seed':20261107}
  catalog=data['products'];sets=set(p['id'] for p in pages)
- assert len(sets)==99 and len(set(p['number'] for p in pages))==99
+ assert len(sets)==95 and len(set(p['number'] for p in pages))==95
  enriched=[assemble(p,plan['purposePools'],catalog) for p in pages]
  assert all(len(p['sections'])>=5 for p in enriched)
  if OUT.exists():shutil.rmtree(OUT)
@@ -92,7 +92,7 @@ def main():
   for b in rendered[i+1:]:
    score=similarity(a['body'],b['body'],'char-5gram-jaccard')
    if score>max_pair[0]:max_pair=(score,a['path'],b['path'])
- sample_paths=['/','/2.html','/3.html']+[x['path'] for x in rendered if x['purpose']=='budget' and x['id'].startswith('county-')][:2]+[x['path'] for x in rendered if x['purpose']=='venue' and x['id'].startswith('county-')][:2]+[x['path'] for x in rendered if x['purpose']=='ribbon' and x['id'].startswith('county-')][:2]
+ sample_paths=['/','/2.html','/3.html']+[x['path'] for x in rendered if x['purpose'].startswith('budget-') and x['id'].startswith('county-')][:2]+[x['path'] for x in rendered if x['purpose'].startswith('venue-') and x['id'].startswith('county-')][:2]+[x['path'] for x in rendered if x['purpose'].startswith('ribbon-') and x['id'].startswith('county-')][:2]
  assert len(sample_paths)==9 and len(set(sample_paths))==9
  sample=[]
  for p in sample_paths:
