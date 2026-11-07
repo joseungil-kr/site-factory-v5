@@ -10,12 +10,12 @@ from pathlib import Path
 from collections import Counter
 from v5.site_plan import initial_spec,validate_plan
 from v5.config import ROOT
-from scripts.county_copy_pools import purpose_intros,purpose_sections
+from scripts.county_copy_pools import purpose_intros,purpose_sections,expanded_pools,county_intents,skus_for
 
 ID='county-funeral-ownerprivate-test'
 SITE=ROOT/'sites'/ID
 SRC=ROOT/'data/regions/v4_official_parent_regions_20261022.json'
-PAGES_TOTAL=99
+PAGES_TOTAL=95
 PRICES={'B201':59000,'B202':59000,'B205':109000,'B206':149000}
 PRODUCTS=[
  ('B201','근조화환 B201',59000),
@@ -40,8 +40,10 @@ def main():
  assert data['retrievedOn']=='2026-10-22'
  parents=data['regions']
  counties=[x for x in parents if x['level']=='municipality' and x['name'].endswith('군') and x['sourceStatus']=='존재']
- provinces=[x for x in parents if x['level']=='province' and x['sourceStatus']=='존재']
- assert (len(counties),len(provinces))==(82,16)
+ all_provinces=[x for x in parents if x['level']=='province' and x['sourceStatus']=='존재']
+ county_parent_codes={c['parent'] for c in counties}
+ provinces=[p for p in all_provinces if p['code'] in county_parent_codes]
+ assert (len(counties),len(all_provinces),len(provinces))==(82,16,12)
  assert len(set(x['code'] for x in counties))==82
  prov_by_code={x['code']:x for x in provinces}
  assert all(x['parent'] in prov_by_code for x in counties)
@@ -50,8 +52,8 @@ def main():
  # A seller table quote is only attached when its official county code matches.
  assert not SOURCE_SHIPPING, 'Never publish unverified county delivery fees'
  pages=[]
- root={'id':'national','number':1,'region':'전국','county':'전국','province':'전국','parentRegion':'전국',
-       'purpose':'budget','title':'전국 군 근조화환 가격과 상품 안내','productSkus':list(PRICES),
+ root={'id':'national','number':1,'region':'전국 군 지역','county':'군 지역','province':'전국','parentRegion':'전국',
+       'purpose':'national','title':'전국 군 근조화환 가격과 상품 안내','productSkus':list(PRICES),
        'intro':'전국 군 지역 근조화환 상품별 표시가와 주문 조건을 안내합니다.',
        'sections':[{'heading':'상품 가격','paragraph':'검증된 판매상품 정보를 안내합니다.'},
                    {'heading':'주문 조건','paragraph':'수령지와 배송비를 확인할 수 있습니다.'}],
@@ -60,22 +62,22 @@ def main():
  pnums={}
  for p in sorted(provinces,key=lambda x:x['code']):
   num=len(pages)+1;pnums[p['code']]=num
-  pages.append({'id':'province-'+p['code'],'number':num,'region':p['fullName'],'county':'각 군',
+  pages.append({'id':'province-'+p['code'],'number':num,'region':p['fullName'],'county':'관내 군 지역',
     'province':p['fullName'],'parentRegion':'전국','parentPageId':'national',
-    'purpose':'venue','title':p['fullName']+' 군 근조화환 상품과 가격',
+    'purpose':'province','title':p['fullName']+' 근조화환 군 지역별 상품과 가격',
     'productSkus':list(PRICES),'intro':p['fullName']+' 근조화환 선택 안내입니다.',
     'sections':[{'heading':'상품','paragraph':'상품 가격과 구성 확인'},
                 {'heading':'주문','paragraph':'받는 시설 확인'}],
     'faq':[],'pageType':'province','officialCode':p['code']})
  for i,c in enumerate(sorted(counties,key=lambda x:x['code'])):
   p=prov_by_code[c['parent']]
-  purpose=PURPOSES[i%len(PURPOSES)]
+  purpose=county_intents()[i%len(county_intents())]
   num=len(pages)+1
   pages.append({'id':'county-'+c['code'],'number':num,'region':c['fullName'],
    'county':c['name'],'province':p['fullName'],'parentRegion':p['fullName'],
    'parentPageId':'province-'+p['code'],'purpose':purpose,
    'title':c['name']+' 근조화환 가격·상품 선택 | 군 근조화환 안내',
-   'productSkus':list(PRICES),'intro':c['name']+' 근조화환 상품 가격과 수령지 안내.',
+   'productSkus':skus_for(purpose),'intro':c['name']+' 근조화환 상품 가격과 수령지 안내.',
    'sections':[{'heading':'상품 선택','paragraph':'같은 상품 유형의 표시가를 확인할 수 있습니다.'},
                {'heading':'주문 요청','paragraph':'받는 시설명과 주소를 확인할 수 있습니다.'}],
    'faq':[],'pageType':'county','officialCode':c['code'],
@@ -98,7 +100,7 @@ def main():
   'research':{'topic':[{'source':'https://www.code.go.kr/stdcode/regCodeL.do','checkedOn':'2026-10-22'}],
    'price':[{'source':'https://fwith.co.kr/shop/item.php?it_id=B201','checkedOn':'2026-11-07'}],
    'order':[{'source':'https://fwith.co.kr/shop/item.php?it_id=B205','checkedOn':'2026-11-07'}]},
-  'purposePools':{
+  'purposePools':expanded_pools({
    'budget':pool('근조화환 예산 선택',
     '{county} 근조화환은 B201/B202 표시가 59,000원과 B205 109,000원, B206 149,000원을 비교할 수 있습니다.',
     '상품 기준가는 59,000원·59,000원·109,000원·149,000원입니다. 상품별 실제 구성·치수와 최종 배송비는 상세 주문 과정에서 확인할 수 있습니다.',
@@ -116,8 +118,25 @@ def main():
     '근조 리본에는 보내는 사람·단체 이름과 조의 문구가 들어갑니다. 원하시는 표기와 오탈자를 주문 단계에서 확인할 수 있습니다.',
     '배송비는 주문 시 결제 안내가 있으며 추가요금은 최종 수령지 기준으로 확인합니다.',
     '동일한 가격의 B201과 B202도 실제 구성은 상품 상세를 기준으로 비교해야 합니다. 리본 비용과 꽃 품종·크기는 선택한 상품의 표시 내용을 따릅니다.',
-    '리본 문구와 보낸 사람 이름은 어디에 적나요?')}
+    '리본 문구와 보낸 사람 이름은 어디에 적나요?')})
  })
+ # National and province pages only show county-bearing province coverage.
+ national=pool('전국 근조화환 상품 선택',
+    '전국 군 지역의 근조화환 가격과 실제 주문 링크를 살펴볼 수 있습니다.',
+    'B201·B202는 각 59,000원, B205는 109,000원, B206은 149,000원입니다. 상품별 꽃 구성·크기는 판매처 상세에 따릅니다.',
+    '군별 배송 추가비와 읍·면 예외는 받는 시설의 상세 주소를 기준으로 판매처에서 확인할 수 있습니다.',
+    '받는 군과 장례식장 주소, 희망일, 리본 문구를 준비하면 실제 결제 총액을 확인할 수 있습니다.',
+    '군 지역 화환의 배송비는 어떻게 확인하나요?')
+ national['introductions']=['전국 군 지역 근조화환의 표시가와 상품 선택, 주문 절차를 정리했습니다.']
+ province=pool('광역 지역별 군 근조화환',
+    '{province}에 속한 군 지역의 근조화환 상품 표시가와 주문 연결을 확인할 수 있습니다.',
+    '{province}의 군 지역으로 보낼 근조화환 상품 B201·B202·B205·B206의 가격과 유형을 비교합니다.',
+    '수령 시설의 읍·면 상세 주소를 기준으로 추가 배송비와 주문 가능 여부를 상담할 수 있습니다.',
+    '관내 군 지역을 선택한 뒤 장례식장명과 빈소·희망일을 판매처에 전달할 수 있습니다.',
+    '해당 광역 지역의 군 근조화환을 어떻게 주문하나요?')
+ province['introductions']=['{province} 관내 군 지역 근조화환의 상품 가격과 수령 시설별 주문 안내를 확인할 수 있습니다.']
+ spec['purposePools']['national']=national
+ spec['purposePools']['province']=province
  result=validate_plan(spec,ID)
  assert result['ready'],result['errors']
  site={
@@ -151,7 +170,7 @@ def main():
  dump(SITE/'site-spec.json',spec)
  dump(SITE/'county-plan-evidence.json',{'sourceFile':str(SRC.relative_to(ROOT)),
    'sourceRetrievedOn':'2026-10-22','sourceBlobSHA':'13d43fc3f2492b29b1680858235fe0ac0cd10580',
-   'countyCount':len(counties),'provinceCount':len(provinces),'targetCount':len(pages),
+   'countyCount':len(counties),'provinceCount':len(provinces),'excludedProvincesWithoutCounty':[p['fullName'] for p in all_provinces if p['code'] not in county_parent_codes],'targetCount':len(pages),
    'countyCodes':[x['code'] for x in counties],
    'deliveryFeeSpecificCases':SOURCE_SHIPPING,
    'shippingEvidenceState':'No county-specific amount accepted until exact B201 source rows, 읍/면 exceptions and checkout calculation are verified',
