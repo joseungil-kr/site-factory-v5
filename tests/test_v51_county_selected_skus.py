@@ -101,6 +101,29 @@ class CountySelectedSkuContract(unittest.TestCase):
             a=assemble(p,self.plan['purposePools'],self.data['products'])
             body=' '.join([a['intro']]+[x['paragraph'] for x in a['sections']])
             self.assertTrue(product_skus_in_text(body)<=set(p['productSkus']))
+    def test_all_eight_previous_offcard_routes_against_actual_rendered_html(self):
+        from scripts.build_county_trial_review_only import main as make, OUT
+        from scripts.verify_county_independent_html import validate_one
+        make()
+        expected={
+            15:['B201','B205'],
+            18:['B201','B202','B205'],
+            28:['B201','B205'],
+            42:['B201','B206'],
+            47:['B202','B206'],
+            63:['B205','B206'],
+            66:['B201','B206'],
+            67:['B202','B205']
+        }
+        for number,skus in expected.items():
+            p=next(x for x in self.data['pages'] if x['number']==number)
+            with self.subTest(route='/'+str(number)+'.html'):
+                self.assertEqual(p['productSkus'],skus)
+                row=validate_one(OUT/(str(number)+'.html'),skus)
+                self.assertEqual(row['errors'],[],row)
+                self.assertEqual(set(row['visibleProseSKUs'])-set(skus),set())
+                self.assertFalse(row['offCardPrices'])
+
     def test_refuse_nonselected_fixture(self):
         pool=json.loads(json.dumps(self.plan['purposePools']['budget-entry']))
         pool['sections'].append({'slot':'bad','heading':'잘못된 비교','paragraph':'B201 59,000원, B205 109,000원'})
