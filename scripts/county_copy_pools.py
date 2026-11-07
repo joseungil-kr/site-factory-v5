@@ -198,7 +198,9 @@ def expanded_pools(base):
         # Permit clearly calculated price *differences*, not prices of unlisted products.
         allowed_prices={format(x,',')+'원' for x in prices}
         allowed_prices.update(format(abs(x-y),',')+'원' for x in prices for y in prices if x!=y)
-        for slot in ('order','ribbon','delivery','information'):
+        # Only two reusable service-oriented slots. Four generic slots made every
+        # county text nearly identical without helping users choose.
+        for slot in ('order','delivery'):
             candidates=[]
             for item in base[group]['sections']:
                 if item['slot']!=slot:
@@ -213,14 +215,13 @@ def expanded_pools(base):
                 candidates.append(copy.deepcopy(item))
             if not candidates:
                 fallback={
-                    'order':('수령시설·주문 확인','{county}의 장례식장명과 주소, 빈소와 희망 수령일을 판매처에 전달하면 주문 조건을 확인할 수 있습니다.'),
-                    'ribbon':('리본 문구와 보내는 이름','조의 문구와 개인·단체의 보내는 이름은 선택한 상품의 주문 옵션에서 확인할 수 있습니다.'),
-                    'delivery':('정확한 배송비 안내','군 지역 배송비에는 읍·면별 차이가 있을 수 있습니다. 수령 시설의 상세 주소를 기준으로 실제 요금을 확인할 수 있습니다.'),
-                    'information':('실물 구성 확인','꽃의 종류와 크기, 리본 옵션 등은 선택한 상품의 상세정보에서 확인할 수 있습니다.')
+                    'order':('장례식장 수령지 입력','{county}에서 받을 장례식장명과 상세 주소·빈소·희망 도착일은 판매처 주문 과정에서 전달할 수 있습니다.'),
+                    'delivery':('배송비와 리본 옵션','상품 표시가 외에 수령지 배송비와 리본 옵션 비용이 추가될 수 있습니다. 실제 주문서에서 총액을 확인할 수 있습니다.')
                 }
                 title,text=fallback[slot]
                 candidates=[{'slot':slot,'heading':title,'paragraph':text}]
             pool['sections'].extend(candidates)
+        # These sections are substantive, not shuffled locality adjectives.
         pool['sections'].extend([
             {'slot':'decision-context','heading':heading,'paragraph':paragraph},
             {'slot':'decision-action','heading':other_title,'paragraph':other_paragraph}
