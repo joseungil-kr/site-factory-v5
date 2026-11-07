@@ -69,7 +69,9 @@ def main():
   file=OUT/('index.html' if page['path']=='/' else page['path'].lstrip('/'))
   s=LinkScan();s.feed(file.read_text())
   assert s.title==1 and s.h1==1 and s.meta==['noindex,nofollow']
-  assert len(s.products)==4 and set(s.products)=={'B201','B202','B205','B206'}
+  original=next(x for x in pages if x['id']==page['id'])
+  assert s.products==original['productSkus'],(page['path'],s.products,original['productSkus'])
+  assert set(s.products)<={'B201','B202','B205','B206'}
   internal={v for v in s.links if v.startswith('/')}
   assert internal<=targets|{'#main'},(page['path'],internal-targets)
   links[page['path']]=internal&targets
