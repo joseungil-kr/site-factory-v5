@@ -201,7 +201,7 @@ def main():
   restricted=RESTRICTED_COUNTY_PRODUCTS.get(c['name'])
   purpose=('restricted-'+restricted[0] if restricted else county_intents()[i%len(county_intents())])
   # Headline must reflect the chosen buyer decision, not a generic SEO template.
-  purpose_heading=({'obje':'근조 오브제','rice':'근조 쌀화환','basket':'영정바구니'}[restricted[0]] if restricted
+  purpose_heading=({'obje':'근조 오브제','rice':'근조 쌀화환','rice-basket':'근조 쌀화환·바구니','basket':'영정바구니'}[restricted[0]] if restricted
                    else next(row[3] for row in INTENTS if row[0]==purpose))
   num=len(pages)+1
   pages.append({'id':'county-'+c['code'],'number':num,'region':c['fullName'],
