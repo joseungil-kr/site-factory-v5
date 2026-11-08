@@ -1,0 +1,17 @@
+{
+  "siteId": "county-funeral-ownerprivate-test",
+  "verifiedOn": "2026-11-08",
+  "sku": "B202",
+  "officialListingName": "근조 3단 화환",
+  "displayPriceKRW": 59000,
+  "officialListingURL": "https://fwith.co.kr/shop/list.php?ca_id=20",
+  "listingContext": "First page of official 근조화환 category, B201 and B202 both separately listed as 근조 3단 화환 at 59,000 KRW",
+  "directItemURL": "https://fwith.co.kr/shop/item.php?it_id=B202",
+  "directItemTextVerified": false,
+  "restrictions": [
+    "listing title and price only",
+    "no proved SKU-specific flower composition or size difference",
+    "the product SKU is an identifier, not independently a customer benefit",
+    "do not claim detailed facility names or street addresses exist in county pages"
+  ]
+}
