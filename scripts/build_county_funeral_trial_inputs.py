@@ -177,6 +177,8 @@ def main():
    'sellerVenueNotice':({
        'text':'판매처 공지: '+c['name']+' 모든 장례식장 - '+SELLER_NOTICE_SHAPE[c['name']]+'.',
        'sourceUrl':SELLER_NOTICE_SOURCE,'checkedOn':'2026-11-08',
+       'factIds':([{'청도군':'venue-cheongdo-rice-20261108','완도군':'venue-wando-rice-basket-20261108'}[c['name']]] if c['name'] in ('청도군','완도군') else []),
+       'outputSlot':'notice','customerQuestion':'받는 군의 장례식장 반입 형태는 무엇인가요?',
        'alternativeUrl':None,
        'alternativeName':None
    } if c['name'] in SELLER_NOTICE_SHAPE else None),
@@ -235,20 +237,22 @@ def main():
    'faqs':[{'q':'오브제 상품 배송료는 언제 확인하나요?','a':'B213 상품의 수령지 주소를 지정한 뒤 판매처 주문 화면에서 배송료와 주문 총액을 확인할 수 있습니다.'}]},
   'restricted-rice':{
    'productSkus':['B054'],
-   'introductions':['{county} 모든 장례식장은 판매처 공지에서 쌀화환 형태를 안내합니다. 근조 쌀화환 10Kg B054 주문 정보와 반입 안내를 확인할 수 있습니다.'],
+   'factOwnership':{'acceptance':'notice','productPrice':'product_card','receiving':'order','postOrder':'faq'},
+   'introductions':['{county} 장례식장으로 보낼 조의 상품의 수령 정보와 주문 경로를 확인할 수 있습니다.'],
    'sections':[
-    {'slot':'choice','heading':'쌀화환 상품','paragraph':'근조 쌀화환 10Kg B054는 쌀화환 반입 안내에 맞는 상품군입니다. 상품번호와 장례식장 주소를 함께 확인해 주문할 수 있습니다.'},
+    {'slot':'choice','heading':'리본에 적을 조의 문구','paragraph':'“삼가 고인의 명복을 빕니다”처럼 조의를 전하는 문구와 보내는 분의 이름을 각각 준비할 수 있습니다.', 'factIds':[], 'customerQuestion':'리본에 어떤 말을 적을까요?'},
     {'slot':'order','heading':'빈소로 보낼 정보','paragraph':'장례식장명과 빈소, 희망 날짜를 정해 해당 상품 주문 화면에 전달해 주세요.'},
     {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 해당 시설이 있는 주소를 지정해 주세요.'}],
    'faqs':[{'q':'배송 조건은 어디에서 확인하나요?','a':'B054 상품의 주문 화면에서 수령지에 적용되는 배송비와 주문 가능 여부를 확인할 수 있습니다.'}]},
   'restricted-rice-basket':{
    'productSkus':['B054'],
-   'introductions':['{county} 장례식장은 판매처 공지에서 쌀화환과 바구니를 반입 형태로 안내합니다. 쌀화환 10Kg 상품 또는 영정바구니 분류를 선택할 수 있습니다.'],
+   'factOwnership':{'acceptance':'notice','productPrice':'product_card','receiving':'order','postOrder':'faq'},
+   'introductions':['{county} 장례식장에 조의를 전할 상품을 고르고 받는 시설의 정보를 준비할 수 있습니다.'],
    'sections':[
-    {'slot':'choice','heading':'쌀화환 또는 바구니','paragraph':'근조 쌀화환 10Kg B054의 표시가격은 90,000원입니다. 영정바구니는 판매처 분류에서 상품별 정보를 확인할 수 있습니다.'},
+    {'slot':'choice','heading':'보내는 분의 명의','paragraph':'개인은 본인 이름을, 회사나 단체는 정식 명칭을 리본 발신인으로 적을 수 있습니다. 조의 문구와 발신 명의는 구분해 작성할 수 있습니다.', 'factIds':[], 'customerQuestion':'발신인은 어떻게 표기할까요?'},
     {'slot':'order','heading':'완도군 수령 정보','paragraph':'장례식장 이름과 빈소, 수령 날짜를 준비하고 원하는 형태를 판매처에 전달해 주세요.'},
     {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}에 속한 읍·면은 {townships}입니다. 정확한 장례식장 주소를 확인해 주세요.'}],
-   'faqs':[{'q':'쌀화환 대신 영정바구니를 선택할 수 있나요?','a':'판매처 공지에는 완도군 장례식장에 쌀화환과 바구니가 안내됩니다. 선택할 상품은 해당 상품 분류와 장례식장의 반입 조건을 함께 확인할 수 있습니다.'}]},
+   'faqs':[{'q':'주문한 상품의 내역은 어디에서 조회하나요?','a':'판매처 사이트의 주문내역조회 메뉴에서 접수한 주문 내용을 확인할 수 있습니다.', 'factIds':[], 'customerQuestion':'접수한 주문을 어디서 확인하나요?', 'outputSlot':'faq'}]},
   'restricted-basket':{
    'productSkus':['B211'],
    'introductions':['{county} 장례식장에 보낼 영정바구니 상품의 판매처 표시가격과 수령지 정보를 정리했습니다.'],
