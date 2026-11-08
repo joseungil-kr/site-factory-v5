@@ -238,6 +238,8 @@ def render(site,page,pages,products,links,pools,region_index=None):
         style=style.replace('</style>',(
           '.document-page nav[aria-label="관련 지역"]{display:flex;flex-wrap:wrap;gap:9px 12px;align-items:center}'
           '.document-page nav[aria-label="관련 지역"] h2{width:100%;margin-bottom:0}'
+          '.document-page nav[aria-label="관련 지역"]{margin:10px 0 20px;padding:12px;'
+          'background:#f5f8f3;border-radius:12px}'
           '.document-page nav[aria-label="관련 지역"] a{display:inline-flex;padding:8px 12px;'
           'border:1px solid #d9e2d6;border-radius:8px;line-height:1.35;text-decoration:none}'
           '.document-page nav[aria-label="현재 위치"] a{display:inline-block;margin-right:7px}'
@@ -252,12 +254,17 @@ def render(site,page,pages,products,links,pools,region_index=None):
     breadcrumb=('<nav aria-label="현재 위치">'+''.join(
                 '<a href="'+markup.h(markup.url_path(node['number']))+'">'+markup.h(node['region'])+'</a> <span>›</span> '
                 for node in ancestors)+'<span>'+markup.h(page['region'])+'</span></nav>' if ancestors else '')
+    # Surface county/province choices before the product grid and long FAQ.
+    # Applies only to this isolated trial; other V5 sites keep their layout.
+    is_county_trial=site.get('id')=='county-funeral-ownerprivate-test'
+    regional_links=regional_navigation(page,pages,region_index)
     return (head+markup.header(site)+'<main id="main" class="container document-page">'
             +breadcrumb+'<header><h1>'+markup.h(page['title'])+'</h1><p>'+markup.h(page['intro'])+'</p></header>'
+            +(regional_links if is_county_trial else '')
             '<section class="recommendations"><h2>상품과 가격</h2><div class="product-list">'+
             products_html(products,page['productSkus'],site.get('id'))+'</div></section>'+markup.article_body(page)+
             '<section class="faq"><h2>자주 묻는 질문</h2>'+markup.faq_markup(page)+'</section>'+
-            regional_navigation(page,pages,region_index)+markup.phone_buttons(site)+markup.render_pagination(pages,page['number'])+
+            ('' if is_county_trial else regional_links)+markup.phone_buttons(site)+markup.render_pagination(pages,page['number'])+
             '</main>'+(
                 markup.footer(site,links,page).replace(
                     '축하와 응원의 마음을 전하는 안내 서비스',
