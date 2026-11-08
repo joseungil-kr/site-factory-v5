@@ -158,6 +158,20 @@ class CountySelectedSkuContract(unittest.TestCase):
             row=validate_one(altered,["B201","B202"])
             self.assertTrue(any("Nonexistent inline visual reference" in e for e in row["errors"]),row)
 
+    def test_factual_customer_tone_and_nonrepeated_faq_in_final_html(self):
+        from scripts.build_county_trial_review_only import main as build_review, OUT
+        from scripts.verify_county_independent_html import validate_one
+        build_review()
+        for page in self.data['pages']:
+            filename='index.html' if page['number']==1 else str(page['number'])+'.html'
+            body=(OUT/filename).read_text(encoding='utf-8')
+            with self.subTest(filename=filename):
+                for token in ('재확인한 법정동 코드','이 명단은 배송 가능 여부의 확인 자료가 아니라',
+                              '현재 보유한 가격 원장','형태 안내 이미지는 판매 상품 실물 사진과 차이가 있을 수 있습니다'):
+                    self.assertNotIn(token,body)
+                self.assertIn('근조화환은 어디에서 주문하고 결제하나요?',body)
+                self.assertFalse(validate_one(OUT/filename,page['productSkus'])['errors'])
+
     def test_refuse_nonselected_fixture(self):
         pool=json.loads(json.dumps(self.plan['purposePools']['budget-entry']))
         pool['sections'].append({'slot':'bad','heading':'잘못된 비교','paragraph':'B201 59,000원, B205 109,000원'})

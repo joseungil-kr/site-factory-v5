@@ -25,6 +25,8 @@ BAD = (
     "비교을", "위치을", "명칭을을", "상품 선택을을",
     "네 상품만 비교한", "같은 등급으로 간주하지 않습니다",
     "현재 확보된 가격자료만으로 알 수 없습니다",
+    "재확인한 법정동 코드", "이 명단은 배송 가능 여부의 확인 자료가 아니라", "현재 보유한 가격 원장",
+    "형태 안내 이미지는 판매 상품 실물 사진과 차이가 있을 수 있습니다",
 )
 
 class RenderedMain(HTMLParser):
@@ -111,6 +113,8 @@ def validate_one(path: Path, selected=None):
     for phrase in BAD:
         if phrase in html:
             failures.append("Bad visitor copy: "+phrase)
+    if prose.count('정확한 수령 시설 주소가 있으면') and prose.count('정확한 수령지 주소를 알려주시면'):
+        failures.append('Repeated delivery-address instruction in rendered prose')
     if "조의를 전하는 근조화환 상품·주문 안내" not in html:
         failures.append("County-only funeral footer missing")
     if 'name="robots" content="noindex,nofollow"' not in html:

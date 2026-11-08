@@ -110,8 +110,8 @@ def pool(title,intro,choice,delivery,extra,faq):
  # Each FAQ answer must address the question's buying intent; the previous
  # shared address-only answer was irrelevant for budget and ribbon questions.
  if '예산' in title:
-  answer=('표시된 상품가를 카드별로 비교해 예산에 맞는 근조화환을 고를 수 있습니다. '
-          '리본 선택비와 실제 수령 주소에 적용되는 배송비는 주문 화면에서 함께 확인합니다.')
+  answer=('예산에 맞는 상품을 고를 때는 가격뿐 아니라 상품번호별 꽃 구성과 크기, 주문 옵션을 함께 살펴보세요. '
+          '같은 가격대에서도 실제 구성은 상품 상세페이지에서 비교할 수 있습니다.')
  elif '리본' in title:
   answer=('상품을 정하신 뒤 주문서의 리본 문구와 보내는 명의 항목에 각각 적을 내용을 '
           '준비해 주세요. 인쇄 가능 글자 수와 옵션은 판매처에서 확인할 수 있습니다.')
@@ -124,8 +124,8 @@ def pool(title,intro,choice,delivery,extra,faq):
  return {'productSkus':list(PRICES),
   'introductions':purpose_intros(title,intro),
   'sections':purpose_sections(title,choice,delivery,extra),
-  'faqs':[{'q':'상품 가격에 배송비가 포함되나요?',
-           'a':'판매처는 배송비를 주문 시 결제하도록 안내합니다. 실제 적용 금액과 총액은 받는 시설의 상세주소를 입력한 뒤 확인할 수 있습니다.'},
+  'faqs':[{'q':'근조화환은 어디에서 주문하고 결제하나요?',
+           'a':'상품 카드의 판매처 링크에서 해당 근조화환의 상세 구성과 주문 옵션을 확인하고 결제할 수 있습니다. 지역 안내 페이지에서는 결제정보를 받지 않습니다.'},
           {'q':faq,'a':answer}]}
 
 def main():
@@ -253,10 +253,10 @@ def main():
   assert names
   scope=__import__('copy').deepcopy(province)
   joined='·'.join(names)
-  scope['introductions']=[p['fullName']+'에서 '+str(len(names))+'개 군 지역 근조화환의 표시가와 주문 절차를 비교할 수 있습니다. 수령지의 실제 배송 조건은 주문 과정에서 확인할 수 있습니다.']
+  scope['introductions']=[p['fullName']+'의 '+str(len(names))+'개 군 지역을 안내합니다. 근조화환을 받을 군을 고르면 상품가격과 주문처로 이동할 수 있습니다.']
   scope['sections'].append({'slot':'covered-counties',
     'heading':p['fullName']+'의 군 지역 검색',
-    'paragraph':p['fullName']+'의 군 지역 목록은 '+joined+'입니다. 2026-10-22에 확보한 법정동 코드 기준 명칭이며, 군 페이지에서 받는 시설명과 주소를 따로 확인할 수 있습니다.'})
+    'paragraph':p['fullName']+'에서 근조화환을 보낼 수령 군을 선택해 주세요. 해당 군은 '+joined+'입니다. 선택한 군의 페이지에서 상품과 주문 정보를 살펴볼 수 있습니다.'})
   selection=(names[0]+'의 수령 시설명과 주소를 준비한 다음 B201·B202·B205·B206의 가격과 주문조건을 볼 수 있습니다.' if len(names)==1 else '목록에서 해당 군을 선택하고 장례식장명과 빈소·주소를 확인한 다음 B201·B202·B205·B206의 주문조건을 비교할 수 있습니다.')
   scope['sections'].append({'slot':'county-selection',
     'heading':'군 지역 선택과 상품 주문',
