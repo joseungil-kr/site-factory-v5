@@ -1,0 +1,109 @@
+{
+  "siteId": "baekse",
+  "asOf": "2026-10-30",
+  "releaseScope": "nationwide 85 city names (시 only) × four menu types",
+  "productionURL": "https://baekse.nalmada.net/",
+  "productionWorker": "sfv54-baekse-city-preview",
+  "productionSourceCommit": "96dc41fc1a80938955c27c09163d5e0167f940eb",
+  "actions": {
+    "sourceFullQuality": {
+      "repo": "joseungil-kr/site-factory-v5",
+      "runId": 41013127863,
+      "status": "success",
+      "url": "https://github.com/joseungil-kr/site-factory-v5/actions/runs/41013127863"
+    },
+    "deploy": {
+      "repo": "joseungil-kr/site-factory-v4",
+      "workflowCommit": "da5966ae804856e8870f0ab21e4fb748c8813539",
+      "runId": 41013219748,
+      "status": "success",
+      "url": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/41013219748"
+    },
+    "indexNowGlobal": {
+      "repo": "joseungil-kr/site-factory-v4",
+      "workflowCommit": "6114b36b92ec03d9e2a6180396ba144dbef22b7f",
+      "runId": 41013460262,
+      "status": "rejected_http_403",
+      "url": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/41013460262",
+      "providerMessage": "SiteVerificationNotCompleted. Site Verification is not completed. Please wait for some time for the verification to complete and try again."
+    },
+    "indexNowBing": {
+      "repo": "joseungil-kr/site-factory-v4",
+      "workflowCommit": "219b0dbecd97c8e0e6939406c4425c9018314600",
+      "runId": 41013592482,
+      "status": "http_200_received",
+      "url": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/41013592482"
+    }
+  },
+  "pageCounts": {
+    "home": 1,
+    "menuGuides": 4,
+    "cityHubs": 85,
+    "cityMenuDetails": 340,
+    "totalIndexableHTML": 430,
+    "notFoundHTMLExcluded": 1
+  },
+  "quality": {
+    "approvedOriginalCopyParagraphs": 104,
+    "realWebpImagesSHA256Verified": 5,
+    "uniqueTitles": 430,
+    "uniqueDescriptions": 430,
+    "brokenInternalLinks": 0,
+    "sampledNarrativeComparisons": 1356,
+    "comparisonMetric": "char-5gram-jaccard",
+    "maximumObserved": 0.422863,
+    "thresholdExclusive": 0.49,
+    "comparisonsAboveThreshold": 0,
+    "previewWorkerNoindex": true,
+    "previewRobotsDisallow": true
+  },
+  "customDomain": {
+    "hostname": "baekse.nalmada.net",
+    "worker": "sfv54-baekse-city-preview",
+    "customDomainAttached": true,
+    "publicHTTP200": true,
+    "siteMap": "https://baekse.nalmada.net/sitemap.xml",
+    "siteMapURLCount": 430,
+    "publicRobotsAllow": true,
+    "indexFollowAll430": true,
+    "selfCanonicalAll430": true,
+    "customDomainBindingsBefore": 90,
+    "customDomainBindingsAfter": 91,
+    "previousDomainBindingsPreserved": true,
+    "dnsWrites": false,
+    "workerRouteWrites": false,
+    "existingWorkerOverwritten": false,
+    "workersDevNoindex": true
+  },
+  "indexNow": {
+    "endpointAccepted": "https://www.bing.com/indexnow",
+    "targetHost": "baekse.nalmada.net",
+    "urlCount": 430,
+    "responseCode": 200,
+    "state": "RECEIVED_BY_PROVIDER",
+    "payloadSHA256": "801edd5bf4196c3f692bfd66761392e1a49d6b06be7aaae67a157cb4a3ce96cf",
+    "keyLocation": "https://baekse.nalmada.net/c4b8096fa37019ed2520a611b51da94e.txt",
+    "keyHTTP200Exact": true,
+    "attempts": [
+      {
+        "endpoint": "https://api.indexnow.org/indexnow",
+        "httpCode": 403,
+        "reason": "SiteVerificationNotCompleted"
+      },
+      {
+        "endpoint": "https://www.bing.com/indexnow",
+        "httpCode": 200,
+        "outcome": "Received"
+      }
+    ],
+    "confirmedIndexed": false,
+    "note": "IndexNow HTTP200 means URL list received; individual search engine indexing is not guaranteed."
+  },
+  "scopeLimits": [
+    "Only approved 85 city names; no separate county/district/dong/eup/myeon SEO pages",
+    "Local sales or training venue facts are not asserted solely by a city name",
+    "GitHub V5 PR remains unmerged; source is deployed from an exact immutable reviewed commit",
+    "Separate search engine property registration or Naver/Google manual ownership is not implied by IndexNow submission"
+  ],
+  "noOtherSitesChanged": true
+}
