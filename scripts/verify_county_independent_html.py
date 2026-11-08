@@ -27,6 +27,8 @@ BAD = (
     "현재 확보된 가격자료만으로 알 수 없습니다",
     "재확인한 법정동 코드", "이 명단은 배송 가능 여부의 확인 자료가 아니라", "현재 보유한 가격 원장",
     "형태 안내 이미지는 판매 상품 실물 사진과 차이가 있을 수 있습니다",
+    "비교하는 안내입니다", "구분해 안내합니다",
+    "고객의 연락처는 주문처에서 입력합니다",
 )
 
 class RenderedMain(HTMLParser):
@@ -115,6 +117,10 @@ def validate_one(path: Path, selected=None):
             failures.append("Bad visitor copy: "+phrase)
     if prose.count('정확한 수령 시설 주소가 있으면') and prose.count('정확한 수령지 주소를 알려주시면'):
         failures.append('Repeated delivery-address instruction in rendered prose')
+    # Audit the rendered navigation position rather than only the template.
+    nav_marker='<nav aria-label="관련 지역">'
+    if html.count(nav_marker)!=1 or html.find(nav_marker)>html.find('<section class="recommendations">'):
+        failures.append("County navigation missing, duplicated or below product content")
     if "조의를 전하는 근조화환 상품·주문 안내" not in html:
         failures.append("County-only funeral footer missing")
     if 'name="robots" content="noindex,nofollow"' not in html:
