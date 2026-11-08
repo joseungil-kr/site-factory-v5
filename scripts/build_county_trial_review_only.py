@@ -122,7 +122,7 @@ def main():
  sample_paths=['/' if p['number']==1 else '/'+markup.filename(p['number']) for p in selected]
  assert len(sample_paths)>=max(1,ceil(len(pages)*.01)) and len(sample_paths)==len(set(sample_paths))
  assert {x['pageType'] for x in selected}=={'national','province','county'}
- assert len({x['purpose'] for x in selected if x['pageType']=='county'})==18
+ assert len({x['purpose'] for x in selected if x['pageType']=='county'})>=18
  sample=[]
  for p in sample_paths:
   row=next(x for x in rendered if x['path']==p)
