@@ -185,7 +185,7 @@ def main():
  assert not SOURCE_SHIPPING, 'Never publish unverified county delivery fees'
  pages=[]
  root={'id':'national','number':1,'region':'전국 군 지역','county':'군 지역','province':'전국','parentRegion':'전국',
-       'purpose':'national','title':'전국 군 근조화환 가격과 상품 안내','productSkus':list(PRICES),
+       'purpose':'national','title':'전국 군 근조화환 지역별 반입 형태와 상품 선택','productSkus':list(PRICES),
        'intro':'전국 군 지역 근조화환 상품별 표시가와 주문 조건을 안내합니다.',
        'sections':[{'heading':'상품 가격','paragraph':'검증된 판매상품 정보를 안내합니다.'},
                    {'heading':'주문 조건','paragraph':'수령지와 배송비를 확인할 수 있습니다.'}],
@@ -349,17 +349,15 @@ def main():
     '군별 배송 추가비와 읍·면 예외는 받는 시설의 상세 주소를 기준으로 판매처에서 확인할 수 있습니다.',
     '받는 군과 장례식장 주소, 희망일, 리본 문구를 준비하면 실제 결제 총액을 확인할 수 있습니다.',
     '군 지역 화환의 배송비는 어떻게 확인하나요?')
- national['introductions']=['받는 장례식장이 있는 군을 먼저 선택한 뒤 근조화환의 상품별 표시가격과 주문 정보를 확인해 보세요.']
+ national['introductions']=['전국 82개 군 중 장례식장 소재지를 선택하면 해당 지역의 반입 형태와 주문 가능한 상품 종류를 살펴볼 수 있습니다.']
  # The home already has the entire province navigator and four price cards;
  # repeating prices, shipment caveats and checkout instructions across five
  # generic sections + two FAQs produced the independent 82/100 rejection.
  national['sections']=[
-  {'slot':'choice','heading':'같은 예산과 상위 가격대의 차이',
-   'paragraph':'B201과 B202는 표시가격이 같지만 상품번호가 서로 다릅니다. B205는 근조 특대 3단 화환, B206은 근조 특특대 3단 화환으로 판매처에 등록돼 있습니다. 상품명과 주문코드가 구분되므로 용도에 맞는 상품을 선택할 수 있습니다.'},
-  {'slot':'order','heading':'받는 군과 장례식장 찾기',
-   'paragraph':'위 지역 목록에서 수령 시설이 있는 광역 지역과 군을 선택해 주세요. 장례식장명과 빈소를 확인한 뒤 해당 상품의 주문 페이지로 이동할 수 있습니다.'},
-  {'slot':'venue-notice','heading':'반입 형태를 확인할 군',
-   'paragraph':'판매처 주요공지사항에는 연천군·부안군·거창군의 장례식장에 오브제 형태를 안내하고 있습니다. 청도군에는 쌀화환, 완도군에는 쌀화환 또는 바구니 안내가 있습니다. 해당 군으로 보낸다면 3단 화환 주문 전에 실제 받는 시설의 반입 형태를 확인해 주세요.'}
+  {'slot':'choice','heading':'받는 군에 따라 달라지는 상품 유형',
+   'paragraph':'판매처 공지에서 연천군·부안군·거창군은 오브제, 고령군은 영정바구니, 청도군은 쌀화환, 완도군은 쌀화환 또는 꽃바구니 형태로 안내합니다. 이 군에서는 해당 지역 상세 페이지의 상품군을 먼저 확인할 수 있습니다.'},
+  {'slot':'order','heading':'수령할 장례식장 정보',
+   'paragraph':'수령 시설이 있는 군을 고르면 해당 군의 읍·면 목록과 주문 가능한 상품 링크를 확인할 수 있습니다. 주문할 때 필요한 장례식장명·빈소·희망 날짜를 준비할 수 있습니다.'}
  ]
  national['faqs']=[
   {'q':'군 지역의 배송료와 주문 합계는 어떻게 확인하나요?',
