@@ -131,7 +131,13 @@ def check_page(page,pools,facts):
         f=facts.get(fid)
         if not f or f['region_scope']!=page['county'] or f['kind']!='acceptance_form':
             raise ValueError('notice county scope or registry mismatch '+page['county'])
-        notice['factIds']=[fid]
+        prior=notice.get('factIds',[])
+        for previous in prior:
+            entry=facts.get(previous)
+            if (not entry or entry['region_scope']!=page['county']
+                    or 'notice' not in entry['allowed_slots']):
+                raise ValueError('preexisting notice fact has no valid source/scope '+str(previous))
+        notice['factIds']=list(dict.fromkeys(prior+[fid]))
         notice['outputSlot']='notice'
         notice['customerQuestion']='해당 군 장례식장의 반입 형태는 무엇인가요?'
     for sku in selected:
