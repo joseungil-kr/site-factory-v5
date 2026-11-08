@@ -159,6 +159,10 @@ class TodayflowerNationalTest(unittest.TestCase):
             self.assertIn('<meta name="robots" content="noindex,nofollow">',html)
             self.assertNotIn('rel="canonical"',html)
             self.assertIn('word-break:keep-all',html)
+            # Narrow screens must show one complete product and a tappable order link.
+            self.assertIn('@media(max-width:390px){',html)
+            self.assertIn('.tf-product-grid{grid-template-columns:minmax(0,1fr);gap:14px}',html)
+            self.assertIn('.tf-product a{font-size:14px;min-height:44px;',html)
             self.assertEqual(html.count('src="/assets/images/'), 7)
             self.assertEqual(html.count('width="1448" height="1086"'), 5)
             self.assertIn("fwith.co.kr/shop/item.php?it_id=",html)
