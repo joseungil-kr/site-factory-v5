@@ -231,7 +231,7 @@ def main():
       if county==c['name'] and sku in (list(restricted[1]) if restricted else skus_for(purpose))
    ],
    'sellerVenueNotice':({
-       'text':c['name']+' 모든 장례식장은 판매처 공지에서 '+SELLER_NOTICE_SHAPE[c['name']]+' 형태로 안내됩니다. 수령 시설을 확인하고 해당 형태의 상품을 선택해 주세요.',
+       'text':'판매처 공지: '+c['name']+' 모든 장례식장 - '+SELLER_NOTICE_SHAPE[c['name']]+'.',
        'sourceUrl':SELLER_NOTICE_SOURCE,'checkedOn':'2026-11-08',
        'alternativeUrl':None,
        'alternativeName':None
@@ -283,9 +283,9 @@ def main():
  special_pools={
   'restricted-obje':{
    'productSkus':['B213'],
-   'introductions':['{county} 모든 장례식장은 판매처 공지에 오브제 형태로 안내되어 있습니다. 근조 2단 오브제 B213 상품의 주문 정보를 확인할 수 있습니다.'],
+   'introductions':['{county} 장례식장에 보낼 근조 2단 오브제의 상품정보와 수령지 안내입니다.'],
    'sections':[
-    {'slot':'choice','heading':'오브제 형태와 상품','paragraph':'근조 2단 오브제 B213은 오브제 반입 안내에 맞는 상품군입니다. 해당 시설의 빈소를 선택한 뒤 이 상품의 주문 정보를 확인할 수 있습니다.'},
+    {'slot':'choice','heading':'판매처 상품 고시','paragraph':'B213 판매처 상세에는 상품 선택옵션 0개·추가옵션 0개로 표시되고, 재생 꽃을 사용하지 않는다고 고시돼 있습니다.'},
     {'slot':'order','heading':'수령 시설 정보','paragraph':'장례식장 이름과 정확한 빈소, 희망 전달일을 정한 뒤 상품 주문 화면에서 접수 가능한 일정을 확인할 수 있습니다.'},
     {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 수령할 시설의 상세주소를 지정해 주세요.'}],
    'faqs':[{'q':'오브제 상품 배송료는 언제 확인하나요?','a':'B213 상품의 수령지 주소를 지정한 뒤 판매처 주문 화면에서 배송료와 주문 총액을 확인할 수 있습니다.'}]},
@@ -307,12 +307,12 @@ def main():
    'faqs':[{'q':'쌀화환 대신 영정바구니를 선택할 수 있나요?','a':'판매처 공지에는 완도군 장례식장에 쌀화환과 바구니가 안내됩니다. 선택할 상품은 해당 상품 분류와 장례식장의 반입 조건을 함께 확인할 수 있습니다.'}]},
   'restricted-basket':{
    'productSkus':['CAT2090'],
-   'introductions':['{county} 모든 장례식장은 판매처 공지에서 영정바구니를 안내합니다. 근조 3단 상품 대신 영정바구니 목록을 확인해 보세요.'],
+   'introductions':['{county} 장례식장으로 보내는 영정바구니의 조의 문구와 수령지 정보를 정리했습니다.'],
    'sections':[
-    {'slot':'choice','heading':'영정바구니 선택','paragraph':'영정바구니 상품 분류에서는 취급 상품과 선택 가능한 규격을 확인할 수 있습니다. 해당 분류에서 원하는 상품을 선택해 보세요.'},
+    {'slot':'choice','heading':'조의 문구 준비','paragraph':'리본에 쓸 조의 표현으로 “삼가 고인의 명복을 빕니다”나 “깊은 애도를 표합니다”를 고려할 수 있습니다. 보내는 분의 이름은 별도로 준비해 주세요.'},
     {'slot':'order','heading':'시설과 빈소','paragraph':'장례식장명과 빈소를 정한 뒤 판매처에 영정바구니 주문 가능 여부를 확인해 주세요.'},
     {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 해당 시설의 상세 주소를 준비해 주세요.'}],
-   'faqs':[{'q':'영정바구니 가격을 어디에서 확인하나요?','a':'판매처 영정바구니 상품 분류에서 상품을 선택한 뒤 가격과 접수 조건을 확인할 수 있습니다.'}]}
+   'faqs':[]}
  }
  # County-only verified venue restrictions share SKU B213 but must not become
  # three identical SEO articles. Different buying tasks and official 읍/면 lists
@@ -322,21 +322,21 @@ def main():
   '연천군':('장례식장과 빈소 선택',
     '연천군에서 오브제를 받는 장례식장명·빈소·받는 분 연락 방법을 구분해 주세요. 주문할 때는 정확한 시설 주소를 입력할 수 있습니다.',
     '연천군 오브제 배송비는 어떻게 확인하나요?',
-    '상품 B213의 주문 화면에서 수령 시설 주소를 지정하고 적용 배송비와 접수 가능 여부를 확인할 수 있습니다.'),
-  '부안군':('희망일과 반입 형태 확인',
-    '부안군 빈소에 필요한 날짜를 정한 뒤 판매처 공지의 오브제 반입 안내와 해당 상품의 주문 접수 일정을 함께 확인해 주세요.',
-    '부안군 장례식장에 3단 화환을 선택해도 되나요?',
-    '판매처 공지에는 부안군 모든 장례식장의 오브제 반입이 안내되어 있어, 상품 B213 근조 2단 오브제 상세 페이지를 연결합니다.'),
+    'B213 판매처의 2026-11-08 배송정보 표에 연천군 추가 배송비는 10,000원으로 기재돼 있습니다. 표에서 연천군 읍면의 별도 예외 행은 확인되지 않았습니다. 해당 금액은 B213 안내이며 실제 결제금액은 주문 시 확인됩니다.'),
+  '부안군':('희망 전달일과 빈소 정보',
+    '부안군 장례식장의 빈소 번호와 도착 희망일을 준비하면 B213 상품 주문에 필요한 수령 정보를 전달할 수 있습니다.',
+    'B213 판매처 상품 페이지에서 주문은 어떻게 시작하나요?',
+    '판매처 B213 상품 상세에는 수량 조절, 바로구매, 장바구니 버튼이 있습니다. 수량을 고른 뒤 원하는 주문 경로를 선택할 수 있습니다.'),
   '거창군':('리본 발신인과 수령 정보',
     '거창군 빈소에 전달할 조의 문구와 보내는 분의 이름을 정리하고, 실제 꽃을 받을 장례식장명과 빈소 정보를 함께 준비해 주세요.',
     '거창군 오브제 리본에는 어떤 이름을 적나요?',
-    '조의 문구와 보내는 사람 또는 단체명을 각각 정해 B213 상품 주문 과정에서 입력할 수 있습니다.')
+    '상품 상세에는 선택옵션 0개·추가옵션 0개로 표시됩니다. 리본 문구 입력 방법은 판매처 고객센터 1844-0644에서 확인할 수 있습니다.')
  }
  for c in counties:
   if c['name'] not in obje_actions:continue
   label,detail,question,answer=obje_actions[c['name']]
   unique=copy.deepcopy(special_pools['restricted-obje'])
-  unique['introductions']=[c['name']+'의 장례식장은 판매처 공지에서 오브제 반입으로 안내됩니다. 근조 2단 오브제 B213 상품과 수령 시설 정보를 살펴보세요.']
+  unique['introductions']=[c['name']+' 근조 2단 오브제의 수령 시설 정보와 판매처 상품고시를 정리했습니다.']
   unique['sections'][1]={'slot':'order','heading':label,'paragraph':detail}
   unique['sections'][2]={'slot':'verified-townships','heading':c['name']+' 읍·면별 수령지','paragraph':c['name']+'의 읍·면 명칭은 {townships}입니다. 실제 받는 장례식장이 속한 읍·면과 도로명 주소를 확인해 주문해 주세요.'}
   unique['faqs']=[{'q':question,'a':answer}]
