@@ -47,7 +47,7 @@ jobs:
         run: |
           npm install --no-save playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Render 33 offline preview paths at 390 and 1440, including all 6 corrected pages
+      - name: Render 35 offline preview paths at 390 and 1440, including all 5 independently failed pages
         run: |
           mkdir -p artifacts/county-v51-browser
           (cd dist/county-funeral-ownerprivate-test && python -m http.server 8766 --bind 127.0.0.1) >/tmp/county-only-http.log 2>&1 &
@@ -57,7 +57,7 @@ jobs:
           const {chromium}=require('playwright'),fs=require('fs');
           (async()=>{
             const pages=JSON.parse(fs.readFileSync('sites/county-funeral-ownerprivate-test/pages.json','utf8'));
-            const ids=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,20,26,27,28,31,36,37,55,59,60,67,69,73,75,77,78,86,88,95]; // 13 original + six visual-reference regressions
+            const ids=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,20,24,26,27,28,31,36,37,42,55,59,60,67,69,73,75,77,78,86,88,95]; // 13 original + six visual-reference regressions
             const expected={};
             for(const p of pages)expected[p.number]=p;
             const browser=await chromium.launch({headless:true});
