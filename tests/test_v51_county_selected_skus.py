@@ -137,7 +137,7 @@ class CountySelectedSkuContract(unittest.TestCase):
             elif n==14:
                 self.assertIn('기본 주문 정보',p['title'])
                 self.assertIn('근조 3단 화환',a['sections'][0]['paragraph'])
-                self.assertIn('근조화환 B202',a['sections'][0]['paragraph'])
+                self.assertIn('근조 3단 화환',a['sections'][0]['paragraph'])
                 self.assertIn('주문한 근조화환 내역',a['faq'][0]['q'])
             elif n==26:
                 self.assertIn('문구 예시',a['intro'])
