@@ -52,14 +52,16 @@
         "restoredManifestFilesVerified": 5087,
         "sharingChanged": false,
         "crossThreadAccess": "independent-authorized-subagent-materialization-and-hash-check-passed"
-      }
+      },
+      "rssReproduction": "pinned RSS generator executed; 5087 original files unchanged; only rss.xml added; 50 full-content items",
+      "offlineResult": "docs/V5_OFFLINE_RSS_REPRODUCTION_20261108.json"
     },
     {
       "id": "clinic-rss-composite",
       "repository": "joseungil-kr/site-factory-v5",
       "baselineRef": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
       "patchRef": "3ae081242743fb8d8bbdd498a44e3855782752ad",
-      "status": "source-files-read-and-hashed; five-RSS-tests-pass; full-site-not-regenerated",
+      "status": "isolated-baseline15906HTML15925assets-reproduced; patch-only3RSS-changes; live-deployment-not-compared",
       "sourceFiles": [
         {
           "localPath": "clinic-base/sites/nalmada-shared3/build_national.py",
@@ -88,8 +90,86 @@
           "ref": "3ae081242743fb8d8bbdd498a44e3855782752ad",
           "path": "tests/test_clinic_rss_feed.py",
           "sha256": "cfb9c54e075ad480de2c52cd00744e4511b0e179fe216085a1536ebcb00119fa"
+        },
+        {
+          "localPath": "clinic-base/data/regions/nationwide_locality_candidates_5034.json",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "data/regions/nationwide_locality_candidates_5034.json",
+          "sha256": "a33b9817e25d18ee8ee66d5cffffa46bb989c60bd91b355e0b99545c9bb40272"
+        },
+        {
+          "localPath": "clinic-base/sites/clinicflower-preview/clinicflower-copy-pool-720.json",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "sites/clinicflower-preview/clinicflower-copy-pool-720.json",
+          "sha256": "b43d42a58440ffd8524ecf24c2f6c35c70cae3c74e0aacbe0d974e8784919e89"
+        },
+        {
+          "localPath": "clinic-base/sites/nalmada-shared3/clinic-indexnow-key.txt",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "sites/nalmada-shared3/clinic-indexnow-key.txt",
+          "sha256": "c481672f476a9aaada294785f9158153099bfd41fd9f3a7084a2a5397ee48725"
+        },
+        {
+          "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/celebration-wreath.webp",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "sites/nalmada-shared3/public/assets/images/celebration-wreath.webp",
+          "sha256": "0c8e735b113c4f0eedc8906a78eb5c39e222f5613561a0be7ee7529b83f37ff8"
+        },
+        {
+          "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/dental.webp",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "sites/nalmada-shared3/public/assets/images/dental.webp",
+          "sha256": "4bba70d3e270f1e3b1abc28f25a6e8aa57d0fe3fe22c0f1be4bdf15572c916c2"
+        },
+        {
+          "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/hero.webp",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "sites/nalmada-shared3/public/assets/images/hero.webp",
+          "sha256": "4de98df894bacbf0ba096732352e6078f4b3f39f2b10596dd16a871ba13170ab"
+        },
+        {
+          "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/hospital.webp",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "sites/nalmada-shared3/public/assets/images/hospital.webp",
+          "sha256": "62be101cbc0358d16947450ee1c0fc592b33dbb344c7bf81719747417a81d0ef"
+        },
+        {
+          "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/oriental.webp",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "sites/nalmada-shared3/public/assets/images/oriental.webp",
+          "sha256": "733ed7e7c4633d3217fa24fba5f297b28ab75376ded0817ffebd23e3bdbf595a"
+        },
+        {
+          "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/phone.webp",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "sites/nalmada-shared3/public/assets/images/phone.webp",
+          "sha256": "4281c2849833d664d947d6ad37d8a3283e3b252ca5d6a6f3f0f017334ba50fde"
+        },
+        {
+          "localPath": "clinic-base/sites/nalmada-shared3/public/assets/style.css",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "sites/nalmada-shared3/public/assets/style.css",
+          "sha256": "0074d0a130d985d5a73b1169042e20677d2ff13a2454b21c8e8e6f6914a6f4b9"
+        },
+        {
+          "localPath": "clinic-base/sites/nalmada-shared3/worker.national.mjs",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "sites/nalmada-shared3/worker.national.mjs",
+          "sha256": "8f4f4e385be23afac5264448b2529f2d2ea42d7b25ed4d0d9a2d3b87bf6a1a14"
         }
-      ]
+      ],
+      "offlineResult": "docs/V5_OFFLINE_RSS_REPRODUCTION_20261108.json"
     }
   ],
   "prohibited": [

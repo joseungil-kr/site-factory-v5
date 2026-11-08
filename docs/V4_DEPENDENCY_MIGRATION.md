@@ -51,3 +51,14 @@ V5가 독립 배포 가능하다는 결론도 아니다.
 - 지원 Library 경로로 별도 디렉터리에 다시 가져와 크기·ZIP hash 및 manifest5087파일 hash 재검사 통과.
 - 사용자 Library 안의 보관이며 공유·접근권한 변경 없음. GitHub Actions가 Library를 자동 읽도록 연결하지 않았다. 향후 허용된 담당자가 같은 Library ID로 복구해야 하며 임의 외부 세션에 대한 접근권한은 보장하지 않는다.
 - 독립 검수 담당도 같은 Library ID와 pinned file ID로 별도 경로 복구 후 크기·hash·5087파일 재검사에 통과했다(검수 담당 보고). 향후 모든 임의 세션의 접근을 보장하는 것은 아니다. 저장 성공을 운영 복구·배포 전환 완료로 간주하지 않는다.
+
+
+## 후속: V5 고정 소스만으로 RSS 변경범위 재현 (2026-11-08)
+아래는 위 초기 단계의 미재현 항목을 이어서 검사한 결과다. 기존 운영본/브랜치/Worker를 건드리지 않고 새로운 로컬 출력 디렉터리에서 실행했다.
+
+1. **Todayflower**: Library 원본의 기존 산출물을 별도 경로로 복원했다. V5 `0ca5705a`의 config/지역확장/입력과 `01563363`의 `scripts/build_todayflower_rss.py` 원문을 사용했다. 지역 확장 입력은 검증된 공식 ZIP, 이미지 입력은 원본 artifact의 동일 바이트다. `python -m scripts.build_todayflower_rss` 실행 후 기존 5087파일 모두 그대로이고 `rss.xml`만 추가됨을 전수 hash로 확인했다. 5071 HTML(콘텐츠5070+404) 모두 불변, RSS50항목/902005bytes. sitemap 또는 공개 전환 작업은 하지 않았다.
+2. **Clinic**: V5 baseline `32484f02`에서 실제 지역5034·문구POOL720·이미지6개·CSS·기존 공개 검증 파일·Worker 소스와 builder를 읽었다. `build_national.py --root INPUT --output NEW_OUTPUT --mode public --audit-json REPORT`로 오프라인 재현했다. 여기서 public은 HTML 메타데이터 모드일 뿐 네트워크 공개를 하지 않는다. 15906 HTML/15925자산 재현 후 patch `3ae08124`의 `patch_active_rss_only.patch()`를 그 격리 출력에만 적용했다. baseline을 또 다른 디렉터리에 재실행하여 비교: RSS3개만 변경, 15906 HTML과 나머지15922파일 동일. 각 RSS50항목, 임의 pubDate 없음.
+3. [실측 delta 보고서](V5_OFFLINE_RSS_REPRODUCTION_20261108.json), [Todayflower 입력별 출처/hash](V5_TODAYFLOWER_RSS_INPUTS_20261108.json), Clinic 전체 필수 입력은 [의존 manifest](v4-dependency-manifest.json)에 고정했다.
+4. 재검사기는 `scripts/audit_rss_reproduction.py`이며 `--todayflower-artifact ZIP --todayflower-output RESTORED_DIST --clinic-before BASELINE_PUBLIC --clinic-after PATCHED_PUBLIC`을 받는다. 읽기만 하며 HTML 변경·예상 밖 파일 추가/삭제·잘못된 RSS 항목 수를 실패 처리한다.
+
+**판정:** V4 workflow를 실행하지 않고 V5 고정 코드·보관 입력으로 이 두 RSS 작업의 오프라인 재현과 변경범위 검증이 가능했다. 이는 현재 live 사이트 byte 일치, 최신 컨텐츠 품질 통과, V5 credential/배포/rollback 전환 완료를 뜻하지 않는다. CI는 단위검사이며 대용량 실물 재현은 별도 로컬 증거다. V4는 계속 보존한다.
