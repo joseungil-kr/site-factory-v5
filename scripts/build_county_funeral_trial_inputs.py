@@ -24,6 +24,8 @@ PRODUCTS=[
  ('B202','근조화환 B202',59000),
  ('B205','근조 특대 3단 화환',109000),
  ('B206','근조 특특대 3단 화환',149000),
+ ('B213','근조 2단 오브제',120000),
+ ('B054','근조 쌀화환 10Kg',90000),
 ]
 PURPOSES=['budget','venue','ribbon']
 PROVINCE_PURCHASE_FOCUSES={
@@ -105,6 +107,9 @@ SOURCE_SHIPPING={}  # Seller B201 county fee applicability was not independently
 # Read-only seller notice observed 2026-11-08; this is a product/venue
 # compatibility warning, NOT a delivery promise or an offer for alternative SKU.
 SELLER_NOTICE_SOURCE='https://fwith.co.kr/page/notice.php'
+RESTRICTED_COUNTY_PRODUCTS={'연천군':('obje',['B213']),'부안군':('obje',['B213']),
+ '거창군':('obje',['B213']),'청도군':('rice',['B054']),
+ '완도군':('rice',['B054']),'고령군':('basket',[])}
 SELLER_NOTICE_SHAPE={
  '연천군':'오브제',
  '부안군':'오브제',
@@ -193,24 +198,27 @@ def main():
   lower.sort()
   township_names=[item[1] for item in lower]
   assert len(township_names)>0 and len(set(township_names))==len(township_names),(c['code'],c['fullName'],township_names)
-  purpose=county_intents()[i%len(county_intents())]
+  restricted=RESTRICTED_COUNTY_PRODUCTS.get(c['name'])
+  purpose=('restricted-'+restricted[0] if restricted else county_intents()[i%len(county_intents())])
   # Headline must reflect the chosen buyer decision, not a generic SEO template.
-  purpose_heading=next(row[3] for row in INTENTS if row[0]==purpose)
+  purpose_heading=({'obje':'근조 오브제','rice':'근조 쌀화환','basket':'영정바구니'}[restricted[0]] if restricted
+                   else next(row[3] for row in INTENTS if row[0]==purpose))
   num=len(pages)+1
   pages.append({'id':'county-'+c['code'],'number':num,'region':c['fullName'],
    'county':c['name'],'province':p['fullName'],'parentRegion':p['fullName'],
    'parentPageId':'province-'+p['code'],'purpose':purpose,
-   'title':c['name']+' 근조화환 | '+purpose_heading+('·오브제 반입 확인' if SELLER_NOTICE_SHAPE.get(c['name'])=='오브제' else '·상품 주문'),
-   'productSkus':skus_for(purpose),'intro':c['name']+' 근조화환 상품 가격과 수령지 안내.',
+   'title':c['name']+' 근조화환 | '+purpose_heading+('·반입 안내' if restricted else '·상품 주문'),
+   'productSkus':list(restricted[1]) if restricted else skus_for(purpose),
+   'intro':c['name']+' 장례식장에 보내는 근조상품의 반입 형태와 주문 정보를 안내합니다.' if restricted else c['name']+' 근조화환 상품 가격과 수령지 안내.',
    'sections':[{'heading':'상품 선택','paragraph':'같은 상품 유형의 표시가를 확인할 수 있습니다.'},
                {'heading':'주문 요청','paragraph':'받는 시설명과 주소를 확인할 수 있습니다.'}],
    'faq':[],'pageType':'county','officialCode':c['code'],
    'shippingEvidence':SOURCE_SHIPPING.get(c['code']),
    'sellerVenueNotice':({
-       'text':c['name']+' 장례식장은 판매처 주요공지사항에서 '+SELLER_NOTICE_SHAPE[c['name']]+' 형태로 안내합니다. 아래 3단 상품을 선택하기 전에 시설명으로 반입 가능한 형태를 확인해 주세요.',
+       'text':c['name']+' 모든 장례식장은 판매처 공지에서 '+SELLER_NOTICE_SHAPE[c['name']]+' 형태로 안내됩니다. 수령 시설을 확인하고 해당 형태의 상품을 선택해 주세요.',
        'sourceUrl':SELLER_NOTICE_SOURCE,'checkedOn':'2026-11-08',
-       'alternativeUrl':('https://fwith.co.kr/shop/item.php?it_id=B213' if SELLER_NOTICE_SHAPE[c['name']]=='오브제' else None),
-       'alternativeName':('근조 2단 오브제' if SELLER_NOTICE_SHAPE[c['name']]=='오브제' else None)
+       'alternativeUrl':None,
+       'alternativeName':None
    } if c['name'] in SELLER_NOTICE_SHAPE else None),
    'siteVariantPolicy':'county-v51','variantIndex':i//len(county_intents()),
    'townships':'·'.join(township_names),'townshipCount':str(len(township_names)),
@@ -253,6 +261,36 @@ def main():
     '동일한 가격의 B201과 B202도 실제 구성은 상품 상세를 기준으로 비교해야 합니다. 리본 비용과 꽃 품종·크기는 선택한 상품의 표시 내용을 따릅니다.',
     '리본 문구와 보낸 사람 이름은 어디에 적나요?')})
  })
+ # Venue-wide rules select one appropriate product cohort BEFORE assembling prose.
+ # A basket-only category has no SKU-confirmed seller item: show no SKU or price
+ # instead of misdirecting visitors to 3-tier wreaths or inventing a listing.
+ special_pools={
+  'restricted-obje':{
+   'productSkus':['B213'],
+   'introductions':['{county} 모든 장례식장은 판매처 공지에 오브제 형태로 안내되어 있습니다. 근조 2단 오브제 B213 상품의 주문 정보를 확인할 수 있습니다.'],
+   'sections':[
+    {'slot':'choice','heading':'오브제 형태와 상품','paragraph':'판매처의 근조 2단 오브제 B213은 120,000원으로 표시됩니다. 오브제 형태의 반입 안내에 맞춰 이 상품을 살펴보세요.'},
+    {'slot':'order','heading':'수령 시설 정보','paragraph':'장례식장 이름과 정확한 빈소, 희망 전달일을 정한 뒤 상품 주문 화면에서 접수 가능한 일정을 확인할 수 있습니다.'},
+    {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 수령할 시설의 상세주소를 지정해 주세요.'}],
+   'faqs':[{'q':'오브제 상품 배송료는 언제 확인하나요?','a':'B213 상품의 수령지 주소를 지정한 뒤 판매처 주문 화면에서 배송료와 주문 총액을 확인할 수 있습니다.'}]},
+  'restricted-rice':{
+   'productSkus':['B054'],
+   'introductions':['{county} 모든 장례식장은 판매처 공지에서 쌀화환 형태를 안내합니다. 근조 쌀화환 10Kg B054 주문 정보와 반입 안내를 확인할 수 있습니다.'],
+   'sections':[
+    {'slot':'choice','heading':'쌀화환 상품','paragraph':'판매처 근조 쌀화환 10Kg B054는 표시가격 90,000원입니다. 수령 시설의 반입 안내와 상품 정보를 함께 확인할 수 있습니다.'},
+    {'slot':'order','heading':'빈소로 보낼 정보','paragraph':'장례식장명과 빈소, 희망 날짜를 정해 해당 상품 주문 화면에 전달해 주세요.'},
+    {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 해당 시설이 있는 주소를 지정해 주세요.'}],
+   'faqs':[{'q':'배송 조건은 어디에서 확인하나요?','a':'B054 상품의 주문 화면에서 수령지에 적용되는 배송비와 주문 가능 여부를 확인할 수 있습니다.'}]},
+  'restricted-basket':{
+   'productSkus':[],
+   'introductions':['{county} 모든 장례식장은 판매처 공지에서 영정바구니를 안내합니다. 근조 3단 상품 대신 영정바구니 목록을 확인해 보세요.'],
+   'sections':[
+    {'slot':'choice','heading':'영정바구니 선택','paragraph':'판매처의 영정바구니 상품 분류에서 현재 취급 상품을 확인할 수 있습니다. 이 시험 원장에는 검증된 개별 영정바구니 SKU와 가격이 없습니다.'},
+    {'slot':'order','heading':'시설과 빈소','paragraph':'장례식장명과 빈소를 정한 뒤 판매처에 영정바구니 주문 가능 여부를 확인해 주세요.'},
+    {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 해당 시설의 상세 주소를 준비해 주세요.'}],
+   'faqs':[{'q':'영정바구니 가격을 어디에서 확인하나요?','a':'판매처 영정바구니 상품 분류에서 상품을 선택한 뒤 가격과 접수 조건을 확인할 수 있습니다.'}]}
+ }
+ spec['purposePools'].update(special_pools)
  # National and province pages only show county-bearing province coverage.
  national=pool('전국 근조화환 상품 선택',
     '전국 군 지역의 근조화환 가격과 실제 주문 링크를 살펴볼 수 있습니다.',
@@ -332,8 +370,8 @@ def main():
  for sku,name,price in PRODUCTS:
   products.append({'sku':sku,'name':name,'referencePrice':price,
     'referenceDate':'2026-11-07','priceConfirmed':True,
-    'priceEvidence':'2026-11-07 09:53 UTC direct read-only HTTP200 SKU and listed price and 주문시 배송비 결제; source run 42361620276',
-    'priceCheckedOn':'2026-11-07','orderUrl':'https://fwith.co.kr/shop/item.php?it_id='+sku,
+    'priceEvidence':('2026-11-08 seller product or category listing readback, source https://fwith.co.kr/shop/item.php?it_id='+sku if sku in ('B213','B054') else '2026-11-07 09:53 UTC direct read-only HTTP200 SKU and listed price and 주문시 배송비 결제; source run 42361620276'),
+    'priceCheckedOn':('2026-11-08' if sku in ('B213','B054') else '2026-11-07'),'orderUrl':'https://fwith.co.kr/shop/item.php?it_id='+sku,
     'verifiedLive':False,'imageUseApproved':False,
     'verifiedSource':True})
  assert all(x['imageUseApproved'] is False for x in products)
