@@ -332,7 +332,7 @@ def expanded_pools(base):
               {
                 "slot": "choice",
                 "heading": "화환 주문 상품 구분",
-                "paragraph": "판매처 목록에서 B202와 B206은 근조화환 중 서로 다른 상품으로 등록돼 있습니다. 가격은 각 상품 카드에서 확인할 수 있습니다."
+                "paragraph": "판매처 목록에서 B202는 근조 3단 화환, B206은 근조 특특대 3단 화환으로 표시됩니다. 해당 상품 카드에서 각 주문 링크로 이동할 수 있습니다."
               },
               {
                 "slot": "choice",
@@ -392,7 +392,7 @@ def expanded_pools(base):
               {
                 "slot": "verified-townships",
                 "heading": "{county} 읍·면 목록",
-                "paragraph": "{county}의 공식 읍·면 {townshipCount}곳은 {townships}입니다. 이 목록은 시설 주소록이 아니므로 실제 받는 장례식장의 상세 위치는 별도로 준비합니다."
+                "paragraph": "{county}의 공식 읍·면 {townshipCount}곳은 {townships}입니다. 이 읍·면 중 받는 시설이 위치한 지역을 구분하고, 장례식장의 도로명주소와 빈소 번호를 함께 준비할 수 있습니다."
               }
             ]
             pool['faqs']=[{'q':'접수한 화환 주문내역은 어디서 조회하나요?',
@@ -477,7 +477,7 @@ def expanded_pools(base):
               {
                 "slot": "verified-townships",
                 "heading": "{county} 읍·면 안내",
-                "paragraph": "{county}의 읍·면 {townshipCount}곳: {townships}. 표시된 이름은 행정구역이며 장례식장 도로명주소나 빈소 정보는 포함하지 않습니다."
+                "paragraph": "{county}의 읍·면 {townshipCount}곳: {townships}. 받는 장례식장의 도로명주소와 빈소 번호는 읍·면 이름과 구분해 준비할 수 있습니다."
               }
             ]
             pool['faqs']=[{'q':'접수 이후 주문내역은 어디서 조회하나요?',
