@@ -352,12 +352,20 @@ def expanded_pools(base):
         elif name=='budget-entry':
             # The ribbon section must give new concrete text rather than repeating
             # the receipt address already owned by the order section.
-            pool['sections']=[
-                ({'slot':'ribbon','heading':'리본 문구와 보내는 이름 예시',
-                  'paragraph':'조의 문구로 “삼가 고인의 명복을 빕니다”를 사용할 수 있습니다. 회사나 모임에서 보낸다면 보내는 이름을 “○○회사 임직원 일동”처럼 별도로 적을 수 있습니다.'}
-                 if item['slot']=='ribbon' else item)
-                for item in pool['sections']
+            ribbon_examples=[
+              ('개인 명의 조의 문구','개인이 조의를 전할 때는 “삼가 고인의 명복을 빕니다” 같은 문구를 사용할 수 있습니다. 보내는 이름은 본인의 이름으로 준비할 수 있습니다.'),
+              ('회사 이름으로 보내기','회사 명의라면 “깊은 애도를 표합니다” 같은 조의 문구와 “○○회사 임직원 일동” 같은 보내는 명칭을 함께 준비할 수 있습니다.'),
+              ('단체와 모임의 명의','협회나 모임에서 보낸다면 “謹弔(근조)” 같은 짧은 표현에 “○○동창회 일동”처럼 단체 이름을 별도로 적을 수 있습니다.'),
+              ('짧은 조의 표현','리본 공간에 간결하게 적을 표현으로 “謹弔(근조)”를 사용할 수 있습니다. 발신인 이름을 문구와 분리해 적으면 전달하는 분이 드러납니다.'),
+              ('인쇄명 오탈자 확인','“삼가 고인의 명복을 빕니다” 같은 조의 문구와 보내는 명칭을 분리해 준비한 뒤, 회사명·개인명 등의 띄어쓰기를 확인할 수 있습니다.')
             ]
+            # Several valid real buyer roles, selected once by purpose/variant.
+            # No locality-specific facts are invented to satisfy similarity metrics.
+            selected_roles=[item for item in pool['sections'] if item['slot'] in ('choice','order')]
+            region_roles=[item for item in pool['sections'] if item['slot']=='verified-townships']
+            pool['sections']=(selected_roles+
+                [{'slot':'ribbon','heading':head,'paragraph':text}
+                 for head,text in ribbon_examples]+region_roles)
             # The choice section already answers "which 59,000 won items?".
             # FAQ must add a new answer about receiving venue compatibility.
             pool['faqs']=[{'q':'주문한 근조화환 내역은 어디서 확인하나요?',
