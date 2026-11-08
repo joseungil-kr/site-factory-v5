@@ -63,4 +63,31 @@ class QA(unittest.TestCase):
    for fragment in ['data/funeral-products/CATALOGUE.json','https://fwith.co.kr/page/notice.php']:
     self.assertIn(fragment,h)
    self.assertIn('2026-10-22',h)
+ def test_mobile_product_cards_regression(self):
+  """Protect the 390px product cards without changing sales copy or URLs."""
+  expected=[('B201','59,000원'),('B203','79,000원'),
+            ('B205','109,000원'),('C205','149,000원'),
+            ('C030','200,000원')]
+  for filename in CASES:
+   h=(ROOT/'editorial-review'/filename).read_text(encoding='utf-8')
+   css=re.search(r'<style>(.*?)</style>',h,re.S)
+   self.assertIsNotNone(css,filename)
+   mobile=re.search(r'@media\s*\(max-width:\s*650px\)(.*)</style>',h,re.S)
+   self.assertIsNotNone(mobile,filename)
+   rules=mobile.group(1)
+   for pattern in [
+    r'\.scroll\s+table\s*\{[^}]*min-width:\s*0',
+    r'\.scroll\s+tbody\s*\{[^}]*display:\s*grid',
+    r'\.scroll\s+tr\s*\{[^}]*display:\s*grid',
+    r'\.scroll\s+td:nth-child\(2\)\s*\{[^}]*white-space:\s*nowrap',
+    r'\.scroll\s+td:nth-child\(3\)\s+a\s*\{[^}]*display:\s*block[^}]*min-height:\s*44px',
+   ]:
+    self.assertRegex(rules,pattern,filename)
+   rows=re.findall(r'<tr><td>(.*?)</td><td>(.*?)</td><td>(.*?)</td></tr>',h,re.S)
+   self.assertEqual(len(rows),5,filename)
+   for row,(sku,price) in zip(rows,expected):
+    self.assertIn(sku,row[0],(filename,sku))
+    self.assertEqual(row[1].strip(),price,(filename,sku))
+    self.assertIn('https://fwith.co.kr/shop/item.php?it_id='+sku,row[2],(filename,sku))
+
 if __name__=='__main__':unittest.main(verbosity=2)
