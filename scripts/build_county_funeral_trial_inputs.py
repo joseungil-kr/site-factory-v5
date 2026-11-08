@@ -48,6 +48,9 @@ SOURCE_SHIPPING={}  # Seller B201 county fee applicability was not independently
 # SKU-scoped seller shipping TABLE facts, re-read 2026-11-08.
 # No row found is NOT a zero-fee guarantee. Do not extrapolate across SKUs.
 VERIFIED_SHIPPING_FACTS={
+ ('횡성군','B201'):{'amount':20000,'scope':'횡성군','exceptions':[],
+   'source':'https://fwith.co.kr/shop/item.php?it_id=B201','checkedOn':'2026-11-08',
+   'sourceTable':'강원 / 20,000원 / 태백시, 평창군, 횡성군 / -'},
  ('연천군','B213'):{'amount':10000,'scope':'연천군','exceptions':[],
    'source':'https://fwith.co.kr/shop/item.php?it_id=B213','checkedOn':'2026-11-08',
    'sourceTable':'경기 / 10,000원 / 가평군, 연천군, 포천시 / -'},
