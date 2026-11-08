@@ -559,3 +559,56 @@ def county_intents():
 
 def skus_for(purpose):
     return next(x[2] for x in INTENTS if x[0]==purpose)
+
+
+# V5.1 county restriction ownership contract. Applied only to the isolated
+# rice and rice/basket buyer purposes; unrelated live-site pools are untouched.
+RESTRICTED_FACT_OWNER={
+    'restricted-rice':{
+        'fact_id':'venue-cheongdo-rice-20261108',
+        'product_price_id':'catalog-B054-price-20261108',
+        'customer_question':'받는 장례식장이 허용하는 화환 형태는?',
+    },
+    'restricted-rice-basket':{
+        'fact_id':'venue-wando-rice-basket-20261108',
+        'product_price_id':'catalog-B054-price-20261108',
+        'customer_question':'받는 장례식장이 허용하는 화환 형태는?',
+    },
+}
+
+def validate_restricted_ownership(purpose,pool):
+    """Fail on assembled-slot *meaning* conflicts before choosing variants.
+
+    Notices own the acceptance condition, cards own SKU/price; choice must add
+    a distinct question and FAQ cannot repeat the same acceptance condition.
+    Source-scoped notice facts are checked against the page by the test suite.
+    """
+    if purpose not in RESTRICTED_FACT_OWNER:
+        return
+    owner=RESTRICTED_FACT_OWNER[purpose]
+    intro=' '.join(pool['introductions'])
+    choice=' '.join(s['paragraph'] for s in pool['sections']
+                    if s['slot']=='choice')
+    answers=' '.join(f['q']+' '+f['a'] for f in pool['faqs'])
+    if any(word in intro for word in ('모든 장례식장','반입 형태','쌀화환','바구니')):
+        raise ValueError('restriction fact repeated in intro: '+purpose)
+    if listed_prices_in_text(choice+answers):
+        raise ValueError('product card price repeated in prose: '+purpose)
+    if product_skus_in_text(choice):
+        raise ValueError('product card SKU repeated in choice: '+purpose)
+    if any(word in choice+answers for word in ('반입 안내','반입 형태','판매처 공지')):
+        raise ValueError('restriction notice repeated in choice/FAQ: '+purpose)
+    for item in pool['sections']:
+        if not item.get('slot') or not item.get('heading') or not item.get('paragraph'):
+            raise ValueError('incomplete customer task: '+purpose)
+    for item in pool['faqs']:
+        if not item.get('q') or not item.get('a'):
+            raise ValueError('unsupported FAQ: '+purpose)
+    pool['factOwnership']={
+        'factId':owner['fact_id'],
+        'noticeSlot':'sellerVenueNotice',
+        'priceFactId':owner['product_price_id'],
+        'priceSlot':'product_card',
+        'choiceQuestion':next((s.get('customerQuestion') for s in pool['sections']
+                               if s['slot']=='choice'),None),
+    }
