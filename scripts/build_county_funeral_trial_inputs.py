@@ -200,7 +200,7 @@ def main():
   pages.append({'id':'county-'+c['code'],'number':num,'region':c['fullName'],
    'county':c['name'],'province':p['fullName'],'parentRegion':p['fullName'],
    'parentPageId':'province-'+p['code'],'purpose':purpose,
-   'title':c['name']+' 근조화환 | '+purpose_heading+'·상품 주문',
+   'title':c['name']+' 근조화환 | '+purpose_heading+('·오브제 반입 확인' if SELLER_NOTICE_SHAPE.get(c['name'])=='오브제' else '·상품 주문'),
    'productSkus':skus_for(purpose),'intro':c['name']+' 근조화환 상품 가격과 수령지 안내.',
    'sections':[{'heading':'상품 선택','paragraph':'같은 상품 유형의 표시가를 확인할 수 있습니다.'},
                {'heading':'주문 요청','paragraph':'받는 시설명과 주소를 확인할 수 있습니다.'}],
