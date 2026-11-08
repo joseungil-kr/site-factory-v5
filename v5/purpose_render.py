@@ -60,7 +60,8 @@ def assemble(page, pools, products, *, service=False):
         raise ConfigError(f'page {page["id"]} has selections outside its purpose pool')
     sections = pool.get('sections')
     faqs = pool.get('faqs')
-    if not isinstance(sections, list) or not isinstance(faqs, list) or not faqs:
+    optional_faq=(page.get('siteVariantPolicy')=='county-v51' and purpose=='restricted-basket')
+    if not isinstance(sections,list) or not isinstance(faqs,list) or (not faqs and not optional_faq):
         raise ConfigError('purpose pool needs sections and FAQs')
     # Preserve every distinct supported slot; the old choice/order-only loop
     # silently discarded delivery, ribbon, budget and venue sections.
@@ -130,7 +131,7 @@ def products_html(products, selected, site_id=None):
                 raise ConfigError('county category link cannot claim a product price')
             rows.append('<article class="product" data-product-sku="'+markup.h(sku)+'">'
                 '<div class="product-copy"><h3>'+markup.h(p['name'])+'</h3>'
-                '<p class="product-note">판매처 영정바구니 상품 분류에서 현재 취급 상품을 확인할 수 있습니다.</p></div>'
+                '</div>'
                 '<a data-track-event="category" class="button btn-outline" target="_blank" rel="noopener noreferrer" href="'
                 +markup.h(p['orderUrl'])+'">영정바구니 상품 목록 보기</a></article>')
             continue
@@ -289,7 +290,7 @@ def render(site,page,pages,products,links,pools,region_index=None):
     return (head+markup.header(site)+'<main id="main" class="container document-page">'
             +breadcrumb+'<header><h1>'+markup.h(page['title'])+'</h1><p>'+markup.h(page['intro'])+'</p></header>'
             +(regional_links if is_county_trial else '')+venue_notice_html+
-            (('<section class="recommendations"><h2>상품과 가격</h2><div class="product-list">'+
+            (('<section class="recommendations"><h2>'+('영정바구니 상품 분류' if page.get('purpose')=='restricted-basket' else '상품과 가격')+'</h2><div class="product-list">'+
             products_html(products,page['productSkus'],site.get('id'))+'</div></section>')
              if page['productSkus'] else
              ('<section class="recommendations"><h2>영정바구니 상품 찾기</h2><p>'
@@ -297,7 +298,7 @@ def render(site,page,pages,products,links,pools,region_index=None):
               '<a class="button" href="https://fwith.co.kr/shop/list.php?ca_id=2090" '
               'target="_blank" rel="noopener noreferrer">영정바구니 상품 목록 보기</a></section>'))+
             markup.article_body(page)+
-            '<section class="faq"><h2>자주 묻는 질문</h2>'+markup.faq_markup(page)+'</section>'+
+            (('<section class="faq"><h2>자주 묻는 질문</h2>'+markup.faq_markup(page)+'</section>') if page['faq'] else '')+
             ('' if is_county_trial else regional_links)+markup.phone_buttons(site)+markup.render_pagination(pages,page['number'])+
             '</main>'+(
                 markup.footer(site,links,page).replace(
