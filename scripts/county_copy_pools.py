@@ -349,6 +349,11 @@ def expanded_pools(base):
             ]
             pool['faqs']=[{'q':'주문한 뒤 리본 문구를 바꿀 수 있나요?',
                            'a':'리본 인쇄 진행 상태에 따라 변경 가능 여부가 달라집니다. 주문한 판매처에 변경할 문구와 상품번호를 전달해 확인할 수 있습니다.'}]
+        elif name=='budget-entry':
+            # The choice section already answers "which 59,000 won items?".
+            # FAQ must add a new answer about receiving venue compatibility.
+            pool['faqs']=[{'q':'{county} 장례식장은 3단 화환을 받을 수 있나요?',
+                           'a':'받는 장례식장마다 화환을 들이는 장소와 반입 조건이 다를 수 있습니다. 상품을 주문하기 전에 시설의 최신 반입 안내와 수령 빈소를 확인해 주세요.'}]
         else:
             pool['faqs']=[pool['faqs'][-1]]
         for item in pool['sections']:
