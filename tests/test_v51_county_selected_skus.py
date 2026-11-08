@@ -200,21 +200,22 @@ class CountySelectedSkuContract(unittest.TestCase):
         from scripts.build_county_trial_review_only import main as make, OUT
         make()
         pages={p['county']:p for p in self.data['pages'] if p['pageType']=='county'}
-        checks=[('연천군','B213',37),('의성군','B205',55)]
-        for county,sku,number in checks:
+        checks=[('연천군','B213',37,10000),('의성군','B205',55,10000),
+                ('횡성군','B201',78,20000)]
+        for county,sku,number,fee in checks:
             p=pages[county]
             facts=p['verifiedSkuShipping']
             self.assertEqual(len(facts),1)
             fact=facts[0]
             self.assertEqual((fact['scope'],fact['sku'],fact['amount'],fact['checkedOn']),
-                             (county,sku,10000,'2026-11-08'))
+                             (county,sku,fee,'2026-11-08'))
             self.assertEqual(fact['source'],
                              'https://fwith.co.kr/shop/item.php?it_id='+sku)
             html=(OUT/f'{number}.html').read_text(encoding='utf-8')
-            self.assertIn('10,000원',html)
+            self.assertIn(f'{fee:,}원',html)
             self.assertIn('data-product-sku="'+sku+'"',html)
         for p in self.data['pages']:
-            if p['pageType']=='county' and p['county'] not in ('연천군','의성군'):
+            if p['pageType']=='county' and p['county'] not in ('연천군','의성군','횡성군'):
                 self.assertFalse(p['verifiedSkuShipping'],p['county'])
     def test_uiseong_facts_instead_of_price_list(self):
         from scripts.build_county_trial_review_only import main as make, OUT
