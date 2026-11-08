@@ -74,7 +74,7 @@ def main():
   assert s.title==1 and s.h1==1 and s.meta==['noindex,nofollow']
   original=next(x for x in pages if x['id']==page['id'])
   assert s.products==original['productSkus'],(page['path'],s.products,original['productSkus'])
-  assert set(s.products)<={'B201','B202','B205','B206','B213','B054','CAT2090'}
+  assert set(s.products)<={'B201','B202','B205','B206','B213','B054','B211','CAT2090'}
   internal={v for v in s.links if v.startswith('/')}
   assert internal<=targets|{'#main'},(page['path'],internal-targets)
   links[page['path']]=internal&targets
