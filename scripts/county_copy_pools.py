@@ -307,7 +307,7 @@ def expanded_pools(base):
             *[item for item in pool['sections'] if item['slot'] in ('order','ribbon')],
             {'slot':'verified-townships',
              'heading':'{county}의 읍·면',
-             'paragraph':'{county}의 읍·면 {townshipCount}곳: {townships}. 이 목록은 행정지역명이며 장례식장명이나 시설 도로명주소가 아닙니다. 받는 시설 주소와 빈소는 별도로 준비해 주세요.'}
+             'paragraph':'{county}의 읍·면 {townshipCount}곳: {townships}.'}
         ]
         # Ribbon intent: introduction=why this page, choice=which confirmed
         # SKU, ribbon=concrete example, FAQ=post-order edits (a NEW question).
@@ -427,7 +427,7 @@ def expanded_pools(base):
               {
                 "slot": "order",
                 "heading": "장례식장 소재지 전달",
-                "paragraph": "배송 문의에는 수령 시설명과 실제 도로명주소가 필요합니다. 군 페이지의 읍면 목록은 행정지역명이지 시설 주소록은 아닙니다."
+                "paragraph": "배송할 장례식장 이름과 도로명주소, 빈소 번호를 함께 준비하면 수령지를 구체적으로 지정할 수 있습니다."
               },
               {
                 "slot": "order",
@@ -447,7 +447,7 @@ def expanded_pools(base):
               {
                 "slot": "order",
                 "heading": "주소 확인 단계",
-                "paragraph": "받는 장례식장 주소에 있는 군·읍면을 확인한 후 주문 상품번호를 함께 정리할 수 있습니다. 페이지가 제공하는 내용은 읍면 이름이고 시설 주소는 직접 준비합니다."
+                "paragraph": "수령할 장례식장의 읍·면과 도로명주소를 주문서에 함께 적으면 상품 배송지를 구분하는 데 도움이 됩니다."
               },
               {
                 "slot": "ribbon",
@@ -490,8 +490,8 @@ def expanded_pools(base):
                 {'slot':'choice','heading':'근조화환 종류 확인',
                  'paragraph':'판매처에서 B201은 근조 3단 화환으로 표기하며 B202는 다른 상품번호입니다. 같은 가격의 두 링크 중 원하는 항목을 선택할 수 있습니다.'},
                 {'slot':'choice','heading':'B201과 B202 구분',
-                 'paragraph':'B201과 B202는 판매처에서 모두 근조 3단 화환으로 표시하지만 주문번호는 서로 다릅니다. 각각의 상품 카드에서 주문 상세를 열 수 있습니다.'},
-                {'slot':'choice','heading':'가격 외 주문번호',
+                 'paragraph':'B201과 B202는 판매처에서 모두 근조 3단 화환으로 표시하지만 상품번호는 서로 다릅니다. 각각의 상품 카드에서 주문 상세를 열 수 있습니다.'},
+                {'slot':'choice','heading':'가격 외 상품번호',
                  'paragraph':'B201과 B202는 각각 별도의 상품 상세주소로 연결됩니다. 표시가격은 같으므로 상품번호로 주문 항목을 구분할 수 있습니다.'},
                 {'slot':'choice','heading':'59,000원 상품 선택',
                  'paragraph':'동일 표시가격의 B201과 B202 중 선택한 번호가 실제 주문 화면과 일치하는지 확인할 수 있습니다.'},
