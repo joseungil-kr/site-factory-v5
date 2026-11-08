@@ -1,0 +1,37 @@
+{
+  "documentType": "independently-retrieved-source-extract",
+  "retrievedOn": "2026-11-08",
+  "sourceSite": "꽃이랑",
+  "sourceProductURL": "https://fwith.co.kr/shop/item.php?it_id=B201",
+  "retrievalMethod": "Follow official B201 link from https://fwith.co.kr/shop/list.php?ca_id=20 to seller product page",
+  "retrievalResult": "Official B201 product page and shipping table readable",
+  "sourcePageEvidence": {
+    "productName": "근조 3단 화환",
+    "productSKU": "B201",
+    "displayPriceKRW": 59000,
+    "shippingPayment": "주문시 결제",
+    "tableTitle": "배송정보 / 추가 배송비 안내",
+    "columnNames": [
+      "시/군/구",
+      "추가비용",
+      "읍/면/동"
+    ],
+    "rowContext": "강원",
+    "verbatimRelevantRow": "20,000원 | 태백시, 평창군, 횡성군 | -",
+    "rowScope": "횡성군",
+    "listedExceptions": "-",
+    "sourceLineRange": "product page visible text lines 147–155; matching row at 154",
+    "linkedSource": "https://fwith.co.kr/shop/item.php?it_id=B201"
+  },
+  "interpretationLimits": [
+    "Exact B201 seller table; NOT a guarantee of real-time fulfilment or final checkout total",
+    "Dash in 읍/면/동 column is the seller's displayed value, not evidence of all conceivable exceptions",
+    "Do not assign this fee to B206 or other SKUs",
+    "This JSON is a faithful text extract of the public seller source, not an image screenshot of the vendor webpage"
+  ],
+  "previousProvenance": {
+    "sourceCode": "scripts/build_county_funeral_trial_inputs.py",
+    "factLedger": "docs/v51-county-sku-shipping-facts-20261108.json",
+    "historicalRun": "42361620276 showed HTTP200 and B201 listed price/delivery-at-checkout but did not archive this full shipping table row"
+  }
+}
