@@ -32,7 +32,8 @@ def check_page(path, canonical_required):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     for name in ('inputs','official-archive','todayflower-artifact','todayflower-root','clinic-before','clinic-after'):
-        parser.add_argument('--'+name,type=Path,required=True)
+        parser.add_argument('--'+name,type=Path,required=name!='official-archive',
+                            **({'default': ROOT/'data/regions/v4_official_legal_codes_20261022.zip'} if name=='official-archive' else {}))
     args=parser.parse_args()
     require_isolated_paths([args.todayflower_root,args.clinic_before,args.clinic_after])
     manifest=json.loads((ROOT/'docs/v4-dependency-manifest.json').read_text())

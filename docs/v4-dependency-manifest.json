@@ -5,13 +5,13 @@
   "dependencies": [
     {
       "id": "skyquote-official-regions",
-      "repository": "joseungil-kr/site-factory-v4",
-      "ref": "97436e8f020f68d22cca8570b00bf567f6fe704f",
-      "path": "data/regions/sources/official-codes.zip",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "f85b9c0bebc67c16acf8ed5cfcd933a424390183",
+      "path": "data/regions/v4_official_legal_codes_20261022.zip",
       "size": 413481,
       "sha256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
       "evidence": ".github/workflows/skyquote-navermeta-minimal.yml",
-      "status": "binary-size-and-digest-verified; pinned-region-audit-reproduced",
+      "status": "V5 local copy byte-verified; runtime input no longer requires V4 fetch; legacy deploy unchanged",
       "v5Source": "e0d0fabc6aca320e21b29c81792b0132a5a6d478",
       "sourceFiles": [
         {
@@ -28,7 +28,13 @@
           "path": "sites/skyquote/official-upper-regions-20261022.json",
           "sha256": "2dca45d5095ed9266c7373a019925c8e5e0145d4d7803c53a45848e1d498d95d"
         }
-      ]
+      ],
+      "origin": {
+        "repository": "joseungil-kr/site-factory-v4",
+        "ref": "97436e8f020f68d22cca8570b00bf567f6fe704f",
+        "path": "data/regions/sources/official-codes.zip"
+      },
+      "runtimeLocalPath": "data/regions/v4_official_legal_codes_20261022.zip"
     },
     {
       "id": "todayflower-artifact",

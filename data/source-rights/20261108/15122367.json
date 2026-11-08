@@ -1,0 +1,20 @@
+{
+  "url": "https://www.data.go.kr/data/15122367/openapi.do",
+  "checkedAt": "2026-11-08T05:45:44.081170+00:00",
+  "status": 200,
+  "htmlSha256": "d345639f92278af4da971013d68fc283847052466b477d167cfd0d9c565e52f8",
+  "name": "보건복지부_보건·복지현황_전국 장례식장 현황",
+  "license": {
+    "name": "이용허락범위 제한 없음",
+    "url": "https://www.data.go.kr/ugs/selectPortalPolicyView.do",
+    "@type": "CreativeWork"
+  },
+  "distribution": [
+    {
+      "encodingFormat": "XML",
+      "contentUrl": "https://apis.data.go.kr/1352000/ODMS_DATA_04_1",
+      "@type": "DataDownload"
+    }
+  ],
+  "dateModified": "2026-04-09"
+}

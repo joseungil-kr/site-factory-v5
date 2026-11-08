@@ -1,0 +1,20 @@
+{
+  "url": "https://www.data.go.kr/data/15122366/openapi.do",
+  "checkedAt": "2026-11-08T05:45:44.417875+00:00",
+  "status": 200,
+  "htmlSha256": "eb10da0e65cb1bd861fffb4621451061863ee69c816ad381c27ddf99a1b2076a",
+  "name": "보건복지부_보건·복지현황_전국 자연장지시설 현황",
+  "license": {
+    "name": "이용허락범위 제한 없음",
+    "url": "https://www.data.go.kr/ugs/selectPortalPolicyView.do",
+    "@type": "CreativeWork"
+  },
+  "distribution": [
+    {
+      "encodingFormat": "XML",
+      "contentUrl": "https://apis.data.go.kr/1352000/ODMS_DATA_03_1",
+      "@type": "DataDownload"
+    }
+  ],
+  "dateModified": "2025-05-27"
+}

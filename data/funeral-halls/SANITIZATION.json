@@ -1,0 +1,51 @@
+{
+  "originalSHA256": "c195065efa2bfb686cd56984a86c3d0576a2f8241014515b98be05bd7f69c560",
+  "sanitizedSHA256": "10b9ce07ea1af16938403b494ea39328394f19767fadc79516afdeeb8ff966be",
+  "sanitizedBytes": 332696,
+  "changes": [
+    {
+      "part": "xl/worksheets/sheet2.xml",
+      "cell": "G8",
+      "matchedSubstrings": 2,
+      "columnRole": "homepage",
+      "action": "remove entire cell value pending review",
+      "originalValueStoredInPublicReport": false
+    },
+    {
+      "part": "xl/worksheets/sheet2.xml",
+      "cell": "G17",
+      "matchedSubstrings": 1,
+      "columnRole": "homepage",
+      "action": "remove entire cell value pending review",
+      "originalValueStoredInPublicReport": false
+    },
+    {
+      "part": "xl/worksheets/sheet2.xml",
+      "cell": "G24",
+      "matchedSubstrings": 1,
+      "columnRole": "homepage",
+      "action": "remove entire cell value pending review",
+      "originalValueStoredInPublicReport": false
+    },
+    {
+      "part": "xl/worksheets/sheet5.xml",
+      "cell": "G269",
+      "matchedSubstrings": 1,
+      "columnRole": "homepage",
+      "action": "remove entire cell value pending review",
+      "originalValueStoredInPublicReport": false
+    },
+    {
+      "part": "xl/worksheets/sheet6.xml",
+      "cell": "G1072",
+      "matchedSubstrings": 1,
+      "columnRole": "homepage",
+      "action": "remove entire cell value pending review",
+      "originalValueStoredInPublicReport": false
+    }
+  ],
+  "originalV4Unchanged": true,
+  "sameAsOriginal": false,
+  "licenseEvidence": "data/source-rights/20261108/*.json",
+  "rawBackup": "not uploaded; original remains at pinned V4 and local private working storage"
+}

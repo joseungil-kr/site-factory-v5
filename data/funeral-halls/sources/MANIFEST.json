@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "importedOn": "2026-10-22",
+  "scope": "Historical inputs only; current operating facts and regional completeness unverified",
+  "sources": [
+    {
+      "id": "detail-xlsx",
+      "path": "data/funeral-halls/sources/facilities.xlsx",
+      "sha256": "10b9ce07ea1af16938403b494ea39328394f19767fadc79516afdeeb8ff966be",
+      "sourceRepository": "flower-delivery",
+      "sourceRevision": "86ed0c14f36a025c36720860f1b3fa3209a7474d",
+      "sourcePath": "자료/전국장사시설_정리.xlsx",
+      "importedOn": "2026-10-22",
+      "originalCollectedAt": null,
+      "workingCopySha256": "10b9ce07ea1af16938403b494ea39328394f19767fadc79516afdeeb8ff966be",
+      "checkoutDifference": "V5 sanitized derivative: five homepage cells removed; not byte-identical original",
+      "reason": "Preserve institutional fields; unverified mobile-like homepage values removed before public V5 copy",
+      "originalSha256": "c195065efa2bfb686cd56984a86c3d0576a2f8241014515b98be05bd7f69c560"
+    },
+    {
+      "id": "legacy-csv",
+      "path": "data/funeral-halls/sources/legacy-facilities.csv",
+      "sha256": "bc085c0de54b22d649dea260602ef9a95639f46f3a549d26cb16558f7398bb1c",
+      "sourceRepository": "flower1st.com",
+      "sourceRevision": "7c0ed25f3d0fb67ffb4c6bcecfde3bd514bb1758",
+      "sourcePath": "flower1st.com/facilities.csv",
+      "importedOn": "2026-10-22",
+      "originalCollectedAt": null,
+      "workingCopySha256": "2e255796b89c935d2ac6f1972a315dc3b860e2e6405aaa3c31798c272e2f8c8d",
+      "checkoutDifference": "CRLF checkout only; data matches Git blob",
+      "reason": "Compare transformed legacy labels and normalized fields, not an independent operating-facts source."
+    }
+  ],
+  "v5Import": {
+    "date": "2026-11-08",
+    "kind": "sanitized derivative, not original-identical copy",
+    "rawWorkbookPublished": false,
+    "cellsRemoved": [
+      {
+        "part": "xl/worksheets/sheet2.xml",
+        "cell": "G8",
+        "matchedSubstrings": 2,
+        "columnRole": "homepage",
+        "action": "remove entire cell value pending review",
+        "originalValueStoredInPublicReport": false
+      },
+      {
+        "part": "xl/worksheets/sheet2.xml",
+        "cell": "G17",
+        "matchedSubstrings": 1,
+        "columnRole": "homepage",
+        "action": "remove entire cell value pending review",
+        "originalValueStoredInPublicReport": false
+      },
+      {
+        "part": "xl/worksheets/sheet2.xml",
+        "cell": "G24",
+        "matchedSubstrings": 1,
+        "columnRole": "homepage",
+        "action": "remove entire cell value pending review",
+        "originalValueStoredInPublicReport": false
+      },
+      {
+        "part": "xl/worksheets/sheet5.xml",
+        "cell": "G269",
+        "matchedSubstrings": 1,
+        "columnRole": "homepage",
+        "action": "remove entire cell value pending review",
+        "originalValueStoredInPublicReport": false
+      },
+      {
+        "part": "xl/worksheets/sheet6.xml",
+        "cell": "G1072",
+        "matchedSubstrings": 1,
+        "columnRole": "homepage",
+        "action": "remove entire cell value pending review",
+        "originalValueStoredInPublicReport": false
+      }
+    ]
+  }
+}

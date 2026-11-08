@@ -71,7 +71,7 @@ def verify_sources(inputs, dep):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--inputs', type=Path, required=True)
-    parser.add_argument('--official-archive', type=Path)
+    parser.add_argument('--official-archive', type=Path, default=ROOT/'data/regions/v4_official_legal_codes_20261022.zip')
     parser.add_argument('--todayflower-artifact', type=Path)
     args = parser.parse_args()
     manifest=json.loads((ROOT/'docs/v4-dependency-manifest.json').read_text())
