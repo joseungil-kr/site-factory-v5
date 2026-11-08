@@ -109,7 +109,7 @@ SOURCE_SHIPPING={}  # Seller B201 county fee applicability was not independently
 SELLER_NOTICE_SOURCE='https://fwith.co.kr/page/notice.php'
 RESTRICTED_COUNTY_PRODUCTS={'연천군':('obje',['B213']),'부안군':('obje',['B213']),
  '거창군':('obje',['B213']),'청도군':('rice',['B054']),
- '완도군':('rice',['B054']),'고령군':('basket',['CAT2090'])}
+ '완도군':('rice-basket',['B054']),'고령군':('basket',['CAT2090'])}
 SELLER_NOTICE_SHAPE={
  '연천군':'오브제',
  '부안군':'오브제',
@@ -281,11 +281,19 @@ def main():
     {'slot':'order','heading':'빈소로 보낼 정보','paragraph':'장례식장명과 빈소, 희망 날짜를 정해 해당 상품 주문 화면에 전달해 주세요.'},
     {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 해당 시설이 있는 주소를 지정해 주세요.'}],
    'faqs':[{'q':'배송 조건은 어디에서 확인하나요?','a':'B054 상품의 주문 화면에서 수령지에 적용되는 배송비와 주문 가능 여부를 확인할 수 있습니다.'}]},
+  'restricted-rice-basket':{
+   'productSkus':['B054'],
+   'introductions':['{county} 장례식장은 판매처 공지에서 쌀화환과 바구니를 반입 형태로 안내합니다. 쌀화환 10Kg 상품 또는 영정바구니 분류를 선택할 수 있습니다.'],
+   'sections':[
+    {'slot':'choice','heading':'쌀화환 또는 바구니','paragraph':'근조 쌀화환 10Kg B054의 표시가격은 90,000원입니다. 영정바구니는 판매처 분류에서 상품별 정보를 확인할 수 있습니다.'},
+    {'slot':'order','heading':'완도군 수령 정보','paragraph':'장례식장 이름과 빈소, 수령 날짜를 준비하고 원하는 형태를 판매처에 전달해 주세요.'},
+    {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}에 속한 읍·면은 {townships}입니다. 정확한 장례식장 주소를 확인해 주세요.'}],
+   'faqs':[{'q':'쌀화환 대신 영정바구니를 선택할 수 있나요?','a':'판매처 공지에는 완도군 장례식장에 쌀화환과 바구니가 안내됩니다. 선택할 상품은 해당 상품 분류와 장례식장의 반입 조건을 함께 확인할 수 있습니다.'}]},
   'restricted-basket':{
    'productSkus':['CAT2090'],
    'introductions':['{county} 모든 장례식장은 판매처 공지에서 영정바구니를 안내합니다. 근조 3단 상품 대신 영정바구니 목록을 확인해 보세요.'],
    'sections':[
-    {'slot':'choice','heading':'영정바구니 선택','paragraph':'판매처의 영정바구니 상품 분류에서 현재 취급 상품을 확인할 수 있습니다. 이 시험 원장에는 검증된 개별 영정바구니 SKU와 가격이 없습니다.'},
+    {'slot':'choice','heading':'영정바구니 선택','paragraph':'영정바구니 상품 분류에서는 취급 상품과 선택 가능한 규격을 확인할 수 있습니다. 해당 분류에서 원하는 상품을 선택해 보세요.'},
     {'slot':'order','heading':'시설과 빈소','paragraph':'장례식장명과 빈소를 정한 뒤 판매처에 영정바구니 주문 가능 여부를 확인해 주세요.'},
     {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 해당 시설의 상세 주소를 준비해 주세요.'}],
    'faqs':[{'q':'영정바구니 가격을 어디에서 확인하나요?','a':'판매처 영정바구니 상품 분류에서 상품을 선택한 뒤 가격과 접수 조건을 확인할 수 있습니다.'}]}
