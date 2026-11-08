@@ -501,6 +501,8 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertEqual(html.count('class="county-venue-notice"'),1)
                 self.assertIn('data-product-sku="B054"',html)
                 self.assertIn('https://fwith.co.kr/shop/item.php?it_id=B054',html)
+                self.assertEqual(html.count('90,000원'),1,
+                    'confirmed product price must be printed once in the card')
         # A purpose-scoped regression: the checker rejects a second copy of
         # the acceptance condition even when phrased outside the notice.
         for purpose in mapping.values():
@@ -508,6 +510,31 @@ class CountySelectedSkuContract(unittest.TestCase):
             pool['faqs'][0]['a']='판매처 공지에 따른 반입 형태를 다시 확인하세요.'
             with self.assertRaisesRegex(ValueError,'repeated'):
                 validate_restricted_ownership(purpose[0],pool)
+
+
+    def test_all_18_base_buyer_purposes_have_sku_cta_and_heading_contract(self):
+        from scripts.county_copy_pools import INTENTS
+        from scripts.build_county_trial_review_only import main as make, OUT
+        make()
+        expected={row[0] for row in INTENTS}
+        self.assertEqual(len(expected),18)
+        counties=[p for p in self.data['pages'] if p['pageType']=='county']
+        self.assertEqual({p['purpose'] for p in counties if p['purpose'] in expected},expected)
+        for purpose in sorted(expected):
+            page=next(p for p in counties if p['purpose']==purpose)
+            with self.subTest(purpose=purpose,page=page['number']):
+                result=assemble(page,self.plan['purposePools'],self.data['products'])
+                self.assertEqual(set(page['productSkus']),
+                    set(self.plan['purposePools'][purpose]['productSkus']))
+                self.assertEqual([x['slot'] for x in result['sections']],
+                    ['choice','order','ribbon','verified-townships'])
+                html=(OUT/(str(page['number'])+'.html')).read_text(encoding='utf-8')
+                self.assertIn(page['title'].split(' | ',1)[-1].split('·상품 주문')[0],html)
+                for sku in page['productSkus']:
+                    self.assertIn('data-product-sku="'+sku+'"',html)
+                    self.assertIn('https://fwith.co.kr/shop/item.php?it_id='+sku,html)
+                self.assertIn('noindex,nofollow',html)
+                self.assertNotIn('rel="canonical"',html)
 
 if __name__=='__main__':
     unittest.main(verbosity=2)
