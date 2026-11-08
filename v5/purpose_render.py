@@ -54,7 +54,9 @@ def assemble(page, pools, products, *, service=False):
     permitted = pool.get(field, [])
     selected = page.get(field, [])
     catalog = {p[key]: p for p in products}
-    if not selected or any(s not in permitted or s not in catalog for s in selected):
+    is_basket_only=(page.get('siteVariantPolicy')=='county-v51' and purpose=='restricted-basket'
+                    and selected==[] and permitted==[])
+    if (not selected and not is_basket_only) or any(s not in permitted or s not in catalog for s in selected):
         raise ConfigError(f'page {page["id"]} has selections outside its purpose pool')
     sections = pool.get('sections')
     faqs = pool.get('faqs')
@@ -82,23 +84,8 @@ def assemble(page, pools, products, *, service=False):
             'sections': resolved_sections,
             'faq': [{'q': _text(f.get('q'), page), 'a': _text(f.get('a'), page)}
                     for _,f in ordered_faq[:min(5,len(ordered_faq))]]}
-    # Seller-noticed ob-je venue restrictions override the generic budget
-    # narrative. Three-tier cards remain visible only as a comparison, never
-    # as a promise that these are permissible at the receiving facility.
-    venue_notice=page.get('sellerVenueNotice')
-    if (page.get('siteVariantPolicy')=='county-v51' and not service
-            and isinstance(venue_notice,dict)
-            and venue_notice.get('alternativeName')=='근조 2단 오브제'):
-        assembled['intro']=(page['county']+
-            ' 장례식장은 판매처 공지에 오브제 형태로 안내되어 있습니다. '
-            '먼저 반입 형태와 근조 2단 오브제 판매처 상품을 확인한 뒤 주문해 주세요.')
-        for section in assembled['sections']:
-            if section.get('slot')=='choice':
-                section['heading']='오브제 반입과 상품 선택'
-                section['paragraph']=(
-                    '아래 '+', '.join(selected)+'은 기존 3단 상품의 가격 비교용입니다. '
-                    '해당 장례식장의 반입 형태는 판매처 공지를 우선 확인하고, '
-                    '근조 2단 오브제 상품은 위 별도 상세 링크에서 살펴보세요.')
+    # County-specific purpose pools are selected from verified acceptance rules
+    # before assembly; never override buyer text after SKU selection.
     if page.get('siteVariantPolicy')=='county-v51' and not service:
         # A build cannot silently show B205 or 109,000원 on a page with only
         # B201/B202 cards. Compare all rendered customer-facing text.
@@ -282,13 +269,7 @@ def render(site,page,pages,products,links,pools,region_index=None):
     if venue_notice:
         if not isinstance(venue_notice,dict) or venue_notice.get('sourceUrl')!='https://fwith.co.kr/page/notice.php':
             raise ConfigError('unapproved county venue notice evidence')
-        alternative=venue_notice.get('alternativeUrl')
         alternative_html=''
-        if alternative:
-            if alternative!='https://fwith.co.kr/shop/item.php?it_id=B213' or venue_notice.get('alternativeName')!='근조 2단 오브제':
-                raise ConfigError('unapproved seller alternative product')
-            alternative_html=(' <a href="'+markup.h(alternative)+'" target="_blank" rel="noopener noreferrer">'
-                +'근조 2단 오브제 상품 보기</a>')
         venue_notice_html=('<aside class="county-venue-notice" role="note"><strong>장례식장 반입 안내</strong> '
             +markup.h(venue_notice['text'])+' <a href="'+markup.h(venue_notice['sourceUrl'])
             +'" target="_blank" rel="noopener noreferrer">판매처 공지 확인</a>'
@@ -296,8 +277,14 @@ def render(site,page,pages,products,links,pools,region_index=None):
     return (head+markup.header(site)+'<main id="main" class="container document-page">'
             +breadcrumb+'<header><h1>'+markup.h(page['title'])+'</h1><p>'+markup.h(page['intro'])+'</p></header>'
             +(regional_links if is_county_trial else '')+venue_notice_html+
-            '<section class="recommendations"><h2>상품과 가격</h2><div class="product-list">'+
-            products_html(products,page['productSkus'],site.get('id'))+'</div></section>'+markup.article_body(page)+
+            (('<section class="recommendations"><h2>상품과 가격</h2><div class="product-list">'+
+            products_html(products,page['productSkus'],site.get('id'))+'</div></section>')
+             if page['productSkus'] else
+             ('<section class="recommendations"><h2>영정바구니 상품 찾기</h2><p>'
+              '판매처 영정바구니 분류에서 현재 상품과 가격을 확인할 수 있습니다.</p>'
+              '<a class="button" href="https://fwith.co.kr/shop/list.php?ca_id=20a0" '
+              'target="_blank" rel="noopener noreferrer">영정바구니 상품 목록 보기</a></section>'))+
+            markup.article_body(page)+
             '<section class="faq"><h2>자주 묻는 질문</h2>'+markup.faq_markup(page)+'</section>'+
             ('' if is_county_trial else regional_links)+markup.phone_buttons(site)+markup.render_pagination(pages,page['number'])+
             '</main>'+(
