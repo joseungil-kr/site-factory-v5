@@ -58,6 +58,34 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertGreater(int(p['townshipCount']),0)
                 if len(selected)<4:
                     self.assertFalse(any(x in text for x in ('네 상품만 비교한','같은 등급으로 간주하지 않습니다')))
+    def test_all_12_province_hubs_have_distinct_information_owners(self):
+        # Source-level assertions: the navigation owns child county names;
+        # introductory text owns count; article owns a grounded buying task.
+        # SKU/card prices do not belong in receiving/address sections.
+        provinces=[p for p in self.data['pages'] if p['pageType']=='province']
+        self.assertEqual(len(provinces),12)
+        for p in provinces:
+            with self.subTest(province=p['region']):
+                a=assemble(p,self.plan['purposePools'],self.data['products'])
+                self.assertEqual([x['slot'] for x in a['sections']],['choice','order'])
+                body=' '.join(x['heading']+' '+x['paragraph'] for x in a['sections'])
+                self.assertFalse(product_skus_in_text(body),
+                    'province body must not recite product SKUs instead of localized buying information')
+                self.assertFalse(listed_prices_in_text(body),
+                    'province body must not recite card prices or price differences')
+                children=[x for x in self.data['pages'] if x.get('parentPageId')==p['id']]
+                joined='·'.join(x['county'] for x in children)
+                self.assertNotIn(joined,body)
+                self.assertIn(str(len(children))+'곳',a['intro'])
+                self.assertNotIn(joined,a['intro'])
+        for number in (2,7):
+            p=next(x for x in provinces if x['number']==number)
+            a=assemble(p,self.plan['purposePools'],self.data['products'])
+            content=' '.join([a['intro']]+[x['paragraph'] for x in a['sections']])
+            self.assertNotIn('B201',content)
+            self.assertNotIn('40,000원',content)
+            self.assertNotIn('연천군·가평군·양평군',content)
+
     def test_buyer_intent_headline_and_early_region_navigation(self):
         # Inspect generated HTML instead of just trusting the page specification.
         from scripts.build_county_trial_review_only import main as render_review, OUT
