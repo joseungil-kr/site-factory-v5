@@ -64,7 +64,11 @@
       "checkedOn": "2026-11-08",
       "sourceRow": "강원 / 20,000원 / 태백시, 평창군, 횡성군 / -",
       "exceptionsListed": [],
-      "knownLimitation": "B201 only; do not infer B206 shipping fee, delivery availability or final order amount"
+      "knownLimitation": "B201 only; do not infer B206 shipping fee, delivery availability or final order amount",
+      "sourceExtractFile": "docs/evidence/v51-B201-hoengseong-shipping-source-extract-20261108.json",
+      "independentSellerPageReadbackOn": "2026-11-08",
+      "originalImageSnapshot": false,
+      "explanation": "Seller product page opened by following B201 catalog link; short shipping-table text row archived. Not full seller HTML or screenshot."
     }
   ],
   "rules": [
