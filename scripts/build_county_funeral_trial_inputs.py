@@ -109,7 +109,10 @@ def dump(path,obj):
 def pool(title,intro,choice,delivery,extra,faq):
  # Each FAQ answer must address the question's buying intent; the previous
  # shared address-only answer was irrelevant for budget and ribbon questions.
- if '예산' in title:
+ if '배송비' in faq:
+  answer=('받는 군과 장례식장의 정확한 주소를 정한 뒤 판매처에서 선택한 상품의 배송비 안내를 확인하세요. '
+          '해당 주문에 적용되는 배송비와 최종 금액은 주문 화면에서 확인할 수 있습니다.')
+ elif '예산' in title:
   answer=('상품 카드에서 예산에 맞는 가격대를 고르고, 원하는 상품번호의 주문 링크를 열어 주세요. '
           '받는 장례식장 주소와 희망일을 입력하면 판매처의 실제 결제금액을 확인할 수 있습니다.')
  elif '리본' in title:
