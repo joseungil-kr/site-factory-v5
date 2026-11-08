@@ -28,7 +28,7 @@
 | T1 데이터 복구 | 공식 ZIP·Library 복구 | 크기/hash·파일5087개 일치 | 직접 및 독립 담당 PASS |
 | T2 격리 재현 | 이전 별도 출력의 변경범위 검사 | Today RSS1추가, Clinic RSS3변경, 기존HTML 전부 동일 | 이번 읽기전용 재검사 PASS |
 | T3 무배포 스모크 | 문서8개·RSS4개 | main/h1/canonical 의도, full-content50개, 임의날짜 없음 | PASS |
-| T4 깨끗한 환경 재연습 | 새 임시 디렉터리에 pinned 입력 재확보·복구 | 기존 디렉터리/운영본 없이 T0–T3 재현 | 다음 시험 |
+| T4 깨끗한 환경 재연습 | 새 임시 디렉터리에 pinned 입력 재확보·복구 | 기존 디렉터리/운영본 없이 T0–T3 재현 | 후속 T4 실측 PASS (동일 머신 새 디렉터리) |
 | T5 비공개 HTTP/복구 | 명시된 승인 범위의 private endpoint | owner200·비인가401/403·실제 복구 | 현재 범위 밖, 미확인 |
 | T6 실제 운영 전환 | 별도 사용자 배포 지시 후 | credential/route/rollback/live readback | 금지, 실행하지 않음 |
 
@@ -54,3 +54,13 @@ python -m unittest discover -s tests -p 'test_v5_test_readiness.py' -v
 - 원격 ref/file 부재, Library 권한/만료, digest 차이, 파일 수/변경범위 차이가 있으면 해당 단계 실패로 기록한다. 원본을 추정·재생성해서 부족분을 덮지 않는다.
 - 인증·권한 설정 변경은 이번 준비에서 필요하지 않았고 실행하지 않았다.
 - 실제 private endpoint와 배포 credential/rollback 조건은 아직 미확인이다. 여기에는 사용자 조치 없이 가능한 정적 시험을 먼저 끝낸다.
+
+
+## T4 후속 실행 결과 (2026-11-08)
+[실행 영수증](V5_T4_CLEAN_RESTORE_RESULT_20261108.json): 같은 클라우드 머신에 존재하지 않던 새 작업 디렉터리를 만들고, 기존 입력·출력 디렉터리를 읽지 않고 GitHub 고정 ref30파일을 새로 확보했다. Library도 같은 pinned ID로 새 디렉터리에 정식 복구했다. 새 OS/새 머신을 준비한 시험은 아니다.
+
+- 원격 새 입력 및 Library 원본 크기/hash 검증 후 고정 원본 코드 실행. 코드 실행 subprocess에는 PATH·PYTHONIOENCODING·PYTHONDONTWRITEBYTECODE만 전달했으며 CF/GitHub 인증환경을 전달하지 않았다.
+- 공식 지역감사 통과. Todayflower RSS50 생성 후 원본5087파일 불변. Clinic baseline15906 HTML/15925자산 재현 후 복제한 격리 후보에만 RSS patch 적용: RSS3개만 변경, HTML15906개 불변.
+- Clinic 원본 RSS5테스트, readiness40입력/8HTML/4RSS 검사 통과. 배포·네트워크 호출 기능이 없는 검사기로 비교했다.
+- T4는 해당 입력/산출물의 깨끗한 디렉터리 복구·재현 시험에서 PASS다. 실제 private HTTP 접근보호와 운영 배포·rollback은 여전히 미검증·미실행이며 기존 운영본은 그대로다.
+- 새 입력 확보에 인증/권한 변경이나 차단 우회가 필요하지 않았다. 추가 사용자 정보 없이 T4를 마쳤다.
