@@ -296,18 +296,22 @@ def expanded_pools(base):
                 if len(skus)!=4 and any(word in text for word in ('네 상품','네 가지','네 개','4개')):
                     continue
                 pool['sections'].append(item)
-        # Official administrative fact genuinely differs by county and helps the
-        # visitor distinguish the exact receiving 읍/면 for delivery-fee questions.
-        pool['sections'].append({
-            'slot':'verified-townships',
-            'heading':'{county} 수령지의 읍·면 찾기',
-            'paragraph':'{county}의 읍·면 {townshipCount}곳은 {townships}입니다. 받는 장례식장의 읍·면을 찾아 상세 주소를 입력해 주세요. 실제 배송 가능 여부와 배송비는 상품 주문 화면에서 확인할 수 있습니다.'
-        })
-        # These two intent sections have a different purpose from the introduction.
-        pool['sections'].extend([
-            {'slot':'decision-context','heading':heading,'paragraph':paragraph},
-            {'slot':'decision-action','heading':other_title,'paragraph':other_paragraph}
-        ])
+        # The old renderer displayed eight simultaneous sections, often saying
+        # "choose a product / check delivery fee / final total" four times.
+        # Compose only FOUR buyer tasks: product decision, receipt handoff,
+        # ribbon identity and official 읍/면 lookup. The decision-specific
+        # paragraph replaces the generic price list already visible in cards.
+        # This is intentional CONTENT deletion, not a banned-phrase rewrite.
+        pool['sections']=[
+            {'slot':'choice','heading':heading,'paragraph':paragraph},
+            *[item for item in pool['sections'] if item['slot'] in ('order','ribbon')],
+            {'slot':'verified-townships',
+             'heading':'{county}의 읍·면',
+             'paragraph':'{county}의 읍·면 {townshipCount}곳: {townships}. 받는 장례식장의 소재지를 목록에서 찾아 정확한 시설 주소와 빈소를 선택해 주세요.'}
+        ]
+        # Keep the FAQ focused on the one concern specific to this purchase
+        # intent; the generic "where to buy" FAQ only restated the card button.
+        pool['faqs']=[pool['faqs'][-1]]
         for item in pool['sections']:
             text=item['heading']+' '+item['paragraph']
             assert product_skus_in_text(text).issubset(selected),(name,text)
