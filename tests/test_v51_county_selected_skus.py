@@ -73,7 +73,9 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertGreater(products,nav, 'Regional navigation must precede the long product/FAQ sections')
                 self.assertEqual(html.count('<nav aria-label="관련 지역">'),1)
                 if p['pageType']=='county':
-                    if p['purpose'] in headings:
+                    if p.get('verifiedSkuShipping') and p['county']=='의성군':
+                        self.assertIn('B205 추가 배송비',p['title'])
+                    elif p['purpose'] in headings:
                         self.assertIn(headings[p['purpose']],p['title'])
                     else:
                         self.assertIn('반입 안내',p['title'])
@@ -116,6 +118,41 @@ class CountySelectedSkuContract(unittest.TestCase):
                 for sku in ('B201','B202','B205','B206'):
                     self.assertNotIn('data-product-sku="'+sku+'"',html)
                 self.assertIn('근조 2단 오브제',p['title']+html)
+
+    def test_verified_shipping_is_not_reused_across_skus_or_counties(self):
+        from scripts.build_county_trial_review_only import main as make, OUT
+        make()
+        pages={p['county']:p for p in self.data['pages'] if p['pageType']=='county'}
+        checks=[('연천군','B213',37),('의성군','B205',55)]
+        for county,sku,number in checks:
+            p=pages[county]
+            facts=p['verifiedSkuShipping']
+            self.assertEqual(len(facts),1)
+            fact=facts[0]
+            self.assertEqual((fact['scope'],fact['sku'],fact['amount'],fact['checkedOn']),
+                             (county,sku,10000,'2026-11-08'))
+            self.assertEqual(fact['source'],
+                             'https://fwith.co.kr/shop/item.php?it_id='+sku)
+            html=(OUT/f'{number}.html').read_text(encoding='utf-8')
+            self.assertIn('10,000원',html)
+            self.assertIn('data-product-sku="'+sku+'"',html)
+        for p in self.data['pages']:
+            if p['pageType']=='county' and p['county'] not in ('연천군','의성군'):
+                self.assertFalse(p['verifiedSkuShipping'],p['county'])
+    def test_uiseong_facts_instead_of_price_list(self):
+        from scripts.build_county_trial_review_only import main as make, OUT
+        make()
+        p=next(x for x in self.data['pages'] if x.get('county')=='의성군')
+        a=assemble(p,self.plan['purposePools'],self.data['products'])
+        self.assertIn('B205 추가 배송비',p['title'])
+        choice=next(s for s in a['sections'] if s['slot']=='choice')
+        delivery=next(s for s in a['sections'] if s['slot']=='order')
+        self.assertIn('재생 꽃 미사용',choice['paragraph'])
+        self.assertIn('10,000원',delivery['paragraph'])
+        self.assertEqual(delivery['paragraph'].count('10,000원'),1)
+        self.assertNotIn('B201·B202·B205·B206',choice['paragraph'])
+        html=(OUT/f"{p['number']}.html").read_text(encoding='utf-8')
+        self.assertIn('10,000원',html)
 
     def test_seller_notice_is_evidence_bound_and_precedes_products(self):
         from scripts.build_county_trial_review_only import main as render_review, OUT
