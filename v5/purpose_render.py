@@ -110,7 +110,7 @@ def assemble(page, pools, products, *, service=False):
             sku=fact.get('sku')
             if (sku not in selected or fact.get('scope')!=page.get('county')
                     or fact.get('source')!='https://fwith.co.kr/shop/item.php?it_id='+sku
-                    or not re.fullmatch(r'\\d{4}-\\d{2}-\\d{2}',str(fact.get('checkedOn','')))
+                    or not re.fullmatch(r'\d{4}-\d{2}-\d{2}',str(fact.get('checkedOn','')))
                     or type(fact.get('amount')) is not int or fact['amount']<0):
                 raise ConfigError('county-v51 unverified SKU/county shipping amount')
             allowed_amounts.add(format(fact['amount'],',')+'원')
