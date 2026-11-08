@@ -265,9 +265,17 @@ def render(site,page,pages,products,links,pools,region_index=None):
     if venue_notice:
         if not isinstance(venue_notice,dict) or venue_notice.get('sourceUrl')!='https://fwith.co.kr/page/notice.php':
             raise ConfigError('unapproved county venue notice evidence')
+        alternative=venue_notice.get('alternativeUrl')
+        alternative_html=''
+        if alternative:
+            if alternative!='https://fwith.co.kr/shop/item.php?it_id=B213' or venue_notice.get('alternativeName')!='근조 2단 오브제':
+                raise ConfigError('unapproved seller alternative product')
+            alternative_html=(' <a href="'+markup.h(alternative)+'" target="_blank" rel="noopener noreferrer">'
+                +'근조 2단 오브제 상품 보기</a>')
         venue_notice_html=('<aside class="county-venue-notice" role="note"><strong>장례식장 반입 안내</strong> '
             +markup.h(venue_notice['text'])+' <a href="'+markup.h(venue_notice['sourceUrl'])
-            +'" target="_blank" rel="noopener noreferrer">판매처 공지 확인</a></aside>')
+            +'" target="_blank" rel="noopener noreferrer">판매처 공지 확인</a>'
+            +alternative_html+'</aside>')
     return (head+markup.header(site)+'<main id="main" class="container document-page">'
             +breadcrumb+'<header><h1>'+markup.h(page['title'])+'</h1><p>'+markup.h(page['intro'])+'</p></header>'
             +(regional_links if is_county_trial else '')+venue_notice_html+
