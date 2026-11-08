@@ -72,6 +72,30 @@ class CountySelectedSkuContract(unittest.TestCase):
                     self.assertIn(p['county'],p['title'])
                     self.assertIn(p['title'],html)
 
+    def test_seller_notice_is_evidence_bound_and_precedes_products(self):
+        from scripts.build_county_trial_review_only import main as render_review, OUT
+        render_review()
+        seller_notice='https://fwith.co.kr/page/notice.php'
+        affected={'연천군':'오브제','부안군':'오브제','거창군':'오브제',
+                  '고령군':'영정바구니','청도군':'쌀화환',
+                  '완도군':'쌀화환 또는 꽃바구니'}
+        for p in self.data['pages']:
+            if p['pageType']!='county':
+                continue
+            filename=str(p['number'])+'.html'
+            html=(OUT/filename).read_text(encoding='utf-8')
+            n=p.get('sellerVenueNotice')
+            with self.subTest(region=p['region']):
+                if p['county'] in affected:
+                    self.assertIsInstance(n,dict)
+                    self.assertIn(affected[p['county']],n['text'])
+                    self.assertEqual(n['sourceUrl'],seller_notice)
+                    self.assertIn('판매처 공지 확인',html)
+                    self.assertLess(html.find('class="county-venue-notice"'),
+                                    html.find('class="recommendations"'))
+                else:
+                    self.assertFalse(n)
+                    self.assertNotIn('class="county-venue-notice"',html)
     def test_real_product_card_headings_and_current_prices(self):
         from scripts.build_county_trial_review_only import main as render_review, OUT
         render_review()
