@@ -1,0 +1,24 @@
+{
+  "source": "site-factory-v5 안산시 기존 검증 지역 원장; 전국 동 목록 확장 전 대표본",
+  "regions": [
+    {
+      "name": "전국",
+      "level": "nation"
+    },
+    {
+      "name": "경기도 안산시",
+      "code": "4127000000",
+      "level": "municipality"
+    },
+    {
+      "name": "경기도 안산시 상록구",
+      "code": "4127100000",
+      "level": "ward"
+    },
+    {
+      "name": "경기도 안산시 단원구",
+      "code": "4127300000",
+      "level": "ward"
+    }
+  ]
+}
