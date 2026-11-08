@@ -26,6 +26,7 @@ PRODUCTS=[
  ('B206','근조 특특대 3단 화환',149000),
  ('B213','근조 2단 오브제',120000),
  ('B054','근조 쌀화환 10Kg',90000),
+ ('B211','근조 영정바구니',59000),
 ]
 PURPOSES=['budget','venue','ribbon']
 PROVINCE_PURCHASE_FOCUSES={
@@ -60,7 +61,7 @@ VERIFIED_SHIPPING_FACTS={
 SELLER_NOTICE_SOURCE='https://fwith.co.kr/page/notice.php'
 RESTRICTED_COUNTY_PRODUCTS={'연천군':('obje',['B213']),'부안군':('obje',['B213']),
  '거창군':('obje',['B213']),'청도군':('rice',['B054']),
- '완도군':('rice-basket',['B054']),'고령군':('basket',['CAT2090'])}
+ '완도군':('rice-basket',['B054']),'고령군':('basket',['B211'])}
 SELLER_NOTICE_SHAPE={
  '연천군':'오브제',
  '부안군':'오브제',
@@ -246,10 +247,10 @@ def main():
     {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}에 속한 읍·면은 {townships}입니다. 정확한 장례식장 주소를 확인해 주세요.'}],
    'faqs':[{'q':'쌀화환 대신 영정바구니를 선택할 수 있나요?','a':'판매처 공지에는 완도군 장례식장에 쌀화환과 바구니가 안내됩니다. 선택할 상품은 해당 상품 분류와 장례식장의 반입 조건을 함께 확인할 수 있습니다.'}]},
   'restricted-basket':{
-   'productSkus':['CAT2090'],
-   'introductions':['{county} 장례식장으로 보내는 영정바구니의 조의 문구와 수령지 정보를 정리했습니다.'],
+   'productSkus':['B211'],
+   'introductions':['{county} 장례식장에 보낼 영정바구니 상품의 판매처 표시가격과 수령지 정보를 정리했습니다.'],
    'sections':[
-    {'slot':'choice','heading':'조의 문구 준비','paragraph':'리본에 쓸 조의 표현으로 “삼가 고인의 명복을 빕니다”나 “깊은 애도를 표합니다”를 고려할 수 있습니다. 보내는 분의 이름은 별도로 준비해 주세요.'},
+    {'slot':'choice','heading':'영정바구니 상품 정보','paragraph':'꽃이랑 근조화환 상품 목록에는 B211이 근조 영정바구니로 등록되어 있고 표시가격은 59,000원입니다. 개별 상품 상세 링크로 이동할 수 있습니다.'},
     {'slot':'order','heading':'시설과 빈소','paragraph':'장례식장명과 빈소를 정한 뒤 판매처에 영정바구니 주문 가능 여부를 확인해 주세요.'},
     {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 해당 시설의 상세 주소를 준비해 주세요.'}],
    'faqs':[]}
@@ -360,9 +361,9 @@ def main():
  products=[]
  for sku,name,price in PRODUCTS:
   products.append({'sku':sku,'name':name,'referencePrice':price,
-    'referenceDate':'2026-11-07','priceConfirmed':True,
-    'priceEvidence':('2026-11-08 seller product or category listing readback, source https://fwith.co.kr/shop/item.php?it_id='+sku if sku in ('B213','B054') else '2026-11-07 09:53 UTC direct read-only HTTP200 SKU and listed price and 주문시 배송비 결제; source run 42361620276'),
-    'priceCheckedOn':('2026-11-08' if sku in ('B213','B054') else '2026-11-07'),'orderUrl':'https://fwith.co.kr/shop/item.php?it_id='+sku,
+    'referenceDate':('2026-11-08' if sku in ('B213','B054','B211') else '2026-11-07'),'priceConfirmed':True,
+    'priceEvidence':('2026-11-08 seller category list https://fwith.co.kr/shop/list.php?ca_id=20 B211 direct item listing' if sku=='B211' else '2026-11-08 seller product or category listing readback, source https://fwith.co.kr/shop/item.php?it_id='+sku if sku in ('B213','B054') else '2026-11-07 09:53 UTC direct read-only HTTP200 SKU and listed price and 주문시 배송비 결제; source run 42361620276'),
+    'priceCheckedOn':('2026-11-08' if sku in ('B213','B054','B211') else '2026-11-07'),'orderUrl':'https://fwith.co.kr/shop/item.php?it_id='+sku,
     'verifiedLive':False,'imageUseApproved':False,
     'verifiedSource':True})
  products.append({'sku':'CAT2090','name':'영정바구니 상품 분류',
