@@ -219,7 +219,7 @@ def main():
   pages.append({'id':'county-'+c['code'],'number':num,'region':c['fullName'],
    'county':c['name'],'province':p['fullName'],'parentRegion':p['fullName'],
    'parentPageId':'province-'+p['code'],'purpose':purpose,
-   'title':c['name']+' 근조화환 | '+purpose_heading+('·반입 안내' if restricted else '·상품 주문'),
+   'title':(c['name']+' 근조화환 | B205 추가 배송비와 상품 주문' if c['name']=='의성군' else c['name']+' 근조화환 | '+purpose_heading+('·반입 안내' if restricted else '·상품 주문')),
    'productSkus':list(restricted[1]) if restricted else skus_for(purpose),
    'intro':c['name']+' 장례식장에 보내는 근조상품의 반입 형태와 주문 정보를 안내합니다.' if restricted else c['name']+' 근조화환 상품 가격과 수령지 안내.',
    'sections':[{'heading':'상품 선택','paragraph':'같은 상품 유형의 표시가를 확인할 수 있습니다.'},
