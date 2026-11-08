@@ -77,6 +77,43 @@ class CountySelectedSkuContract(unittest.TestCase):
                     self.assertIn(p['county'],p['title'])
                     self.assertIn(p['title'],html)
 
+    def test_headline_promise_and_semantic_duplication_regressions(self):
+        # This is a text-overlap warning gate, NOT a substitute for editorial reading.
+        from difflib import SequenceMatcher
+        from scripts.build_county_trial_review_only import main as make, OUT
+        make()
+        pages={p['number']:p for p in self.data['pages']}
+        for n in (1,14,26,37,95):
+            p=pages[n]
+            a=assemble(p,self.plan['purposePools'],self.data['products'])
+            html=(OUT/('index.html' if n==1 else str(n)+'.html')).read_text(encoding='utf-8')
+            blocks=[a['intro']]+[s['paragraph'] for s in a['sections']]+[f['a'] for f in a['faq']]
+            for i,left in enumerate(blocks):
+                for right in blocks[i+1:]:
+                    overlap=SequenceMatcher(None,left,right,autojunk=False).ratio()
+                    self.assertLess(overlap,0.85,(n,'nearly duplicated buyer information',round(overlap,3)))
+            self.assertIn(p['title'],html)
+            if n==1:
+                self.assertNotIn('단정하지 말고',html)
+                self.assertIn('근조 특대 3단',html)
+            elif n==14:
+                self.assertIn('같은 가격의 상품번호 확인',p['title'])
+                self.assertIn('근조 3단 화환',a['sections'][0]['paragraph'])
+                self.assertIn('근조화환 B202',a['sections'][0]['paragraph'])
+                self.assertIn('3단 화환을 받을 수 있나요?',a['faq'][0]['q'])
+            elif n==26:
+                self.assertIn('문구 예시',a['intro'])
+                ribbon=next(s for s in a['sections'] if s['slot']=='ribbon')
+                self.assertTrue(any(x in ribbon['paragraph'] for x in
+                    ('삼가 고인의 명복','깊은 애도','謹弔')),(n,ribbon))
+                self.assertIn('주문한 뒤',a['faq'][0]['q'])
+            elif n in (37,95):
+                self.assertEqual(p['productSkus'],['B213'])
+                self.assertIn('data-product-sku="B213"',html)
+                for sku in ('B201','B202','B205','B206'):
+                    self.assertNotIn('data-product-sku="'+sku+'"',html)
+                self.assertIn('근조 2단 오브제',p['title']+html)
+
     def test_seller_notice_is_evidence_bound_and_precedes_products(self):
         from scripts.build_county_trial_review_only import main as render_review, OUT
         render_review()
