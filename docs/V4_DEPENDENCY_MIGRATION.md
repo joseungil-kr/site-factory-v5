@@ -9,10 +9,10 @@ V4 `data/regions/sources/official-codes.zip` 길이413481과 SHA256을 검사한
 V4 `ops/v5-isolated-staging-20261024`의 해당 workflow 수정 push 자체가 배포 trigger다. **이 파일을 복사해 활성 workflow로 추가하거나 원본을 수정하지 않는다.**
 
 확정 hash: `44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd`.
-이 hash는 workflow 원문에 적힌 기대값을 확인한 것이며, 이번 단계에서 ZIP 바이너리 실물을 읽어 검증했다는 뜻이 아니다.
+후속 비배포 재현 단계에서 GitHub fetch_file(base64)의 고정 ref 원본을 읽어 ZIP 실물 길이/hash를 확인했다. 고정 V5 원본 감사 스크립트 실행도 통과했다.
 V5가 독립 배포 가능하다는 결론도 아니다.
 
-## 함께 남은 경로 (관리자 조사 보고)
+## 함께 남은 경로 (후속 단계에서 workflow 원문 직접 확인)
 - Todayflower RSS: V5 고정 소스 `0ca5705aa12950da571f089b2d4ac7256111f77e` 및 artifact13036248347 의존. artifact 보존기간/실물 해시/복원성 검증 전 이관 완료 불가.
 - Clinic RSS: V5 baseline `32484f02e3c12e6bfcf057702041b70f66fdafe5` + patch `3ae081242743fb8d8bbdd498a44e3855782752ad`.
 - V4 ops branch 조사 HEAD `ce4051221fc4c12e2c9c051a109d81a2b224a70b`. main만 조사하면 이 의존성을 놓친다.
@@ -30,3 +30,14 @@ V5가 독립 배포 가능하다는 결론도 아니다.
 `python scripts/check_v5_integration.py`는 문서 링크/원장/manifest를 읽기 전용 검사한다.
 `python scripts/check_v5_integration.py --official-archive /approved/path/official-codes.zip`는 실물이 있으면 길이/hash만 검사한다.
 네트워크 다운로드·비밀키 접근·배포·변경 기능이 없다. ZIP 옵션 없이 통과한 결과는 데이터 이관 완료가 아니다.
+
+
+## 2026-11-08 비배포 독립 입력 검증 결과
+- SkyQuote: V4 ZIP 실물 413481 bytes, 고정 SHA256 일치. V5 e0d0fabc 원본 감사 코드와 지역 원장으로 53403행·활성20560·읍면동4632·상위284 및 부모 매핑4632 재현. 서비스 제공 범위 검증은 아니다.
+- Todayflower: 올바른 V5 저장소 artifact13036248347을 공식 다운로드 도구로 수신. 84218864 bytes, 고정 digest 일치, 5070 콘텐츠 문서의 manifest5087파일 해시 전부 확인. ZIP은 읽기만 했으며 해제·재생성·배포하지 않았다. 원래 run41185803963. 추가 RSS 생성 소스01563363도 workflow가 참조하므로 manifest에 기록했다. 해당 RSS 생성 동작은 이번 재현 범위에서 제외한다.
+- Clinic: baseline32484f02와 patch3ae08124의 실제 build/patch/RSS source4개를 읽고 SHA256 고정. 패치 ref의 test_clinic_rss_feed.py 5개 테스트 통과. 15906 HTML 전체 재생성이나 운영 적용은 하지 않았다.
+- 실패/복구 기록: generic fetch는 binary UTF-8 제한400 → 문서화된 base64 파일 읽기 성공. 잘못된 V4 저장소 artifact 조회404 → workflow에서 실제 소유 V5를 확인하여 정상 조회. 파일 전송 도구32MiB 한도 → 동일 도구가 제공한 공식 서명 URL로 수신 성공. 인증·권한 거절이나 보안 우회는 없었다.
+
+실측 결과는 [JSON 보고서](V4_DEPENDENCY_REPRODUCTION_20261108.json), 소스 ref/path/hash는 [manifest](v4-dependency-manifest.json) 참조.
+재검사: `python scripts/verify_v4_dependency_inputs.py --inputs /approved/pinned-inputs --official-archive /approved/official-codes.zip --todayflower-artifact /approved/todayflower.zip`.
+입력 디렉터리는 manifest의 localPath 구조를 사용하고 각 파일은 지정 repository/ref/path로 확보한다. 검사기는 네트워크·추출·쓰기·사이트 빌드·배포 기능이 없다. 원본 ZIP/artifact는 이번 커밋에 올리지 않았다. 지속 보관·V5 배포경로 전환·완전 독립 복구는 별도 미완료다.

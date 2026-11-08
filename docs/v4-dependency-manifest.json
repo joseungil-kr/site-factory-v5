@@ -11,8 +11,72 @@
       "size": 413481,
       "sha256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
       "evidence": ".github/workflows/skyquote-navermeta-minimal.yml",
-      "status": "expected-digest-read-from-workflow; binary-not-verified",
-      "v5Source": "e0d0fabc6aca320e21b29c81792b0132a5a6d478"
+      "status": "binary-size-and-digest-verified; pinned-region-audit-reproduced",
+      "v5Source": "e0d0fabc6aca320e21b29c81792b0132a5a6d478",
+      "sourceFiles": [
+        {
+          "localPath": "skyquote/scripts/skyquote_audit_official.py",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "e0d0fabc6aca320e21b29c81792b0132a5a6d478",
+          "path": "scripts/skyquote_audit_official.py",
+          "sha256": "8e8780f98a037b2069b6ab1ed6fe359915aa994f9654e16d0c4172d116098772"
+        },
+        {
+          "localPath": "skyquote/sites/skyquote/official-upper-regions-20261022.json",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "e0d0fabc6aca320e21b29c81792b0132a5a6d478",
+          "path": "sites/skyquote/official-upper-regions-20261022.json",
+          "sha256": "2dca45d5095ed9266c7373a019925c8e5e0145d4d7803c53a45848e1d498d95d"
+        }
+      ]
+    },
+    {
+      "id": "todayflower-artifact",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "artifactId": 13036248347,
+      "originalRun": 41185803963,
+      "sha256": "16b52597fe77b0b4311ea21ad5daf6c5193af94346f8dc8df9834e676003a180",
+      "rssGeneratorRef": "01563363af7c7b968f1a03c24729cc2f23c81664",
+      "status": "downloaded; verification-report-separate",
+      "retentionRisk": "Artifact is not durable source; current availability does not prove future retention"
+    },
+    {
+      "id": "clinic-rss-composite",
+      "repository": "joseungil-kr/site-factory-v5",
+      "baselineRef": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "patchRef": "3ae081242743fb8d8bbdd498a44e3855782752ad",
+      "status": "source-files-read-and-hashed; five-RSS-tests-pass; full-site-not-regenerated",
+      "sourceFiles": [
+        {
+          "localPath": "clinic-base/sites/nalmada-shared3/build_national.py",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+          "path": "sites/nalmada-shared3/build_national.py",
+          "sha256": "86b85511d942c6b80ca28668a618b9549b80cfcf7cd329a0decab9754091c0ac"
+        },
+        {
+          "localPath": "clinic-patch/sites/nalmada-shared3/patch_active_rss_only.py",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "3ae081242743fb8d8bbdd498a44e3855782752ad",
+          "path": "sites/nalmada-shared3/patch_active_rss_only.py",
+          "sha256": "5fb0fa6717c2c097d93dd229a694158fe8a72605deb4f2ea3c59eb2cec91b12c"
+        },
+        {
+          "localPath": "clinic-patch/sites/nalmada-shared3/rss_feed.py",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "3ae081242743fb8d8bbdd498a44e3855782752ad",
+          "path": "sites/nalmada-shared3/rss_feed.py",
+          "sha256": "6711c9bcbf814bf8b062e674d7f605fe85cab9ce8814da52ad69dfbb211027db"
+        },
+        {
+          "localPath": "clinic-patch/tests/test_clinic_rss_feed.py",
+          "repository": "joseungil-kr/site-factory-v5",
+          "ref": "3ae081242743fb8d8bbdd498a44e3855782752ad",
+          "path": "tests/test_clinic_rss_feed.py",
+          "sha256": "cfb9c54e075ad480de2c52cd00744e4511b0e179fe216085a1536ebcb00119fa"
+        }
+      ]
     }
   ],
   "prohibited": [
