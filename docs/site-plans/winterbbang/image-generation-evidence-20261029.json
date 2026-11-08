@@ -1,0 +1,223 @@
+{
+  "siteId": "winterbbang",
+  "schemaVersion": 1,
+  "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+  "userRequestText": "히어로 이미지 및 각 페이지 이미지는 생성형 이미지로 채운다 5장의 이미지 생성하여 모든 페이지 공통으로 넣는다",
+  "sourceArchive": {
+    "libraryPath": "/SiteFactory/image-origin/2026-10/winterbbang_generated_collage_originals.zip",
+    "sha256": "c6c394c94bbb639de8a616436e4802acfc5e92539189d3a0b5a6f8a0d956db28"
+  },
+  "originalGeneratedToolResults": [
+    {
+      "originalFile": "a_vibrant_warm_promotional_food_stall_market_mon.png",
+      "toolName": "OpenAI image_gen",
+      "toolResultFileId": "file_000000001314820699240599731cd809",
+      "generationId": "a05a4682-dda1-49b6-a51d-61d69e5134b5",
+      "resultUploadedAtUTC": "2026-10-29T04:26:49.779011+00:00",
+      "resultUploadedAtIsNotGenerationTimestamp": true,
+      "generatedAtUTC": null,
+      "toolPromptVerbatim": null,
+      "originalSha256": "e7cab03adeb6fe0ed20f10d2e5649ea5560a42f93f1cf99889306229a14d622e",
+      "originalBytes": 2682714,
+      "originalSize": [
+        1536,
+        1024
+      ],
+      "userRequestText": "히어로 이미지 및 각 페이지 이미지는 생성형 이미지로 채운다 5장의 이미지 생성하여 모든 페이지 공통으로 넣는다"
+    },
+    {
+      "originalFile": "a_bright_warm_high_quality_collage_advertisement.png",
+      "toolName": "OpenAI image_gen",
+      "toolResultFileId": "file_0000000013388206954e1b2610e5dd8d",
+      "generationId": "8add3adf-1a02-4141-8e68-8a5bcfb201b5",
+      "resultUploadedAtUTC": "2026-10-29T04:27:29.801654+00:00",
+      "resultUploadedAtIsNotGenerationTimestamp": true,
+      "generatedAtUTC": null,
+      "toolPromptVerbatim": null,
+      "originalSha256": "68132492cf5f10d50d83538f40ab0b6a6aaf2b6bca27907c465190fb250645c8",
+      "originalBytes": 2732776,
+      "originalSize": [
+        1536,
+        1024
+      ],
+      "userRequestText": "히어로 이미지 및 각 페이지 이미지는 생성형 이미지로 채운다 5장의 이미지 생성하여 모든 페이지 공통으로 넣는다"
+    },
+    {
+      "originalFile": "a_bright_colorful_promotional_collage_brochure_st.png",
+      "toolName": "OpenAI image_gen",
+      "toolResultFileId": "file_000000000ec881f5b976c610165e43fc",
+      "generationId": "26cf9549-7c44-4992-acdb-6855e59130da",
+      "resultUploadedAtUTC": "2026-10-29T05:02:01.027384+00:00",
+      "resultUploadedAtIsNotGenerationTimestamp": true,
+      "generatedAtUTC": null,
+      "toolPromptVerbatim": null,
+      "originalSha256": "37364125751658015b3e74e7a24ce5a79d0316e09fd39308098adbbac26bd768",
+      "originalBytes": 2672653,
+      "originalSize": [
+        1536,
+        1024
+      ],
+      "userRequestText": "히어로 이미지 및 각 페이지 이미지는 생성형 이미지로 채운다 5장의 이미지 생성하여 모든 페이지 공통으로 넣는다"
+    },
+    {
+      "originalFile": "a_bright_warm_promotional_collage_poster_style_im.png",
+      "toolName": "OpenAI image_gen",
+      "toolResultFileId": "file_00000000bb6c81f59bd49a215b341590",
+      "generationId": "bff4e1eb-ccf3-4854-b293-cd28578ed66b",
+      "resultUploadedAtUTC": "2026-10-29T05:02:26.282050+00:00",
+      "resultUploadedAtIsNotGenerationTimestamp": true,
+      "generatedAtUTC": null,
+      "toolPromptVerbatim": null,
+      "originalSha256": "0d74af58e18f7182611f3a90904bc718a46cb927e072fd542ce864694d3c72d1",
+      "originalBytes": 2574738,
+      "originalSize": [
+        1536,
+        1024
+      ],
+      "userRequestText": "히어로 이미지 및 각 페이지 이미지는 생성형 이미지로 채운다 5장의 이미지 생성하여 모든 페이지 공통으로 넣는다"
+    },
+    {
+      "originalFile": "a_bright_warm_professional_collage_advertising_b.png",
+      "toolName": "OpenAI image_gen",
+      "toolResultFileId": "file_00000000f4c081f592c5e8dd053f400b",
+      "generationId": "8f81491c-4e47-4c11-b2d0-8cb42a6b8be6",
+      "resultUploadedAtUTC": "2026-10-29T05:03:44.168422+00:00",
+      "resultUploadedAtIsNotGenerationTimestamp": true,
+      "generatedAtUTC": null,
+      "toolPromptVerbatim": null,
+      "originalSha256": "075031507df29eddf88de99e6ee5144d4622ca1219434cd5c5c361edd5b9b298",
+      "originalBytes": 2605215,
+      "originalSize": [
+        1536,
+        1024
+      ],
+      "userRequestText": "히어로 이미지 및 각 페이지 이미지는 생성형 이미지로 채운다 5장의 이미지 생성하여 모든 페이지 공통으로 넣는다"
+    }
+  ],
+  "finalAssets": [
+    {
+      "assetPath": "assets/library/winterbbang/hero.webp",
+      "finalSHA256": "9ece3fbcfe2c973e74e814a2beee1a3c57f2b4bb105aa1e9f8f04477844adc41",
+      "bytes": 22556,
+      "pixelSize": [
+        800,
+        350
+      ],
+      "actualGenerationSourceCandidates": [
+        {
+          "originalFile": "a_vibrant_warm_promotional_food_stall_market_mon.png",
+          "siftHomographyInliers": 20
+        },
+        {
+          "originalFile": "a_bright_colorful_promotional_collage_brochure_st.png",
+          "siftHomographyInliers": 10
+        }
+      ],
+      "singleOriginalAndExactCropProven": false,
+      "toolPromptVerbatim": null,
+      "generatedAtUTC": null,
+      "depictedFactRole": "illustration_not_actual_customer_order_or_sales_proof",
+      "status": "REVIEW_HOLD_FOR_FUTURE_IMAGE_REUSE_UNTIL_PROVEN"
+    },
+    {
+      "assetPath": "assets/library/winterbbang/shop-in-shop.webp",
+      "finalSHA256": "2faccc9eeca968c3e02db91aceb62caf63cf597d81ccb735fa71efa0fe34d69d",
+      "bytes": 17496,
+      "pixelSize": [
+        600,
+        450
+      ],
+      "actualGenerationSourceCandidates": [
+        {
+          "originalFile": "a_vibrant_warm_promotional_food_stall_market_mon.png",
+          "siftHomographyInliers": 12
+        },
+        {
+          "originalFile": "a_bright_warm_high_quality_collage_advertisement.png",
+          "siftHomographyInliers": 7
+        }
+      ],
+      "singleOriginalAndExactCropProven": false,
+      "toolPromptVerbatim": null,
+      "generatedAtUTC": null,
+      "depictedFactRole": "illustration_not_actual_customer_order_or_sales_proof",
+      "status": "REVIEW_HOLD_FOR_FUTURE_IMAGE_REUSE_UNTIL_PROVEN"
+    },
+    {
+      "assetPath": "assets/library/winterbbang/menu.webp",
+      "finalSHA256": "a0ec8d32e53bd8b6aae1477b3fd79191adec62606e85024b1a212d2d1ac6ec5a",
+      "bytes": 27056,
+      "pixelSize": [
+        600,
+        250
+      ],
+      "actualGenerationSourceCandidates": [
+        {
+          "originalFile": "a_bright_warm_high_quality_collage_advertisement.png",
+          "siftHomographyInliers": 4
+        }
+      ],
+      "singleOriginalAndExactCropProven": false,
+      "toolPromptVerbatim": null,
+      "generatedAtUTC": null,
+      "depictedFactRole": "illustration_not_actual_customer_order_or_sales_proof",
+      "status": "REVIEW_HOLD_FOR_FUTURE_IMAGE_REUSE_UNTIL_PROVEN"
+    },
+    {
+      "assetPath": "assets/library/winterbbang/street.webp",
+      "finalSHA256": "6c4d232d054070563351d32c53536ee95bb1011cbdfefdc33df9824544a40cae",
+      "bytes": 19372,
+      "pixelSize": [
+        600,
+        400
+      ],
+      "actualGenerationSourceCandidates": [
+        {
+          "originalFile": "a_vibrant_warm_promotional_food_stall_market_mon.png",
+          "siftHomographyInliers": 16
+        },
+        {
+          "originalFile": "a_bright_colorful_promotional_collage_brochure_st.png",
+          "siftHomographyInliers": 6
+        }
+      ],
+      "singleOriginalAndExactCropProven": false,
+      "toolPromptVerbatim": null,
+      "generatedAtUTC": null,
+      "depictedFactRole": "illustration_not_actual_customer_order_or_sales_proof",
+      "status": "REVIEW_HOLD_FOR_FUTURE_IMAGE_REUSE_UNTIL_PROVEN"
+    },
+    {
+      "assetPath": "assets/library/winterbbang/ingredients.webp",
+      "finalSHA256": "cf33a58a4707aa0bc4d4b1b0e206d077743edd11a1a1cbf0d99aa205beb4126e",
+      "bytes": 15138,
+      "pixelSize": [
+        800,
+        333
+      ],
+      "actualGenerationSourceCandidates": [
+        {
+          "originalFile": "a_vibrant_warm_promotional_food_stall_market_mon.png",
+          "siftHomographyInliers": 5
+        },
+        {
+          "originalFile": "a_bright_warm_high_quality_collage_advertisement.png",
+          "siftHomographyInliers": 4
+        }
+      ],
+      "singleOriginalAndExactCropProven": false,
+      "toolPromptVerbatim": null,
+      "generatedAtUTC": null,
+      "depictedFactRole": "illustration_not_actual_customer_order_or_sales_proof",
+      "status": "REVIEW_HOLD_FOR_FUTURE_IMAGE_REUSE_UNTIL_PROVEN"
+    }
+  ],
+  "reviewOutcome": "REAL_GENERATION_TOOL_RESULTS_RECOVERED_BUT_EXACT_SINGLE_SOURCE_TO_EACH_WEBP_CROP_NOT_PROVEN",
+  "method": "OpenCV SIFT/ratio and homography correspondence to source collages; small numbers of inliers are only candidate evidence, not definitive ancestry",
+  "missingItems": [
+    "exact_tool_prompt",
+    "tool_generation_timestamp_utc",
+    "per-final-image exact original collage, crop rectangle and resampling/encoding parameters"
+  ],
+  "legacyProductionPolicy": "Do not auto-remove the already deployed pages/assets; any new release/reuse of unresolved final files must satisfy the image source policy gate or replace with newly generated proven originals."
+}

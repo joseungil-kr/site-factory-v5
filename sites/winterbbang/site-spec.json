@@ -1,0 +1,122 @@
+{
+  "version": 2,
+  "siteId": "winterbbang",
+  "approved": true,
+  "approvalSource": "User 2026-10-29 approved design and requested Seoul/Gyeonggi all locality-name pages, copy pool and deployment",
+  "approvalScope": "PAGE_PLAN_AND_PREVIEW_BUILD_ONLY; NOT PROOF OF CUSTOM-DOMAIN OWNERSHIP OR SECURITY AUTHORIZATION",
+  "domain": "https://winterbbang.nalmada.net",
+  "domainStatus": "CONNECTED_LIVE_HTTPS200_NOINDEX — 2026-10-29 V4 Actions 40867847521 exact host and existing Worker binding verified",
+  "brand": "백세푸드",
+  "businessModel": "Winter snack startup/shop-in-shop consultation and ingredient distribution (telephone lead), not a local storefront locator",
+  "serviceScope": {
+    "region": "서울특별시·경기도; 전국 납품·판매점/대리점 전화상담",
+    "granularity": "2026-10-12 named locality candidate rows: 1,588 names ending 동 + 143 가 + 1 로; present legal/admin status not fully verified",
+    "facilities": "existing cafes, unmanned cafes with human food prep/safety, produce stores, snack bars, twisted-dough stores, teahouses, permitted outdoor stalls",
+    "source": "data/regions/seoul_gyeonggi_current_dong.json",
+    "sourceRows": 1732,
+    "districts": 69,
+    "sourceAsOf": "2026-10-12",
+    "sourceSHA256": "057679a9a6312dbb4dd284d2ca42856d40a828239b2483540a7000b630fc30eb"
+  },
+  "pageTypes": [
+    "home",
+    "metropolitan-hub",
+    "district-hub",
+    "locality-startup-consultation"
+  ],
+  "targetPageCount": 1804,
+  "countFormula": "1 homepage + 2 metropolitan hubs + 69 district hubs + 1732 distinct locality names",
+  "titlePattern": "{full locality name} 붕어빵·잉어빵·계란빵·십원빵 창업·샵인샵 안내 | 백세푸드",
+  "urlPattern": "/ (home), /p/{sha12}.html (province hub), /d/{sha12}.html (district hub), /r/{sha12}.html (region)",
+  "keywordGroups": {
+    "primary": [
+      "{full locality name} 붕어빵 창업"
+    ],
+    "secondary": [
+      "붕어빵 샵인샵",
+      "잉어빵 창업",
+      "계란빵 창업",
+      "십원빵 창업",
+      "겨울 간식 매대 창업",
+      "반죽·팥소·슈크림 납품 상담"
+    ]
+  },
+  "copyPoolPlan": {
+    "industry": "붕어빵 등 겨울 간식 창업 및 재료 납품",
+    "source": "docs/site-plans/winterbbang/copy-pool.seed.json (64 originals) + sites/winterbbang/region-copy-pool.json (96 originals); deterministic independent regional decisions",
+    "sentenceTarget": 160,
+    "originalBlockCount": 160,
+    "regionalSections": 11,
+    "localEvidenceStatus": "NOT_VERIFIED_IN_1732_LOCALITIES; do not claim physical branch, local sales, market facts",
+    "releaseQualityPolicy": "all named localities may be generated; individual search-indexing requires evidence-based originality review"
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-jaccard",
+    "thresholdExclusive": 0.49,
+    "sampleFraction": 0.01,
+    "seed": 20261029,
+    "population": "regional narrative only, excluding shared header/footer/cards/CTA/region names, fixed 1% sample vs 1732 regional narrative population"
+  },
+  "conversion": {
+    "mode": "telephone enquiry",
+    "phone": "031-407-0103",
+    "orderUrl": null,
+    "operator": "백세푸드 분식창업 담당자",
+    "noLeadForm": true
+  },
+  "images": {
+    "source": "existing five AI-generated WebP files from owner-approved sample, immutable source hashes in docs/site-plans/winterbbang/images-manifest.json",
+    "approved": true,
+    "names": [
+      "hero.webp",
+      "shop-in-shop.webp",
+      "menu.webp",
+      "street.webp",
+      "ingredients.webp"
+    ],
+    "reuse": "all pages share exact same five files",
+    "actualEvidence": false
+  },
+  "publishPolicy": {
+    "mode": "CUSTOM_DOMAIN_CONNECTED_NOINDEX",
+    "indexNow": false,
+    "ownershipProof": true,
+    "customDomainBindingAllowed": true,
+    "searchReleaseAllowed": false,
+    "workerNameCandidate": "sfv54-winterbbang-preview",
+    "customDomainBindingVerified": true,
+    "existingWorkerVerified": true,
+    "httpsVerified": true,
+    "domainBindingEvidence": "https://github.com/joseungil-kr/site-factory-v4/actions/runs/40867847521"
+  },
+  "sourceProvenance": {
+    "regionBlobSha": "6de6e5751b26a13a2132238f13633df3de0cd2aa",
+    "oldV4Names": "V4 region-name-count/NAME_CANDIDATES.json",
+    "notes": "Official 2026 law/administration classification incomplete. No unverified search-volume claims."
+  },
+  "publicClaims": {
+    "menuSupport": [
+      "붕어빵",
+      "잉어빵",
+      "계란빵",
+      "십원빵"
+    ],
+    "margin": "Operator-provided 60-70% of sale price minus ingredient cost ONLY, not net profit",
+    "privateContractTerms": "Never put cost packages, minimum order volumes, equipment agreement details or negotiated prices in publicly served HTML, metadata or source."
+  },
+  "domainBinding": {
+    "host": "winterbbang.nalmada.net",
+    "worker": "sfv54-winterbbang-preview",
+    "status": "LIVE_HTTPS_NO_INDEX",
+    "newWorkerDeployed": false,
+    "manualDnsChange": false,
+    "cloudflareAutoManagedDnsCertificate": true,
+    "existingDomainsBefore": 87,
+    "existingDomainsAfter": 88,
+    "otherBindingsUnchanged": true,
+    "previewSourceSha": "da457ae5a6a3b667ac27505143fe353ddbb0b771",
+    "bindingRunId": 40867847521,
+    "readback": "origin home/region/image/robots/404 validated; custom hostname same paths HTTPS200/noindex and missing URL404",
+    "indexNow": false
+  }
+}
