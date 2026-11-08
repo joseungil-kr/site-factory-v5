@@ -18,7 +18,7 @@
 - GitHub Actions 빌드 https://github.com/joseungil-kr/site-factory-v5/actions/runs/42458536256 SUCCESS; 원본 ZIP https://github.com/joseungil-kr/site-factory-v5/actions/runs/42458536256/artifacts/13608552728
 - 오프라인 HTML 검사 https://github.com/joseungil-kr/site-factory-v5/actions/runs/42458536121 SUCCESS.
 - Chromium 및 회귀 https://github.com/joseungil-kr/site-factory-v5/actions/runs/42458536159 SUCCESS; 원본 화면 https://github.com/joseungil-kr/site-factory-v5/actions/runs/42458536159/artifacts/13609055821.
-- 직접 다운로드한 내부 정적 ZIP SHA256 b2c455e037b51a3dc0a2eaf75851b6a8ec875f75a59cedfe14f84776fab8d3d2 (원본 빌드 manifest의 SHA256과 일치). 25 경로 x 390/1440 = 50개 화면, qa.json passed, overflow 0. /2, /7, /60 모바일·PC PNG를 실제 열어 제목/탐색/카드 확인.
+- 직접 다운로드한 내부 정적 ZIP SHA256 b2c455e037b51a3dc0a2eaf75851b6a8ec875f75a59cedfe14f84776fab8d3d2 (원본 빌드 manifest의 SHA256과 일치). 최초 25경로 × 390/1440 = 50개 화면, qa.json passed, overflow 0. /2, /7, /60 모바일·PC PNG를 실제 열어 제목/탐색/카드 확인.
 - 최신 HTML 실독 19/95 (20%): 전국 /, 광역 /2부터 /13까지 총 12개, 그리고 이전 실패 /14·/26·/37·/55·/60·/95. H1·intro·본문 모든 section·FAQ·card SKU/price/CTA 확인.
 
 ## 작업자 AI 편집 잠정점수 (독립 인간 판정이 아님)
@@ -49,3 +49,9 @@
 - 현재 B211 상세 페이지 직접 조회는 cache miss로 판매처 상품 목록상 링크 이상 검증되지 않음. 실제 주문 가능 상태, 상품 옵션과 고령군 배송료·최종 총액은 원문 캡처/판매처 확인 전 확정하지 않는다.
 - 이 검수는 작업자의 AI 편집 판단과 CI 증거이며 계실장 독립 합격 승인과 다르다. 이후 불합격 페이지가 있으면 풀과 검수 규칙을 다시 수정해 재생성해야 한다.
 - 운영 사이트, Todayflower, main, DNS, 인증·권한, 보안, 공개·배포, 검색등록·IndexNow: 어떤 변경도 하지 않음.
+
+## 추가 광역 12개 전체 브라우저 검수
+- 워크플로우 검수 범위 커밋 **aae668c7bda2955e42d2d763d0039f3196243330**. 정적 콘텐츠 파일/상품 매핑은 변경하지 않고 광역 2~13페이지를 390·1440px 모두 검사하도록 확대.
+- [GitHub Actions run 42458985566](https://github.com/joseungil-kr/site-factory-v5/actions/runs/42458985566) **SUCCESS**; [원본 화면 artifact 13608956922](https://github.com/joseungil-kr/site-factory-v5/actions/runs/42458985566/artifacts/13608956922).
+- Chromium offline localhost 화면 **32경로×2해상도=64장**, `qa.json` passed, 가로 넘침 0. 광역 12개 전부 모바일/데스크톱 캡처를 남기고 직접 검토했다.
+- 이는 이전 원본 콘텐츠 SHA `156a7b4f104cfeadeb94bca85607cc231eadcbaf`의 추가 독립 시각 증거이다. 외부 공개 배포/접근 통제 또는 계실장 편집 품질 합격을 뜻하지 않는다.
