@@ -211,7 +211,8 @@ class CountySelectedSkuContract(unittest.TestCase):
                         self.assertIn('data-product-sku="B213"',html)
                     elif p['county']=='고령군':
                         self.assertEqual(p['productSkus'],['B211'])
-                        self.assertIn('영정바구니 상품 목록 보기',html)
+                        self.assertIn('영정바구니 상품 분류 보기',html)
+                        self.assertIn('data-product-sku="B211"',html)
                     else:
                         self.assertEqual(p['productSkus'],['B054'])
                         self.assertIn('data-product-sku="B054"',html)
