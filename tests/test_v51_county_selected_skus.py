@@ -102,6 +102,38 @@ class CountySelectedSkuContract(unittest.TestCase):
                        for p in pages]
                 self.assertEqual(len(texts),len(set(texts)),intent)
 
+    def test_customer_html_never_exposes_internal_data_scope_or_confuses_product_number(self):
+        from scripts.build_county_trial_review_only import main as render_review, OUT
+        render_review()
+        banned=[
+            '이 목록은 행정지역명이며 장례식장명이나 시설 도로명주소가 아닙니다',
+            '페이지가 제공하는 내용은 읍면 이름이고 시설 주소는 직접 준비합니다',
+            '군 페이지의 읍면 목록은 행정지역명이지 시설 주소록은 아닙니다',
+            '가격 외 주문번호','주문번호는 서로 다릅니다',
+        ]
+        seen=0
+        for p in self.data['pages']:
+            filename='index.html' if p['number']==1 else f"{p['number']}.html"
+            html=(OUT/filename).read_text(encoding='utf-8')
+            with self.subTest(filename=filename):
+                for phrase in banned:
+                    self.assertNotIn(phrase,html)
+                if p['pageType']=='county':
+                    seen+=1
+        self.assertEqual(seen,82)
+        # Focused checks on formerly failed county pages and valid order/SKU terms.
+        for number in (14,26,24,42,86):
+            html=(OUT/f'{number}.html').read_text(encoding='utf-8')
+            self.assertIn('상품번호',html)
+            self.assertNotIn('주문번호는 서로 다릅니다',html)
+        for number in (12,77,78):
+            html=(OUT/f'{number}.html').read_text(encoding='utf-8')
+            self.assertIn('읍·면',html)
+        shipping=(OUT/'78.html').read_text(encoding='utf-8')
+        self.assertIn('20,000원',shipping)
+        self.assertIn('data-product-sku="B201"',shipping)
+        self.assertIn('data-product-sku="B206"',shipping)
+
     def test_all_12_province_hubs_have_distinct_information_owners(self):
         # Source-level assertions: the navigation owns child county names;
         # introductory text owns count; article owns a grounded buying task.
