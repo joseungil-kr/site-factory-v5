@@ -114,6 +114,25 @@ def validate_one(path: Path, selected=None):
         prices[sku]=int(amounts[0].replace(",","").removesuffix("원"))
     allowed={f"{amount:,}원" for amount in prices.values()}
     allowed|={f"{abs(a-b):,}원" for a in prices.values() for b in prices.values() if a!=b}
+    # Read the separate source ledger rather than accepting every numeric amount.
+    # A shipping row qualifies only for the exact page's county and visible SKU.
+    evidence_file=ROOT/'docs/v51-county-sku-shipping-facts-20261108.json'
+    if evidence_file.is_file() and path.stem.isdigit():
+        number=int(path.stem)
+        pfile=ROOT/'sites'/ID/'pages.json'
+        if pfile.is_file():
+            page=next((p for p in json.loads(pfile.read_text(encoding='utf-8'))
+                       if p.get('number')==number),None)
+            if page:
+                evidence=json.loads(evidence_file.read_text(encoding='utf-8'))
+                for row in evidence['facts']:
+                    if (row.get('kind')=='additionalShippingFee'
+                            and row.get('county')==page.get('county')
+                            and row.get('sku') in cards
+                            and row.get('source')=='https://fwith.co.kr/shop/item.php?it_id='+row['sku']
+                            and row.get('checkedOn')==evidence['checkedOn']
+                            and type(row.get('amountKRW')) is int):
+                        allowed.add(f"{row['amountKRW']:,}원")
     mentioned_prices={f"{int(v[:-1].replace(',','')):,}원" for v in PRICE.findall(prose)}
     unsupported=sorted(mentioned_prices-allowed)
     if unsupported:failures.append("Off-card price in actual visible HTML: "+",".join(unsupported))
