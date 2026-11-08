@@ -282,6 +282,12 @@ def expanded_pools(base):
             options.extend({'slot':slot,'heading':title,'paragraph':body}
                 for title,body in additional[slot])
             for item in options:
+                # Budget introductions and decision sections already explain prices
+                # and checkout costs. Reserve the delivery slot for scheduling or
+                # hand-off instead of repeating the same fee disclaimer.
+                if group=='budget' and slot=='delivery' and item['heading'] not in (
+                    '희망 도착 시간','배송 요청 시각','수령 시설 확인','수령 날짜 전달'):
+                    continue
                 text=item['heading']+' '+item['paragraph']
                 if not product_skus_in_text(text).issubset(selected):
                     continue
