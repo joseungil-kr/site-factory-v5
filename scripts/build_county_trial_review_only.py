@@ -44,7 +44,8 @@ def main():
  catalog=data['products'];sets=set(p['id'] for p in pages)
  assert len(sets)==95 and len(set(p['number'] for p in pages))==95
  enriched=[assemble(p,plan['purposePools'],catalog) for p in pages]
- assert all(len(p['sections'])==4 and len(p['faq'])==1 for p in enriched if p['pageType']=='county')
+ assert all(len(p['sections'])==(3 if p['purpose'].startswith('restricted-') else 4)
+            and len(p['faq'])==1 for p in enriched if p['pageType']=='county')
  assert all(len(p['sections'])>=2 for p in enriched if p['pageType']!='county')
  if OUT.exists():shutil.rmtree(OUT)
  (OUT/'assets'/'images').mkdir(parents=True)
