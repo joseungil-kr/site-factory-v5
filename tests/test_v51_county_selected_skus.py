@@ -541,6 +541,7 @@ class CountySelectedSkuContract(unittest.TestCase):
         from scripts.county_fact_contract import (
             registry, faq_topic, answer_topic, bind_faq, check_page)
         facts=registry()
+        self.assertEqual(set(facts['seller-notice-six-county-summary']['allowed_slots']),{'choice','order'})
         pages=self.data['pages']
         self.assertEqual(len(pages),95)
         purposes={p['purpose'] for p in pages}
