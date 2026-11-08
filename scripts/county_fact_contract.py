@@ -63,6 +63,7 @@ def bind_faq(purpose, faq, facts):
         raise ValueError('FAQ does not answer order history question')
     ids=[]
     if '주문내역조회' in a: ids.append('seller-order-history-menu')
+    if purpose=='restricted-obje-연천군' and '10,000원' in a: ids.append('shipping-연천군-B213')
     if '선택옵션 0개' in a or '추가옵션 0개' in a: ids.append('sku-B213-options-zero')
     if FACT_PATTERN.search(a) and not ids:
         raise ValueError('FAQ factual claim without fact ID: '+purpose)
