@@ -134,11 +134,11 @@ INTENTS=[
  ('venue-timing','venue',['B201','B205'],'희망 전달 일시',
   '장례식장에 근조화환이 도착해야 할 날짜와 희망 시간대를 정해 상품 상세 및 실제 배송 접수 가능 여부를 확인하는 방법을 안내합니다.',
   '일정 문의 정보','상품코드, 정확한 시설 주소, 희망 도착 시간과 빈소 정보를 묶어 문의하면 해당 주소의 실제 접수 가능 시간을 안내받을 수 있습니다.'),
- ('venue-form','venue',['B202','B206'],'3단화환 반입 조건',
-  '장례식장마다 3단화환 반입 시간과 설치 장소가 다를 수 있습니다. 받는 시설의 안내에 맞춰 주문 전에 반입 가능 여부를 확인해 주세요.',
+ ('venue-form','venue',['B202','B206'],'3단 상품명과 빈소 안내',
+  'B202는 판매처의 근조 3단 화환, B206은 근조 특특대 3단 화환으로 분류되어 있습니다. 받는 시설에 전달할 빈소 번호는 상품과 별도로 기입할 정보입니다.',
   '대체 상품 문의','해당 시설에서 3단화환을 받지 않는 경우 실제 주문 가능한 다른 형태의 상품이 있는지 판매처에 따로 문의할 수 있습니다.'),
- ('venue-shipping','venue',['B201','B206'],'정확한 주소에 따른 배송비',
-  '상품 상세의 군 단위 배송비 표만으로 최종 요금을 단정하기 어렵습니다. 일부 읍·면의 예외가 있어 실제 배송비는 수령 시설 주소로 다시 확인합니다.',
+ ('venue-shipping','venue',['B201','B206'],'배송비 표와 주문정보',
+  'B201과 B206은 판매처에서 주문하는 근조 3단 상품으로 분류됩니다. 배송비는 해당 상품의 배송정보와 받는 군·읍면을 함께 기준으로 삼으므로, 이 페이지에 확인되지 않은 횡성군 추가금액을 적지 않습니다.',
   '배송비 확인 경로','장례식장명과 도로명 주소를 알려주시면 판매처가 해당 주문의 추가 배송비와 가능한 접수일을 안내할 수 있습니다.'),
  ('venue-order','venue',['B202','B205'],'주문 내용 재확인',
   '근조화환의 상품번호와 장례식장명, 빈소와 리본을 분리해 확인하면 비슷한 상품명이나 수령지 혼동을 줄일 수 있습니다.',
@@ -174,8 +174,8 @@ INTENT_INTROS={
  'venue-room':'{county} 장례식장으로 근조화환을 보낼 때는 시설명과 빈소를 먼저 정리해 주세요. 상품을 선택하고 희망 전달 시간을 알려주시면 주문 가능 일정을 상담할 수 있습니다.',
  'venue-location':'{county}에서 근조화환을 받을 장례식장의 정확한 주소와 화환 반입 위치를 준비해 주세요. 상품번호와 함께 전달하면 배송 조건을 확인하기 편리합니다.',
  'venue-timing':'{county} 근조화환 주문은 장례식장에 전달할 날짜와 희망 시간을 정하는 데서 시작합니다. 상품별 접수 가능 시간과 배송비를 판매처에서 확인할 수 있습니다.',
- 'venue-form':'{county} 장례식장에 3단 근조화환을 보내시려면 설치 공간과 반입 가능 여부를 확인해 보세요. 선택한 상품번호와 정확한 시설 주소로 주문을 상담할 수 있습니다.',
- 'venue-shipping':'{county} 근조화환의 배송비는 선택한 상품과 장례식장의 상세 주소를 기준으로 확인해 주세요. 읍·면 정보가 정해지면 주문 화면에서 적용 금액을 살펴볼 수 있습니다.',
+ 'venue-form':'{county} 근조화환의 판매처 상품명, 빈소를 적을 항목과 공식 읍·면 명칭을 안내합니다.',
+ 'venue-shipping':'{county} 근조화환의 상품별 배송정보 확인 경로와 공식 읍·면 명칭을 안내합니다. 시설 주소와 빈소는 주문자가 별도로 준비해야 합니다.',
  'venue-order':'{county} 근조화환 주문서에는 상품번호와 장례식장·빈소, 희망일, 리본 문구를 구분해 입력하면 편리합니다. 상품별 주문 링크를 통해 확인할 수 있습니다.',
  'ribbon-text':'{county} 장례식장에 보낼 조의 문구 예시와 빈소에 전달할 정보를 정리했습니다.',
  'ribbon-sender':'{county} 근조화환에 적을 보내는 사람의 이름을 정리해 주세요. 개인 명의와 회사·단체 명의를 구분하고 리본 문구를 함께 확인할 수 있습니다.',
@@ -307,11 +307,38 @@ def expanded_pools(base):
             *[item for item in pool['sections'] if item['slot'] in ('order','ribbon')],
             {'slot':'verified-townships',
              'heading':'{county}의 읍·면',
-             'paragraph':'{county}의 읍·면 {townshipCount}곳: {townships}. 받는 장례식장의 소재지를 목록에서 찾아 정확한 시설 주소와 빈소를 선택해 주세요.'}
+             'paragraph':'{county}의 읍·면 {townshipCount}곳: {townships}. 이 목록은 행정지역명이며 장례식장명이나 시설 도로명주소가 아닙니다. 받는 시설 주소와 빈소는 별도로 준비해 주세요.'}
         ]
         # Ribbon intent: introduction=why this page, choice=which confirmed
         # SKU, ribbon=concrete example, FAQ=post-order edits (a NEW question).
         # Never restate the senders/condolence distinction in four sections.
+        if name=='venue-form':
+            # The introduction states what exists; each section owns a new task.
+            pool['sections']=[
+                {'slot':'choice','heading':'판매처 상품명 구분',
+                 'paragraph':'B202는 근조 3단 화환, B206은 근조 특특대 3단 화환이라는 판매처 등록명입니다. 두 상품의 규격·꽃 수량이 같거나 다르다는 자료는 이 페이지에서 주장하지 않습니다.'},
+                {'slot':'order','heading':'수령 빈소와 희망일',
+                 'paragraph':'주문할 때 장례식장명, 고인 또는 빈소 번호, 희망 전달 날짜를 별도로 준비할 수 있습니다. 시설별 도로명주소는 이 페이지에 제공되지 않습니다.'},
+                {'slot':'ribbon','heading':'리본에 적는 조의 문구',
+                 'paragraph':'“삼가 고인의 명복을 빕니다”와 “깊은 애도를 표합니다”는 근조 리본에 사용할 수 있는 표현입니다. 보내는 분 이름은 문구와 구분해 준비할 수 있습니다.'},
+                {'slot':'verified-townships','heading':'{county} 읍·면 이름',
+                 'paragraph':'{county}의 읍·면 {townshipCount}곳은 {townships}입니다. 장례식장명과 도로명주소는 포함되어 있지 않으므로 실제 받는 시설의 정보를 별도로 준비해야 합니다.'}
+            ]
+            pool['faqs']=[{'q':'접수한 화환 주문내역은 어디서 볼 수 있나요?',
+                           'a':'판매처 상단의 주문내역조회 메뉴에서 주문내역을 조회할 수 있습니다.'}]
+        elif name=='venue-shipping':
+            pool['sections']=[
+                {'slot':'choice','heading':'배송정보가 연결된 상품',
+                 'paragraph':'판매처의 B201 근조 3단 화환과 B206 근조 특특대 3단 화환에는 각각 상품 상세 링크가 있습니다. 이 페이지는 두 상품의 횡성군 추가 배송비 액수를 확정해 표시하지 않습니다.'},
+                {'slot':'order','heading':'배송 문의에 필요한 수령지',
+                 'paragraph':'선택 상품번호와 장례식장 도로명주소, 빈소 번호, 희망 전달일을 갖추면 받는 장소를 특정할 수 있습니다. 실제 시설 주소는 이 페이지의 읍면 목록에서 자동 검색되지 않습니다.'},
+                {'slot':'ribbon','heading':'조의 문구와 보내는 명의',
+                 'paragraph':'리본에는 “삼가 고인의 명복을 빕니다” 같은 조의 문구와 보내는 개인·단체 이름을 분리해 적을 수 있습니다.'},
+                {'slot':'verified-townships','heading':'{county} 읍·면 명칭',
+                 'paragraph':'{county}의 읍·면 {townshipCount}곳은 {townships}입니다. 행정구역명 목록이며 장례식장별 이름·도로명주소 목록은 아닙니다.'}
+            ]
+            pool['faqs']=[{'q':'주문을 마친 후 배송·주문 상태는 어디서 확인하나요?',
+                           'a':'판매처 사이트의 주문내역조회 메뉴에서 접수한 주문 정보를 확인할 수 있습니다.'}]
         if name=='ribbon-text':
             region_lookup=[s for s in pool['sections'] if s['slot']=='verified-townships']
             pool['sections']=[
