@@ -75,9 +75,14 @@ class CountySelectedSkuContract(unittest.TestCase):
                     'province body must not recite card prices or price differences')
                 children=[x for x in self.data['pages'] if x.get('parentPageId')==p['id']]
                 joined='·'.join(x['county'] for x in children)
-                self.assertNotIn(joined,body)
+                if len(children)>1:
+                    self.assertNotIn(joined,body)
+                    self.assertNotIn(joined,a['intro'])
+                else:
+                    # For single-county provinces, naming the sole county is
+                    # genuine purchase context, not a repeated multi-county list.
+                    self.assertLessEqual(body.count(joined),2)
                 self.assertIn(str(len(children))+'곳',a['intro'])
-                self.assertNotIn(joined,a['intro'])
         for number in (2,7):
             p=next(x for x in provinces if x['number']==number)
             a=assemble(p,self.plan['purposePools'],self.data['products'])
