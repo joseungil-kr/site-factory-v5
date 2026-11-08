@@ -85,6 +85,33 @@ def assemble(page, pools, products, *, service=False):
             'sections': resolved_sections,
             'faq': [{'q': _text(f.get('q'), page), 'a': _text(f.get('a'), page)}
                     for _,f in ordered_faq[:min(5,len(ordered_faq))]]}
+    # A source-backed shipping row supplies an entirely new buyer fact.
+    # Keep fee ownership in the receiving/order section; avoid echoing card
+    # prices in the 'comparison' section or the page introduction.
+    evidence=page.get('verifiedSkuShipping',[])
+    if (page.get('siteVariantPolicy')=='county-v51' and not service and evidence
+            and not page.get('purpose','').startswith('restricted-')):
+        if len(evidence)!=1:
+            raise ConfigError('county-v51 review requires scoped shipping evidence')
+        fee=evidence[0]; sku=fee['sku']
+        if sku not in selected or fee['scope']!=page['county']:
+            raise ConfigError('county-v51 mismatched shipping SKU or locality')
+        assembled['intro']=(page['county']+' 장례식장으로 보낼 근조상품을 선택할 때, '
+                             +sku+'의 판매처 배송정보를 함께 볼 수 있습니다.')
+        for section in assembled['sections']:
+            if section['slot']=='choice':
+                section['heading']=sku+' 상품 고시'
+                section['paragraph']=(sku+' '+catalog[sku]['name']+
+                     '의 판매처 상세에는 선택옵션 0개, 추가옵션 0개, 제조자 꽃이랑, 재생 꽃 미사용으로 표시돼 있습니다.')
+            elif section['slot']=='order':
+                section['heading']=sku+' '+page['county']+' 추가 배송비'
+                section['paragraph']=(sku+' 판매처 배송표의 '+page['county']+
+                    ' 추가 배송비는 '+format(fee['amount'],',')+'원입니다. '
+                    '표에서 이 군의 읍·면 추가 예외는 별도 표시되지 않았습니다. '
+                    '상품의 최종 결제금액은 주문 시 확인됩니다.')
+        assembled['faq']=[{'q':'장례식장의 3단 화환 반입 여부는 어떻게 확인하나요?',
+                          'a':'받는 장례식장마다 설치 가능한 형태와 반입 장소가 다를 수 있습니다. '
+                              '시설에 빈소와 반입 규정을 확인한 뒤 상품을 선택할 수 있습니다.'}]
     # County-specific purpose pools are selected from verified acceptance rules
     # before assembly; never override buyer text after SKU selection.
     if page.get('siteVariantPolicy')=='county-v51' and not service:
