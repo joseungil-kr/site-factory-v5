@@ -1,0 +1,63 @@
+{
+  "site": "skyquote",
+  "status": "Five newly text-generated images stored with original PNGs and generation records; publication remains gated",
+  "generatedAt": "2026-10-30",
+  "imageType": "image/webp",
+  "aiIllustrative": true,
+  "source": "Five independent text-only image_gen outputs; no input/reference images",
+  "assets": [
+    {
+      "path": "sites/skyquote/assets/city-crane.webp",
+      "sha256": "9934622e90fd98ff8228f2cbae4e570239fda0566a106a2d5f64dd9fab3a83c1",
+      "alt": "한국 도시 스카이차와 안전통제 전경",
+      "width": 1536,
+      "height": 1024,
+      "source": "sites/skyquote/provenance/20261030-text-generated/01-safe-parked-truck.png",
+      "bytes": 262462
+    },
+    {
+      "path": "sites/skyquote/assets/facade-safety.webp",
+      "sha256": "8b8b02bace43517f046be7a97c72afc217afa3a9d48d408f254b932f380c6cc3",
+      "alt": "외벽 작업대와 안전 구획 설명",
+      "width": 1536,
+      "height": 1024,
+      "source": "sites/skyquote/provenance/20261030-text-generated/02-facade-height-work.png",
+      "bytes": 325980
+    },
+    {
+      "path": "sites/skyquote/assets/sign-work.webp",
+      "sha256": "f5f68bbc0c1a6bbd016fe28c8e110bfdf303b143ea62a8ee1af6dda428d51eb4",
+      "alt": "간판 주변 작업 안전 설명",
+      "width": 1536,
+      "height": 1024,
+      "source": "sites/skyquote/provenance/20261030-text-generated/03-sign-maintenance-v2.png",
+      "bytes": 337362
+    },
+    {
+      "path": "sites/skyquote/assets/work-height.webp",
+      "sha256": "fb93d20fd05a9173ce19c37cb5686cf8469bf6c4e004554ee3e209a539ddbcbe",
+      "alt": "장비 높이·수평 도달거리 설명",
+      "width": 1536,
+      "height": 1024,
+      "source": "sites/skyquote/provenance/20261030-text-generated/04-high-reach-platform-v2.png",
+      "bytes": 284906
+    },
+    {
+      "path": "sites/skyquote/assets/outrigger-access.webp",
+      "sha256": "75b4a089b2e3a5815922bd7390fde6c44dd5e1f5dfa172f1b2aa4bb3c899d049",
+      "alt": "차량 지지대·지반 확인 설명",
+      "width": 1536,
+      "height": 1024,
+      "source": "sites/skyquote/provenance/20261030-text-generated/05-outrigger-ground-check.png",
+      "bytes": 292460
+    }
+  ],
+  "assertNoPublishUntilVerified": true,
+  "originalAssetSource": "provenance/20261030-text-generated/generation-records.json",
+  "provenance": {
+    "records": "sites/skyquote/provenance/20261030-text-generated/generation-records.json",
+    "generated_only": true,
+    "recorded_at_utc": "2026-10-30T07:28:34.062Z",
+    "limitations": "AI illustrative assets, not proof of real equipment, completed jobs, or mechanically certified configurations."
+  }
+}
