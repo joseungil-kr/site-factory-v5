@@ -87,7 +87,7 @@ def enforce_pool(purpose,pool,facts):
         slot=section['slot']
         if '판매처 공지' in text:
             summary=facts['seller-notice-six-county-summary']
-            mentioned=set(re.findall(r'[가-힣]+군',text))
+            mentioned=set(re.findall(r'[가-힣]+군',text)) - {'상품군','근조상품군'}
             if not mentioned or not mentioned.issubset(set(summary['region_scope'])):
                 raise ValueError('seller notice unsupported county scope '+purpose)
             section['factIds']=['seller-notice-six-county-summary']
