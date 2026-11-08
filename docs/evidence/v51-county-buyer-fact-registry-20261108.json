@@ -1,0 +1,313 @@
+{
+  "schema_version": 2,
+  "scope": "isolated county trial only",
+  "limitations": "source check date confirmed; time unavailable; SKU B054 county shipping rows do not guarantee checkout or fulfillment",
+  "facts": [
+    {
+      "fact_id": "sku-B201-catalog-price",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B201",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "product listing only",
+      "facility_scope": null,
+      "product_id": "B201",
+      "allowed_slots": [
+        "product_card"
+      ],
+      "kind": "product_list_price",
+      "value": {
+        "name": "근조 3단 화환",
+        "price": 59000
+      }
+    },
+    {
+      "fact_id": "sku-B202-catalog-price",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B202",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "product listing only",
+      "facility_scope": null,
+      "product_id": "B202",
+      "allowed_slots": [
+        "product_card"
+      ],
+      "kind": "product_list_price",
+      "value": {
+        "name": "근조 3단 화환",
+        "price": 59000
+      }
+    },
+    {
+      "fact_id": "sku-B205-catalog-price",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B205",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "product listing only",
+      "facility_scope": null,
+      "product_id": "B205",
+      "allowed_slots": [
+        "product_card"
+      ],
+      "kind": "product_list_price",
+      "value": {
+        "name": "근조 특대 3단 화환",
+        "price": 109000
+      }
+    },
+    {
+      "fact_id": "sku-B206-catalog-price",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B206",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "product listing only",
+      "facility_scope": null,
+      "product_id": "B206",
+      "allowed_slots": [
+        "product_card"
+      ],
+      "kind": "product_list_price",
+      "value": {
+        "name": "근조 특특대 3단 화환",
+        "price": 149000
+      }
+    },
+    {
+      "fact_id": "sku-B213-catalog-price",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B213",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "product listing only",
+      "facility_scope": null,
+      "product_id": "B213",
+      "allowed_slots": [
+        "product_card"
+      ],
+      "kind": "product_list_price",
+      "value": {
+        "name": "근조 2단 오브제",
+        "price": 120000
+      }
+    },
+    {
+      "fact_id": "sku-B054-catalog-price",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B054",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "product listing only",
+      "facility_scope": null,
+      "product_id": "B054",
+      "allowed_slots": [
+        "product_card"
+      ],
+      "kind": "product_list_price",
+      "value": {
+        "name": "근조 쌀화환 10Kg",
+        "price": 90000
+      }
+    },
+    {
+      "fact_id": "sku-B211-catalog-price",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B211",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "product listing only",
+      "facility_scope": null,
+      "product_id": "B211",
+      "allowed_slots": [
+        "product_card"
+      ],
+      "kind": "product_list_price",
+      "value": {
+        "name": "근조 영정바구니",
+        "price": 59000
+      }
+    },
+    {
+      "fact_id": "shipping-횡성군-B201",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B201",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "횡성군",
+      "facility_scope": "seller SKU shipping table; not final checkout or delivery guarantee",
+      "product_id": "B201",
+      "allowed_slots": [
+        "order",
+        "faq"
+      ],
+      "kind": "sku_county_shipping_fee",
+      "value": 20000
+    },
+    {
+      "fact_id": "shipping-연천군-B213",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B213",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "연천군",
+      "facility_scope": "seller SKU shipping table; not final checkout or delivery guarantee",
+      "product_id": "B213",
+      "allowed_slots": [
+        "order",
+        "faq"
+      ],
+      "kind": "sku_county_shipping_fee",
+      "value": 10000
+    },
+    {
+      "fact_id": "shipping-의성군-B205",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B205",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "의성군",
+      "facility_scope": "seller SKU shipping table; not final checkout or delivery guarantee",
+      "product_id": "B205",
+      "allowed_slots": [
+        "order",
+        "faq"
+      ],
+      "kind": "sku_county_shipping_fee",
+      "value": 10000
+    },
+    {
+      "fact_id": "shipping-청도군-B054",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B054",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "청도군",
+      "facility_scope": "seller SKU shipping table; not final checkout or delivery guarantee",
+      "product_id": "B054",
+      "allowed_slots": [
+        "order",
+        "faq"
+      ],
+      "kind": "sku_county_shipping_fee",
+      "value": 10000
+    },
+    {
+      "fact_id": "shipping-완도군-B054",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B054",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "완도군",
+      "facility_scope": "seller SKU shipping table; not final checkout or delivery guarantee",
+      "product_id": "B054",
+      "allowed_slots": [
+        "order",
+        "faq"
+      ],
+      "kind": "sku_county_shipping_fee",
+      "value": 20000
+    },
+    {
+      "fact_id": "notice-연천군-acceptance",
+      "source_url": "https://fwith.co.kr/page/notice.php",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "연천군",
+      "facility_scope": "seller notice: all funeral venues in named county",
+      "product_id": null,
+      "allowed_slots": [
+        "notice"
+      ],
+      "kind": "acceptance_form",
+      "value": "오브제"
+    },
+    {
+      "fact_id": "notice-부안군-acceptance",
+      "source_url": "https://fwith.co.kr/page/notice.php",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "부안군",
+      "facility_scope": "seller notice: all funeral venues in named county",
+      "product_id": null,
+      "allowed_slots": [
+        "notice"
+      ],
+      "kind": "acceptance_form",
+      "value": "오브제"
+    },
+    {
+      "fact_id": "notice-거창군-acceptance",
+      "source_url": "https://fwith.co.kr/page/notice.php",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "거창군",
+      "facility_scope": "seller notice: all funeral venues in named county",
+      "product_id": null,
+      "allowed_slots": [
+        "notice"
+      ],
+      "kind": "acceptance_form",
+      "value": "오브제"
+    },
+    {
+      "fact_id": "notice-고령군-acceptance",
+      "source_url": "https://fwith.co.kr/page/notice.php",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "고령군",
+      "facility_scope": "seller notice: all funeral venues in named county",
+      "product_id": null,
+      "allowed_slots": [
+        "notice"
+      ],
+      "kind": "acceptance_form",
+      "value": "영정바구니"
+    },
+    {
+      "fact_id": "notice-청도군-acceptance",
+      "source_url": "https://fwith.co.kr/page/notice.php",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "청도군",
+      "facility_scope": "seller notice: all funeral venues in named county",
+      "product_id": null,
+      "allowed_slots": [
+        "notice"
+      ],
+      "kind": "acceptance_form",
+      "value": "쌀화환"
+    },
+    {
+      "fact_id": "notice-완도군-acceptance",
+      "source_url": "https://fwith.co.kr/page/notice.php",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "완도군",
+      "facility_scope": "seller notice: all funeral venues in named county",
+      "product_id": null,
+      "allowed_slots": [
+        "notice"
+      ],
+      "kind": "acceptance_form",
+      "value": "쌀화환 또는 꽃바구니"
+    },
+    {
+      "fact_id": "sku-B213-options-zero",
+      "source_url": "https://fwith.co.kr/shop/item.php?it_id=B213",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "product detail",
+      "facility_scope": null,
+      "product_id": "B213",
+      "allowed_slots": [
+        "choice"
+      ],
+      "kind": "seller_options",
+      "value": "선택옵션 0개·추가옵션 0개"
+    },
+    {
+      "fact_id": "seller-order-history-menu",
+      "source_url": "https://fwith.co.kr/",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "site navigation",
+      "facility_scope": null,
+      "product_id": null,
+      "allowed_slots": [
+        "faq"
+      ],
+      "kind": "order_history_navigation",
+      "value": "주문내역조회 메뉴"
+    }
+  ]
+}
