@@ -1,0 +1,76 @@
+{
+  "id": "onehour-sky",
+  "businessModel": "service-lead",
+  "brand": "한시간스카이",
+  "siteTitle": "전국 스카이차 1시간 작업·반나절 기준요금",
+  "domain": "https://1hrsky.nalmada.net",
+  "requestedDomain": "https://1hrsky.nalmada.net",
+  "workerName": null,
+  "phone": "010-5322-1952",
+  "phonePendingBrandConfirmation": false,
+  "locale": "ko-KR",
+  "keyword": "스카이차",
+  "region": "전국",
+  "serviceLabel": "스카이차",
+  "theme": "classic",
+  "status": "preview",
+  "serviceHours": "전화 상담",
+  "workTypes": [
+    "1시간 간판·광고물 작업",
+    "외벽 점검·부분 보수",
+    "외부 조명 교체",
+    "유리·창호 시공 보조",
+    "시설물 설치·철거",
+    "실리콘·방수 부분 보수"
+  ],
+  "imageLibrary": "daysky",
+  "imagePool": [
+    "skycar-hero.webp",
+    "skycar-facade.webp",
+    "skycar-truck.webp"
+  ],
+  "imageAssetsApproved": true,
+  "publishEnabled": false,
+  "publicIndexingApproved": true,
+  "pricingPolicy": "half-day-minimum-consult",
+  "minimumBillingText": "1시간만 작업해도 반나절 요금 기준으로 견적을 협의합니다. 출동·장비 세팅·작업·철수 기본비용이 발생하므로 최종 금액은 현장 조건을 확인한 뒤 전화로 안내합니다.",
+  "heroTitle": "전국 스카이차 1시간 작업, 반일작업 전문 '한시간스카이'",
+  "heroSlogan": "신청 후 1시간 이내 도착을 목표로 가까운 기사를 신속하게 확인합니다. 실제 도착 시간은 배차 가능 여부 및 교통 상황에 따라 달라집니다.",
+  "callTitle": "1시간 작업도 반나절 기준으로 견적 상담",
+  "callDescription": "현장 주소·목표 높이·작업 종류·희망 시각을 알려주시면 가능한 가까운 기사를 확인합니다. 1시간 도착 여부는 배차 상황에 따라 안내합니다.",
+  "analytics": {
+    "enabled": false
+  },
+  "siteSearch": {
+    "enabled": false
+  },
+  "indexNow": {
+    "enabled": false,
+    "key": null
+  },
+  "staticAssetSoftLimit": 18000,
+  "source": "Owner-approved nationwide service inquiry and half-day minimum, 010-5322-1952 and photos reused; verified public binding and 55-to-all Jaccard; no unverified work history or guaranteed 1-hour arrival",
+  "navigation": [
+    {
+      "label": "홈",
+      "href": "/"
+    },
+    {
+      "label": "1시간 요금 안내",
+      "href": "/#rates"
+    },
+    {
+      "label": "작업 유형",
+      "href": "/#works"
+    },
+    {
+      "label": "전국 지역",
+      "href": "/#regions"
+    }
+  ],
+  "phoneUseApproved": true,
+  "domainOwnershipVerified": true,
+  "publicIndexingScope": "onehour-5436-20261028",
+  "naverSiteVerification": "24640409f1b53459210054eec4e83176009a0a84",
+  "releaseEvidencePath": "sites/onehour-sky/release-evidence.json"
+}
