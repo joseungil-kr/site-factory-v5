@@ -403,7 +403,9 @@ def main():
    'shippingEvidenceState':'No county-specific amount accepted until exact B201 source rows, 읍/면 exceptions and checkout calculation are verified',
    'priceReadback':'2026-11-07 09:53 UTC independent HTTP200 four SKU price/delivery readback, GitHub run 42361620276',
    'imageUsage':'Only new owned simple SVG illustration. No seller image copied.',
-   'privateDeploymentReady':False,'productionHost':None})
+   'privateDeploymentReady':False,'productionHost':None,
+   'factRegistry':'docs/evidence/v51-county-buyer-fact-registry-20261108.json',
+   'faqContract':'docs/V51_COUNTY_FAQ_FACT_CONTRACT_20261108.md'})
  print('V51_COUNTY_TRIAL_INPUTS_BUILT='+json.dumps({'siteId':ID,'totalPages':len(pages),
    'counties':len(counties),'provinces':len(provinces),'purposes':dict(Counter(x['purpose'] for x in pages))},ensure_ascii=False))
 if __name__=='__main__':main()
