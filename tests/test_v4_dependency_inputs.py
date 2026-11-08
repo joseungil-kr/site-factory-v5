@@ -1,5 +1,6 @@
 import importlib.util
 import io
+import json
 from pathlib import Path
 import tempfile
 import unittest
@@ -11,6 +12,15 @@ checks=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(checks)
 
 class DependencyInputsTests(unittest.TestCase):
+    def test_backup_matches_pinned_artifact(self):
+        manifest=json.loads((ROOT/'docs/v4-dependency-manifest.json').read_text())
+        dep=next(x for x in manifest['dependencies'] if x['id']=='todayflower-artifact')
+        backup=dep['backup']
+        self.assertEqual(backup['sha256'],dep['sha256'])
+        self.assertEqual(backup['sizeBytes'],84218864)
+        self.assertEqual(backup['restoredManifestFilesVerified'],5087)
+        self.assertFalse(backup['sharingChanged'])
+
     def test_correct_digest_and_size(self):
         with tempfile.NamedTemporaryFile() as f:
             f.write(b'known');f.flush()

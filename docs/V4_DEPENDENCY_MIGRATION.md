@@ -41,3 +41,13 @@ V5가 독립 배포 가능하다는 결론도 아니다.
 실측 결과는 [JSON 보고서](V4_DEPENDENCY_REPRODUCTION_20261108.json), 소스 ref/path/hash는 [manifest](v4-dependency-manifest.json) 참조.
 재검사: `python scripts/verify_v4_dependency_inputs.py --inputs /approved/pinned-inputs --official-archive /approved/official-codes.zip --todayflower-artifact /approved/todayflower.zip`.
 입력 디렉터리는 manifest의 localPath 구조를 사용하고 각 파일은 지정 repository/ref/path로 확보한다. 검사기는 네트워크·추출·쓰기·사이트 빌드·배포 기능이 없다. 원본 ZIP/artifact는 이번 커밋에 올리지 않았다. 지속 보관·V5 배포경로 전환·완전 독립 복구는 별도 미완료다.
+
+
+## Todayflower 원본 보존·복구 (2026-11-08)
+검증한 기존 ZIP을 변환하지 않고 사용자 Library에 보관했다. GitHub Actions artifact의 보고된 만료시각은 2026-11-14 08:46 UTC이며, 이 별도 보관본은 Actions artifact 수명에 의존하지 않는다.
+- Library ID: `libfile_036e72dc9e4481919d1742e1cd416804`, 버전0.
+- 파일: `todayflower-13036248347.zip`, 84218864 bytes.
+- SHA256: `16b52597fe77b0b4311ea21ad5daf6c5193af94346f8dc8df9834e676003a180`.
+- 지원 Library 경로로 별도 디렉터리에 다시 가져와 크기·ZIP hash 및 manifest5087파일 hash 재검사 통과.
+- 사용자 Library 안의 보관이며 공유·접근권한 변경 없음. GitHub Actions가 Library를 자동 읽도록 연결하지 않았다. 향후 허용된 담당자가 같은 Library ID로 복구해야 하며 임의 외부 세션에 대한 접근권한은 보장하지 않는다.
+- 독립 검수 담당도 같은 Library ID와 pinned file ID로 별도 경로 복구 후 크기·hash·5087파일 재검사에 통과했다(검수 담당 보고). 향후 모든 임의 세션의 접근을 보장하는 것은 아니다. 저장 성공을 운영 복구·배포 전환 완료로 간주하지 않는다.

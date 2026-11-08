@@ -38,8 +38,21 @@
       "originalRun": 41185803963,
       "sha256": "16b52597fe77b0b4311ea21ad5daf6c5193af94346f8dc8df9834e676003a180",
       "rssGeneratorRef": "01563363af7c7b968f1a03c24729cc2f23c81664",
-      "status": "downloaded; verification-report-separate",
-      "retentionRisk": "Artifact is not durable source; current availability does not prove future retention"
+      "status": "downloaded; all5087-manifest-file-hashes-verified; library-stored-and-restored",
+      "retentionRisk": "GitHub artifact expiry reported 2026-11-14T08:46Z; verified original now additionally retained in user Library; future access still requires authorized Library identity",
+      "backup": {
+        "provider": "ChatGPT Library",
+        "libraryFileId": "libfile_036e72dc9e4481919d1742e1cd416804",
+        "fileId": "file_00000000c6b881f58a97f883b27d4a10",
+        "fileName": "todayflower-13036248347.zip",
+        "version": 0,
+        "sizeBytes": 84218864,
+        "sha256": "16b52597fe77b0b4311ea21ad5daf6c5193af94346f8dc8df9834e676003a180",
+        "restoredSizeAndDigestVerified": true,
+        "restoredManifestFilesVerified": 5087,
+        "sharingChanged": false,
+        "crossThreadAccess": "independent-authorized-subagent-materialization-and-hash-check-passed"
+      }
     },
     {
       "id": "clinic-rss-composite",
