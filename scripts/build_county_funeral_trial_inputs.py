@@ -11,6 +11,7 @@ from collections import Counter
 from v5.site_plan import initial_spec,validate_plan
 from v5.config import ROOT
 from scripts.county_copy_pools import purpose_intros,purpose_sections,expanded_pools,county_intents,skus_for,INTENTS,validate_restricted_ownership
+from scripts.county_fact_contract import enforce_all_pools,check_page
 
 ID='county-funeral-ownerprivate-test'
 SITE=ROOT/'sites'/ID
@@ -277,8 +278,8 @@ def main():
     '판매처 B213 상품 상세에는 수량 조절, 바로구매, 장바구니 버튼이 있습니다. 수량을 고른 뒤 원하는 주문 경로를 선택할 수 있습니다.'),
   '거창군':('리본 발신인과 수령 정보',
     '거창군 빈소에 전달할 조의 문구와 보내는 분의 이름을 정리하고, 실제 꽃을 받을 장례식장명과 빈소 정보를 함께 준비해 주세요.',
-    '거창군 오브제 리본에는 어떤 이름을 적나요?',
-    '상품 상세에는 선택옵션 0개·추가옵션 0개로 표시됩니다. 리본 문구 입력 방법은 판매처 고객센터 1844-0644에서 확인할 수 있습니다.')
+    '접수한 근조상품 주문내역은 어디서 조회하나요?',
+    '판매처 사이트의 주문내역조회 메뉴에서 접수한 주문 정보를 확인할 수 있습니다.')
  }
  for c in counties:
   if c['name'] not in obje_actions:continue
@@ -353,6 +354,10 @@ def main():
    {'slot':'order','heading':focus[2],'paragraph':focus[3]},
   ]
   spec['purposePools']['province-'+p['code']]=scope
+ # Bind every buyer-purpose pool and fact to the external registry before rendering.
+ facts=enforce_all_pools(spec['purposePools'])
+ for page in pages:
+  check_page(page,spec['purposePools'],facts)
  result=validate_plan(spec,ID)
  assert result['ready'],result['errors']
  site={
