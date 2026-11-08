@@ -47,6 +47,11 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertNotIn('{townships}',text)
                 self.assertIn(p['townships'],text)
                 self.assertEqual(p['siteVariantPolicy'],'county-v51')
+                if p['purpose'].startswith('budget'):
+                    delivery=[s for s in a['sections'] if s['slot']=='delivery']
+                    self.assertEqual(len(delivery),1)
+                    self.assertIn(delivery[0]['heading'],(
+                        '희망 도착 시간','배송 요청 시각','수령 시설 확인','수령 날짜 전달'))
                 self.assertGreater(int(p['townshipCount']),0)
                 if len(selected)<4:
                     self.assertFalse(any(x in text for x in ('네 상품만 비교한','같은 등급으로 간주하지 않습니다')))
