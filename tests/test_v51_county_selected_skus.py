@@ -2,7 +2,7 @@
 import json,re,unittest
 from pathlib import Path
 from scripts.build_county_funeral_trial_inputs import main as generate,ID,SITE,PRICES
-KNOWN_PRICES={**PRICES,'B213':120000,'B054':90000}
+KNOWN_PRICES={**PRICES,'B213':120000,'B054':90000,'B211':59000}
 from scripts.county_copy_pools import product_skus_in_text,listed_prices_in_text
 from v5.config import read_site,ConfigError
 from v5.purpose_render import assemble
@@ -210,7 +210,7 @@ class CountySelectedSkuContract(unittest.TestCase):
                         self.assertEqual(p['productSkus'],['B213'])
                         self.assertIn('data-product-sku="B213"',html)
                     elif p['county']=='고령군':
-                        self.assertEqual(p['productSkus'],['CAT2090'])
+                        self.assertEqual(p['productSkus'],['B211'])
                         self.assertIn('영정바구니 상품 목록 보기',html)
                     else:
                         self.assertEqual(p['productSkus'],['B054'])
@@ -228,7 +228,7 @@ class CountySelectedSkuContract(unittest.TestCase):
         from scripts.build_county_trial_review_only import main as render_review, OUT
         render_review()
         special={'연천군':('B213',),'부안군':('B213',),'거창군':('B213',),
-                 '고령군':('CAT2090',),'청도군':('B054',),'완도군':('B054',)}
+                 '고령군':('B211',),'청도군':('B054',),'완도군':('B054',)}
         for page in self.data['pages']:
             if page.get('pageType')!='county':continue
             with self.subTest(region=page['county']):
@@ -237,9 +237,10 @@ class CountySelectedSkuContract(unittest.TestCase):
                     self.assertEqual(tuple(page['productSkus']),special[page['county']])
                     self.assertNotIn('data-product-sku="B201"',html)
                     self.assertNotIn('data-product-sku="B205"',html)
-                    if special[page['county']][0]=='CAT2090':
-                        self.assertNotIn('상품번호 CAT2090',html)
-                        self.assertNotIn('data-track-event="shop"',html)
+                    if page['county']=='고령군':
+                        self.assertIn('shop/item.php?it_id=B211',html)
+                        self.assertIn('59,000원',html)
+                        self.assertIn('영정바구니 상품 분류 보기',html)
                     else:
                         self.assertIn('shop/item.php?it_id='+special[page['county']][0],html)
                 else:
