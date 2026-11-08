@@ -107,8 +107,8 @@ def purpose_sections(title,choice,delivery,extra):
 # These additional slots are compulsory per purpose; they cannot be chosen away
 # by hashed variants. A county page carries only the products for its decision.
 INTENTS=[
- ('budget-entry','budget',['B201','B202'],'같은 가격의 상품번호 확인',
-  'B201은 판매처에서 근조 3단 화환, B202는 근조화환 B202로 표기한 별도 주문 항목입니다. 두 상품의 표시가격은 59,000원으로 같으며 상품번호와 직접 주문 링크가 각각 구분됩니다.',
+ ('budget-entry','budget',['B201','B202'],'근조화환 기본 주문 정보',
+  '판매처에는 B201이 근조 3단 화환, B202가 근조화환 B202로 등록돼 있습니다. 각 상품 카드에서 해당 상품의 주문 상세로 이동할 수 있습니다.',
   '가격 외 확인 항목','상품을 고른 뒤에는 수령 장례식장명·빈소·희망 날짜와 리본에 적을 이름을 준비하면 주문 내용을 정확하게 입력하기 편리합니다.'),
  ('budget-upgrade','budget',['B201','B205'],'표시가 5만 원 차이 비교',
   'B201과 B205는 서로 다른 가격대의 상품입니다. 표시가격만으로 꽃 수량과 크기를 판단하기보다 각 판매처 상세의 구성과 규격을 비교해 주세요.',
@@ -165,7 +165,7 @@ INTENTS=[
 # Each introduction answers one actual buyer decision in natural Korean.
 # The selected cohort is defined in INTENTS; prices below belong only to it.
 INTENT_INTROS={
- 'budget-entry':'{county}에 보내는 근조화환을 59,000원 예산에서 고르신다면 판매처의 서로 다른 상품번호 B201과 B202를 확인할 수 있습니다.',
+ 'budget-entry':'{county} 장례식장으로 보낼 근조화환을 준비할 때, 상품 주문 링크와 수령지·조의 문구 정보를 함께 살펴볼 수 있습니다.',
  'budget-upgrade':'{county} 근조화환의 B201은 59,000원, B205는 109,000원으로 기준가격 차이가 50,000원입니다. 두 상품의 구성과 배송 조건을 함께 비교해 보세요.',
  'budget-premium':'{county} 근조화환을 상위 가격대에서 고르신다면 B205와 B206 두 상품의 상세 사진·규격·주문 옵션을 나란히 살펴보세요.',
  'budget-total':'{county}에 보낼 근조화환 B202와 B206은 상품가격뿐 아니라 선택할 수 있는 옵션을 함께 살펴본 뒤 예산에 맞게 결정해 보세요.',
@@ -177,7 +177,7 @@ INTENT_INTROS={
  'venue-form':'{county} 장례식장에 3단 근조화환을 보내시려면 설치 공간과 반입 가능 여부를 확인해 보세요. 선택한 상품번호와 정확한 시설 주소로 주문을 상담할 수 있습니다.',
  'venue-shipping':'{county} 근조화환의 배송비는 선택한 상품과 장례식장의 상세 주소를 기준으로 확인해 주세요. 읍·면 정보가 정해지면 주문 화면에서 적용 금액을 살펴볼 수 있습니다.',
  'venue-order':'{county} 근조화환 주문서에는 상품번호와 장례식장·빈소, 희망일, 리본 문구를 구분해 입력하면 편리합니다. 상품별 주문 링크를 통해 확인할 수 있습니다.',
- 'ribbon-text':'{county} 장례식장에 보낼 근조화환의 조의 문구 예시와 리본 주문 절차를 살펴볼 수 있습니다.',
+ 'ribbon-text':'{county} 장례식장에 보낼 조의 문구 예시와 빈소에 전달할 정보를 정리했습니다.',
  'ribbon-sender':'{county} 근조화환에 적을 보내는 사람의 이름을 정리해 주세요. 개인 명의와 회사·단체 명의를 구분하고 리본 문구를 함께 확인할 수 있습니다.',
  'ribbon-company':'{county} 근조화환을 회사나 단체 명의로 보내신다면 리본에 표시할 정식 명칭을 준비해 주세요. 실제 받는 시설명과 발신 명의는 별도 항목으로 정리하면 됩니다.',
  'ribbon-charge':'{county} 근조화환 리본의 문구·인쇄 옵션을 고르실 때 추가 비용이 있는지도 살펴보세요. 선택한 상품의 표시가격과 배송비를 함께 비교할 수 있습니다.',
@@ -320,7 +320,7 @@ def expanded_pools(base):
                 {'slot':'choice','heading':'근조화환 종류 확인',
                  'paragraph':'판매처에서 B201은 근조 3단 화환으로 표기하며 B202는 다른 상품번호입니다. 같은 가격의 두 링크 중 원하는 항목을 선택할 수 있습니다.'},
                 {'slot':'choice','heading':'B201과 B202 구분',
-                 'paragraph':'두 상품은 동일한 59,000원 표시가를 갖고 있습니다. B201은 근조 3단 화환, B202는 근조화환 B202라는 상품명으로 연결되며 주문번호가 구분됩니다.'},
+                 'paragraph':'B201은 근조 3단 화환, B202는 근조화환 B202라는 판매처 이름으로 등록돼 있습니다. 각각의 상품 카드에서 주문 상세를 열 수 있습니다.'},
                 {'slot':'choice','heading':'가격 외 주문번호',
                  'paragraph':'B201과 B202는 각각 별도의 상품 상세주소로 연결됩니다. 표시가격은 같으므로 상품번호로 주문 항목을 구분할 수 있습니다.'},
                 {'slot':'choice','heading':'59,000원 상품 선택',
@@ -352,8 +352,8 @@ def expanded_pools(base):
         elif name=='budget-entry':
             # The choice section already answers "which 59,000 won items?".
             # FAQ must add a new answer about receiving venue compatibility.
-            pool['faqs']=[{'q':'{county} 장례식장은 3단 화환을 받을 수 있나요?',
-                           'a':'받는 장례식장마다 화환을 들이는 장소와 반입 조건이 다를 수 있습니다. 상품을 주문하기 전에 시설의 최신 반입 안내와 수령 빈소를 확인해 주세요.'}]
+            pool['faqs']=[{'q':'주문한 근조화환 내역은 어디서 확인하나요?',
+                           'a':'판매처 상단의 주문내역조회 메뉴에서 주문 정보를 조회할 수 있습니다. 주문 시 이용한 구매 경로에서 내역을 확인해 주세요.'}]
         else:
             pool['faqs']=[pool['faqs'][-1]]
         for item in pool['sections']:
