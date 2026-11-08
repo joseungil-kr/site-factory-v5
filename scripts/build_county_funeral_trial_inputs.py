@@ -242,14 +242,37 @@ def main():
     '군별 배송 추가비와 읍·면 예외는 받는 시설의 상세 주소를 기준으로 판매처에서 확인할 수 있습니다.',
     '받는 군과 장례식장 주소, 희망일, 리본 문구를 준비하면 실제 결제 총액을 확인할 수 있습니다.',
     '군 지역 화환의 배송비는 어떻게 확인하나요?')
- national['introductions']=['전국 군 지역의 근조화환 표시가격과 상품별 주문처를 지역별로 살펴볼 수 있습니다.']
+ national['introductions']=['받는 장례식장이 있는 군을 먼저 선택한 뒤 근조화환의 상품별 표시가격과 주문 정보를 확인해 보세요.']
+ # The home already has the entire province navigator and four price cards;
+ # repeating prices, shipment caveats and checkout instructions across five
+ # generic sections + two FAQs produced the independent 82/100 rejection.
+ national['sections']=[
+  {'slot':'choice','heading':'같은 가격의 상품 비교',
+   'paragraph':'B201과 B202는 각각 59,000원으로 표시된 서로 다른 상품번호입니다. 상품명과 코드가 다르므로 꽃 구성과 크기, 선택 옵션은 각 상품 상세에서 확인해 고르실 수 있습니다.'},
+  {'slot':'order','heading':'받는 군과 장례식장 찾기',
+   'paragraph':'위 지역 목록에서 수령 시설이 있는 광역 지역과 군을 선택해 주세요. 장례식장명과 빈소를 확인한 뒤 해당 상품의 주문 페이지로 이동할 수 있습니다.'}
+ ]
+ national['faqs']=[
+  {'q':'군 지역의 배송료와 주문 합계는 어떻게 확인하나요?',
+   'a':'선택한 상품의 주문 화면에서 정확한 장례식장 주소를 입력하면 적용 배송료와 옵션 비용을 포함한 금액을 확인할 수 있습니다.'}
+ ]
  province=pool('광역 지역별 군 근조화환',
     '{province}에 속한 군 지역의 근조화환 상품 표시가와 주문 연결을 확인할 수 있습니다.',
     '{province}의 군 지역으로 보낼 근조화환 상품 B201·B202·B205·B206의 가격과 유형을 비교합니다.',
     '수령 시설의 읍·면 상세 주소를 기준으로 추가 배송비와 주문 가능 여부를 상담할 수 있습니다.',
     '관내 군 지역을 선택한 뒤 장례식장명과 빈소·희망일을 판매처에 전달할 수 있습니다.',
     '해당 광역 지역의 군 근조화환을 어떻게 주문하나요?')
- province['introductions']=['{province} 관내 군 지역 근조화환의 상품 가격과 수령 시설별 주문 안내를 확인할 수 있습니다.']
+ province['introductions']=['{province}에서 근조화환을 보낼 군을 고르면 상품별 주문 링크와 수령 시설 정보를 확인할 수 있습니다.']
+ province['sections']=[
+  {'slot':'choice','heading':'어느 군으로 보낼지 정하기',
+   'paragraph':'수령할 장례식장이 있는 군을 위 지역 목록에서 선택해 주세요. 근조화환 상품은 코드별로 구분되며 가격과 구성은 각 상품 카드·상세 화면에서 비교할 수 있습니다.'},
+  {'slot':'order','heading':'장례식장 수령 정보',
+   'paragraph':'장례식장명·도로명 주소·빈소와 희망 전달 날짜가 정해지면 선택한 화환의 주문 화면에서 필요한 정보를 입력할 수 있습니다.'}
+ ]
+ province['faqs']=[
+  {'q':'선택한 군의 추가 배송비는 어디서 확인하나요?',
+   'a':'상품번호와 정확한 수령 주소를 판매처에 전달하면 접수 가능 여부와 실제 적용 요금을 확인할 수 있습니다.'}
+ ]
  spec['purposePools']['national']=national
  spec['purposePools']['province']=province
  # Only counties attested by the pinned official parent ledger are listed.
@@ -259,18 +282,10 @@ def main():
   scope=__import__('copy').deepcopy(province)
   joined='·'.join(names)
   scope['introductions']=[p['fullName']+'의 '+str(len(names))+'개 군 지역을 안내합니다. 근조화환을 받을 군을 고르면 상품가격과 주문처로 이동할 수 있습니다.']
-  scope['sections'].append({'slot':'covered-counties',
-    'heading':p['fullName']+'의 군 지역 검색',
-    'paragraph':p['fullName']+'에서 근조화환을 보낼 수령 군을 선택해 주세요. 해당 군은 '+joined+'입니다. 선택한 군의 페이지에서 상품과 주문 정보를 살펴볼 수 있습니다.'})
-  selection=(names[0]+'의 수령 시설명과 주소를 준비한 다음 B201·B202·B205·B206의 가격과 주문조건을 볼 수 있습니다.' if len(names)==1 else '목록에서 해당 군을 선택하고 장례식장명과 빈소·주소를 확인한 다음 B201·B202·B205·B206의 주문조건을 비교할 수 있습니다.')
-  scope['sections'].append({'slot':'county-selection',
-    'heading':'군 지역 선택과 상품 주문',
-    'paragraph':selection})
-  focus=PROVINCE_PURCHASE_FOCUSES[p['code']]
-  scope['sections'].extend([
-   {'slot':'purchase-focus','heading':focus[0],'paragraph':focus[1]},
-   {'slot':'purchase-details','heading':focus[2],'paragraph':focus[3]},
-  ])
+  # The region navigator immediately above product cards already lists
+  # every child county, so repeating the entire list in an article is noise.
+  # Keep the official county count in the introduction only.
+  assert len(names)>0
   spec['purposePools']['province-'+p['code']]=scope
  result=validate_plan(spec,ID)
  assert result['ready'],result['errors']
