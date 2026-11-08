@@ -57,7 +57,8 @@ def evaluate():
             [f['q']+' '+f['a'] for f in assembled['faq']])
         skus=set(p['productSkus'])
         mentioned=product_skus_in_text(body)
-        expected_price={PRICES[sku] for sku in skus}
+        catalog_prices={x['sku']:x.get('referencePrice') for x in data['products']}
+        expected_price={catalog_prices[sku] for sku in skus if type(catalog_prices[sku]) is int}
         allowed_price={format(x,',')+'원' for x in expected_price}
         allowed_price|={format(abs(x-y),',')+'원' for x in expected_price for y in expected_price if x!=y}
         bad_words=[w for w in forbidden if w in html or w in body]
@@ -69,9 +70,11 @@ def evaluate():
         nscore=24 if not bad_words else 12
         if assembled['intro'] in [x['paragraph'] for x in assembled['sections']]:nscore-=8
         fscore=29 if not bad_sku and not bad_price and not independent_page['errors'] and set(parser.skus)==skus and len(parser.skus)==len(skus) else 8
-        if not all(format(PRICES[sku],',')+'원' in html for sku in skus):fscore-=10
-        if '2026-11-07' not in html:fscore-=2
-        utility=29 if all('shop/item.php?it_id='+sku in html for sku in skus) else 13
+        if not all(format(catalog_prices[sku],',')+'원' in html for sku in skus if type(catalog_prices[sku]) is int):fscore-=10
+        if not all(str(next(x for x in data['products'] if x['sku']==sku).get('priceCheckedOn')) in html
+                   for sku in skus if type(catalog_prices[sku]) is int):fscore-=2
+        utility=29 if all((('shop/list.php?ca_id=2090' in html) if sku=='CAT2090'
+                           else ('shop/item.php?it_id='+sku in html)) for sku in skus) else 13
         if is_county and (p['townships'] not in body or '읍·면' not in body):
             utility-=8
         if not ('빈소' in body or '장례식장' in body or '수령' in body):
