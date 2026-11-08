@@ -149,6 +149,24 @@ def assemble(page, pools, products, *, service=False):
             raise ConfigError('county-v51 off-card price in copy: '+str(sorted(seen_prices-allowed_amounts)))
         if assembled['intro'] in [x['paragraph'] for x in assembled['sections']]:
             raise ConfigError('county-v51 duplicated introduction as section')
+        # Re-evaluate the frozen FAQ/section registry contract against the
+        # *actual* pool used to assemble this page. Editing site-spec after
+        # generation must not bypass the original all-purpose audit.
+        if 'faqContractVersion' in pool:
+            import copy
+            from scripts.county_fact_contract import registry,enforce_pool,check_page
+            try:
+                facts=registry()
+                verified=copy.deepcopy(pool)
+                enforce_pool(purpose,verified,facts)
+                check_page(page,pools,facts)
+                for original,new in zip(pool['faqs'],verified['faqs']):
+                    if any(original.get(field)!=new.get(field) for field in (
+                        'customer_question','answer_topic','answer_fact_ids',
+                        'answer_kind','output_slot')):
+                        raise ValueError('stale or forged FAQ fact metadata')
+            except (ValueError,KeyError,TypeError) as exc:
+                raise ConfigError('county-v51 FAQ/fact ownership: '+str(exc)) from exc
     return assembled
 
 
