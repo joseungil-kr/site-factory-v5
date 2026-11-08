@@ -73,7 +73,13 @@ STYLE = r"""
 .tf-choose-card-body{padding:16px}.tf-articles{grid-template-columns:1fr}.tf-product-grid{gap:9px}
 .tf-product-copy{padding:11px}.tf-product h4{font-size:14px}.tf-product-price{font-size:18px}
 .tf-pack-photo{height:245px}.tf-related{grid-template-columns:1fr}.tf-section{padding-block:30px}}
-@media(max-width:390px){.tf-hero h1{font-size:31px}.tf-choose-card h3{font-size:17px}.tf-product a{font-size:11px}}
+@media(max-width:390px){.tf-hero h1{font-size:31px}.tf-choose-card h3{font-size:17px}
+.tf-product-grid{grid-template-columns:minmax(0,1fr);gap:14px}
+.tf-product-copy{padding:15px 16px 18px}.tf-product h4{font-size:17px}
+.tf-product-price{font-size:22px;overflow-wrap:anywhere}
+.tf-product a{font-size:14px;min-height:44px;display:flex;align-items:center;justify-content:center}
+.tf-product img{aspect-ratio:4/3;object-position:center}
+}
 """
 
 GENERATED_FILES = frozenset({
