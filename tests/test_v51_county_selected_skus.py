@@ -50,6 +50,25 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertGreater(int(p['townshipCount']),0)
                 if len(selected)<4:
                     self.assertFalse(any(x in text for x in ('네 상품만 비교한','같은 등급으로 간주하지 않습니다')))
+    def test_buyer_intent_headline_and_early_region_navigation(self):
+        # Inspect generated HTML instead of just trusting the page specification.
+        from scripts.build_county_trial_review_only import main as render_review, OUT
+        from scripts.county_copy_pools import INTENTS
+        render_review()
+        headings={row[0]:row[3] for row in INTENTS}
+        for p in self.data['pages']:
+            html=(OUT/('index.html' if p['number']==1 else str(p['number'])+'.html')).read_text(encoding='utf-8')
+            with self.subTest(page=p['number']):
+                nav=html.find('<nav aria-label="관련 지역">')
+                products=html.find('<section class="recommendations">')
+                self.assertGreaterEqual(nav,0)
+                self.assertGreater(products,nav, 'Regional navigation must precede the long product/FAQ sections')
+                self.assertEqual(html.count('<nav aria-label="관련 지역">'),1)
+                if p['pageType']=='county':
+                    self.assertIn(headings[p['purpose']],p['title'])
+                    self.assertIn(p['county'],p['title'])
+                    self.assertIn(p['title'],html)
+
     def test_real_product_card_headings_and_current_prices(self):
         from scripts.build_county_trial_review_only import main as render_review, OUT
         render_review()
