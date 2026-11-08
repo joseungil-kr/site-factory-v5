@@ -139,7 +139,7 @@ def products_html(products, selected, site_id=None):
         price=('<p class="product-price">'+format(p['referencePrice'],',')+'원</p>'
                if _has_proof(p,'price') else '')
         note=('<p class="product-note">상품번호 '+markup.h(sku)+
-              ' · 기준가 확인 2026-11-07 · 꽃의 상세 구성·규격은 판매처 상품정보에서 볼 수 있습니다.</p>'
+              ' · 기준가 확인 '+markup.h(p.get('priceCheckedOn',''))+' · 꽃의 상세 구성·규격은 판매처 상품정보에서 볼 수 있습니다.</p>'
               if site_id=='county-funeral-ownerprivate-test' else '')
         rows.append('<article class="product" data-product-sku="'+markup.h(sku)+'">'+image+
                     '<div class="product-copy"><h3>'+markup.h(p['name'])+'</h3>'+price+note+'</div>'+
