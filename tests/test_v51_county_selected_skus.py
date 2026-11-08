@@ -536,5 +536,38 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertIn('noindex,nofollow',html)
                 self.assertNotIn('rel="canonical"',html)
 
+
+    def test_all_purpose_fact_registry_faq_question_answer_contract(self):
+        from scripts.county_fact_contract import (
+            registry, faq_topic, answer_topic, bind_faq, check_page)
+        facts=registry()
+        pages=self.data['pages']
+        self.assertEqual(len(pages),95)
+        purposes={p['purpose'] for p in pages}
+        self.assertEqual(set(self.plan['purposePools']),purposes | {'budget','venue','ribbon','province'})
+        for page in pages:
+            with self.subTest(page=page['number'],purpose=page['purpose']):
+                pool=self.plan['purposePools'][page['purpose']]
+                self.assertTrue(check_page(page,pool if False else self.plan['purposePools'],facts))
+                for f in pool['faqs']:
+                    self.assertEqual(f['customer_question'],f['q'])
+                    self.assertIn(f['answer_kind'],('sourced_fact','buyer_guidance'))
+                    self.assertEqual(f['output_slot'],'faq')
+                    self.assertIn('answer_fact_ids',f)
+                    self.assertEqual(f['answer_topic'],faq_topic(f['q']))
+                    if f['answer_kind']=='sourced_fact':
+                        self.assertTrue(f['answer_fact_ids'])
+                    for fid in f['answer_fact_ids']:
+                        self.assertIn(fid,facts)
+                        self.assertIn('faq',facts[fid]['allowed_slots'])
+        false_answer={'q':'거창군 오브제 리본에는 어떤 이름을 적나요?',
+                      'a':'상품 상세에는 선택옵션 0개·추가옵션 0개로 표시됩니다. 고객센터에 문의해 주세요.'}
+        with self.assertRaisesRegex(ValueError,'ribbon name question'):
+            bind_faq('restricted-obje-거창군',false_answer,facts)
+        false_fact={'q':'접수한 주문내역은 어디서 조회하나요?',
+                    'a':'판매처 공지에 따르면 거창군에는 상품 배송이 보장됩니다.'}
+        with self.assertRaisesRegex(ValueError,'factual claim'):
+            bind_faq('restricted-obje-거창군',false_fact,facts)
+
 if __name__=='__main__':
     unittest.main(verbosity=2)
