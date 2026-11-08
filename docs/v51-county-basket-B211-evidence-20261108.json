@@ -1,0 +1,28 @@
+{
+  "site": "county-funeral-ownerprivate-test",
+  "checkedOn": "2026-11-08",
+  "seller": "꽃이랑 / fwith.co.kr",
+  "listingURL": "https://fwith.co.kr/shop/list.php?ca_id=20",
+  "subcategoryURL": "https://fwith.co.kr/shop/list.php?ca_id=2090",
+  "sku": "B211",
+  "productName": "근조 영정바구니",
+  "listedPriceKRW": 59000,
+  "directItemURL": "https://fwith.co.kr/shop/item.php?it_id=B211",
+  "listingEvidence": "Official condolence-wreath parent catalog displays B211 근조 영정바구니 59,000원 and a linked product detail page; 영정바구니 appears as an official subcategory.",
+  "confirmed": [
+    "name",
+    "seller SKU",
+    "listed price on category parent",
+    "direct item link from catalog",
+    "subcategory link"
+  ],
+  "unconfirmed": [
+    "item-detail page direct readback: cache miss",
+    "checkout actually completable",
+    "current stock",
+    "delivery for Goryeong",
+    "seller product image licensing",
+    "options and extra charges"
+  ],
+  "policy": "Keep item as evidenced listing with link; do not assert checkout completed or guaranteed delivery. If direct item page fails external reviewer, mark destination revalidation pending; do not invent alternate SKU."
+}
