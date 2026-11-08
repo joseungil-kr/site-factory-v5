@@ -483,6 +483,7 @@ class CountySelectedSkuContract(unittest.TestCase):
                 validate_restricted_ownership(purpose,pool)
                 fact_id=RESTRICTED_FACT_OWNER[purpose]['fact_id']
                 self.assertIn(fact_id,page['sellerVenueNotice']['factIds'])
+                self.assertIn('notice-'+county+'-acceptance',page['sellerVenueNotice']['factIds'])
                 self.assertEqual(facts[fact_id]['source_url'],page['sellerVenueNotice']['sourceUrl'])
                 self.assertEqual(facts[fact_id]['region_scope'],[county])
                 self.assertEqual(facts[fact_id]['verification_status'],'confirmed')
