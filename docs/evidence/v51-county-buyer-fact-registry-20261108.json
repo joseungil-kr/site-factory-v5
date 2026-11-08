@@ -337,6 +337,36 @@
         "청도군": "쌀화환",
         "완도군": "쌀화환 또는 꽃바구니"
       }
+    },
+    {
+      "fact_id": "venue-cheongdo-rice-20261108",
+      "source_url": "https://fwith.co.kr/page/notice.php",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "청도군",
+      "facility_scope": "seller notice: all funeral venues in named county",
+      "product_id": null,
+      "allowed_slots": [
+        "notice"
+      ],
+      "kind": "acceptance_form",
+      "value": "쌀화환",
+      "legacy_alias_of": "notice-청도군-acceptance"
+    },
+    {
+      "fact_id": "venue-wando-rice-basket-20261108",
+      "source_url": "https://fwith.co.kr/page/notice.php",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": "완도군",
+      "facility_scope": "seller notice: all funeral venues in named county",
+      "product_id": null,
+      "allowed_slots": [
+        "notice"
+      ],
+      "kind": "acceptance_form",
+      "value": "쌀화환 또는 꽃바구니",
+      "legacy_alias_of": "notice-완도군-acceptance"
     }
   ]
 }
