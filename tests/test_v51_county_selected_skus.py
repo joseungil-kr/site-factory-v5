@@ -91,6 +91,12 @@ class CountySelectedSkuContract(unittest.TestCase):
                     self.assertIn(affected[p['county']],n['text'])
                     self.assertEqual(n['sourceUrl'],seller_notice)
                     self.assertIn('판매처 공지 확인',html)
+                    if affected[p['county']]=='오브제':
+                        self.assertEqual(n.get('alternativeUrl'),
+                            'https://fwith.co.kr/shop/item.php?it_id=B213')
+                        self.assertIn('근조 2단 오브제 상품 보기',html)
+                    else:
+                        self.assertFalse(n.get('alternativeUrl'))
                     self.assertLess(html.find('class="county-venue-notice"'),
                                     html.find('class="recommendations"'))
                 else:
