@@ -87,7 +87,9 @@ def evaluate():
         for faq in assembled['faq']:
             question=faq['q']
             answer=faq['a']
-            if '예산' in question:
+            if '내역' in question or '조회' in question:
+                required=('주문내역조회','조회','구매내역')
+            elif '예산' in question:
                 required=('가격','상품','예산')
             elif '리본' in question or '보낸 사람' in question:
                 required=('리본','명의','문구')
