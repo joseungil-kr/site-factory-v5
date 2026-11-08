@@ -102,10 +102,10 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertNotIn('단정하지 말고',html)
                 self.assertIn('근조 특대 3단',html)
             elif n==14:
-                self.assertIn('같은 가격의 상품번호 확인',p['title'])
+                self.assertIn('근조화환 기본 주문 정보',p['title'])
                 self.assertIn('근조 3단 화환',a['sections'][0]['paragraph'])
                 self.assertIn('근조화환 B202',a['sections'][0]['paragraph'])
-                self.assertIn('3단 화환을 받을 수 있나요?',a['faq'][0]['q'])
+                self.assertIn('주문한 근조화환 내역',a['faq'][0]['q'])
             elif n==26:
                 self.assertIn('문구 예시',a['intro'])
                 ribbon=next(s for s in a['sections'] if s['slot']=='ribbon')
