@@ -107,6 +107,7 @@ def enforce_pool(purpose,pool,facts):
             f=facts.get(fid)
             if not f or slot not in f['allowed_slots']:
                 raise ValueError('invalid section fact/slot '+purpose+': '+fid)
+    pool['faqContractVersion']=2
     pool['faqs']=[bind_faq(purpose,f,facts) for f in pool['faqs']]
     # Meaningful client questions should differ: a repeated factual options
     # FAQ is not allowed after an options section.
