@@ -107,7 +107,7 @@ def purpose_sections(title,choice,delivery,extra):
 # These additional slots are compulsory per purpose; they cannot be chosen away
 # by hashed variants. A county page carries only the products for its decision.
 INTENTS=[
- ('budget-entry','budget',['B201','B202'],'근조화환 기본 주문 정보',
+ ('budget-entry','budget',['B201','B202'],'기본 주문 정보',
   '판매처에는 B201이 근조 3단 화환, B202가 근조화환 B202로 등록돼 있습니다. 각 상품 카드에서 해당 상품의 주문 상세로 이동할 수 있습니다.',
   '가격 외 확인 항목','상품을 고른 뒤에는 수령 장례식장명·빈소·희망 날짜와 리본에 적을 이름을 준비하면 주문 내용을 정확하게 입력하기 편리합니다.'),
  ('budget-upgrade','budget',['B201','B205'],'표시가 5만 원 차이 비교',
@@ -143,7 +143,7 @@ INTENTS=[
  ('venue-order','venue',['B202','B205'],'주문 내용 재확인',
   '근조화환의 상품번호와 장례식장명, 빈소와 리본을 분리해 확인하면 비슷한 상품명이나 수령지 혼동을 줄일 수 있습니다.',
   '주문서 기록','상품 선택과 수령지 정보가 일치하는지 주문 화면에서 다시 확인하는 흐름을 제공합니다. 실제 배송 확인은 판매처 주문내역에서 진행합니다.'),
- ('ribbon-text','ribbon',['B201','B202'],'리본 주문에 사용할 상품 확인',
+ ('ribbon-text','ribbon',['B201','B202'],'리본 문구 예시',
   'B201과 B202는 모두 59,000원으로 확인된 별도 근조화환 상품입니다. 주문할 상품번호를 선택한 뒤 리본 인쇄 항목을 입력할 수 있습니다.',
   '표현 확인','회사·단체 명의가 길다면 사용할 정식 명칭이나 약칭을 미리 결정해 주세요. 리본에 인쇄될 이름은 주문 확정 전 한 번 더 확인할 수 있습니다.'),
  ('ribbon-sender','ribbon',['B205','B206'],'보내는 분 이름',
@@ -343,13 +343,21 @@ def expanded_pools(base):
                  'paragraph':'단체에서 보내는 근조화환은 “깊은 애도를 표합니다”와 같은 문구에 회사나 모임의 정식 명칭을 함께 적을 수 있습니다.'},
                 {'slot':'ribbon','heading':'개인 발신인 표기',
                  'paragraph':'개인 명의의 조의 문구로는 “삼가 고인의 명복을 빕니다”를 사용할 수 있습니다. 보내는 이름은 별도 리본 항목에 입력할 수 있습니다.'},
-                {'slot':'ribbon','heading':'인쇄 전 문자 확인',
-                 'paragraph':'“謹弔(근조)”처럼 짧은 조의 표현을 선택할 수 있습니다. 한글 이름과 단체 약칭의 띄어쓰기는 인쇄 요청 전에 확인해 주세요.'},
+                {'slot':'ribbon','heading':'인쇄할 문구와 이름 예시',
+                 'paragraph':'조의 문구로 “삼가 고인의 명복을 빕니다” 또는 “謹弔(근조)”를 사용할 수 있습니다. 보내는 분의 명칭은 예를 들어 “○○회사 임직원 일동”처럼 별도로 적을 수 있습니다.'},
                 *region_lookup
             ]
             pool['faqs']=[{'q':'주문한 뒤 리본 문구를 바꿀 수 있나요?',
                            'a':'리본 인쇄 진행 상태에 따라 변경 가능 여부가 달라집니다. 주문한 판매처에 변경할 문구와 상품번호를 전달해 확인할 수 있습니다.'}]
         elif name=='budget-entry':
+            # The ribbon section must give new concrete text rather than repeating
+            # the receipt address already owned by the order section.
+            pool['sections']=[
+                ({'slot':'ribbon','heading':'리본 문구와 보내는 이름 예시',
+                  'paragraph':'조의 문구로 “삼가 고인의 명복을 빕니다”를 사용할 수 있습니다. 회사나 모임에서 보낸다면 보내는 이름을 “○○회사 임직원 일동”처럼 별도로 적을 수 있습니다.'}
+                 if item['slot']=='ribbon' else item)
+                for item in pool['sections']
+            ]
             # The choice section already answers "which 59,000 won items?".
             # FAQ must add a new answer about receiving venue compatibility.
             pool['faqs']=[{'q':'주문한 근조화환 내역은 어디서 확인하나요?',
