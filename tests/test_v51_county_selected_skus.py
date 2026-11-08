@@ -2,6 +2,7 @@
 import json,re,unittest
 from pathlib import Path
 from scripts.build_county_funeral_trial_inputs import main as generate,ID,SITE,PRICES
+KNOWN_PRICES={**PRICES,'B213':120000,'B054':90000}
 from scripts.county_copy_pools import product_skus_in_text,listed_prices_in_text
 from v5.config import read_site,ConfigError
 from v5.purpose_render import assemble
@@ -38,7 +39,7 @@ class CountySelectedSkuContract(unittest.TestCase):
                     [x['q']+' '+x['a'] for x in a['faq']])
                 self.assertTrue(product_skus_in_text(text)<=selected,
                     f"{p['number']}: prose names products missing from cards")
-                product_prices={PRICES[x] for x in selected}
+                product_prices={KNOWN_PRICES[x] for x in selected if x in KNOWN_PRICES}
                 permitted={format(x,',')+'원' for x in product_prices}
                 permitted|={format(abs(x-y),',')+'원' for x in product_prices for y in product_prices if x!=y}
                 self.assertTrue(listed_prices_in_text(text)<=permitted,
@@ -48,7 +49,8 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertIn(p['townships'],text)
                 self.assertEqual(p['siteVariantPolicy'],'county-v51')
                 self.assertEqual([s['slot'] for s in a['sections']],
-                    ['choice','order','ribbon','verified-townships'])
+                    (['choice','order','verified-townships'] if p['purpose'].startswith('restricted-')
+                     else ['choice','order','ribbon','verified-townships']))
                 self.assertEqual(len(a['faq']),1)
                 self.assertGreater(int(p['townshipCount']),0)
                 if len(selected)<4:
@@ -68,7 +70,10 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertGreater(products,nav, 'Regional navigation must precede the long product/FAQ sections')
                 self.assertEqual(html.count('<nav aria-label="관련 지역">'),1)
                 if p['pageType']=='county':
-                    self.assertIn(headings[p['purpose']],p['title'])
+                    if p['purpose'] in headings:
+                        self.assertIn(headings[p['purpose']],p['title'])
+                    else:
+                        self.assertIn('반입 안내',p['title'])
                     self.assertIn(p['county'],p['title'])
                     self.assertIn(p['title'],html)
 
@@ -92,16 +97,40 @@ class CountySelectedSkuContract(unittest.TestCase):
                     self.assertEqual(n['sourceUrl'],seller_notice)
                     self.assertIn('판매처 공지 확인',html)
                     if affected[p['county']]=='오브제':
-                        self.assertEqual(n.get('alternativeUrl'),
-                            'https://fwith.co.kr/shop/item.php?it_id=B213')
-                        self.assertIn('근조 2단 오브제 상품 보기',html)
+                        self.assertEqual(p['productSkus'],['B213'])
+                        self.assertIn('data-product-sku="B213"',html)
+                    elif p['county']=='고령군':
+                        self.assertEqual(p['productSkus'],['CAT2090'])
+                        self.assertIn('영정바구니 상품 목록 보기',html)
                     else:
-                        self.assertFalse(n.get('alternativeUrl'))
+                        self.assertEqual(p['productSkus'],['B054'])
+                        self.assertIn('data-product-sku="B054"',html)
+                    self.assertNotIn('data-product-sku="B201"',html)
                     self.assertLess(html.find('class="county-venue-notice"'),
                                     html.find('class="recommendations"'))
                 else:
                     self.assertFalse(n)
                     self.assertNotIn('class="county-venue-notice"',html)
+    def test_restriction_product_fit_and_cta_fail_closed(self):
+        from scripts.build_county_trial_review_only import main as render_review, OUT
+        render_review()
+        special={'연천군':('B213',),'부안군':('B213',),'거창군':('B213',),
+                 '고령군':('CAT2090',),'청도군':('B054',),'완도군':('B054',)}
+        for page in self.data['pages']:
+            if page.get('pageType')!='county':continue
+            with self.subTest(region=page['county']):
+                html=(OUT/(str(page['number'])+'.html')).read_text(encoding='utf-8')
+                if page['county'] in special:
+                    self.assertEqual(tuple(page['productSkus']),special[page['county']])
+                    self.assertNotIn('data-product-sku="B201"',html)
+                    self.assertNotIn('data-product-sku="B205"',html)
+                    if special[page['county']][0]=='CAT2090':
+                        self.assertNotIn('상품번호 CAT2090',html)
+                        self.assertNotIn('data-track-event="shop"',html)
+                    else:
+                        self.assertIn('shop/item.php?it_id='+special[page['county']][0],html)
+                else:
+                    self.assertNotIn('CAT2090',html)
     def test_real_product_card_headings_and_current_prices(self):
         from scripts.build_county_trial_review_only import main as render_review, OUT
         render_review()
@@ -114,9 +143,13 @@ class CountySelectedSkuContract(unittest.TestCase):
             a=assemble(p,self.plan['purposePools'],self.data['products'])
             self.assertEqual(body.count('data-product-sku='),len(p['productSkus']),p['number'])
             for sku in p['productSkus']:
-                expected=format(PRICES[sku],',')+'원'
                 self.assertIn('data-product-sku="'+sku+'"',body,p['number'])
-                self.assertIn(expected,body,p['number'])
+                if sku in KNOWN_PRICES:
+                    expected=format(KNOWN_PRICES[sku],',')+'원'
+                    self.assertIn(expected,body,p['number'])
+                else:
+                    self.assertEqual(sku,'CAT2090')
+                    self.assertIn('영정바구니 상품 목록 보기',body)
             self.assertIn('읍·면',body,p['number'])
             self.assertNotIn('네 상품만 비교한',body)
             self.assertNotIn('공개 페이지에 개인정보를 적지 않습니다',body)
@@ -160,7 +193,7 @@ class CountySelectedSkuContract(unittest.TestCase):
         expected={
             15:['B201','B205'],
             18:['B201','B202','B205'],
-            28:['B201','B205'],
+            28:['B054'],
             42:['B201','B206'],
             47:['B202','B206'],
             63:['B205','B206'],
