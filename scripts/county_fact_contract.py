@@ -85,7 +85,13 @@ def enforce_pool(purpose,pool,facts):
     for section in pool['sections']:
         text=section['paragraph']
         slot=section['slot']
-        if slot=='choice' and ('선택옵션 0개' in text or '추가옵션 0개' in text):
+        if '판매처 공지' in text:
+            summary=facts['seller-notice-six-county-summary']
+            mentioned=set(re.findall(r'[가-힣]+군',text))
+            if not mentioned or not mentioned.issubset(set(summary['region_scope'])):
+                raise ValueError('seller notice unsupported county scope '+purpose)
+            section['factIds']=['seller-notice-six-county-summary']
+        elif slot=='choice' and ('선택옵션 0개' in text or '추가옵션 0개' in text):
             section['factIds']=['sku-B213-options-zero']
         else:
             section['factIds']=section.get('factIds',[])
