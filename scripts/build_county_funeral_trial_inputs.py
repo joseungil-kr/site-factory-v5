@@ -109,7 +109,7 @@ SOURCE_SHIPPING={}  # Seller B201 county fee applicability was not independently
 SELLER_NOTICE_SOURCE='https://fwith.co.kr/page/notice.php'
 RESTRICTED_COUNTY_PRODUCTS={'연천군':('obje',['B213']),'부안군':('obje',['B213']),
  '거창군':('obje',['B213']),'청도군':('rice',['B054']),
- '완도군':('rice',['B054']),'고령군':('basket',[])}
+ '완도군':('rice',['B054']),'고령군':('basket',['CAT2090'])}
 SELLER_NOTICE_SHAPE={
  '연천군':'오브제',
  '부안군':'오브제',
@@ -282,7 +282,7 @@ def main():
     {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 해당 시설이 있는 주소를 지정해 주세요.'}],
    'faqs':[{'q':'배송 조건은 어디에서 확인하나요?','a':'B054 상품의 주문 화면에서 수령지에 적용되는 배송비와 주문 가능 여부를 확인할 수 있습니다.'}]},
   'restricted-basket':{
-   'productSkus':[],
+   'productSkus':['CAT2090'],
    'introductions':['{county} 모든 장례식장은 판매처 공지에서 영정바구니를 안내합니다. 근조 3단 상품 대신 영정바구니 목록을 확인해 보세요.'],
    'sections':[
     {'slot':'choice','heading':'영정바구니 선택','paragraph':'판매처의 영정바구니 상품 분류에서 현재 취급 상품을 확인할 수 있습니다. 이 시험 원장에는 검증된 개별 영정바구니 SKU와 가격이 없습니다.'},
@@ -374,6 +374,10 @@ def main():
     'priceCheckedOn':('2026-11-08' if sku in ('B213','B054') else '2026-11-07'),'orderUrl':'https://fwith.co.kr/shop/item.php?it_id='+sku,
     'verifiedLive':False,'imageUseApproved':False,
     'verifiedSource':True})
+ products.append({'sku':'CAT2090','name':'영정바구니 상품 분류',
+   'referencePrice':None,'priceConfirmed':False,'priceEvidence':None,
+   'priceCheckedOn':None,'orderUrl':'https://fwith.co.kr/shop/list.php?ca_id=2090',
+   'isCategoryLink':True,'imageUseApproved':False,'verifiedSource':True})
  assert all(x['imageUseApproved'] is False for x in products)
  SITE.mkdir(parents=True,exist_ok=True)
  dump(SITE/'site.json',site)
