@@ -102,6 +102,18 @@ PROVINCE_PURCHASE_FOCUSES={
 }
 
 SOURCE_SHIPPING={}  # Seller B201 county fee applicability was not independently parsed into verified SKU-specific records.
+# Read-only seller notice observed 2026-11-08; this is a product/venue
+# compatibility warning, NOT a delivery promise or an offer for alternative SKU.
+SELLER_NOTICE_SOURCE='https://fwith.co.kr/page/notice.php'
+SELLER_NOTICE_SHAPE={
+ '연천군':'오브제',
+ '부안군':'오브제',
+ '거창군':'오브제',
+ '고령군':'영정바구니',
+ '청도군':'쌀화환',
+ '완도군':'쌀화환 또는 꽃바구니',
+}
+
 def dump(path,obj):
  path.parent.mkdir(parents=True,exist_ok=True)
  path.write_text(json.dumps(obj,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
@@ -194,6 +206,10 @@ def main():
                {'heading':'주문 요청','paragraph':'받는 시설명과 주소를 확인할 수 있습니다.'}],
    'faq':[],'pageType':'county','officialCode':c['code'],
    'shippingEvidence':SOURCE_SHIPPING.get(c['code']),
+   'sellerVenueNotice':({
+       'text':c['name']+' 장례식장은 판매처 주요공지사항에서 '+SELLER_NOTICE_SHAPE[c['name']]+' 형태로 안내합니다. 아래 3단 상품을 선택하기 전에 시설명으로 반입 가능한 형태를 확인해 주세요.',
+       'sourceUrl':SELLER_NOTICE_SOURCE,'checkedOn':'2026-11-08'
+   } if c['name'] in SELLER_NOTICE_SHAPE else None),
    'siteVariantPolicy':'county-v51','variantIndex':i//len(county_intents()),
    'townships':'·'.join(township_names),'townshipCount':str(len(township_names)),
    'officialTownshipCodes':[x[0] for x in lower]})
