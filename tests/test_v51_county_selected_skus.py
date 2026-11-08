@@ -170,6 +170,7 @@ class CountySelectedSkuContract(unittest.TestCase):
                               '현재 보유한 가격 원장','형태 안내 이미지는 판매 상품 실물 사진과 차이가 있을 수 있습니다'):
                     self.assertNotIn(token,body)
                 self.assertIn('근조화환은 어디에서 주문하고 결제하나요?',body)
+                self.assertNotIn('지역 안내 페이지에서는 결제정보를 받지 않습니다',body)
                 self.assertFalse(validate_one(OUT/filename,page['productSkus'])['errors'])
 
     def test_refuse_nonselected_fixture(self):
