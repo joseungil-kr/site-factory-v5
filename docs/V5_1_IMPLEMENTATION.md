@@ -24,3 +24,7 @@ V5.1은 별도 배포 서비스가 아닌 기존 생성기의 신규 사이트 �
 새 V5.1 기획의 공개 빌드 또는 공유 Worker 출시 준비 전 `python -m v5 review-sample --site <id>`로 검수 대상과 입력 digest를 출력한다. 목적별로 1%를 올림해 고정 추출하며 각 목적에 적어도 하나를 포함한다. 검수자가 결과를 `site-spec.json`의 `qualityReview`에 `approved`, `reviewer`, `reviewedOn`, `evidence`, `inputDigest`, `samples: [{id, score}]` 형태로 기록한다. 모든 지정 표본이 90점 이상이어야 공개 준비가 가능하다. 상품·페이지·문구 풀·기획 데이터가 달라지면 digest가 바뀌어 검수를 다시 해야 한다. 이 기계적 게이트는 작성된 점수가 사실인지나 텍스트의 자연스러움을 판단하지 않으므로 실제 검토와 증거가 필요하다.
 
 기존 Daysky 자동 배포 workflow는 push 트리거를 제거하고 수동 실행만 남긴다. 생성기 코드를 main에 반영해도 기존 사이트는 배포되지 않는다. 기존 사이트 재생성이나 재배포는 사용자 별도 지시를 따른다.
+
+
+## 작업 창구 연결
+[통합 기준](V5_CONTROL_INDEX.md)과 [사이트별 작업 원장](V5_WORK_REGISTRY.md)을 따른다. 공통 생성기 main 반영은 사이트별 어댑터 검증·배포 완료와 다르다. V4 외부 의존성은 [이관 원장](V4_DEPENDENCY_MIGRATION.md)에 기록한다.

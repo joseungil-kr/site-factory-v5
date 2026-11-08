@@ -1,5 +1,7 @@
 # 사이트 제작 사전기획 게이트 (Preflight Planning Gate)
 
+현행 작업 창구: [V5 통합 기준](docs/V5_CONTROL_INDEX.md). 이 문서 다음에 [V5.1 입력·생성 계약](docs/V5_1_IMPLEMENTATION.md)과 [작업 원장](docs/V5_WORK_REGISTRY.md)을 확인한다. 최신 사용자 지시가 우선이며 기존 운영본은 자동 재생성·재배포하지 않는다.
+
 ## 등록 도메인별 Worker 정책 — 2026-11-04 승인
 
 **신규·증분 사이트는 등록 도메인별 Worker 1개를 사용한다.** `domain.net`과 검증된 `*.domain.net` 호스트를 같은 Worker 패키지에 통합하고, 서로 다른 원 도메인 사이트는 묶지 않는다. 서브도메인별 별도 Worker는 기본적으로 금지하며, 동일 Worker에서 처리 불가능한 기능·보안·운영 격리 요구가 입증될 때만 예외적으로 검토한다.

@@ -1,5 +1,9 @@
 # Site Factory agent rules
 
+## 현행 V5 작업 입구 (2026-11-08)
+
+신규 작업은 [V5 통합 작업 창구](docs/V5_CONTROL_INDEX.md)를 따른다. `AGENTS.md → SITE_CREATION_PROTOCOL.md → docs/V5_1_IMPLEMENTATION.md → docs/V5_WORK_REGISTRY.md` 순서로 읽는다. 기존 사이트 재생성·재배포 없이 신규 사이트 개선에 적용한다. V4 잔존 의존성은 별도 원장에 기록하며 검증 전 보존한다.
+
 신규 사이트 제작 요청을 받으면 **반드시 `SITE_CREATION_PROTOCOL.md`부터 읽는다**.
 
 1. 기존 GitHub 구현·템플릿·업종별 풀·운영 소스를 확인한다.
