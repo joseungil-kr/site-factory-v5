@@ -271,7 +271,7 @@ def main():
  ]
  province['faqs']=[
   {'q':'선택한 군의 추가 배송비는 어디서 확인하나요?',
-   'a':'상품번호와 정확한 수령 주소를 판매처에 전달하면 접수 가능 여부와 실제 적용 요금을 확인할 수 있습니다.'}
+   'a':'상품번호와 장례식장 도로명 주소를 판매처 주문 화면에 입력하면 해당 주소의 배송비·접수 가능 여부·결제금액을 확인할 수 있습니다.'}
  ]
  spec['purposePools']['national']=national
  spec['purposePools']['province']=province
@@ -282,10 +282,17 @@ def main():
   scope=__import__('copy').deepcopy(province)
   joined='·'.join(names)
   scope['introductions']=[p['fullName']+'의 '+str(len(names))+'개 군 지역을 안내합니다. 근조화환을 받을 군을 고르면 상품가격과 주문처로 이동할 수 있습니다.']
-  # The region navigator immediately above product cards already lists
-  # every child county, so repeating the entire list in an article is noise.
-  # Keep the official county count in the introduction only.
+  # Province-specific sources prevent county name substitution alone.
+  # Compare each county against the actual ledger before rendering.
   assert len(names)>0
+  scope['sections'].append({
+   'slot':'covered-counties','heading':p['fullName']+'의 군 지역',
+   'paragraph':'군 선택 대상은 '+joined+'입니다. 받는 장례식장의 주소가 어느 군인지 확인하고 해당 군 페이지로 이동해 주세요.'})
+  focus=PROVINCE_PURCHASE_FOCUSES[p['code']]
+  scope['sections'].extend([
+   {'slot':'purchase-focus','heading':focus[0],'paragraph':focus[1]},
+   {'slot':'purchase-details','heading':focus[2],'paragraph':focus[3]},
+  ])
   spec['purposePools']['province-'+p['code']]=scope
  result=validate_plan(spec,ID)
  assert result['ready'],result['errors']
