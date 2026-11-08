@@ -405,6 +405,7 @@ def main():
    'imageUsage':'Only new owned simple SVG illustration. No seller image copied.',
    'privateDeploymentReady':False,'productionHost':None,
    'factRegistry':'docs/evidence/v51-county-buyer-fact-registry-20261108.json',
+   'factRegistryContractVersion':2,
    'faqContract':'docs/V51_COUNTY_FAQ_FACT_CONTRACT_20261108.md'})
  print('V51_COUNTY_TRIAL_INPUTS_BUILT='+json.dumps({'siteId':ID,'totalPages':len(pages),
    'counties':len(counties),'provinces':len(provinces),'purposes':dict(Counter(x['purpose'] for x in pages))},ensure_ascii=False))
