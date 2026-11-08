@@ -102,6 +102,11 @@ def validate_one(path: Path, selected=None):
     if extra:failures.append("Off-card SKU in actual visible HTML: "+",".join(extra))
     prices={}
     for sku,raw in doc.card_prices.items():
+        if sku=='CAT2090':
+            if raw.strip():failures.append('Basket category must not display a price')
+            if 'https://fwith.co.kr/shop/list.php?ca_id=2090' not in doc.links:
+                failures.append('Basket category link missing')
+            continue
         amounts=PRICE.findall(raw)
         if len(amounts)!=1:
             failures.append(f"Card {sku} has {len(amounts)} prices: {raw!r}")
@@ -130,6 +135,7 @@ def validate_one(path: Path, selected=None):
     if "실물 상품 사진" in html and "imageUseApproved" in html:
         failures.append("Internal image permission text leaked")
     for sku in cards:
+        if sku=='CAT2090':continue
         expected="https://fwith.co.kr/shop/item.php?it_id="+sku
         if expected not in doc.links:
             failures.append("Missing real seller order link for "+sku)
