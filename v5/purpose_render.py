@@ -82,6 +82,23 @@ def assemble(page, pools, products, *, service=False):
             'sections': resolved_sections,
             'faq': [{'q': _text(f.get('q'), page), 'a': _text(f.get('a'), page)}
                     for _,f in ordered_faq[:min(5,len(ordered_faq))]]}
+    # Seller-noticed ob-je venue restrictions override the generic budget
+    # narrative. Three-tier cards remain visible only as a comparison, never
+    # as a promise that these are permissible at the receiving facility.
+    venue_notice=page.get('sellerVenueNotice')
+    if (page.get('siteVariantPolicy')=='county-v51' and not service
+            and isinstance(venue_notice,dict)
+            and venue_notice.get('alternativeName')=='근조 2단 오브제'):
+        assembled['intro']=(page['county']+
+            ' 장례식장은 판매처 공지에 오브제 형태로 안내되어 있습니다. '
+            '먼저 반입 형태와 근조 2단 오브제 판매처 상품을 확인한 뒤 주문해 주세요.')
+        for section in assembled['sections']:
+            if section.get('slot')=='choice':
+                section['heading']='오브제 반입과 상품 선택'
+                section['paragraph']=(
+                    '아래 B201·B202·B205·B206은 기존 3단 상품의 가격 비교용입니다. '
+                    '해당 장례식장의 반입 형태는 판매처 공지를 우선 확인하고, '
+                    '근조 2단 오브제 상품은 위 별도 상세 링크에서 살펴보세요.')
     if page.get('siteVariantPolicy')=='county-v51' and not service:
         # A build cannot silently show B205 or 109,000원 on a page with only
         # B201/B202 cards. Compare all rendered customer-facing text.
