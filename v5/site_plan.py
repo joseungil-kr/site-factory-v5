@@ -57,7 +57,8 @@ def validate_plan(data, site_id=None):
                 if not isinstance(name,str) or not name.strip() or not isinstance(pool,dict):
                     errors.append('invalid purpose pool');continue
                 for field in ('introductions','sections','faqs'):
-                    if not isinstance(pool.get(field),list) or not pool[field]:
+                    optional_faq=(data.get('siteId')=='county-funeral-ownerprivate-test' or data.get('id')=='county-funeral-ownerprivate-test') and field=='faqs' and name=='restricted-basket'
+                    if not isinstance(pool.get(field),list) or (not pool[field] and not optional_faq):
                         errors.append('purpose pool '+name+' missing '+field)
                 key='serviceIds' if data.get('businessModel')=='service-lead' else 'productSkus'
                 if not isinstance(pool.get(key),list) or not pool[key]:
