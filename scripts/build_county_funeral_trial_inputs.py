@@ -250,7 +250,7 @@ def main():
    'productSkus':['B211'],
    'introductions':['{county} 장례식장에 보낼 영정바구니 상품의 판매처 표시가격과 수령지 정보를 정리했습니다.'],
    'sections':[
-    {'slot':'choice','heading':'영정바구니 상품 정보','paragraph':'꽃이랑 근조화환 상품 목록에는 B211이 근조 영정바구니로 등록되어 있고 표시가격은 59,000원입니다. 개별 상품 상세 링크로 이동할 수 있습니다.'},
+    {'slot':'choice','heading':'조의 리본 문구','paragraph':'“삼가 고인의 명복을 빕니다”와 “깊은 애도를 표합니다”는 영정바구니에 사용할 수 있는 조의 문구입니다. 보내는 분이나 단체 이름은 문구와 구분해 준비할 수 있습니다.'},
     {'slot':'order','heading':'시설과 빈소','paragraph':'장례식장명과 빈소를 정한 뒤 판매처에 영정바구니 주문 가능 여부를 확인해 주세요.'},
     {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 해당 시설의 상세 주소를 준비해 주세요.'}],
    'faqs':[]}
