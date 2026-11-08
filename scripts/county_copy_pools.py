@@ -312,6 +312,22 @@ def expanded_pools(base):
         # Ribbon intent: introduction=why this page, choice=which confirmed
         # SKU, ribbon=concrete example, FAQ=post-order edits (a NEW question).
         # Never restate the senders/condolence distinction in four sections.
+        if name=='ribbon-charge':
+            # Price/option slot owns charges; order slot must add real receiving
+            # information rather than restating 'check the checkout total'.
+            pool['sections']=[
+                ({'slot':'order','heading':'받는 빈소와 리본 명의 구분',
+                  'paragraph':'화환을 받을 장례식장명·빈소와 전달 희망일은 수령 정보로, 리본의 보내는 분 이름은 발신 정보로 각각 준비할 수 있습니다.'}
+                 if item['slot']=='order' else item)
+                for item in pool['sections']
+            ]
+        elif name=='ribbon-company':
+            pool['sections']=[
+                ({'slot':'order','heading':'단체 주문의 수령 장소',
+                  'paragraph':'근조화환을 받을 장례식장명과 빈소, 전달 희망일은 수령 정보에 적고, 회사·모임의 정식 명칭은 리본 발신인으로 구분해 준비할 수 있습니다.'}
+                 if item['slot']=='order' else item)
+                for item in pool['sections']
+            ]
         if name=='venue-form':
             pool['sections']=[
               {
