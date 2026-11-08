@@ -265,10 +265,12 @@ def main():
  # repeating prices, shipment caveats and checkout instructions across five
  # generic sections + two FAQs produced the independent 82/100 rejection.
  national['sections']=[
-  {'slot':'choice','heading':'같은 가격의 상품 비교',
-   'paragraph':'B201과 B202는 각각 59,000원으로 표시된 서로 다른 상품번호입니다. 상품명과 코드가 다르므로 꽃 구성과 크기, 선택 옵션은 각 상품 상세에서 확인해 고르실 수 있습니다.'},
+  {'slot':'choice','heading':'같은 예산과 상위 가격대의 차이',
+   'paragraph':'B201·B202는 가격이 같은 서로 다른 상품번호입니다. B205는 판매처 상품명이 근조 특대 3단 화환, B206은 근조 특특대 3단 화환으로 구분됩니다. 가격대가 높다는 이유만으로 꽃 구성·실제 치수 차이를 단정하지 말고 각 상품 상세에서 비교해 보세요.'},
   {'slot':'order','heading':'받는 군과 장례식장 찾기',
-   'paragraph':'위 지역 목록에서 수령 시설이 있는 광역 지역과 군을 선택해 주세요. 장례식장명과 빈소를 확인한 뒤 해당 상품의 주문 페이지로 이동할 수 있습니다.'}
+   'paragraph':'위 지역 목록에서 수령 시설이 있는 광역 지역과 군을 선택해 주세요. 장례식장명과 빈소를 확인한 뒤 해당 상품의 주문 페이지로 이동할 수 있습니다.'},
+  {'slot':'venue-notice','heading':'반입 형태를 확인할 군',
+   'paragraph':'판매처 주요공지사항에는 연천군·부안군·거창군의 장례식장에 오브제 형태를 안내하고 있습니다. 청도군에는 쌀화환, 완도군에는 쌀화환 또는 바구니 안내가 있습니다. 해당 군으로 보낸다면 3단 화환 주문 전에 실제 받는 시설의 반입 형태를 확인해 주세요.'}
  ]
  national['faqs']=[
   {'q':'군 지역의 배송료와 주문 합계는 어떻게 확인하나요?',
