@@ -47,7 +47,7 @@ jobs:
         run: |
           npm install --no-save playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Render 21 offline preview paths at 390 and 1440, including all 6 corrected pages
+      - name: Render 24 offline preview paths at 390 and 1440, including all 6 corrected pages
         run: |
           mkdir -p artifacts/county-v51-browser
           (cd dist/county-funeral-ownerprivate-test && python -m http.server 8766 --bind 127.0.0.1) >/tmp/county-only-http.log 2>&1 &
@@ -57,7 +57,7 @@ jobs:
           const {chromium}=require('playwright'),fs=require('fs');
           (async()=>{
             const pages=JSON.parse(fs.readFileSync('sites/county-funeral-ownerprivate-test/pages.json','utf8'));
-            const ids=[1,2,3,5,7,13,14,20,26,27,31,36,37,55,67,69,73,77,86,88,95]; // 13 original + six visual-reference regressions
+            const ids=[1,2,3,5,7,13,14,20,26,27,28,31,36,37,55,59,67,69,73,75,77,86,88,95]; // 13 original + six visual-reference regressions
             const expected={};
             for(const p of pages)expected[p.number]=p;
             const browser=await chromium.launch({headless:true});
@@ -84,7 +84,7 @@ jobs:
                     canonicals:document.querySelectorAll('link[rel=canonical]').length,
                     productSkus:products.map(x=>x.getAttribute('data-product-sku')),
                     prices:products.map(x=>x.querySelector('.product-price')?.innerText.trim()||''),
-                    usableLinks:products.map(x=>{const a=x.querySelector('a[href]');if(!a)return false;const b=a.getBoundingClientRect();return b.width>50&&b.height>=20&&b.left>=0&&b.right<=innerWidth&&a.href.startsWith('https://fwith.co.kr/shop/item.php?it_id=')}),
+                    usableLinks:products.map(x=>{const a=x.querySelector('a[href]');if(!a)return false;const b=a.getBoundingClientRect();return b.width>50&&b.height>=20&&b.left>=0&&b.right<=innerWidth&&(a.href.startsWith('https://fwith.co.kr/shop/item.php?it_id=')||a.href==='https://fwith.co.kr/shop/list.php?ca_id=2090')}),
                     breadcrumbs:anchors.length,relatedRegionLinks:related.length,
                     minimumRelatedGap:Math.min(9,...gaps),images:document.images.length,
                     productNotes:products.map(x=>x.querySelector('.product-note')?.innerText||''),
@@ -92,12 +92,12 @@ jobs:
                   };
                 });
                 const ref=expected[number];
-                const actualPrice={'B201':'59,000원','B202':'59,000원','B205':'109,000원','B206':'149,000원'};
+                const actualPrice={'B201':'59,000원','B202':'59,000원','B205':'109,000원','B206':'149,000원','B213':'120,000원','B054':'90,000원','CAT2090':''};
                 if(check.prices.some((price,i)=>price!==actualPrice[check.productSkus[i]]))throw Error('MISMATCHED_PRICE '+JSON.stringify({path,mode,check}));
                 if(check.overflow||check.noindex!=='noindex,nofollow'||check.canonicals||
                    !check.visibleHeading||JSON.stringify(check.productSkus)!==JSON.stringify(ref.productSkus)||
                    check.usableLinks.some(x=>!x)||check.minimumRelatedGap<6||
-                   check.productNotes.some(x=>!x.includes('상품번호')||!x.includes('판매처'))||
+                   check.productNotes.some((x,i)=>check.productSkus[i]==='CAT2090'?(!x.includes('판매처')||x.includes('상품번호')):(!x.includes('상품번호')||!x.includes('판매처')))||
                    check.breadcrumbs!==(ref.pageType==='county'?2:ref.pageType==='province'?1:0))
                    throw Error('BROWSER_QA '+JSON.stringify({path,mode,check,expectedSkus:ref.productSkus}));
                 await page.screenshot({path:'artifacts/county-v51-browser/'+mode+'-'+number+'.png',fullPage:true});
