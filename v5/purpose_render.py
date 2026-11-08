@@ -260,7 +260,7 @@ def render(site,page,pages,products,links,pools,region_index=None):
     regional_links=regional_navigation(page,pages,region_index)
     return (head+markup.header(site)+'<main id="main" class="container document-page">'
             +breadcrumb+'<header><h1>'+markup.h(page['title'])+'</h1><p>'+markup.h(page['intro'])+'</p></header>'
-            +(regional_links if is_county_trial else '')
+            +(regional_links if is_county_trial else '')+
             '<section class="recommendations"><h2>상품과 가격</h2><div class="product-list">'+
             products_html(products,page['productSkus'],site.get('id'))+'</div></section>'+markup.article_body(page)+
             '<section class="faq"><h2>자주 묻는 질문</h2>'+markup.faq_markup(page)+'</section>'+
