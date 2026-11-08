@@ -10,7 +10,7 @@ from pathlib import Path
 from collections import Counter
 from v5.site_plan import initial_spec,validate_plan
 from v5.config import ROOT
-from scripts.county_copy_pools import purpose_intros,purpose_sections,expanded_pools,county_intents,skus_for
+from scripts.county_copy_pools import purpose_intros,purpose_sections,expanded_pools,county_intents,skus_for,INTENTS
 
 ID='county-funeral-ownerprivate-test'
 SITE=ROOT/'sites'/ID
@@ -182,11 +182,13 @@ def main():
   township_names=[item[1] for item in lower]
   assert len(township_names)>0 and len(set(township_names))==len(township_names),(c['code'],c['fullName'],township_names)
   purpose=county_intents()[i%len(county_intents())]
+  # Headline must reflect the chosen buyer decision, not a generic SEO template.
+  purpose_heading=next(row[3] for row in INTENTS if row[0]==purpose)
   num=len(pages)+1
   pages.append({'id':'county-'+c['code'],'number':num,'region':c['fullName'],
    'county':c['name'],'province':p['fullName'],'parentRegion':p['fullName'],
    'parentPageId':'province-'+p['code'],'purpose':purpose,
-   'title':c['name']+' 근조화환 가격·상품 선택 | 군 근조화환 안내',
+   'title':c['name']+' 근조화환 | '+purpose_heading+'·상품 주문',
    'productSkus':skus_for(purpose),'intro':c['name']+' 근조화환 상품 가격과 수령지 안내.',
    'sections':[{'heading':'상품 선택','paragraph':'같은 상품 유형의 표시가를 확인할 수 있습니다.'},
                {'heading':'주문 요청','paragraph':'받는 시설명과 주소를 확인할 수 있습니다.'}],
