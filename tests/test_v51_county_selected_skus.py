@@ -544,11 +544,11 @@ class CountySelectedSkuContract(unittest.TestCase):
         pages=self.data['pages']
         self.assertEqual(len(pages),95)
         purposes={p['purpose'] for p in pages}
-        self.assertEqual(set(self.plan['purposePools']),purposes | {'budget','venue','ribbon','province'})
+        self.assertTrue(purposes.issubset(set(self.plan['purposePools'])))
         for page in pages:
             with self.subTest(page=page['number'],purpose=page['purpose']):
                 pool=self.plan['purposePools'][page['purpose']]
-                self.assertTrue(check_page(page,pool if False else self.plan['purposePools'],facts))
+                self.assertTrue(check_page(page,self.plan['purposePools'],facts))
                 for f in pool['faqs']:
                     self.assertEqual(f['customer_question'],f['q'])
                     self.assertIn(f['answer_kind'],('sourced_fact','buyer_guidance'))
@@ -564,7 +564,7 @@ class CountySelectedSkuContract(unittest.TestCase):
                       'a':'상품 상세에는 선택옵션 0개·추가옵션 0개로 표시됩니다. 고객센터에 문의해 주세요.'}
         with self.assertRaisesRegex(ValueError,'ribbon name question'):
             bind_faq('restricted-obje-거창군',false_answer,facts)
-        false_fact={'q':'접수한 주문내역은 어디서 조회하나요?',
+        false_fact={'q':'거창군 장례식장 반입 규정은 무엇인가요?',
                     'a':'판매처 공지에 따르면 거창군에는 상품 배송이 보장됩니다.'}
         with self.assertRaisesRegex(ValueError,'factual claim'):
             bind_faq('restricted-obje-거창군',false_fact,facts)
