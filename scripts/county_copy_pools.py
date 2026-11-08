@@ -108,7 +108,7 @@ def purpose_sections(title,choice,delivery,extra):
 # by hashed variants. A county page carries only the products for its decision.
 INTENTS=[
  ('budget-entry','budget',['B201','B202'],'기본 주문 정보',
-  '판매처에는 B201과 B202는 판매처에 각각 근조 3단 화환이라는 상품명으로 등록돼 있습니다. 각 상품 카드에서 해당 상품의 주문 상세로 이동할 수 있습니다.',
+  'B201과 B202는 판매처 목록에서 모두 근조 3단 화환이라는 이름으로 등록돼 있습니다. 각 상품 카드에서 해당 상품의 주문 상세로 이동할 수 있습니다.',
   '가격 외 확인 항목','상품을 고른 뒤에는 수령 장례식장명·빈소·희망 날짜와 리본에 적을 이름을 준비하면 주문 내용을 정확하게 입력하기 편리합니다.'),
  ('budget-upgrade','budget',['B201','B205'],'표시가 5만 원 차이 비교',
   'B201과 B205는 서로 다른 가격대의 상품입니다. 표시가격만으로 꽃 수량과 크기를 판단하기보다 각 판매처 상세의 구성과 규격을 비교해 주세요.',
