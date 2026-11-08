@@ -325,7 +325,8 @@
       "facility_scope": "six individually named county restrictions; no expansion to others",
       "product_id": null,
       "allowed_slots": [
-        "choice"
+        "choice",
+        "order"
       ],
       "kind": "county_notice_summary",
       "value": {
