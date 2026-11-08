@@ -309,9 +309,24 @@ def expanded_pools(base):
              'heading':'{county}의 읍·면',
              'paragraph':'{county}의 읍·면 {townshipCount}곳: {townships}. 받는 장례식장의 소재지를 목록에서 찾아 정확한 시설 주소와 빈소를 선택해 주세요.'}
         ]
-        # Keep the FAQ focused on the one concern specific to this purchase
-        # intent; the generic "where to buy" FAQ only restated the card button.
-        pool['faqs']=[pool['faqs'][-1]]
+        # Ribbon intent: introduction=why this page, choice=which confirmed
+        # SKU, ribbon=concrete example, FAQ=post-order edits (a NEW question).
+        # Never restate the senders/condolence distinction in four sections.
+        if name=='ribbon-text':
+            region_lookup=[s for s in pool['sections'] if s['slot']=='verified-townships']
+            pool['sections']=[
+                {'slot':'choice','heading':'상품번호와 표시가격',
+                 'paragraph':'B201과 B202는 각각 59,000원으로 표시된 서로 다른 판매처 상품입니다. 실제 주문할 상품번호를 선택해 주세요.'},
+                {'slot':'order','heading':'빈소 전달 정보',
+                 'paragraph':'화환을 받을 장례식장명과 빈소 번호, 희망 날짜를 정확하게 정하면 해당 상품 주문 화면에 입력할 수 있습니다.'},
+                {'slot':'ribbon','heading':'조의 문구 예시',
+                 'paragraph':'“삼가 고인의 명복을 빕니다”, “깊은 애도를 표합니다”는 근조 리본에 사용할 수 있는 표현입니다. 발신 명의는 주문 옵션의 다른 항목에 적을 수 있습니다.'},
+                *region_lookup
+            ]
+            pool['faqs']=[{'q':'주문한 뒤 리본 문구를 바꿀 수 있나요?',
+                           'a':'리본 인쇄 진행 상태에 따라 변경 가능 여부가 달라지므로 주문한 판매처에 수정할 문구와 상품번호를 전달해 확인할 수 있습니다.'}]
+        else:
+            pool['faqs']=[pool['faqs'][-1]]
         for item in pool['sections']:
             text=item['heading']+' '+item['paragraph']
             assert product_skus_in_text(text).issubset(selected),(name,text)
