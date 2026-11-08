@@ -104,6 +104,17 @@ PROVINCE_PURCHASE_FOCUSES={
 }
 
 SOURCE_SHIPPING={}  # Seller B201 county fee applicability was not independently parsed into verified SKU-specific records.
+# SKU-scoped seller shipping TABLE facts, re-read 2026-11-08.
+# No row found is NOT a zero-fee guarantee. Do not extrapolate across SKUs.
+VERIFIED_SHIPPING_FACTS={
+ ('연천군','B213'):{'amount':10000,'scope':'연천군','exceptions':[],
+   'source':'https://fwith.co.kr/shop/item.php?it_id=B213','checkedOn':'2026-11-08',
+   'sourceTable':'경기 / 10,000원 / 가평군, 연천군, 포천시 / -'},
+ ('의성군','B205'):{'amount':10000,'scope':'의성군','exceptions':[],
+   'source':'https://fwith.co.kr/shop/item.php?it_id=B205','checkedOn':'2026-11-08',
+   'sourceTable':'경북 / 10,000원 / 문경시, 영천시, 예천군, 의성군, 청도군 / -'},
+}
+
 # Read-only seller notice observed 2026-11-08; this is a product/venue
 # compatibility warning, NOT a delivery promise or an offer for alternative SKU.
 SELLER_NOTICE_SOURCE='https://fwith.co.kr/page/notice.php'
@@ -215,6 +226,10 @@ def main():
                {'heading':'주문 요청','paragraph':'받는 시설명과 주소를 확인할 수 있습니다.'}],
    'faq':[],'pageType':'county','officialCode':c['code'],
    'shippingEvidence':SOURCE_SHIPPING.get(c['code']),
+   'verifiedSkuShipping':[
+      {'sku':sku,**fact} for (county,sku),fact in VERIFIED_SHIPPING_FACTS.items()
+      if county==c['name'] and sku in (list(restricted[1]) if restricted else skus_for(purpose))
+   ],
    'sellerVenueNotice':({
        'text':c['name']+' 모든 장례식장은 판매처 공지에서 '+SELLER_NOTICE_SHAPE[c['name']]+' 형태로 안내됩니다. 수령 시설을 확인하고 해당 형태의 상품을 선택해 주세요.',
        'sourceUrl':SELLER_NOTICE_SOURCE,'checkedOn':'2026-11-08',
@@ -428,6 +443,8 @@ def main():
    'countyCount':len(counties),'provinceCount':len(provinces),'excludedProvincesWithoutCounty':[p['fullName'] for p in all_provinces if p['code'] not in county_parent_codes],'targetCount':len(pages),
    'countyCodes':[x['code'] for x in counties],
    'deliveryFeeSpecificCases':SOURCE_SHIPPING,
+   'skuShippingSourceRows':[{'county':county,'sku':sku,**fact}
+      for (county,sku),fact in VERIFIED_SHIPPING_FACTS.items()],
    'shippingEvidenceState':'No county-specific amount accepted until exact B201 source rows, 읍/면 exceptions and checkout calculation are verified',
    'priceReadback':'2026-11-07 09:53 UTC independent HTTP200 four SKU price/delivery readback, GitHub run 42361620276',
    'imageUsage':'Only new owned simple SVG illustration. No seller image copied.',
