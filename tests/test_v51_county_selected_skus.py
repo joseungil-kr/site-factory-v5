@@ -465,5 +465,49 @@ class CountySelectedSkuContract(unittest.TestCase):
         with self.assertRaisesRegex(ConfigError,'off-card price'):
             assemble(altered,{'bad-test':bad_price},self.data['products'])
 
+
+    def test_restricted_fact_ownership_and_semantic_repetition_regression(self):
+        from scripts.county_copy_pools import validate_restricted_ownership, RESTRICTED_FACT_OWNER
+        from scripts.build_county_trial_review_only import main as make, OUT
+        make()
+        mapping={'청도군':('restricted-rice',59),
+                 '완도군':('restricted-rice-basket',28)}
+        ledger=json.loads((Path('docs/evidence/v51-county-restricted-fact-ownership-20261108.json')).read_text(encoding='utf-8'))
+        facts={f['fact_id']:f for f in ledger['facts']}
+        for county,(purpose,number) in mapping.items():
+            with self.subTest(county=county,purpose=purpose):
+                page=next(p for p in self.data['pages'] if p['county']==county)
+                self.assertEqual(page['number'],number)
+                self.assertEqual(page['purpose'],purpose)
+                pool=json.loads(json.dumps(self.plan['purposePools'][purpose]))
+                validate_restricted_ownership(purpose,pool)
+                fact_id=RESTRICTED_FACT_OWNER[purpose]['fact_id']
+                self.assertIn(fact_id,page['sellerVenueNotice']['factIds'])
+                self.assertEqual(facts[fact_id]['source_url'],page['sellerVenueNotice']['sourceUrl'])
+                self.assertEqual(facts[fact_id]['region_scope'],[county])
+                self.assertEqual(facts[fact_id]['verification_status'],'confirmed')
+                self.assertEqual(facts[fact_id]['facility_scope'],
+                    'all funeral venues within named county per seller notice')
+                assembled=assemble(page,self.plan['purposePools'],self.data['products'])
+                self.assertNotIn('쌀화환',assembled['intro'])
+                self.assertNotIn('바구니',assembled['intro'])
+                choice=next(x for x in assembled['sections'] if x['slot']=='choice')
+                self.assertEqual(listed_prices_in_text(choice['paragraph']),set())
+                self.assertEqual(product_skus_in_text(choice['paragraph']),set())
+                faq_text=' '.join(x['q']+' '+x['a'] for x in assembled['faq'])
+                self.assertNotIn('판매처 공지',faq_text)
+                self.assertNotIn('반입 형태',faq_text)
+                html=(OUT/(str(number)+'.html')).read_text(encoding='utf-8')
+                self.assertEqual(html.count('class="county-venue-notice"'),1)
+                self.assertIn('data-product-sku="B054"',html)
+                self.assertIn('https://fwith.co.kr/shop/item.php?it_id=B054',html)
+        # A purpose-scoped regression: the checker rejects a second copy of
+        # the acceptance condition even when phrased outside the notice.
+        for purpose in mapping.values():
+            pool=json.loads(json.dumps(self.plan['purposePools'][purpose[0]]))
+            pool['faqs'][0]['a']='판매처 공지에 따른 반입 형태를 다시 확인하세요.'
+            with self.assertRaisesRegex(ValueError,'repeated'):
+                validate_restricted_ownership(purpose[0],pool)
+
 if __name__=='__main__':
     unittest.main(verbosity=2)
