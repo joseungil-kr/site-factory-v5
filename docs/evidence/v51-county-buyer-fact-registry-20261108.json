@@ -308,6 +308,34 @@
       ],
       "kind": "order_history_navigation",
       "value": "주문내역조회 메뉴"
+    },
+    {
+      "fact_id": "seller-notice-six-county-summary",
+      "source_url": "https://fwith.co.kr/page/notice.php",
+      "checked_at": "2026-11-08 date confirmed; exact time not recorded",
+      "verified": "confirmed",
+      "region_scope": [
+        "연천군",
+        "부안군",
+        "거창군",
+        "고령군",
+        "청도군",
+        "완도군"
+      ],
+      "facility_scope": "six individually named county restrictions; no expansion to others",
+      "product_id": null,
+      "allowed_slots": [
+        "choice"
+      ],
+      "kind": "county_notice_summary",
+      "value": {
+        "연천군": "오브제",
+        "부안군": "오브제",
+        "거창군": "오브제",
+        "고령군": "영정바구니",
+        "청도군": "쌀화환",
+        "완도군": "쌀화환 또는 꽃바구니"
+      }
     }
   ]
 }
