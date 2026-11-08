@@ -328,7 +328,7 @@ def main():
   assert names
   scope=__import__('copy').deepcopy(province)
   joined='·'.join(names)
-  scope['introductions']=[p['fullName']+'의 '+str(len(names))+'개 군 지역을 안내합니다. 근조화환을 받을 군을 고르면 상품가격과 주문처로 이동할 수 있습니다.']
+  scope['introductions']=[p['fullName']+'의 군 지역 '+str(len(names))+'곳을 대상으로 장례식장 소재지에 맞는 근조상품 안내를 제공합니다.']
   # Province-specific sources prevent county name substitution alone.
   # Compare each county against the actual ledger before rendering.
   assert len(names)>0
@@ -336,11 +336,11 @@ def main():
   # decisions plus one official county inventory. The old generic choice/order
   # paragraphs repeated these sections without adding information.
   focus=PROVINCE_PURCHASE_FOCUSES[p['code']]
+  # Information owner: child names already appear as links in regional nav.
+  # Never repeat the same full county list in prose or invent filler sections.
   scope['sections']=[
    {'slot':'choice','heading':focus[0],'paragraph':focus[1]},
    {'slot':'order','heading':focus[2],'paragraph':focus[3]},
-   {'slot':'covered-counties','heading':p['fullName']+'의 소속 군',
-    'paragraph':'이 광역 지역에서 선택할 수 있는 군은 '+joined+'입니다. 지역 링크에서 해당 군 페이지로 이동할 수 있습니다.'},
   ]
   spec['purposePools']['province-'+p['code']]=scope
  result=validate_plan(spec,ID)
