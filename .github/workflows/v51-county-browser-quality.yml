@@ -92,7 +92,7 @@ jobs:
                   };
                 });
                 const ref=expected[number];
-                const actualPrice={'B201':'59,000원','B202':'59,000원','B205':'109,000원','B206':'149,000원','B213':'120,000원','B054':'90,000원','CAT2090':''};
+                const actualPrice={'B201':'59,000원','B202':'59,000원','B205':'109,000원','B206':'149,000원','B213':'120,000원','B054':'90,000원','B211':'59,000원','CAT2090':''};
                 if(check.prices.some((price,i)=>price!==actualPrice[check.productSkus[i]]))throw Error('MISMATCHED_PRICE '+JSON.stringify({path,mode,check}));
                 if(check.overflow||check.noindex!=='noindex,nofollow'||check.canonicals||
                    !check.visibleHeading||JSON.stringify(check.productSkus)!==JSON.stringify(ref.productSkus)||
