@@ -11,7 +11,8 @@
       "source": "https://fwith.co.kr/shop/item.php?it_id=B213",
       "sourceRow": "경기 10,000원 가평군, 연천군, 포천시 읍면동 예외 -",
       "exceptionsListed": [],
-      "knownLimitation": "B213 only; final checkout amount and current availability not guaranteed"
+      "knownLimitation": "B213 only; final checkout amount and current availability not guaranteed",
+      "checkedOn": "2026-11-08"
     },
     {
       "sku": "B205",
@@ -21,7 +22,8 @@
       "source": "https://fwith.co.kr/shop/item.php?it_id=B205",
       "sourceRow": "경북 10,000원 문경시, 영천시, 예천군, 의성군, 청도군 읍면동 예외 -",
       "exceptionsListed": [],
-      "knownLimitation": "B205 only; other SKUs not inferred"
+      "knownLimitation": "B205 only; other SKUs not inferred",
+      "checkedOn": "2026-11-08"
     },
     {
       "sku": "B213",
@@ -35,7 +37,8 @@
         "바로구매",
         "장바구니"
       ],
-      "source": "https://fwith.co.kr/shop/item.php?it_id=B213"
+      "source": "https://fwith.co.kr/shop/item.php?it_id=B213",
+      "checkedOn": "2026-11-08"
     },
     {
       "sku": "B205",
@@ -49,7 +52,8 @@
         "바로구매",
         "장바구니"
       ],
-      "source": "https://fwith.co.kr/shop/item.php?it_id=B205"
+      "source": "https://fwith.co.kr/shop/item.php?it_id=B205",
+      "checkedOn": "2026-11-08"
     }
   ],
   "rules": [
