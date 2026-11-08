@@ -60,6 +60,9 @@ def evaluate():
         catalog_prices={x['sku']:x.get('referencePrice') for x in data['products']}
         expected_price={catalog_prices[sku] for sku in skus if type(catalog_prices[sku]) is int}
         allowed_price={format(x,',')+'원' for x in expected_price}
+        allowed_price|={format(fact['amount'],',')+'원' for fact in p.get('verifiedSkuShipping',[])
+                        if fact.get('sku') in skus and fact.get('scope')==p.get('county')
+                        and fact.get('source')=='https://fwith.co.kr/shop/item.php?it_id='+fact['sku']}
         allowed_price|={format(abs(x-y),',')+'원' for x in expected_price for y in expected_price if x!=y}
         bad_words=[w for w in forbidden if w in html or w in body]
         bad_sku=sorted(mentioned-skus)
