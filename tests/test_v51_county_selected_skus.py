@@ -58,6 +58,50 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertGreater(int(p['townshipCount']),0)
                 if len(selected)<4:
                     self.assertFalse(any(x in text for x in ('네 상품만 비교한','같은 등급으로 간주하지 않습니다')))
+    def test_destination_truth_and_official_B202_title_in_all_95_html(self):
+        from scripts.build_county_trial_review_only import main as make, OUT
+        make()
+        catalog={x['sku']:x for x in self.data['products']}
+        self.assertEqual(catalog['B202']['name'],'근조 3단 화환')
+        for p in self.data['pages']:
+            fn='index.html' if p['number']==1 else str(p['number'])+'.html'
+            body=(OUT/fn).read_text(encoding='utf-8')
+            with self.subTest(page=fn):
+                self.assertNotIn('근조화환 B202',body,
+                    'fallback code must never be attributed as official title')
+                if 'B202' in p['productSkus']:
+                    self.assertIn('data-product-sku="B202"',body)
+                    self.assertIn('근조 3단 화환',body)
+                if p['pageType']=='county':
+                    self.assertNotIn('장례식장명과 도로명주소를 찾을 수 있습니다',body)
+        gangwon=(OUT/'12.html').read_text(encoding='utf-8')
+        self.assertNotIn('수령 시설의 읍·면과 상세 주소를 찾을 수 있습니다',gangwon)
+        self.assertIn('읍·면',gangwon)
+
+    def test_venue_77_78_action_roles_and_new_faq(self):
+        from scripts.build_county_trial_review_only import main as make, OUT
+        make()
+        for number in (77,78):
+            p=next(x for x in self.data['pages'] if x['number']==number)
+            a=assemble(p,self.plan['purposePools'],self.data['products'])
+            with self.subTest(number=number):
+                self.assertEqual([x['slot'] for x in a['sections']],
+                                 ['choice','order','ribbon','verified-townships'])
+                self.assertTrue(a['faq'])
+                self.assertIn('주문내역',a['faq'][0]['a'])
+                self.assertNotIn('반입 가능 여부는 어떻게 확인',a['faq'][0]['q'])
+                self.assertEqual(a['intro'].count('반입 가능 여부'),0)
+                self.assertIn(p['townships'],a['sections'][-1]['paragraph'])
+                self.assertNotIn('장례식장명과 도로명주소를 찾을 수',a['sections'][-1]['paragraph'])
+        # A single purpose reused across counties must produce different
+        # substantive buyer tasks, not a copied sequence plus a changed county.
+        for intent in ('venue-form','venue-shipping'):
+            pages=[p for p in self.data['pages'] if p['purpose']==intent]
+            if len(pages)>1:
+                texts=[tuple(s['paragraph'] for s in assemble(p,self.plan['purposePools'],self.data['products'])['sections'][:3])
+                       for p in pages]
+                self.assertEqual(len(texts),len(set(texts)),intent)
+
     def test_all_12_province_hubs_have_distinct_information_owners(self):
         # Source-level assertions: the navigation owns child county names;
         # introductory text owns count; article owns a grounded buying task.
