@@ -328,7 +328,7 @@ def render(site,page,pages,products,links,pools,region_index=None):
     return (head+markup.header(site)+'<main id="main" class="container document-page">'
             +breadcrumb+'<header><h1>'+markup.h(page['title'])+'</h1><p>'+markup.h(page['intro'])+'</p></header>'
             +(regional_links if is_county_trial else '')+venue_notice_html+
-            (('<section class="recommendations"><h2>'+('영정바구니 상품 분류' if page.get('purpose')=='restricted-basket' else '상품과 가격')+'</h2><div class="product-list">'+
+            (('<section class="recommendations"><h2>'+('판매처 상품 유형 선택' if page.get('purpose')=='restricted-basket' else '상품과 가격')+'</h2><div class="product-list">'+
             products_html(products,page['productSkus'],site.get('id'))+'</div></section>')
              if page['productSkus'] else
              ('<section class="recommendations"><h2>영정바구니 상품 찾기</h2><p>'
