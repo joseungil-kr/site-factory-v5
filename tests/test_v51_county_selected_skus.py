@@ -571,5 +571,25 @@ class CountySelectedSkuContract(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'factual claim'):
             bind_faq('restricted-obje-거창군',false_fact,facts)
 
+
+    def test_assembled_county_rejects_stale_or_wrong_faq_facts(self):
+        import copy
+        geochang=next(p for p in self.data['pages'] if p.get('county')=='거창군')
+        changed=copy.deepcopy(self.plan['purposePools'])
+        key=geochang['purpose']
+        self.assertEqual(changed[key]['faqContractVersion'],2)
+        changed[key]['faqs'][0]['q']='거창군 오브제 리본에는 어떤 이름을 적나요?'
+        changed[key]['faqs'][0]['a']='판매처 상세에는 선택옵션 0개·추가옵션 0개로 표시됩니다.'
+        with self.assertRaisesRegex(ConfigError,'FAQ|fact ownership'):
+            assemble(geochang,changed,self.data['products'])
+        changed=copy.deepcopy(self.plan['purposePools'])
+        changed[key]['faqs'][0]['answer_fact_ids']=[]
+        with self.assertRaisesRegex(ConfigError,'stale or forged'):
+            assemble(geochang,changed,self.data['products'])
+        # The unmodified real generated FAQ has a novel post-order
+        # lookup answer and survives the strict runtime contract.
+        result=assemble(geochang,self.plan['purposePools'],self.data['products'])
+        self.assertIn('주문내역조회',result['faq'][0]['a'])
+
 if __name__=='__main__':
     unittest.main(verbosity=2)
