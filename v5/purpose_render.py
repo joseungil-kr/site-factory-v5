@@ -279,6 +279,9 @@ def render(site,page,pages,products,links,pools,region_index=None):
         if not isinstance(venue_notice,dict) or venue_notice.get('sourceUrl')!='https://fwith.co.kr/page/notice.php':
             raise ConfigError('unapproved county venue notice evidence')
         alternative_html=''
+        if page.get('purpose')=='restricted-rice-basket':
+            alternative_html=(' <a href="https://fwith.co.kr/shop/list.php?ca_id=2090" '
+                'target="_blank" rel="noopener noreferrer">영정바구니 상품 분류 보기</a>')
         venue_notice_html=('<aside class="county-venue-notice" role="note"><strong>장례식장 반입 안내</strong> '
             +markup.h(venue_notice['text'])+' <a href="'+markup.h(venue_notice['sourceUrl'])
             +'" target="_blank" rel="noopener noreferrer">판매처 공지 확인</a>'
