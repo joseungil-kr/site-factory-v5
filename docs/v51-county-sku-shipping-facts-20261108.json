@@ -54,6 +54,17 @@
       ],
       "source": "https://fwith.co.kr/shop/item.php?it_id=B205",
       "checkedOn": "2026-11-08"
+    },
+    {
+      "sku": "B201",
+      "county": "횡성군",
+      "kind": "additionalShippingFee",
+      "amountKRW": 20000,
+      "source": "https://fwith.co.kr/shop/item.php?it_id=B201",
+      "checkedOn": "2026-11-08",
+      "sourceRow": "강원 / 20,000원 / 태백시, 평창군, 횡성군 / -",
+      "exceptionsListed": [],
+      "knownLimitation": "B201 only; do not infer B206 shipping fee, delivery availability or final order amount"
     }
   ],
   "rules": [
