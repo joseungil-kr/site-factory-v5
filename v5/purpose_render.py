@@ -318,7 +318,7 @@ def render(site,page,pages,products,links,pools,region_index=None):
         if not isinstance(venue_notice,dict) or venue_notice.get('sourceUrl')!='https://fwith.co.kr/page/notice.php':
             raise ConfigError('unapproved county venue notice evidence')
         alternative_html=''
-        if page.get('purpose')=='restricted-rice-basket':
+        if page.get('purpose') in ('restricted-rice-basket','restricted-basket'):
             alternative_html=(' <a href="https://fwith.co.kr/shop/list.php?ca_id=2090" '
                 'target="_blank" rel="noopener noreferrer">영정바구니 상품 분류 보기</a>')
         venue_notice_html=('<aside class="county-venue-notice" role="note"><strong>장례식장 반입 안내</strong> '
@@ -328,7 +328,7 @@ def render(site,page,pages,products,links,pools,region_index=None):
     return (head+markup.header(site)+'<main id="main" class="container document-page">'
             +breadcrumb+'<header><h1>'+markup.h(page['title'])+'</h1><p>'+markup.h(page['intro'])+'</p></header>'
             +(regional_links if is_county_trial else '')+venue_notice_html+
-            (('<section class="recommendations"><h2>'+('판매처 상품 유형 선택' if page.get('purpose')=='restricted-basket' else '일반 3단 상품 목록' if page.get('pageType') in ('national','province') and is_county_trial else '상품과 가격')+'</h2><div class="product-list">'+
+            (('<section class="recommendations"><h2>'+('영정바구니 상품' if page.get('purpose')=='restricted-basket' else '일반 3단 상품 목록' if page.get('pageType') in ('national','province') and is_county_trial else '상품과 가격')+'</h2><div class="product-list">'+
             products_html(products,page['productSkus'],site.get('id'))+'</div></section>')
              if page['productSkus'] else
              ('<section class="recommendations"><h2>영정바구니 상품 찾기</h2><p>'
