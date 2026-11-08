@@ -41,6 +41,9 @@ class CountySelectedSkuContract(unittest.TestCase):
                     f"{p['number']}: prose names products missing from cards")
                 product_prices={KNOWN_PRICES[x] for x in selected if x in KNOWN_PRICES}
                 permitted={format(x,',')+'원' for x in product_prices}
+                permitted|={format(fact['amount'],',')+'원' for fact in p.get('verifiedSkuShipping',[])
+                            if fact.get('sku') in selected and fact.get('scope')==p.get('county')
+                            and fact.get('source')=='https://fwith.co.kr/shop/item.php?it_id='+fact['sku']}
                 permitted|={format(abs(x-y),',')+'원' for x in product_prices for y in product_prices if x!=y}
                 self.assertTrue(listed_prices_in_text(text)<=permitted,
                     f"{p['number']}: prose contains prices of products absent from cards")
@@ -51,7 +54,7 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertEqual([s['slot'] for s in a['sections']],
                     (['choice','order','verified-townships'] if p['purpose'].startswith('restricted-')
                      else ['choice','order','ribbon','verified-townships']))
-                self.assertEqual(len(a['faq']),1)
+                self.assertEqual(len(a['faq']),0 if p['purpose']=='restricted-basket' else 1)
                 self.assertGreater(int(p['townshipCount']),0)
                 if len(selected)<4:
                     self.assertFalse(any(x in text for x in ('네 상품만 비교한','같은 등급으로 간주하지 않습니다')))
@@ -296,7 +299,7 @@ class CountySelectedSkuContract(unittest.TestCase):
                     self.assertIn('군 지역의 배송료와 주문 합계는 어떻게 확인하나요?',body)
                 elif page['pageType']=='province':
                     self.assertIn('선택한 군의 추가 배송비는 어디서 확인하나요?',body)
-                self.assertEqual(body.count('<details'),1)
+                self.assertEqual(body.count('<details'),0 if page.get('purpose')=='restricted-basket' else 1)
                 self.assertNotIn('지역 안내 페이지에서는 결제정보를 받지 않습니다',body)
                 self.assertFalse(validate_one(OUT/filename,page['productSkus'])['errors'])
 
