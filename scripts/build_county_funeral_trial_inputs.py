@@ -60,10 +60,10 @@ PROVINCE_PURCHASE_FOCUSES={
     "받는 장례식장명, 빈소 정보, 배송할 실제 주소를 준비하면 접수 가능 여부를 상담하기 좋습니다. 리본에 표기할 개인·단체 명의를 별도로 검토하면 받는 분의 정보와 보내는 분의 이름을 구분할 수 있습니다."
   ],
   "4100000000": [
-    "근조화환 예산의 단계",
-    "연천군·가평군·양평군에 속한 수령지를 선택할 때 B201과 B202의 59,000원 기준가를 비교한 다음 109,000원의 B205까지 예산 범위를 넓혀 볼 수 있습니다. 모든 금액은 추가비용 이전의 상품 표시가입니다.",
-    "구매 전 합계 점검",
-    "B206의 기준가는 149,000원이지만 실제 결제금액은 선택한 상품·주소·리본 옵션에 따라 달라집니다. 장례식장 주소와 행사 정보를 판매처에 알려 각 군의 주문 조건을 확인한 후 구매 결정을 내릴 수 있습니다."
+    "경기도 세 군의 상품 반입 형태",
+    "경기도의 군 페이지는 연천군·가평군·양평군입니다. 판매처 공지에는 연천군 모든 장례식장이 오브제 형태로 기재돼 있어 연천군 페이지는 근조 2단 오브제 B213으로 연결됩니다.",
+    "연천군 오브제 배송비 근거",
+    "B213 판매처 배송표에는 연천군 추가 배송비 10,000원이 표시돼 있습니다(2026-11-08 확인). 이 금액은 B213의 연천군 안내이며 가평군·양평군 다른 상품의 배송비로 적용하지 않습니다."
   ],
   "4300000000": [
     "같은 용도 기준가 비교",
@@ -392,14 +392,16 @@ def main():
   # Province-specific sources prevent county name substitution alone.
   # Compare each county against the actual ledger before rendering.
   assert len(names)>0
-  scope['sections'].append({
-   'slot':'covered-counties','heading':p['fullName']+'의 군 지역',
-   'paragraph':'군 선택 대상은 '+joined+'입니다. 받는 장례식장의 주소가 어느 군인지 확인하고 해당 군 페이지로 이동해 주세요.'})
+  # Information ownership: two independently authored provincial buying
+  # decisions plus one official county inventory. The old generic choice/order
+  # paragraphs repeated these sections without adding information.
   focus=PROVINCE_PURCHASE_FOCUSES[p['code']]
-  scope['sections'].extend([
-   {'slot':'purchase-focus','heading':focus[0],'paragraph':focus[1]},
-   {'slot':'purchase-details','heading':focus[2],'paragraph':focus[3]},
-  ])
+  scope['sections']=[
+   {'slot':'choice','heading':focus[0],'paragraph':focus[1]},
+   {'slot':'order','heading':focus[2],'paragraph':focus[3]},
+   {'slot':'covered-counties','heading':p['fullName']+'의 소속 군',
+    'paragraph':'이 광역 지역에서 선택할 수 있는 군은 '+joined+'입니다. 지역 링크에서 해당 군 페이지로 이동할 수 있습니다.'},
+  ]
   spec['purposePools']['province-'+p['code']]=scope
  result=validate_plan(spec,ID)
  assert result['ready'],result['errors']
