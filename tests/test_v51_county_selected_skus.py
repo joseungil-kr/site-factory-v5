@@ -188,10 +188,12 @@ class CountySelectedSkuContract(unittest.TestCase):
                 for token in ('재확인한 법정동 코드','이 명단은 배송 가능 여부의 확인 자료가 아니라',
                               '현재 보유한 가격 원장','형태 안내 이미지는 판매 상품 실물 사진과 차이가 있을 수 있습니다'):
                     self.assertNotIn(token,body)
-                if page['pageType']=='county':
-                    self.assertNotIn('근조화환은 어디에서 주문하고 결제하나요?',body)
-                else:
-                    self.assertIn('근조화환은 어디에서 주문하고 결제하나요?',body)
+                self.assertNotIn('근조화환은 어디에서 주문하고 결제하나요?',body)
+                if page['pageType']=='national':
+                    self.assertIn('군 지역의 배송료와 주문 합계는 어떻게 확인하나요?',body)
+                elif page['pageType']=='province':
+                    self.assertIn('선택한 군의 추가 배송비는 어디서 확인하나요?',body)
+                self.assertEqual(body.count('<details'),1)
                 self.assertNotIn('지역 안내 페이지에서는 결제정보를 받지 않습니다',body)
                 self.assertFalse(validate_one(OUT/filename,page['productSkus'])['errors'])
 
