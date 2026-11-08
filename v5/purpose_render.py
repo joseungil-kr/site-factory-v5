@@ -109,9 +109,12 @@ def assemble(page, pools, products, *, service=False):
                     ' 추가 배송비는 '+format(fee['amount'],',')+'원입니다. '
                     '표에서 이 군의 읍·면 추가 예외는 별도 표시되지 않았습니다. '
                     '상품의 최종 결제금액은 주문 시 확인됩니다.')
-        assembled['faq']=[{'q':'장례식장의 3단 화환 반입 여부는 어떻게 확인하나요?',
-                          'a':'받는 장례식장마다 설치 가능한 형태와 반입 장소가 다를 수 있습니다. '
-                              '시설에 빈소와 반입 규정을 확인한 뒤 상품을 선택할 수 있습니다.'}]
+        # The shipping-intent FAQ owns post-order status, not another venue
+        # permission check. Preserve that distinct answer from its purpose pool.
+        if page.get('purpose')!='venue-shipping':
+            assembled['faq']=[{'q':'장례식장의 3단 화환 반입 여부는 어떻게 확인하나요?',
+                              'a':'받는 장례식장마다 설치 가능한 형태와 반입 장소가 다를 수 있습니다. '
+                                  '시설에 빈소와 반입 규정을 확인한 뒤 상품을 선택할 수 있습니다.'}]
     # County-specific purpose pools are selected from verified acceptance rules
     # before assembly; never override buyer text after SKU selection.
     if page.get('siteVariantPolicy')=='county-v51' and not service:
