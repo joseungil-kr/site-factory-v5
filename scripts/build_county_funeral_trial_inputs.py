@@ -208,7 +208,9 @@ def main():
    'shippingEvidence':SOURCE_SHIPPING.get(c['code']),
    'sellerVenueNotice':({
        'text':c['name']+' 장례식장은 판매처 주요공지사항에서 '+SELLER_NOTICE_SHAPE[c['name']]+' 형태로 안내합니다. 아래 3단 상품을 선택하기 전에 시설명으로 반입 가능한 형태를 확인해 주세요.',
-       'sourceUrl':SELLER_NOTICE_SOURCE,'checkedOn':'2026-11-08'
+       'sourceUrl':SELLER_NOTICE_SOURCE,'checkedOn':'2026-11-08',
+       'alternativeUrl':('https://fwith.co.kr/shop/item.php?it_id=B213' if SELLER_NOTICE_SHAPE[c['name']]=='오브제' else None),
+       'alternativeName':('근조 2단 오브제' if SELLER_NOTICE_SHAPE[c['name']]=='오브제' else None)
    } if c['name'] in SELLER_NOTICE_SHAPE else None),
    'siteVariantPolicy':'county-v51','variantIndex':i//len(county_intents()),
    'townships':'·'.join(township_names),'townshipCount':str(len(township_names)),
