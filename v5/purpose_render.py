@@ -244,6 +244,8 @@ def render(site,page,pages,products,links,pools,region_index=None):
           'border:1px solid #d9e2d6;border-radius:8px;line-height:1.35;text-decoration:none}'
           '.document-page nav[aria-label="현재 위치"] a{display:inline-block;margin-right:7px}'
           '.product-note{font-size:.88rem;line-height:1.5;color:#425547;margin-top:8px}'
+          '.county-venue-notice{margin:14px 0;padding:15px 17px;border:1px solid #b3c6ad;'
+          'background:#f4f8f0;border-radius:10px;line-height:1.65}'
           '@media(max-width:520px){.product .button{width:100%;text-align:center;min-height:44px}}'
           '</style>'))
     og=('<meta property="og:type" content="website"><meta property="og:url" content="'+
@@ -258,9 +260,17 @@ def render(site,page,pages,products,links,pools,region_index=None):
     # Applies only to this isolated trial; other V5 sites keep their layout.
     is_county_trial=site.get('id')=='county-funeral-ownerprivate-test'
     regional_links=regional_navigation(page,pages,region_index)
+    venue_notice=page.get('sellerVenueNotice') if is_county_trial else None
+    venue_notice_html=''
+    if venue_notice:
+        if not isinstance(venue_notice,dict) or venue_notice.get('sourceUrl')!='https://fwith.co.kr/page/notice.php':
+            raise ConfigError('unapproved county venue notice evidence')
+        venue_notice_html=('<aside class="county-venue-notice" role="note"><strong>장례식장 반입 안내</strong> '
+            +markup.h(venue_notice['text'])+' <a href="'+markup.h(venue_notice['sourceUrl'])
+            +'" target="_blank" rel="noopener noreferrer">판매처 공지 확인</a></aside>')
     return (head+markup.header(site)+'<main id="main" class="container document-page">'
             +breadcrumb+'<header><h1>'+markup.h(page['title'])+'</h1><p>'+markup.h(page['intro'])+'</p></header>'
-            +(regional_links if is_county_trial else '')+
+            +(regional_links if is_county_trial else '')+venue_notice_html+
             '<section class="recommendations"><h2>상품과 가격</h2><div class="product-list">'+
             products_html(products,page['productSkus'],site.get('id'))+'</div></section>'+markup.article_body(page)+
             '<section class="faq"><h2>자주 묻는 질문</h2>'+markup.faq_markup(page)+'</section>'+
