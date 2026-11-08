@@ -96,7 +96,7 @@ def assemble(page, pools, products, *, service=False):
             if section.get('slot')=='choice':
                 section['heading']='오브제 반입과 상품 선택'
                 section['paragraph']=(
-                    '아래 B201·B202·B205·B206은 기존 3단 상품의 가격 비교용입니다. '
+                    '아래 '+', '.join(selected)+'은 기존 3단 상품의 가격 비교용입니다. '
                     '해당 장례식장의 반입 형태는 판매처 공지를 우선 확인하고, '
                     '근조 2단 오브제 상품은 위 별도 상세 링크에서 살펴보세요.')
     if page.get('siteVariantPolicy')=='county-v51' and not service:
