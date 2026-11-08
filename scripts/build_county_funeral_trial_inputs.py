@@ -199,7 +199,8 @@ def main():
   township_names=[item[1] for item in lower]
   assert len(township_names)>0 and len(set(township_names))==len(township_names),(c['code'],c['fullName'],township_names)
   restricted=RESTRICTED_COUNTY_PRODUCTS.get(c['name'])
-  purpose=('restricted-'+restricted[0] if restricted else county_intents()[i%len(county_intents())])
+  purpose=(('restricted-obje-'+c['name']) if restricted and restricted[0]=='obje' else
+           ('restricted-'+restricted[0]) if restricted else county_intents()[i%len(county_intents())])
   # Headline must reflect the chosen buyer decision, not a generic SEO template.
   purpose_heading=({'obje':'근조 오브제','rice':'근조 쌀화환','rice-basket':'근조 쌀화환·바구니','basket':'영정바구니'}[restricted[0]] if restricted
                    else next(row[3] for row in INTENTS if row[0]==purpose))
@@ -298,6 +299,33 @@ def main():
     {'slot':'verified-townships','heading':'{county} 읍·면','paragraph':'{county}의 읍·면: {townships}. 해당 시설의 상세 주소를 준비해 주세요.'}],
    'faqs':[{'q':'영정바구니 가격을 어디에서 확인하나요?','a':'판매처 영정바구니 상품 분류에서 상품을 선택한 뒤 가격과 접수 조건을 확인할 수 있습니다.'}]}
  }
+ # County-only verified venue restrictions share SKU B213 but must not become
+ # three identical SEO articles. Different buying tasks and official 읍/면 lists
+ # make the owner-private pages useful without inventing florist or facility data.
+ import copy
+ obje_actions={
+  '연천군':('장례식장과 빈소 선택',
+    '연천군에서 오브제를 받는 장례식장명·빈소·받는 분 연락 방법을 구분해 주세요. 주문할 때는 정확한 시설 주소를 입력할 수 있습니다.',
+    '연천군 오브제 배송비는 어떻게 확인하나요?',
+    '상품 B213의 주문 화면에서 수령 시설 주소를 지정하고 적용 배송비와 접수 가능 여부를 확인할 수 있습니다.'),
+  '부안군':('희망일과 반입 형태 확인',
+    '부안군 빈소에 필요한 날짜를 정한 뒤 판매처 공지의 오브제 반입 안내와 해당 상품의 주문 접수 일정을 함께 확인해 주세요.',
+    '부안군 장례식장에 3단 화환을 선택해도 되나요?',
+    '판매처 공지에는 부안군 모든 장례식장의 오브제 반입이 안내되어 있어, 상품 B213 근조 2단 오브제 상세 페이지를 연결합니다.'),
+  '거창군':('리본 발신인과 수령 정보',
+    '거창군 빈소에 전달할 조의 문구와 보내는 분의 이름을 정리하고, 실제 꽃을 받을 장례식장명과 빈소 정보를 함께 준비해 주세요.',
+    '거창군 오브제 리본에는 어떤 이름을 적나요?',
+    '조의 문구와 보내는 사람 또는 단체명을 각각 정해 B213 상품 주문 과정에서 입력할 수 있습니다.')
+ }
+ for c in counties:
+  if c['name'] not in obje_actions:continue
+  label,detail,question,answer=obje_actions[c['name']]
+  unique=copy.deepcopy(special_pools['restricted-obje'])
+  unique['introductions']=[c['name']+'의 장례식장은 판매처 공지에서 오브제 반입으로 안내됩니다. 근조 2단 오브제 B213 상품과 수령 시설 정보를 살펴보세요.']
+  unique['sections'][1]={'slot':'order','heading':label,'paragraph':detail}
+  unique['sections'][2]={'slot':'verified-townships','heading':c['name']+' 읍·면별 수령지','paragraph':c['name']+'의 읍·면 명칭은 {townships}입니다. 실제 받는 장례식장이 속한 읍·면과 도로명 주소를 확인해 주문해 주세요.'}
+  unique['faqs']=[{'q':question,'a':answer}]
+  special_pools['restricted-obje-'+c['name']]=unique
  spec['purposePools'].update(special_pools)
  # National and province pages only show county-bearing province coverage.
  national=pool('전국 근조화환 상품 선택',
