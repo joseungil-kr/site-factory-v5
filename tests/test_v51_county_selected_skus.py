@@ -142,6 +142,9 @@ class CountySelectedSkuContract(unittest.TestCase):
                     else:
                         self.assertEqual(p['productSkus'],['B054'])
                         self.assertIn('data-product-sku="B054"',html)
+                        if p['county']=='완도군':
+                            self.assertIn('영정바구니 상품 분류 보기',html)
+                            self.assertIn('https://fwith.co.kr/shop/list.php?ca_id=2090',html)
                     self.assertNotIn('data-product-sku="B201"',html)
                     self.assertLess(html.find('class="county-venue-notice"'),
                                     html.find('class="recommendations"'))
