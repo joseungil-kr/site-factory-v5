@@ -10,7 +10,7 @@ from pathlib import Path
 from collections import Counter
 from v5.site_plan import initial_spec,validate_plan
 from v5.config import ROOT
-from scripts.county_copy_pools import purpose_intros,purpose_sections,expanded_pools,county_intents,skus_for,INTENTS
+from scripts.county_copy_pools import purpose_intros,purpose_sections,expanded_pools,county_intents,skus_for,INTENTS,validate_restricted_ownership
 
 ID='county-funeral-ownerprivate-test'
 SITE=ROOT/'sites'/ID
@@ -289,6 +289,8 @@ def main():
   unique['sections'][2]={'slot':'verified-townships','heading':c['name']+' 읍·면별 수령지','paragraph':c['name']+'의 읍·면 명칭은 {townships}입니다. 실제 받는 장례식장이 속한 읍·면과 도로명 주소를 확인해 주문해 주세요.'}
   unique['faqs']=[{'q':question,'a':answer}]
   special_pools['restricted-obje-'+c['name']]=unique
+ for restricted_name in ('restricted-rice','restricted-rice-basket'):
+  validate_restricted_ownership(restricted_name,special_pools[restricted_name])
  spec['purposePools'].update(special_pools)
  # National and province pages only show county-bearing province coverage.
  national=pool('전국 근조화환 상품 선택',
