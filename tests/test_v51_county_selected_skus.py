@@ -47,11 +47,9 @@ class CountySelectedSkuContract(unittest.TestCase):
                 self.assertNotIn('{townships}',text)
                 self.assertIn(p['townships'],text)
                 self.assertEqual(p['siteVariantPolicy'],'county-v51')
-                if p['purpose'].startswith('budget'):
-                    delivery=[s for s in a['sections'] if s['slot']=='delivery']
-                    self.assertEqual(len(delivery),1)
-                    self.assertIn(delivery[0]['heading'],(
-                        '희망 도착 시간','배송 요청 시각','수령 시설 확인','수령 날짜 전달'))
+                self.assertEqual([s['slot'] for s in a['sections']],
+                    ['choice','order','ribbon','verified-townships'])
+                self.assertEqual(len(a['faq']),1)
                 self.assertGreater(int(p['townshipCount']),0)
                 if len(selected)<4:
                     self.assertFalse(any(x in text for x in ('네 상품만 비교한','같은 등급으로 간주하지 않습니다')))
@@ -153,13 +151,11 @@ class CountySelectedSkuContract(unittest.TestCase):
         from scripts.verify_county_independent_html import validate_one
         render_review()
         bad_text="아래 도형은 근조화환의 형태를 살펴보기 위한 그림입니다"
-        good_text="연결된 판매처 상품 상세페이지에서 근조화환 사진과 구성 안내를 확인할 수 있습니다."
         pages={p["number"]:p for p in self.data["pages"]}
         for number in (26,67,69,73,77,86):
             with self.subTest(path=f"/{number}.html"):
                 path=OUT/f"{number}.html"
                 actual=path.read_text(encoding="utf-8")
-                self.assertIn(good_text,actual)
                 self.assertNotIn(bad_text,actual)
                 row=validate_one(path,pages[number]["productSkus"])
                 self.assertFalse(row["errors"],row)
@@ -173,12 +169,11 @@ class CountySelectedSkuContract(unittest.TestCase):
         from scripts.verify_county_independent_html import validate_one
         render_review()
         original=(OUT/"26.html").read_text(encoding="utf-8")
-        good="연결된 판매처 상품 상세페이지에서 근조화환 사진과 구성 안내를 확인할 수 있습니다."
         bad="아래 도형은 근조화환의 형태를 살펴보기 위한 그림입니다."
-        self.assertIn(good,original)
         with tempfile.TemporaryDirectory() as tmp:
             altered=Path(tmp)/"26.html"
-            altered.write_text(original.replace(good,bad,1),encoding="utf-8")
+            altered.write_text(original.replace('<section class="recommendations">',
+                '<p>'+bad+'</p><section class="recommendations">',1),encoding="utf-8")
             row=validate_one(altered,["B201","B202"])
             self.assertTrue(any("Nonexistent inline visual reference" in e for e in row["errors"]),row)
 
@@ -193,7 +188,10 @@ class CountySelectedSkuContract(unittest.TestCase):
                 for token in ('재확인한 법정동 코드','이 명단은 배송 가능 여부의 확인 자료가 아니라',
                               '현재 보유한 가격 원장','형태 안내 이미지는 판매 상품 실물 사진과 차이가 있을 수 있습니다'):
                     self.assertNotIn(token,body)
-                self.assertIn('근조화환은 어디에서 주문하고 결제하나요?',body)
+                if page['pageType']=='county':
+                    self.assertNotIn('근조화환은 어디에서 주문하고 결제하나요?',body)
+                else:
+                    self.assertIn('근조화환은 어디에서 주문하고 결제하나요?',body)
                 self.assertNotIn('지역 안내 페이지에서는 결제정보를 받지 않습니다',body)
                 self.assertFalse(validate_one(OUT/filename,page['productSkus'])['errors'])
 
