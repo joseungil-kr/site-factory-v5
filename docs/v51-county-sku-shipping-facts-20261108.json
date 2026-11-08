@@ -1,0 +1,62 @@
+{
+  "siteId": "county-funeral-ownerprivate-test",
+  "checkedOn": "2026-11-08",
+  "scope": "ownerprivate trial only",
+  "facts": [
+    {
+      "sku": "B213",
+      "county": "연천군",
+      "kind": "additionalShippingFee",
+      "amountKRW": 10000,
+      "source": "https://fwith.co.kr/shop/item.php?it_id=B213",
+      "sourceRow": "경기 10,000원 가평군, 연천군, 포천시 읍면동 예외 -",
+      "exceptionsListed": [],
+      "knownLimitation": "B213 only; final checkout amount and current availability not guaranteed"
+    },
+    {
+      "sku": "B205",
+      "county": "의성군",
+      "kind": "additionalShippingFee",
+      "amountKRW": 10000,
+      "source": "https://fwith.co.kr/shop/item.php?it_id=B205",
+      "sourceRow": "경북 10,000원 문경시, 영천시, 예천군, 의성군, 청도군 읍면동 예외 -",
+      "exceptionsListed": [],
+      "knownLimitation": "B205 only; other SKUs not inferred"
+    },
+    {
+      "sku": "B213",
+      "county": "연천군",
+      "kind": "orderSummary",
+      "name": "근조 2단 오브제",
+      "listedKRW": 120000,
+      "selectionOptions": 0,
+      "extraOptions": 0,
+      "orderActions": [
+        "바로구매",
+        "장바구니"
+      ],
+      "source": "https://fwith.co.kr/shop/item.php?it_id=B213"
+    },
+    {
+      "sku": "B205",
+      "county": "의성군",
+      "kind": "orderSummary",
+      "name": "근조 특대 3단 화환",
+      "listedKRW": 109000,
+      "selectionOptions": 0,
+      "extraOptions": 0,
+      "orderActions": [
+        "바로구매",
+        "장바구니"
+      ],
+      "source": "https://fwith.co.kr/shop/item.php?it_id=B205"
+    }
+  ],
+  "rules": [
+    "use fact only when exact county and SKU match",
+    "do not infer zero shipping for missing table rows",
+    "do not infer final total or guaranteed delivery",
+    "do not repeat identical notice across intro/body/FAQ",
+    "separate category listings from purchasable SKUs"
+  ]
+}
