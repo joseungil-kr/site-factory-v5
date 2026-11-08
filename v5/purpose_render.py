@@ -125,6 +125,15 @@ def products_html(products, selected, site_id=None):
     rows=[]
     for sku in selected:
         p=catalog[sku]
+        if site_id=='county-funeral-ownerprivate-test' and p.get('isCategoryLink'):
+            if p.get('referencePrice') is not None or p.get('priceConfirmed'):
+                raise ConfigError('county category link cannot claim a product price')
+            rows.append('<article class="product" data-product-sku="'+markup.h(sku)+'">'
+                '<div class="product-copy"><h3>'+markup.h(p['name'])+'</h3>'
+                '<p class="product-note">판매처 영정바구니 상품 분류에서 현재 취급 상품을 확인할 수 있습니다.</p></div>'
+                '<a data-track-event="category" class="button btn-outline" target="_blank" rel="noopener noreferrer" href="'
+                +markup.h(p['orderUrl'])+'">영정바구니 상품 목록 보기</a></article>')
+            continue
         image=('<img src="'+markup.h(p['imageUrl'])+'" alt="'+markup.h(p['name'])+'" loading="lazy">'
                if _has_proof(p,'image',site_id) else '')
         price=('<p class="product-price">'+format(p['referencePrice'],',')+'원</p>'
@@ -282,7 +291,7 @@ def render(site,page,pages,products,links,pools,region_index=None):
              if page['productSkus'] else
              ('<section class="recommendations"><h2>영정바구니 상품 찾기</h2><p>'
               '판매처 영정바구니 분류에서 현재 상품과 가격을 확인할 수 있습니다.</p>'
-              '<a class="button" href="https://fwith.co.kr/shop/list.php?ca_id=20a0" '
+              '<a class="button" href="https://fwith.co.kr/shop/list.php?ca_id=2090" '
               'target="_blank" rel="noopener noreferrer">영정바구니 상품 목록 보기</a></section>'))+
             markup.article_body(page)+
             '<section class="faq"><h2>자주 묻는 질문</h2>'+markup.faq_markup(page)+'</section>'+
