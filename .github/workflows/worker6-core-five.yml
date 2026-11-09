@@ -13,6 +13,7 @@ on:
       - scripts/worker6_core_five_preview.py
       - tests/test_worker6_core_roles.py
       - tests/test_worker6_catalog_consistency.py
+      - tests/test_worker6_catalog_full_output.py
       - sites/promotion-gift-plants/direct-source-access-audit-20261109.json
       - tests/test_worker6_evidence_sections.py
       - .github/workflows/worker6-core-five.yml
@@ -30,7 +31,7 @@ jobs:
           python-version: '3.12'
       - name: Evidence and section contract regression
         run: |
-          python -m unittest tests.test_worker6_evidence_sections tests.test_worker6_section_contract tests.test_worker6_page_type tests.test_worker6_core_roles tests.test_worker6_source_links tests.test_worker6_catalog_consistency -v
+          python -m unittest tests.test_worker6_evidence_sections tests.test_worker6_section_contract tests.test_worker6_page_type tests.test_worker6_core_roles tests.test_worker6_source_links tests.test_worker6_catalog_consistency tests.test_worker6_catalog_full_output -v
       - name: Prepare five pages and V5.1 plan check
         run: |
           python scripts/worker6_core_five_preview.py
