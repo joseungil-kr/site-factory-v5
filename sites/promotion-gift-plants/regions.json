@@ -1,0 +1,29 @@
+{
+  "source": "Existing V5 ansan-promotion-plant region fixture; four representative places only; nationwide inventory not yet expanded",
+  "regions": [
+    {
+      "name": "경기도 안산시",
+      "code": null,
+      "level": "representative-preview",
+      "verifiedBy": "existing V5 fixture"
+    },
+    {
+      "name": "경기도 안산시 상록구",
+      "code": null,
+      "level": "representative-preview",
+      "verifiedBy": "existing V5 fixture"
+    },
+    {
+      "name": "경기도 안산시 단원구",
+      "code": null,
+      "level": "representative-preview",
+      "verifiedBy": "existing V5 fixture"
+    },
+    {
+      "name": "경기도 안산시 단원구 고잔동",
+      "code": null,
+      "level": "representative-preview",
+      "verifiedBy": "existing V5 fixture"
+    }
+  ]
+}
