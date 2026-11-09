@@ -7,7 +7,9 @@
 
 > 고양 킨텍스 - 예식장만 화환가능, 행사장은 화분만 가능
 
-공지의 게시일·최종수정일은 확인되지 않았다. [킨텍스 전시주최자 매뉴얼](https://www.kintex.com/download/formatModal/8.%EC%A0%84%EC%8B%9C%EC%A3%BC%EC%B5%9C%EC%9E%90%EB%A7%A4%EB%89%B4%EC%96%BC.pdf)과 [화상상담실 이용안내](https://www.kintex.com/download/formatModal/3.%ED%99%94%EC%83%81%EC%83%81%EB%8B%B4%EC%8B%A4%EC%9D%B4%EC%9A%A9%EC%95%88%EB%82%B4.pdf)에서는 해당 문장과 동일한 현재 전 행사 공통 화분·화환 반입 규정을 확인하지 못했다. 별도 [전시회 주최자 안내](https://www.kes.org/bbs/down.asp?id=kor_etc&no=1384)는 **그 전시회에 한해** 대형 화환·대형 화분의 전시장 반입을 제한하므로 킨텍스 전체 규정으로 확대하지 않는다.
+공지의 게시일·최종수정일은 확인되지 않았다. 킨텍스 공식 도메인에서 링크된 두 PDF는 2026-11-09 재열람 시 **HTTP 502**로 실패했다. 따라서 **실제 문서 제목·연도·쪽·정확인용을 확인하지 못했으며**, PDF 전체에 반입규정이 없다고 결론 내릴 수 없다. 앞선 “매뉴얼에서 해당 규정 미발견” 요약은 근거 불충분으로 철회한다.
+
+별도로 인용했던 [KES 2023 전시자료](https://www.kes.org/bbs/down.asp?id=kor_etc&no=1384)는 직접 열람 시 **HTTP 403**이었고, 검색 색인 발췌에만 “전시장 내에는 전시 진행 및 참관에 방해가 될 수 있는 대형 화환 및 대형 화분을 반입할 수 없습니다.”라는 문장이 나타났다. **PDF 쪽번호는 미확인**이다. KES 주최 측의 [공식 연혁](https://www.kes.org/kor/intro/history.asp)과 [코엑스 행사 기록](https://www.coex.co.kr/exhibitions/%ED%95%9C%EA%B5%AD%EC%A0%84%EC%9E%90%EC%A0%84-5/)은 **KES 2023(제54회 한국전자전), 2023년 10월 24~27일, 서울 코엑스 A·B홀** 개최를 확인한다. **킨텍스가 아닌 다른 장소의 특정 행사 자료이므로 킨텍스 반입규정 검증자료에서 제외**한다. 일반적으로 행사별 규정이 다를 수 있다는 참고 이상의 용도로 사용하지 않는다.
 
 **고객 질문 초안:** “킨텍스에서 열리는 [정확한 행사명·홀·날짜]에 축하 선물을 보내려 합니다. 이 행사에서 화환 또는 화분 중 어떤 품목을 받을 수 있나요? 수령 장소와 담당자, 반입 가능한 시간도 확인해 주세요.”
 
@@ -24,6 +26,8 @@
 - 판매처 원문: https://fwith.co.kr/page/notice.php (checkedAt 2026-11-09, sourceUpdatedAt null)
 - 킨텍스 공식 전시주최자 매뉴얼: https://www.kintex.com/download/formatModal/8.%EC%A0%84%EC%8B%9C%EC%A3%BC%EC%B5%9C%EC%9E%90%EB%A7%A4%EB%89%B4%EC%96%BC.pdf
 - 킨텍스 공식 화상상담실 이용안내: https://www.kintex.com/download/formatModal/3.%ED%99%94%EC%83%81%EC%83%81%EB%8B%B4%EC%8B%A4%EC%9D%B4%EC%9A%A9%EC%95%88%EB%82%B4.pdf
-- 별도 전시회 안내: https://www.kes.org/bbs/down.asp?id=kor_etc&no=1384
+- KES 2023 색인 발췌(직접 403, 쪽번호 미확인, 코엑스 행사): https://www.kes.org/bbs/down.asp?id=kor_etc&no=1384
+- KES 공식 행사연혁: https://www.kes.org/kor/intro/history.asp
+- 코엑스 KES 2023 개최기록: https://www.coex.co.kr/exhibitions/%ED%95%9C%EA%B5%AD%EC%A0%84%EC%9E%90%EC%A0%84-5/
 
 **판정:** seller-reported/current-unverified. 일반 승진 사무실 배송, 고양·인천 전체 지역, 다른 행사장, 특정 주문의 도착·반입 보장으로 전용 금지. 사용자 확인 전국 배송 운영시간과 개별 주문 상담 조건은 변경하지 않는다.
