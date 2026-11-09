@@ -11,6 +11,7 @@ on:
       - sites/promotion-gift-plants/products.json
       - tests/test_worker6_source_links.py
       - scripts/worker6_core_five_preview.py
+      - scripts/worker6_purpose_diff_capture.py
       - tests/test_worker6_core_roles.py
       - tests/test_worker6_catalog_consistency.py
       - tests/test_worker6_catalog_full_output.py
@@ -39,6 +40,8 @@ jobs:
         run: |
           python scripts/worker6_core_five_preview.py
           python -m v5 plan-check --site promotion-gift-plants
+      - name: Capture actual purpose bodies and HTML before quality gate
+        run: python -m scripts.worker6_purpose_diff_capture
       - name: Build five pages with original V5.1 renderer
         run: python -m v5 build --site promotion-gift-plants --mode preview
       - name: Audit and validate five page routes and products
