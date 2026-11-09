@@ -1,6 +1,6 @@
 {
   "checkedAt": "2026-11-09",
-  "verificationMethod": "D144 directly fetched seller HTML; D156 indexed seller text observed but direct seller HTML was not retrieved. Indexed observation date differs from original publication/crawl date, which is unknown.",
+  "verificationMethod": "D144 worker direct seller page; D156 worker indexed seller text plus supervisor direct seller page at approx 2026-11-09 03:23 UTC. Original publication/crawl time unknown.",
   "sources": [
     {
       "sku": "D144",
@@ -33,9 +33,23 @@
       "observationCheckedAt": "2026-11-09 (date only; exact time not recorded)",
       "originalPagePublishedAt": null,
       "originalPageCrawledAt": null,
-      "directOriginalHtmlVerified": false,
-      "verificationStatus": "indexed-seller-text-only",
-      "priceRequiresDirectRecheckBeforePublic": true
+      "directOriginalHtmlVerified": true,
+      "verificationStatus": "supervisor-direct-seller-page-and-worker-indexed-text",
+      "priceRequiresDirectRecheckBeforePublic": false,
+      "supervisorDirectVerification": {
+        "method": "Cloud Browser opened original seller product page",
+        "verifiedAtApprox": "2026-11-09T03:23:00Z",
+        "verifiedBy": "계실장 independent supervisor",
+        "facts": [
+          "priceKRW=60000",
+          "choiceOptions=0",
+          "extraOptions=0",
+          "phone=1844-0644",
+          "shippingPayment=주문시 결제"
+        ],
+        "evidenceOrigin": "supervisor-reported direct observation, not worker's direct fetch"
+      },
+      "workerDirectOriginalHtmlVerified": false
     }
   ],
   "delivery": {
