@@ -44,9 +44,16 @@ def assemble(page, pools, products, *, service=False):
         raise ConfigError('purpose pool needs sections and FAQs')
     resolved_sections=[]
     for slot in ('choice','order'):
-        section=_chosen([s for s in sections if isinstance(s,dict) and s.get('slot')==slot],page,'section:'+slot)
-        resolved_sections.append({'heading':_text(section.get('heading'),page),
-                                  'paragraph':_text(section.get('paragraph'),page)})
+        candidates=[s for s in sections if isinstance(s,dict) and s.get('slot')==slot]
+        if not candidates:
+            raise ConfigError('purpose pool missing section slot '+slot)
+        # Retain every independently authored section for short representative
+        # pages; long-form quality is not manufactured by duplicate padding.
+        ordered=sorted(enumerate(candidates),key=lambda pair:
+            hashlib.sha256((page['id']+':section:'+slot+':'+str(pair[0])).encode()).digest())
+        for _,section in ordered:
+            resolved_sections.append({'heading':_text(section.get('heading'),page),
+                                      'paragraph':_text(section.get('paragraph'),page)})
     if any(not isinstance(f,dict) or not f.get('q') or not f.get('a') for f in faqs):
         raise ConfigError('invalid purpose pool FAQ')
     ordered_faq=sorted(enumerate(faqs),key=lambda pair:hashlib.sha256((page['id']+':faq:'+str(pair[0])).encode()).digest())
