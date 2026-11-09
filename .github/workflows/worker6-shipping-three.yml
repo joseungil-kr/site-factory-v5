@@ -1,0 +1,68 @@
+name: Worker6 three-region shipping evidence preview
+on:
+  push:
+    branches: [site/v51-promotion-gift-plants-20261109]
+    paths:
+      - scripts/worker6_shipping_render.py
+      - scripts/worker6_shipping_three_preview.py
+      - tests/test_worker6_shipping_render.py
+      - .github/workflows/worker6-shipping-three.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  experiment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Regress seller shipping cases and V5 contracts
+        run: python -m unittest tests.test_worker6_shipping_render tests.test_worker6_page_type tests.test_worker6_evidence_sections -v
+      - name: Prepare three shipping regions in isolated checkout
+        run: |
+          python scripts/worker6_shipping_three_preview.py
+          python -m v5 plan-check --site promotion-gift-plants
+      - name: Build with existing V5 renderer and unchanged quality gate
+        run: python -m v5 build --site promotion-gift-plants --mode preview
+      - name: Audit unchanged quality threshold
+        run: python -m v5 audit --site promotion-gift-plants
+      - name: Preserve full original body even when build fails
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from v5.purpose_render import assemble
+          from v5.audit import similarity
+          site=Path('sites/promotion-gift-plants')
+          out=Path('reports/promotion-gift-plants/shipping-three')
+          out.mkdir(parents=True,exist_ok=True)
+          pages=json.loads((site/'pages.json').read_text())
+          pools=json.loads((site/'site-spec.json').read_text())['purposePools']
+          products=json.loads((site/'products.json').read_text())
+          bodies=[]
+          for p in pages:
+              a=assemble(p,pools,products)
+              bodies.append({'region':p['region'],'purpose':p['purpose'],'products':p['productSkus'],
+                'text':'\\n'.join([a['intro']]+[x['heading']+' '+x['paragraph'] for x in a['sections']]),
+                'evidence':p.get('evidenceSections',[])})
+          comparisons=[]
+          for i in range(len(bodies)):
+              for j in range(i+1,len(bodies)):
+                  comparisons.append({'pair':[bodies[i]['region'],bodies[j]['region']],
+                    'similarity':similarity(bodies[i]['text'],bodies[j]['text'])})
+          (out/'full-text-comparison.json').write_text(json.dumps({'bodies':bodies,'pairs':comparisons,'threshold':0.49},ensure_ascii=False,indent=2),encoding='utf-8')
+          print('COMPARISON',json.dumps(comparisons,ensure_ascii=False))
+          PY
+      - name: Upload actual HTML and text comparison
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: worker6-three-region-shipping-preview
+          path: |
+            dist/promotion-gift-plants/
+            reports/promotion-gift-plants/
+          if-no-files-found: warn
