@@ -3,6 +3,7 @@ on:
   push:
     branches: [site/v51-promotion-gift-plants-20261109]
     paths:
+      - scripts/worker6-browser-qa.mjs
       - scripts/worker6_core_five_preview.py
       - tests/test_worker6_evidence_sections.py
       - .github/workflows/worker6-core-five.yml
