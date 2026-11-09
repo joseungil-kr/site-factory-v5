@@ -4,6 +4,8 @@ on:
     branches: [site/v51-promotion-gift-plants-20261109]
     paths:
       - scripts/worker6_operator_three_diagnostic.py
+      - scripts/worker6_core_five_preview.py
+      - sites/promotion-gift-plants/operator-service-confirmation-20261109.json
       - scripts/worker6_shipping_render.py
       - sites/promotion-gift-plants/customer-decision-modules-20261109.json
       - tests/test_worker6_buyer_modules.py
@@ -28,6 +30,11 @@ jobs:
         run: python -m unittest tests.test_worker6_operator_contract tests.test_worker6_shipping_render tests.test_worker6_page_type tests.test_worker6_buyer_modules -v
       - name: Render actual six V5.1 HTML with original similarity metric
         run: python scripts/worker6_operator_three_diagnostic.py
+      - name: Prepare real preview static assets for local HTTP test
+        run: |
+          python scripts/worker6_core_five_preview.py
+          python -m v5 build --site promotion-gift-plants --mode preview
+          cp -R dist/promotion-gift-plants/assets reports/promotion-gift-plants/operator-three/assets
       - name: Validate output, noindex and provenance
         run: |
           python - <<'PY'
@@ -37,12 +44,30 @@ jobs:
           d=json.loads((root/'diagnostic.json').read_text())
           assert len(d['regions'])==6 and len(d['pairs'])==15
           assert d['publicationApproved'] is False
+          assert len(d['nameRemovedPairs'])==15
           for n in range(1,7):
               html=(root/f'{n}.html').read_text()
               assert 'noindex' in html and '08:00~23:00' in html and '06:00~20:00' in html
               assert '참고 원문 보기' in html
+              assert html.count('지역별 지점에서 발송하며 전국 당일배송 서비스를 안내합니다')==1
+              assert html.count('data-product-sku=')==6
           print('DIAGNOSTIC_6_HTML_OK',json.dumps(d['pairs'],ensure_ascii=False))
           PY
+      - name: Install browser and Korean fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: HTTP and 390/1440 screenshot audit of all six
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory reports/promotion-gift-plants/operator-three >/tmp/worker6-six-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" || true' EXIT
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/1.html >/dev/null && break || sleep 1; done
+          WORKER6_PAGES=1,2,3,4,5,6 node scripts/worker6-browser-qa.mjs
+          cp reports/promotion-gift-plants/browser-qa.json reports/promotion-gift-plants/operator-three/browser-qa.json
+          cp -R reports/promotion-gift-plants/screenshots reports/promotion-gift-plants/operator-three/screenshots
       - uses: actions/upload-artifact@v4
         if: always()
         with:
