@@ -1,0 +1,159 @@
+{
+  "date": "2026-11-09",
+  "method": "ChatGPT public web search and direct URL opens; exact regional SERP rank not established; no Google/Naver rank claim",
+  "regions": [
+    {
+      "region": "경기도 파주시 적성면",
+      "queries": [
+        "파주시 적성면 승진화분 주문 축하화분 당일배송"
+      ],
+      "exactRegionCompetitorFullBody": "not found in retrieved results",
+      "officialSource": {
+        "url": "https://tour.paju.go.kr/story_paju/storyMarket2015_08/index.html",
+        "status": "direct full HTML read",
+        "finding": "파주시 공식 전통시장 페이지 lists 적성전통시장 at 적성면 청송로 1023 일원 and 적성5일장 at 적성면 솥뒤로 20 일원",
+        "utility": "Could help disambiguate an address ONLY if customer actually chooses this destination; not proof of plant receiving access, store hours or delivery.",
+        "decision": "Do not insert market names into generic promotion gift pages"
+      }
+    },
+    {
+      "region": "경기도 가평군 설악면",
+      "queries": [
+        "가평군 설악면 승진화분 주문 축하화분 당일배송"
+      ],
+      "exactRegionCompetitorFullBody": "not found in retrieved results",
+      "officialSource": {
+        "url": "https://www.forest.go.kr/newkfsweb/cmm/fms/BoardFileDown.do?atchFileId=FILE_000000000482332&bbsId=BBSMSTR_1069&fileSn=1",
+        "status": "public PDF search excerpt only, no full document review",
+        "finding": "Forest plan contains locality names within 설악면",
+        "utility": "Forestry parcels do not help order a congratulatory plant",
+        "decision": "Exclude from consumer content"
+      }
+    },
+    {
+      "region": "전라남도 강진군 대구면",
+      "queries": [
+        "강진군 대구면 승진화분 주문 축하화분 당일배송"
+      ],
+      "exactRegionCompetitorFullBody": "not found in retrieved results",
+      "officialSource": {
+        "url": "https://www.cha.go.kr/cmm/fms/BoardFileDown.do?atchFileId=FILE_000000000441779&bbsId=BBSMSTR_1019&dwldHistYn=N&fileSn=0",
+        "status": "public PDF search excerpt only, no full document review",
+        "finding": "2024 cultural heritage decision mentions 강진군 대구면 용운리",
+        "utility": "Historic roadwork location does not establish recipient or flower delivery relevance",
+        "decision": "Exclude from consumer content"
+      }
+    }
+  ],
+  "competitorOriginals": [
+    {
+      "url": "https://guide.15660001.com/%EC%8A%B9%EC%A7%84-%EC%B6%95%ED%95%98-%ED%99%94%EB%B6%84-%EC%B6%94%EC%B2%9C/",
+      "status": "direct full HTML read, 182 lines",
+      "title": "승진 축하 화분 추천",
+      "observed": [
+        "purpose/recipient role",
+        "budget bands with actual seller SKU links",
+        "explicit 39k orchid geographic restriction",
+        "recipient name/title/company/department/floor/room",
+        "delivery date/time",
+        "ribbon phrase and sender name",
+        "mobile navigation and Kakao/phone CTA in HTML; real mobile UX unverified"
+      ],
+      "limits": [
+        "Seller 3-hour arrival and free ribbon cannot be transferred to 꽃이랑",
+        "not an exact-region ranking observation"
+      ],
+      "usefulModules": [
+        "verified own SKU budget comparison",
+        "sender/title examples",
+        "buyer-provided receiving details",
+        "seller confirmed regional fee display"
+      ]
+    },
+    {
+      "url": "https://blog.gyeonginflower.com/",
+      "status": "direct full HTML read, 41 lines",
+      "title": "경인플라워",
+      "observed": [
+        "category navigation",
+        "article link to promotion gift choice by space/sender",
+        "same-day order checklist link"
+      ],
+      "limits": [
+        "linked detailed promotion article direct open cache miss",
+        "not region-specific evidence",
+        "cannot confirm detailed article body or mobile interactions"
+      ],
+      "usefulModules": [
+        "customer choice question: recipient placement, sender identity, delivery date"
+      ]
+    },
+    {
+      "url": "https://www.gmarket.co.kr/n/search?keyword=%EC%8A%B9%EC%A7%84%ED%99%94%EB%B6%84",
+      "status": "direct full listing HTML read, 2965 lines",
+      "title": "G마켓 승진화분 상품검색",
+      "observed": [
+        "product cards show item price, delivery badge, reviews, merchant, product link",
+        "advertising placements explicitly labeled"
+      ],
+      "limits": [
+        "not exact local SERP ranking",
+        "clicked seller detail cache miss",
+        "merchant-specific cutoff/fees cannot be used as 꽃이랑 promise"
+      ],
+      "usefulModules": [
+        "clear seller-confirmed SKU, price, order CTA and delivery policy distinction"
+      ]
+    },
+    {
+      "url": "https://store.ohou.se/goods/3674871",
+      "status": "search result text only; original full body not independently opened",
+      "observed": [
+        "product-specific size/delivery exceptions appear in snippet"
+      ],
+      "limits": [
+        "not independently confirmed full content",
+        "not own product policy"
+      ]
+    },
+    {
+      "url": "https://www.coupang.com/vp/products/651721",
+      "status": "direct open cache miss",
+      "observed": [],
+      "limits": [
+        "no full body verification"
+      ]
+    }
+  ],
+  "comparison": "None of the directly read competitor pages demonstrated a verified region-specific ordering advantage for all three localities. They primarily use reusable product/purpose/order workflows. No evidence that locality-name variations alone produce 5302 independent useful pages.",
+  "nextContentModules": [
+    {
+      "id": "product-budget",
+      "source": "own seller four SKU original pages supervisor verified",
+      "publish": "four SKU price/order links, size wording limited to product title"
+    },
+    {
+      "id": "sender-message",
+      "source": "own seller congratulatory_words.jpg supervisor directly read",
+      "publish": "original sample messages, not ribbon included"
+    },
+    {
+      "id": "delivery-fee",
+      "source": "own seller D144 surcharge rows",
+      "publish": "only verified display fee; final fee by phone"
+    },
+    {
+      "id": "recipient-path",
+      "source": "competitor original guide, general buyer workflow",
+      "publish": "optional customer-selected workplace/home/venue questions, not locality facts"
+    }
+  ],
+  "notEnoughForNationwide": [
+    "no verified locality-specific branch facts",
+    "no distinct recipient restrictions or order workflows per locality",
+    "no seller-confirmed SKU-level locality availability and fees beyond displayed table",
+    "same 4 products and service policy across all regions"
+  ],
+  "rankClaims": "none",
+  "publicationApproved": false
+}
