@@ -52,5 +52,69 @@
       "관엽화분",
       "소형"
     ]
+  },
+  {
+    "sku": "D026",
+    "name": "아로우카리아 대형",
+    "referencePrice": 90000,
+    "priceConfirmed": true,
+    "priceEvidence": "https://fwith.co.kr/shop/item.php?it_id=D026 supervisor direct HTML 2026-11-09 UTC03:35-36",
+    "priceCheckedOn": "2026-11-09",
+    "verifiedLive": true,
+    "imageUrl": null,
+    "imageUseApproved": false,
+    "imageApprovalEvidence": null,
+    "imageApprovedFor": [],
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D026",
+    "source": "supervisor direct seller page; worker direct fetch cache miss",
+    "lastLiveCheckedOn": "2026-11-09",
+    "lastLiveEvidence": "supervisor cloud browser direct original",
+    "orderOptionsObserved": {
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "regionSurchargeListed": null
+    },
+    "productCharacteristicsVerified": [
+      "대형"
+    ],
+    "unverified": [
+      "actual height",
+      "dimensions",
+      "stock",
+      "image rights",
+      "delivery guarantee"
+    ]
+  },
+  {
+    "sku": "D152",
+    "name": "레드카네이션 화분",
+    "referencePrice": 50000,
+    "priceConfirmed": true,
+    "priceEvidence": "https://fwith.co.kr/shop/item.php?it_id=D152 supervisor direct HTML 2026-11-09 UTC03:35-36",
+    "priceCheckedOn": "2026-11-09",
+    "verifiedLive": true,
+    "imageUrl": null,
+    "imageUseApproved": false,
+    "imageApprovalEvidence": null,
+    "imageApprovedFor": [],
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D152",
+    "source": "supervisor direct seller page; worker direct fetch cache miss",
+    "lastLiveCheckedOn": "2026-11-09",
+    "lastLiveEvidence": "supervisor cloud browser direct original",
+    "orderOptionsObserved": {
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "regionSurchargeListed": null
+    },
+    "productCharacteristicsVerified": [],
+    "unverified": [
+      "actual height",
+      "dimensions",
+      "stock",
+      "image rights",
+      "delivery guarantee"
+    ]
   }
 ]
