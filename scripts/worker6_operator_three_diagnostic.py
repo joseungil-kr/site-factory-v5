@@ -63,7 +63,7 @@ for page in pages:
  assert 'noindex' in html
  assert all('it_id='+x in html for x in sku)
  assert '08:00~23:00' in html and '06:00~20:00' in html
- assert operator_copy in html
+ assert module_by_id['order-call-timing']['body'] in html
  assert '참고 원문 보기' in html
  (out/f'{page["number"]}.html').write_text(html,encoding='utf-8')
 pairs=[{'pair':[texts[i]['region'],texts[j]['region']],'similarity':similarity(texts[i]['text'],texts[j]['text'])}
