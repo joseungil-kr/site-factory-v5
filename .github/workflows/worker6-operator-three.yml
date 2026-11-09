@@ -1,0 +1,45 @@
+name: Worker6 operator-confirmed three-region diagnostic
+on:
+  push:
+    branches: [site/v51-promotion-gift-plants-20261109]
+    paths:
+      - scripts/worker6_operator_three_diagnostic.py
+      - tests/test_worker6_operator_contract.py
+      - .github/workflows/worker6-operator-three.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  diagnostic:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Operator source and contract regressions
+        run: python -m unittest tests.test_worker6_operator_contract tests.test_worker6_shipping_render tests.test_worker6_page_type -v
+      - name: Render actual three V5.1 HTML with original similarity metric
+        run: python scripts/worker6_operator_three_diagnostic.py
+      - name: Validate output, noindex and provenance
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          root=Path('reports/promotion-gift-plants/operator-three')
+          d=json.loads((root/'diagnostic.json').read_text())
+          assert len(d['regions'])==3 and len(d['pairs'])==3
+          assert d['publicationApproved'] is False
+          for n in (1,2,3):
+              html=(root/f'{n}.html').read_text()
+              assert 'noindex' in html and '08:00~23:00' in html and '06:00~20:00' in html
+              assert '참고 원문 보기' in html
+          print('DIAGNOSTIC_3_HTML_OK',json.dumps(d['pairs'],ensure_ascii=False))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: worker6-operator-three-private-html
+          path: reports/promotion-gift-plants/operator-three/
+          if-no-files-found: warn
