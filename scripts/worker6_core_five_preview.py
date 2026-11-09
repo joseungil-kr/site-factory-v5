@@ -32,11 +32,11 @@ for purpose,intro in guide_introductions.items():
 decision_modules={
  'promotion':{
   'choice':('승진 선물 선택','금전수 탁상용 D144는 53,000원, 포인세티아 소형 D156은 60,000원입니다. 두 상품의 크기와 재고는 미확인이므로 수령 공간을 정한 뒤 상세상품에서 확인하세요.'),
-  'message':('승진 축하 문구 예시','예시: “새로운 자리에서의 활약을 응원합니다.” 보내는 사람 표기 예: “○○회사 영업팀 일동”. 꽃이랑 경조사어도우미에 승진 문구 참고 이미지가 있으나, 리본 포함·문구 입력·무료 제공 여부는 확인되지 않았습니다. 참고: https://fwith.co.kr/data/common/flower379/congratulatory_words.jpg'),
+  'message':('승진 축하 문구 예시','예시: “새로운 자리에서의 활약을 응원합니다.” 보내는 사람 표기 예: “○○회사 영업팀 일동”. 꽃이랑 경조사어도우미에 승진 문구 참고 이미지가 있으나, 리본 포함·문구 입력·무료 제공 여부는 확인되지 않았습니다.'),
   'order':('승진 선물 주문 확인','새 직함, 받는 회사·부서·층·호실, 실제 수령 날짜와 담당자를 정리합니다. 상품별 최종 배송비·메시지 제공 여부를 확인한 뒤 결제합니다.')},
  'transfer':{
   'choice':('영전·전보 선물 선택','D156 포인세티아 소형 60,000원과 D144 금전수 탁상용 53,000원을 비교합니다. 새 근무지의 배치 공간과 실제 수령 가능한 날짜가 상품 선택의 기준입니다.'),
-  'message':('영전 축하 문구 예시','예시: “새로운 자리에서 뜻하신 일을 이루시길 바랍니다.” 보내는 사람 표기 예: “○○회사 대표 홍길동”. 꽃이랑 문구 참고 이미지에 영전 축하 예시가 있으나, 주문 상품에 리본이 제공되는지는 미확인입니다. 참고: https://fwith.co.kr/data/common/flower379/congratulatory_words.jpg'),
+  'message':('영전 축하 문구 예시','예시: “새로운 자리에서 뜻하신 일을 이루시길 바랍니다.” 보내는 사람 표기 예: “○○회사 대표 홍길동”. 꽃이랑 문구 참고 이미지에 영전 축하 예시가 있으나, 주문 상품에 리본이 제공되는지는 미확인입니다.'),
   'order':('영전·전보 수령 확인','발령일과 출근일을 구분하고 새 근무지의 정확한 주소·부서·대리 수령 담당자를 확인합니다. 이전 근무지로 잘못 보내지 않도록 배송지와 수령일을 결제 전에 점검합니다.')},
  'congratulations':{
   'choice':('축하화분과 예산 선택','확인된 상품은 D144 금전수 탁상용 53,000원, D156 포인세티아 소형 60,000원입니다. 상품명으로만 실제 크기나 식물관리 조건을 추정하지 말고 받는 분의 선호와 배치 장소를 확인하세요.'),
@@ -53,7 +53,8 @@ for purpose,modules in decision_modules.items():
     # Preserve V5.1 slots without multiplying repetitive generic paragraphs.
     pool['sections']=[
       {'slot':'choice','role':'required','heading':modules['choice'][0],'paragraph':modules['choice'][1]},
-      {'slot':'choice','role':'required','heading':modules['message'][0],'paragraph':modules['message'][1]},
+      {'slot':'choice','role':'required','heading':modules['message'][0],'paragraph':modules['message'][1],
+       **({'sourceUrl':'https://fwith.co.kr/data/common/flower379/congratulatory_words.jpg'} if purpose in ('promotion','transfer') else {})},
       {'slot':'order','role':'required','heading':modules['order'][0],'paragraph':modules['order'][1]}]
     pool['faqs']=[{'q':'당일 배송이 보장되나요?','a':'배송 가능 여부와 도착 시간은 판매처에 확인해야 합니다.'},
                   {'q':'리본·메시지가 제공되나요?','a':'참고 문구가 공개되어 있어도 해당 상품의 제공 여부와 입력 방법은 별도 확인해야 합니다.'}]
