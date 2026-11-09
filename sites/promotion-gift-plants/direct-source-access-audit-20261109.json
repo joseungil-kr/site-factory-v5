@@ -51,13 +51,35 @@
   "ownSeller": [
     {
       "url": "https://fwith.co.kr/bbs/content.php?co_id=congratulatory_words",
-      "access": "cache-miss",
-      "claimsAllowed": false
+      "access": "worker-text-cache-miss-supervisor-image-success",
+      "claimsAllowed": false,
+      "supervisorObservation": {
+        "atApprox": "2026-11-09T03:33:00Z",
+        "method": "cloud browser image viewed enlarged",
+        "htmlPageAccessible": true,
+        "imageUrl": "https://fwith.co.kr/data/common/flower379/congratulatory_words.jpg",
+        "verifiedExamplePhrases": [
+          "승진을 축하하며 더 큰 영광있기를 기원합니다",
+          "영전을 진심으로 축하하며 더 큰 뜻을 펼치길 기원합니다"
+        ],
+        "limit": "Examples only; no verified ribbon provision, text input option or free service"
+      }
     },
     {
       "url": "https://fwith.co.kr/bbs/content.php?co_id=management_tips",
-      "access": "cache-miss",
-      "claimsAllowed": false
+      "access": "worker-text-cache-miss-supervisor-image-success",
+      "claimsAllowed": false,
+      "supervisorObservation": {
+        "atApprox": "2026-11-09T03:33:00Z",
+        "method": "cloud browser image viewed",
+        "htmlPageAccessible": true,
+        "imageUrl": "https://fwith.co.kr/data/common/flower379/management_tips.jpg",
+        "scope": "general orchids and foliage care, not D144/D156 SKU-specific",
+        "doNotReuse": [
+          "summer every 3 days",
+          "winter every week"
+        ]
+      }
     },
     {
       "url": "https://fwith.co.kr/shop/item.php?it_id=D026",
@@ -70,6 +92,6 @@
       "claimsAllowed": false
     }
   ],
-  "finding": "Only one competitor's redirected body was actually readable; no first-party ribbon, care or additional SKU detail verified. Do not claim full three competitor review or mobile flow inspection.",
+  "finding": "Competitor full body access limited to redirected guide. Own seller congratulatory and management content images were directly viewed by supervisor, while worker text fetch returned cache miss; image text is not product-option or SKU-care proof.",
   "sourceCitation": "turn770600view2"
 }
