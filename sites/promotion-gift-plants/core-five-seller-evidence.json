@@ -1,6 +1,6 @@
 {
   "checkedAt": "2026-11-09",
-  "verificationMethod": "Seller public product detail HTML; D144 direct page, D156 indexed seller page after direct fetch cache miss",
+  "verificationMethod": "D144 directly fetched seller HTML; D156 indexed seller text observed but direct seller HTML was not retrieved. Indexed observation date differs from original publication/crawl date, which is unknown.",
   "sources": [
     {
       "sku": "D144",
@@ -12,7 +12,12 @@
       "shippingPayment": "주문시 결제",
       "purchaseAction": "바로구매/장바구니",
       "phone": "1844-0644",
-      "seasonalAppearanceMayVary": true
+      "seasonalAppearanceMayVary": true,
+      "observationCheckedAt": "2026-11-09 (date only; exact time not recorded)",
+      "originalPagePublishedAt": null,
+      "originalPageCrawledAt": null,
+      "directOriginalHtmlVerified": true,
+      "verificationStatus": "direct-seller-page"
     },
     {
       "sku": "D156",
@@ -24,7 +29,13 @@
       "shippingPayment": "주문시 결제",
       "purchaseAction": "바로구매",
       "phone": "1844-0644",
-      "seasonalAppearanceMayVary": true
+      "seasonalAppearanceMayVary": true,
+      "observationCheckedAt": "2026-11-09 (date only; exact time not recorded)",
+      "originalPagePublishedAt": null,
+      "originalPageCrawledAt": null,
+      "directOriginalHtmlVerified": false,
+      "verificationStatus": "indexed-seller-text-only",
+      "priceRequiresDirectRecheckBeforePublic": true
     }
   ],
   "delivery": {
