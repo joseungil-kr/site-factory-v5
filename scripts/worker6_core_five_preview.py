@@ -30,16 +30,33 @@ for purpose,intro in guide_introductions.items():
 # Replace overlapping generic selection sections with one substantive,
 # purpose-specific buyer decision module. Do not append a fifth repetition.
 decision_modules={
- 'promotion':('승진 선물 비교와 주문 정보','D144 금전수 탁상용 53,000원과 D156 포인세티아 소형 60,000원을 비교합니다. 상품명만으로 실제 화분 크기나 재고를 판단하지 마세요. 주문할 때 새 직함, 회사·부서·층·호실, 수령 담당자와 날짜를 준비합니다. 리본 문구 제공 방식은 꽃이랑 원문 확인 전까지 미확인입니다.'),
- 'transfer':('영전·전보의 새 근무지 수령','발령일과 실제 출근일을 구분하고, 이전 근무지 대신 새 직장 주소·부서·층·호실·대리 수령인을 확인합니다. D156 60,000원과 D144 53,000원 중 상품 상세와 수령 공간에 맞는 것을 선택하고 배송 가능 여부를 문의합니다.'),
- 'congratulations':('축하 문구·보내는 사람·상품 선택','D144 53,000원과 D156 60,000원 중 받는 분의 선호와 배치 장소에 맞는 후보를 고릅니다. 받는 분 이름, 축하 사유, 보내는 회사·부서·성명을 정리합니다. 실제 리본·메시지 제공 여부와 입력 방법은 꽃이랑 경조사어도우미 원문을 확인하지 못했으므로 판매처에 문의해야 합니다.'),
- 'sameDayInquiry':('당일 주문 가능 여부 확인 순서','결제 전에 상품번호 D144 또는 D156, 시군구·읍면동을 포함한 상세 주소, 희망 수령 시각, 받는 분 연락처를 준비합니다. 배송 가능 여부, 접수 마감, 최종 배송비는 확인되지 않았으며 판매처 1844-0644에 문의해 결정합니다.')
+ 'promotion':{
+  'choice':('승진 선물 선택','금전수 탁상용 D144는 53,000원, 포인세티아 소형 D156은 60,000원입니다. 두 상품의 크기와 재고는 미확인이므로 수령 공간을 정한 뒤 상세상품에서 확인하세요.'),
+  'message':('승진 축하 문구 예시','예시: “새로운 자리에서의 활약을 응원합니다.” 보내는 사람 표기 예: “○○회사 영업팀 일동”. 꽃이랑 경조사어도우미에 승진 문구 참고 이미지가 있으나, 리본 포함·문구 입력·무료 제공 여부는 확인되지 않았습니다. 참고: https://fwith.co.kr/data/common/flower379/congratulatory_words.jpg'),
+  'order':('승진 선물 주문 확인','새 직함, 받는 회사·부서·층·호실, 실제 수령 날짜와 담당자를 정리합니다. 상품별 최종 배송비·메시지 제공 여부를 확인한 뒤 결제합니다.')},
+ 'transfer':{
+  'choice':('영전·전보 선물 선택','D156 포인세티아 소형 60,000원과 D144 금전수 탁상용 53,000원을 비교합니다. 새 근무지의 배치 공간과 실제 수령 가능한 날짜가 상품 선택의 기준입니다.'),
+  'message':('영전 축하 문구 예시','예시: “새로운 자리에서 뜻하신 일을 이루시길 바랍니다.” 보내는 사람 표기 예: “○○회사 대표 홍길동”. 꽃이랑 문구 참고 이미지에 영전 축하 예시가 있으나, 주문 상품에 리본이 제공되는지는 미확인입니다. 참고: https://fwith.co.kr/data/common/flower379/congratulatory_words.jpg'),
+  'order':('영전·전보 수령 확인','발령일과 출근일을 구분하고 새 근무지의 정확한 주소·부서·대리 수령 담당자를 확인합니다. 이전 근무지로 잘못 보내지 않도록 배송지와 수령일을 결제 전에 점검합니다.')},
+ 'congratulations':{
+  'choice':('축하화분과 예산 선택','확인된 상품은 D144 금전수 탁상용 53,000원, D156 포인세티아 소형 60,000원입니다. 상품명으로만 실제 크기나 식물관리 조건을 추정하지 말고 받는 분의 선호와 배치 장소를 확인하세요.'),
+  'message':('축하 메시지 준비','예시: “새 출발을 진심으로 축하드립니다.” 보내는 사람 표기 예: “○○동호회 회원 일동”. 문구 예시는 직접 작성한 참고 문장으로, 판매처의 리본 제작 서비스나 무료 제공을 뜻하지 않습니다.'),
+  'order':('축하 선물 주문 확인','받는 분의 이름, 축하 행사일, 정확한 수령 장소와 연락처를 확인합니다. 리본·메시지 선택 가능 여부는 상품 상세 또는 판매처 문의로 확인한 뒤 주문하세요.')},
+ 'sameDayInquiry':{
+  'choice':('당일 문의 1단계 · 상품과 수령지 준비','문의할 정보: 상품번호 D144 또는 D156 / 수령지 시군구·읍면동·건물·층 / 받는 분 연락처 / 희망 수령 시각. 실제 재고와 주문 마감은 확인되지 않았습니다.'),
+  'message':('당일 문의 2단계 · 판매처 답변 확인','판매처에 확인할 항목: 해당 주소 배송 가능 여부 / 접수 마감 / 예상 수령 가능 시간 / 지역 추가 배송비와 최종 결제금액 / 부재 시 수령 방법. 답변이 확정되기 전에는 당일 도착을 전제로 결제하지 마세요.'),
+  'order':('당일 문의 3단계 · 결제 판단','전화 1844-0644로 문의 결과를 확인하고 상품 상세의 수량·옵션·금액을 재확인합니다. 배송 가능 여부나 시간·요금이 미확정이면 주문을 확정하지 않고 추가 확인합니다.')}
 }
-for purpose,(heading,paragraph) in decision_modules.items():
+for purpose,modules in decision_modules.items():
     pool=spec['purposePools'][purpose]
-    # Keep genuinely distinct order guidance, remove repetitive choice blocks.
-    pool['sections']=[x for x in pool['sections'] if x['slot']=='order']
-    pool['sections'].insert(0,{'slot':'choice','role':'required','heading':heading,'paragraph':paragraph})
+    # One module per independent job: choice, message, transaction.
+    # Preserve V5.1 slots without multiplying repetitive generic paragraphs.
+    pool['sections']=[
+      {'slot':'choice','role':'required','heading':modules['choice'][0],'paragraph':modules['choice'][1]},
+      {'slot':'choice','role':'required','heading':modules['message'][0],'paragraph':modules['message'][1]},
+      {'slot':'order','role':'required','heading':modules['order'][0],'paragraph':modules['order'][1]}]
+    pool['faqs']=[{'q':'당일 배송이 보장되나요?','a':'배송 가능 여부와 도착 시간은 판매처에 확인해야 합니다.'},
+                  {'q':'리본·메시지가 제공되나요?','a':'참고 문구가 공개되어 있어도 해당 상품의 제공 여부와 입력 방법은 별도 확인해야 합니다.'}]
 spec['pageTypes']=['homepage','purpose-guide']
 spec['targetPageCount']=5
 spec['publishPolicy']['mode']='preview'
