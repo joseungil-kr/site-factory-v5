@@ -1,0 +1,75 @@
+name: Worker6 nationwide V5.1 isolated build
+on:
+  workflow_dispatch:
+  push:
+    branches: [site/v51-promotion-gift-plants-20261109]
+    paths:
+      - scripts/worker6_nationwide_inputs.py
+      - .github/workflows/worker6-nationwide.yml
+permissions:
+  contents: read
+jobs:
+  nationwide:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare nationwide source and replace only isolated runner inputs
+        run: |
+          python scripts/worker6_nationwide_inputs.py
+          cp reports/promotion-gift-plants/nationwide-input/pages.json sites/promotion-gift-plants/pages.json
+          cp reports/promotion-gift-plants/nationwide-input/regions.json sites/promotion-gift-plants/regions.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('sites/promotion-gift-plants/pages.json')
+          pages=json.loads(p.read_text())
+          assert len(pages)==5302
+          assert len({x['id'] for x in pages})==5302
+          assert len({x['region'] for x in pages})==5302
+          assert len({x['number'] for x in pages})==5302
+          assert sum(x['pageKind']=='locality-detail' for x in pages)==5034
+          assert sum(x['pageKind']=='district-hub' for x in pages)==250
+          assert sum(x['pageKind']=='province-hub' for x in pages)==17
+          assert sum(x['pageKind']=='homepage' for x in pages)==1
+          print('INPUT_OK',len(pages))
+          PY
+      - name: V5.1 plan-check
+        run: python -m v5 plan-check --site promotion-gift-plants
+      - name: Build all 5302 pages with existing V5.1 renderer
+        run: python -m v5 build --site promotion-gift-plants --mode preview
+      - name: V5.1 audit and fixed 54-page review sample
+        run: |
+          python -m v5 audit --site promotion-gift-plants
+          python -m v5 review-sample --site promotion-gift-plants > reports/promotion-gift-plants/review-sample.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('reports/promotion-gift-plants')
+          sample=json.loads((root/'review-sample.json').read_text())
+          pages=json.loads(Path('sites/promotion-gift-plants/pages.json').read_text())
+          lookup={p['id']:p for p in pages}
+          selected=sample['sampleIds']
+          assert len(selected)>=54
+          items=[]
+          for id in selected:
+            p=lookup[id]
+            html=Path('dist/promotion-gift-plants')/('index.html' if p['number']==1 else str(p['number'])+'.html')
+            content=html.read_text(encoding='utf-8')
+            items.append({'id':id,'number':p['number'],'purpose':p['purpose'],'region':p['region'],'htmlPath':str(html),'htmlBytes':len(content),'title':p['title'],'sourceFlag':p.get('sourceFlag')})
+          (root/'54plus-review-index.json').write_text(json.dumps(items,ensure_ascii=False,indent=2),encoding='utf-8')
+          print('SAMPLE_OK',len(items))
+          PY
+      - name: Archive isolated nationwide HTML and QA
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: worker6-nationwide-5302-v51-preview
+          path: |
+            dist/promotion-gift-plants/
+            reports/promotion-gift-plants/
+          if-no-files-found: warn
+          retention-days: 7
