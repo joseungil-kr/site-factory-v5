@@ -2,6 +2,7 @@
 from pathlib import Path
 import json,sys
 ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
 sys.path.insert(0,str(ROOT/'scripts'))
 from worker6_shipping_render import lookup,evidence_section
 from v5.purpose_render import render,assemble
