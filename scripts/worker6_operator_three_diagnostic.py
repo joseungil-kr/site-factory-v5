@@ -35,16 +35,16 @@ def module_section(module_id,slot):
  return {'slot':slot,'role':'required','heading':m['heading'],'paragraph':m['body'],
          **({'sourceUrl':m['sourceUrl']} if 'sourceUrl' in m else {})}
 def scenario_pool(state):
- config=next(x for x in modules['scenarioChoices'] if x['case']==state)
+ fee=modules['editorialStructure']['feeModuleByVerifiedSellerRowState'][state]
+ # All recipient options are present for every region. No arbitrary locality assignment.
+ ids=['budget-and-placement','title-and-sender','workplace-receipt','home-receipt','venue-receipt','order-call-timing',fee]
  return {'productSkus':sku,
- 'introductions':['승진 축하화분 주문에서 상품 예산, 메시지, 실제 수령상황과 지역별 추가 배송비 표를 나누어 확인합니다. 아래 수령 사례는 선택 가능한 상황이지 지역별 시설 현황이 아닙니다.'],
- 'sections':[
-  module_section(config['primary'],'choice'),
-  module_section(config['recipient'],'choice'),
-  module_section('order-call-timing','order'),
-  module_section(config['fee'],'order')],
+ 'introductions':['승진 축하화분을 예산·축하 문구·수령 장소에 따라 선택하세요. 회사·자택·행사장 중 받는 분에게 맞는 방법을 확인하고 지역별 배송비는 주문 전에 상담합니다.'],
+ 'sections':[module_section(mid,'order' if mid in ('order-call-timing',fee) else 'choice') for mid in ids],
  'faqs':common_faq}
-cases=[('경기도','파주시','적성면'),('경기도','가평군','설악면'),('전라남도','강진군','대구면')]
+cases=[('경기도','파주시','적성면'),('경기도','양평군','단월면'),
+       ('경기도','가평군','설악면'),('경기도','포천시','이동면'),
+       ('전라남도','강진군','대구면'),('전라남도','영광군','법성면')]
 pages=[];records=[]
 for i,(province,district,locality) in enumerate(cases,1):
  match=lookup(province,district,locality)
@@ -67,10 +67,11 @@ for page in pages:
  assert '참고 원문 보기' in html
  (out/f'{page["number"]}.html').write_text(html,encoding='utf-8')
 pairs=[{'pair':[texts[i]['region'],texts[j]['region']],'similarity':similarity(texts[i]['text'],texts[j]['text'])}
- for i in range(3) for j in range(i+1,3)]
+ for i in range(len(texts)) for j in range(i+1,len(texts))]
 report={'source':'user provided operator confirmation, not external verification',
  'qualityGateThresholdExclusive':0.49,'auditPassed':all(p['similarity']<0.49 for p in pairs),
  'pairs':pairs,'regions':records,'bodies':texts,'publicationApproved':False,
- 'scenarioEvidenceIsLocalFact':False,'selectionRule':'buyer decision scenario, not factual regional prevalence'}
+ 'failedPairs':[p for p in pairs if p['similarity']>=0.49],
+ 'scenarioEvidenceIsLocalFact':False,'selectionRule':'all recipient choices on every region; fee state only controls fee guidance'}
 (out/'diagnostic.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-print('THREE_DIAGNOSTIC',json.dumps({'pairs':pairs,'auditPassed':report['auditPassed']},ensure_ascii=False))
+print('SIX_DIAGNOSTIC',json.dumps({'pairs':pairs,'auditPassed':report['auditPassed']},ensure_ascii=False))
