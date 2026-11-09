@@ -1,0 +1,108 @@
+{
+  "checkedOn": "2026-11-09",
+  "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=D144",
+  "directTextVerified": true,
+  "confirmed": [
+    {
+      "field": "price",
+      "value": "53,000원",
+      "lines": "52-57"
+    },
+    {
+      "field": "options",
+      "value": "선택옵션 0개, 추가옵션 0개",
+      "lines": "52-57"
+    },
+    {
+      "field": "shippingPayment",
+      "value": "주문시 결제",
+      "lines": "57"
+    },
+    {
+      "field": "purchaseFlow",
+      "value": "수량 선택, 바로구매/장바구니",
+      "lines": "59-67"
+    },
+    {
+      "field": "regionalSurcharge",
+      "value": "지역별 추가 배송비 표 존재; 배송지에 따라 추가 발생 가능",
+      "lines": "131-199"
+    },
+    {
+      "field": "appearance",
+      "value": "계절에 따라 상품 형태·화분·장식 변경 가능",
+      "lines": "47"
+    },
+    {
+      "field": "orderPayerName",
+      "value": "주문자와 입금자 이름이 다르면 고객센터 연락",
+      "lines": "425-430"
+    },
+    {
+      "field": "contact",
+      "value": "1844-0644",
+      "lines": "124, 423-440"
+    },
+    {
+      "field": "reviews",
+      "value": "개별 후기 존재",
+      "lines": "204-272",
+      "use": "개인 경험이지 배송지역/시간 보장 아님"
+    },
+    {
+      "field": "deliveryGallery",
+      "value": "게시물이 없습니다",
+      "lines": "126-130",
+      "use": "지역 배송 증빙 없음"
+    },
+    {
+      "field": "productNotice",
+      "value": "품명·제조자·기타 고시 존재",
+      "lines": "117-124",
+      "use": "다른 SKU·지역 배송 조건으로 일반화 금지"
+    }
+  ],
+  "unverified": [
+    {
+      "field": "finalShippingPrice",
+      "source": "배송지별 추가요금의 중복 우선순위와 주문 결제 화면 미확인",
+      "resolution": "seller checkout or confirmed operations"
+    },
+    {
+      "field": "sameDayCoverage",
+      "source": "상품 상세에 확정된 지역별 당일배송 가능 목록 없음",
+      "resolution": "seller operations by SKU/date/address"
+    },
+    {
+      "field": "orderCutoff",
+      "source": "상품 상세에 확인된 마감시각 없음",
+      "resolution": "seller operations"
+    },
+    {
+      "field": "stock",
+      "source": "현재 재고 상태 미확인",
+      "resolution": "seller inventory"
+    },
+    {
+      "field": "ribbonOption",
+      "source": "경조사 문구 참고 이미지는 옵션/제공 약속이 아님",
+      "resolution": "seller order UI and fulfillment"
+    },
+    {
+      "field": "dimensions",
+      "source": "탁상용/소형/대형 상품명만 확인",
+      "resolution": "product measurements"
+    },
+    {
+      "field": "refundPolicy",
+      "source": "교환/반품은 이미지이며 텍스트로 구체 조건 확인 불가",
+      "resolution": "seller original policy image/terms"
+    },
+    {
+      "field": "regionalReceiving",
+      "source": "배송 갤러리 빈 목록과 후기만으로 수령 가능 장소 검증 불가",
+      "resolution": "seller fulfillment and recipient facility"
+    }
+  ],
+  "decision": "Can use order payer name and seasonal appearance notice in purpose guides, but not convert them into locality coverage claims."
+}
