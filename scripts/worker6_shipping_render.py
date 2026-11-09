@@ -8,6 +8,12 @@ ALIASES={'경기도':'경기','강원도':'강원','경상남도':'경남','경�
 def lookup(province,district,locality,source=None):
     data=source if source is not None else json.loads(SOURCE.read_text(encoding='utf-8'))
     province_label=ALIASES.get(province)
+    if not province_label:
+        return {'region':' '.join((province,district,locality)),'state':'jurisdiction-unresolved',
+            'candidates':[],'sourceUrl':data['sourceUrl'],'checkedAt':data['checkedAt'],
+            'finalShippingPriceKnown':False,'deliveryAvailabilityKnown':False,
+            'absenceMeansFree':False,'aliasOnlyNotOfficialAddressValidation':True,
+            'reason':'province label cannot be mapped without authoritative jurisdiction evidence'}
     candidates=[]
     for row in data['rows']:
         if province_label!=row['provinceLabel']:continue
@@ -28,7 +34,9 @@ def lookup(province,district,locality,source=None):
         'absenceMeansFree':False,'aliasOnlyNotOfficialAddressValidation':True}
 def evidence_section(result):
     rows=result['candidates']
-    if result['state']=='exact-locality-display':
+    if result['state']=='jurisdiction-unresolved':
+        description=f"{result['region']}의 행정명과 판매처 배송비 표의 지역명 연결이 확인되지 않았습니다. 원문 행이 없다고 판단할 수 없습니다."
+    elif result['state']=='exact-locality-display':
         item=rows[0]
         description=f"판매처 추가 배송비 표 {item['row']}행에는 {result['region']}에 추가 배송비 {item['extraKRW']:,}원이 표시됩니다."
     elif result['state']=='overlap-unknown-priority':
