@@ -1,0 +1,22 @@
+name: Worker6 venue provenance evidence gate
+on:
+  push:
+    branches: [site/v51-promotion-gift-plants-20261109]
+    paths:
+      - scripts/worker6_venue_evidence_gate.py
+      - tests/test_worker6_venue_evidence_gate.py
+      - sites/promotion-gift-plants/TWO_VENUE_ADMISSION_EVIDENCE_20261109.json
+      - .github/workflows/worker6-venue-evidence-gate.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate venue evidence structure and fixture rejections
+        run: python -m unittest tests.test_worker6_venue_evidence_gate -v
