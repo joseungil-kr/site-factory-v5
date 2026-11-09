@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "sourceBasis": [
+    "seller four verified product SKUs and prices 2026-11-09",
+    "seller congratulatory phrase image directly reviewed by supervisor",
+    "user-provided nationwide dispatch and telephone hours",
+    "seller surcharge rows 2026-11-09"
+  ],
+  "policy": "Customer-decision scenarios are examples, never assertions about local recipient facilities or prevalent practices. Never rotate synonyms to reduce similarity. Every section must answer a distinct purchase question.",
+  "modules": [
+    {
+      "id": "budget-and-placement",
+      "decision": "Which budget and placement constraints matter?",
+      "heading": "예산과 놓을 공간부터 비교",
+      "body": "5만 원대에는 레드카네이션 화분 50,000원과 금전수 탁상용 53,000원이 있습니다. 6만 원 포인세티아 소형과 9만 원 아로우카리아 대형도 선택지입니다. '탁상용·소형·대형'은 판매처 상품명에 적힌 구분으로 실제 높이·폭을 뜻하지 않습니다. 받는 분의 책상인지 공용공간인지 확인하고 화분의 실측 치수를 전화로 문의한 다음 선택합니다."
+    },
+    {
+      "id": "title-and-sender",
+      "decision": "What wording and sender identity should be prepared?",
+      "heading": "승진 직함과 보내는 사람 표기",
+      "body": "축하 메시지 예시: '새로운 자리에서의 활약을 응원합니다.' 보내는 사람 표기 예시: '○○회사 ○○팀 일동'. 새 직함을 정확히 확인한 뒤 문구와 발신자 표기를 따로 정리합니다. 꽃이랑 경조사어도우미의 문구는 참고자료일 뿐 주문상품에 리본이 포함된다는 뜻은 아닙니다.",
+      "sourceUrl": "https://fwith.co.kr/data/common/flower379/congratulatory_words.jpg"
+    },
+    {
+      "id": "workplace-receipt",
+      "decision": "Who will receive at the new workplace?",
+      "heading": "회사·사무실 수령을 선택했다면",
+      "body": "사무실로 받는 상황에서는 회사명, 부서, 건물·층·호실과 수령 담당자에게 전달 가능한 날짜를 확인합니다. 승진 발령일에 자리에 없을 수도 있으므로 실제 근무일과 전달 희망일을 구분하세요. 이는 선택 가능한 주문 시나리오이며 해당 지역에 특정 회사나 지점이 있다는 주장과 무관합니다."
+    },
+    {
+      "id": "home-receipt",
+      "decision": "What changes if recipient chooses home?",
+      "heading": "자택 수령을 선택했다면",
+      "body": "집으로 받는 상황에서는 도로명주소와 동·호수, 수령인이 연락받을 수 있는 시간, 부재 시 연락 방법을 확인합니다. 주거지에 화분을 놓을 공간과 수령 가능 여부를 먼저 확인하고 판매처에 전달합니다. 자택 수령 가능 여부와 실제 전달시간은 주문 건별 전화상담으로 결정합니다."
+    },
+    {
+      "id": "venue-receipt",
+      "decision": "What changes if recipient chooses an event venue?",
+      "heading": "행사장 수령을 선택했다면",
+      "body": "축하행사 장소로 받는 경우에는 행사 시작시각과 물품 반입 가능 시간, 행사장 담당 부서 또는 수령 창구를 구분합니다. 행사 시작 전 도착을 자동 보장하지 않으므로 장소의 수령 가능 시간을 먼저 확인하고 판매처에 전달합니다. 지역의 특정 행사장이나 반입 규칙을 확인한 것으로 해석하면 안 됩니다."
+    },
+    {
+      "id": "order-call-timing",
+      "decision": "What should be asked on the phone?",
+      "heading": "전화 주문시간과 배송 가능 시간 판단",
+      "body": "사업자 운영확인 기준 전화 주문은 08:00~23:00이며, 배송 가능 시간대는 지역 꽃집 운영시간에 따른 06:00~20:00입니다. 지역별 지점 발송으로 전국 당일배송 서비스를 안내하지만, 주문 건의 실제 당일 도착·마감·재고·추가요금은 1844-0644에서 확인합니다. 23시 주문이 그날 도착한다는 뜻은 아닙니다."
+    },
+    {
+      "id": "seller-fee-exact",
+      "decision": "How to interpret exact locality surcharge?",
+      "heading": "읍면 표기 추가요금 확인",
+      "body": "판매처 배송비 표에 읍면 단위로 표시된 추가비용은 상담 시 대조할 참고 금액입니다. 표의 금액이 최종 결제 배송비나 모든 상품에 적용되는 확정액은 아닙니다. 주문할 상품번호와 정확한 읍면동을 전달해 적용 금액을 확인합니다."
+    },
+    {
+      "id": "seller-fee-overlap",
+      "decision": "How to interpret overlapping district/locality fees?",
+      "heading": "상위지역·읍면 요금이 겹칠 때",
+      "body": "시군구와 하위 읍면에 서로 다른 추가비용이 표시되면 어느 행이 우선하는지 표만으로 결정하지 않습니다. 상담 시 두 행의 금액을 함께 제시하고 주문 상품에 실제 적용되는 추가 배송비를 확인합니다. 큰 금액 또는 작은 금액을 임의로 적용하지 않습니다."
+    },
+    {
+      "id": "seller-fee-jurisdiction",
+      "decision": "What if administrative label is unresolved?",
+      "heading": "배송비 표 행정명 연결 확인",
+      "body": "판매처의 광역 행정명과 지역 후보 원장의 명칭이 다르면 같은 지역이라고 임의로 확정하거나 배송비가 없다고 해석하지 않습니다. 고객이 전달할 주소와 판매처 표의 표기를 함께 확인해 적용 지역과 최종 추가요금을 상담합니다."
+    }
+  ],
+  "scenarioChoices": [
+    {
+      "case": "exact-locality-display",
+      "primary": "budget-and-placement",
+      "recipient": "workplace-receipt",
+      "fee": "seller-fee-exact"
+    },
+    {
+      "case": "overlap-unknown-priority",
+      "primary": "title-and-sender",
+      "recipient": "venue-receipt",
+      "fee": "seller-fee-overlap"
+    },
+    {
+      "case": "jurisdiction-unresolved",
+      "primary": "budget-and-placement",
+      "recipient": "home-receipt",
+      "fee": "seller-fee-jurisdiction"
+    }
+  ],
+  "limitations": "Different scenario examples are editorial decision aids, not verified regional differences; should not count as locality-unique factual evidence or 85-point pass."
+}
