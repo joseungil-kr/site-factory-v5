@@ -5,14 +5,6 @@ ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/'sites/promotion-gift-plants'
 from copy import deepcopy
 
-def product_summary(items):
-    """Single source for product count, names, prices and cards."""
-    ordered=sorted(items,key=lambda p:(p['priceKRW'],p['sku']))
-    return {'count':len(ordered),
-            'label':' / '.join(f"{p['name']} {p['priceKRW']:,}원 ({p['sku']})" for p in ordered),
-            'skus':[p['sku'] for p in ordered],
-            'priceBands':sorted({p['priceKRW']//10000 for p in ordered})}
-
 def generate_inputs(source,base_spec,site_input):
     spec=deepcopy(base_spec)
     product_ids=['D144','D156','D152','D026']
