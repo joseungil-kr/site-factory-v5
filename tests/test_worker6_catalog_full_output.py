@@ -16,7 +16,7 @@ class CatalogFullOutput(unittest.TestCase):
         cls.catalog=json.loads((SITE/'products.json').read_text(encoding='utf-8'))
     def _real_render(self,skus):
         selected=[copy.deepcopy(next(x for x in self.seller['sources'] if x['sku']==sku)) for sku in skus]
-        spec,pages,regions,site=generate_inputs({'sources':selected},self.spec,self.site)
+        spec,pages,regions,site=generate_inputs({'sources':selected},self.spec,self.site,require_orchids=False)
         products=[copy.deepcopy(next(x for x in self.catalog if x['sku']==sku)) for sku in skus]
         outputs={}
         for page in pages:
