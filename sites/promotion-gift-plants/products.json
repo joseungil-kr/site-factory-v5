@@ -2,91 +2,55 @@
   {
     "sku": "D144",
     "name": "금전수 탁상용",
-    "referencePrice": null,
-    "priceConfirmed": false,
-    "priceEvidence": null,
-    "priceCheckedOn": null,
-    "verifiedLive": false,
+    "referencePrice": 53000,
+    "priceConfirmed": true,
+    "priceEvidence": "https://fwith.co.kr/shop/item.php?it_id=D144 price and purchase options observed 2026-11-09",
+    "priceCheckedOn": "2026-11-09",
+    "verifiedLive": true,
     "imageUrl": null,
     "imageUseApproved": false,
     "imageApprovalEvidence": null,
     "imageApprovedFor": [],
     "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D144",
-    "source": "legacy V5 product catalog or pre-interruption prototype; current live price/order/image unverified"
-  },
-  {
-    "sku": "D149",
-    "name": "녹보수 소형",
-    "referencePrice": null,
-    "priceConfirmed": false,
-    "priceEvidence": null,
-    "priceCheckedOn": null,
-    "verifiedLive": false,
-    "imageUrl": null,
-    "imageUseApproved": false,
-    "imageApprovalEvidence": null,
-    "imageApprovedFor": [],
-    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D149",
-    "source": "legacy V5 product catalog or pre-interruption prototype; current live price/order/image unverified"
-  },
-  {
-    "sku": "D158",
-    "name": "스투키 탁상용",
-    "referencePrice": null,
-    "priceConfirmed": false,
-    "priceEvidence": null,
-    "priceCheckedOn": null,
-    "verifiedLive": false,
-    "imageUrl": null,
-    "imageUseApproved": false,
-    "imageApprovalEvidence": null,
-    "imageApprovedFor": [],
-    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D158",
-    "source": "legacy V5 product catalog or pre-interruption prototype; current live price/order/image unverified"
-  },
-  {
-    "sku": "D143",
-    "name": "몬스테라 소형",
-    "referencePrice": null,
-    "priceConfirmed": false,
-    "priceEvidence": null,
-    "priceCheckedOn": null,
-    "verifiedLive": false,
-    "imageUrl": null,
-    "imageUseApproved": false,
-    "imageApprovalEvidence": null,
-    "imageApprovedFor": [],
-    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D143",
-    "source": "legacy V5 product catalog or pre-interruption prototype; current live price/order/image unverified"
-  },
-  {
-    "sku": "D151",
-    "name": "크루시아 소형",
-    "referencePrice": null,
-    "priceConfirmed": false,
-    "priceEvidence": null,
-    "priceCheckedOn": null,
-    "verifiedLive": false,
-    "imageUrl": null,
-    "imageUseApproved": false,
-    "imageApprovalEvidence": null,
-    "imageApprovedFor": [],
-    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D151",
-    "source": "legacy V5 product catalog or pre-interruption prototype; current live price/order/image unverified"
+    "source": "legacy V5 product catalog or pre-interruption prototype; current live price/order/image unverified",
+    "lastLiveCheckedOn": "2026-11-09",
+    "lastLiveEvidence": "https://fwith.co.kr/shop/item.php?it_id=D144 official product listing and order form; current stock and delivery time unverified",
+    "orderOptionsObserved": {
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "regionSurchargeListed": true
+    },
+    "productCharacteristicsVerified": [
+      "관엽화분",
+      "탁상용"
+    ]
   },
   {
     "sku": "D156",
     "name": "포인세티아 소형",
-    "referencePrice": null,
-    "priceConfirmed": false,
-    "priceEvidence": null,
-    "priceCheckedOn": null,
-    "verifiedLive": false,
+    "referencePrice": 60000,
+    "priceConfirmed": true,
+    "priceEvidence": "https://fwith.co.kr/shop/item.php?it_id=D156 price and purchase options observed 2026-11-09",
+    "priceCheckedOn": "2026-11-09",
+    "verifiedLive": true,
     "imageUrl": null,
     "imageUseApproved": false,
     "imageApprovalEvidence": null,
     "imageApprovedFor": [],
     "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D156",
-    "source": "legacy V5 product catalog or pre-interruption prototype; current live price/order/image unverified"
+    "source": "legacy V5 product catalog or pre-interruption prototype; current live price/order/image unverified",
+    "lastLiveCheckedOn": "2026-11-09",
+    "lastLiveEvidence": "https://fwith.co.kr/shop/item.php?it_id=D156 official product listing and order form; current stock and delivery time unverified",
+    "orderOptionsObserved": {
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "regionSurchargeListed": true
+    },
+    "productCharacteristicsVerified": [
+      "관엽화분",
+      "소형"
+    ]
   }
 ]
