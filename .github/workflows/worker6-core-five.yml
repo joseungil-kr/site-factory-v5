@@ -1,0 +1,76 @@
+name: Worker6 five core purpose preview
+on:
+  push:
+    branches: [site/v51-promotion-gift-plants-20261109]
+    paths:
+      - scripts/worker6_core_five_preview.py
+      - tests/test_worker6_evidence_sections.py
+      - .github/workflows/worker6-core-five.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Evidence and section contract regression
+        run: |
+          python -m unittest tests.test_worker6_evidence_sections tests.test_worker6_section_contract -v
+      - name: Prepare five pages and V5.1 plan check
+        run: |
+          python scripts/worker6_core_five_preview.py
+          python -m v5 plan-check --site promotion-gift-plants
+      - name: Build five pages with original V5.1 renderer
+        run: python -m v5 build --site promotion-gift-plants --mode preview
+      - name: Audit and validate five page routes and products
+        run: |
+          python -m v5 audit --site promotion-gift-plants
+          python - <<'PY'
+          from pathlib import Path
+          from html.parser import HTMLParser
+          import json
+          root=Path('dist/promotion-gift-plants')
+          report=Path('reports/promotion-gift-plants')
+          rows=[]
+          for n in range(1,6):
+              p=root/('index.html' if n==1 else str(n)+'.html')
+              html=p.read_text(encoding='utf-8')
+              assert 'noindex' in html
+              assert 'fwith.co.kr/shop/item.php?it_id=D144' in html
+              assert 'fwith.co.kr/shop/item.php?it_id=D156' in html
+              assert 'href="tel:1844-0644"' in html
+              assert html.count('data-product-sku=')>=2
+              rows.append({'page':n,'path':str(p),'bytes':len(html),'productLinks':2})
+          assert all(('href="/'+str(i)+'.html"') in (root/'index.html').read_text(encoding='utf-8') for i in range(2,6))
+          (report/'core-five-routes.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding='utf-8')
+          print('FIVE_ROUTES_OK',len(rows))
+          PY
+      - name: Install Korean fonts and browser
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: HTTP 390 and 1440 full-page screenshots
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory dist/promotion-gift-plants >/tmp/worker6-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" || true' EXIT
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/ >/dev/null && break || sleep 1; done
+          WORKER6_PAGES=index,2,3,4,5 node scripts/worker6-browser-qa.mjs
+      - name: Upload actual HTML, audit, screens, evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: worker6-core-five-real-preview
+          path: |
+            dist/promotion-gift-plants/
+            reports/promotion-gift-plants/
+            sites/promotion-gift-plants/core-five-seller-evidence.json
+          if-no-files-found: warn
+          retention-days: 14
