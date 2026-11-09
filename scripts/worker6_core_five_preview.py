@@ -134,6 +134,20 @@ def generate_inputs(source,base_spec,site_input,require_orchids=True):
              'paragraph':orchid_copy})
         pool['faqs'].append({'q':'승진·영전에 난류 상품도 고를 수 있나요?',
             'a':'꽃이랑 확인 상품으로 동양란 일향금 E008 110,000원과 서양란 연핑크 호접란 F055 60,000원이 있습니다. 주문 전 실제 상품 상태와 배송 가능 시간을 확인하세요.'})
+    relationship_messages={
+      'promotion':('직장 동료라면 “새 직책에서 펼칠 활약을 응원합니다.” / '
+                   '거래처라면 “승진을 축하드리며 앞으로의 발전을 기원합니다.” / '
+                   '가족이라면 “오랫동안 쌓아온 노력이 빛나는 날, 진심으로 축하해요.”'),
+      'transfer':('동료라면 “새로운 근무지에서도 뜻깊은 성과를 이루시길 바랍니다.” / '
+                  '거래처라면 “새로운 자리에서의 출발을 축하드립니다.” / '
+                  '가족이라면 “새로운 환경에서도 늘 응원할게요.”')
+    }
+    for purpose,examples in relationship_messages.items():
+        pool=spec['purposePools'][purpose]
+        pool['sections'].insert(2,{'slot':'choice','role':'required',
+             'heading':'관계에 따라 축하 메시지 고르기',
+             'paragraph':examples+' 보내는 사람 표기는 회사·부서·성명을 구분해 준비하세요. '
+                '문구는 직접 작성한 예시이며 리본 제공이나 입력 옵션이 포함된다는 뜻은 아닙니다.'})
     spec['pageTypes']=['homepage','purpose-guide']
     spec['targetPageCount']=5
     spec['publishPolicy']['mode']='preview'
