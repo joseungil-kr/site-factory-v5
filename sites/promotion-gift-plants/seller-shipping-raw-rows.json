@@ -1,0 +1,590 @@
+{
+  "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=D144",
+  "checkedAt": "2026-11-09",
+  "sourceSection": "배송정보 / 추가 배송비 안내",
+  "rawHeader": [
+    "시/군/구",
+    "추가비용",
+    "읍/면/동"
+  ],
+  "interpretation": "Seller-displayed extra shipping charges only; not delivery coverage, availability, cutoff or final total",
+  "rawProvinceLabelsNotOfficial": true,
+  "rows": [
+    {
+      "row": 1,
+      "provinceLabel": "강원",
+      "extraKRW": 10000,
+      "districtText": "강릉시, 고성군, 동해시, 삼척시, 속초시, 양구군, 양양군, 영월군, 원주시, 인제군, 정선군, 철원군, 홍천군, 화천군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 2,
+      "provinceLabel": "강원",
+      "extraKRW": 20000,
+      "districtText": "강릉시",
+      "localityText": "주문진읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 3,
+      "provinceLabel": "강원",
+      "extraKRW": 20000,
+      "districtText": "태백시, 평창군, 횡성군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 4,
+      "provinceLabel": "강원",
+      "extraKRW": 20000,
+      "districtText": "홍천군",
+      "localityText": "서석면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 5,
+      "provinceLabel": "경기",
+      "extraKRW": 10000,
+      "districtText": "가평군, 연천군, 포천시",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 6,
+      "provinceLabel": "경기",
+      "extraKRW": 10000,
+      "districtText": "양평군",
+      "localityText": "단월면, 양서면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 7,
+      "provinceLabel": "경기",
+      "extraKRW": 10000,
+      "districtText": "파주시",
+      "localityText": "적성면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 8,
+      "provinceLabel": "경기",
+      "extraKRW": 20000,
+      "districtText": "가평군",
+      "localityText": "설악면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 9,
+      "provinceLabel": "경기",
+      "extraKRW": 20000,
+      "districtText": "포천시",
+      "localityText": "이동면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 10,
+      "provinceLabel": "경기",
+      "extraKRW": 30000,
+      "districtText": "안산시 단원구",
+      "localityText": "대부남동, 대부동동, 대부북동",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 11,
+      "provinceLabel": "경남",
+      "extraKRW": 10000,
+      "districtText": "김해시",
+      "localityText": "진영읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 12,
+      "provinceLabel": "경남",
+      "extraKRW": 10000,
+      "districtText": "남해군",
+      "localityText": "창선면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 13,
+      "provinceLabel": "경남",
+      "extraKRW": 10000,
+      "districtText": "밀양시",
+      "localityText": "부북면, 하남읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 14,
+      "provinceLabel": "경남",
+      "extraKRW": 10000,
+      "districtText": "산청군, 의령군, 창녕군, 하동군, 함안군, 합천군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 15,
+      "provinceLabel": "경남",
+      "extraKRW": 10000,
+      "districtText": "양산시",
+      "localityText": "덕계동, 명동, 삼호동, 상북면, 소주동, 용당동, 평산동, 하북면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 16,
+      "provinceLabel": "경남",
+      "extraKRW": 10000,
+      "districtText": "창원시 의창구",
+      "localityText": "동읍, 북면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 17,
+      "provinceLabel": "경남",
+      "extraKRW": 10000,
+      "districtText": "창원시 진해구",
+      "localityText": "안골동, 용원동",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 18,
+      "provinceLabel": "경북",
+      "extraKRW": 10000,
+      "districtText": "경산시",
+      "localityText": "와촌면, 자인면, 하양읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 19,
+      "provinceLabel": "경북",
+      "extraKRW": 10000,
+      "districtText": "문경시, 영천시, 예천군, 의성군, 청도군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 20,
+      "provinceLabel": "경북",
+      "extraKRW": 10000,
+      "districtText": "안동시",
+      "localityText": "풍산읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 21,
+      "provinceLabel": "경북",
+      "extraKRW": 10000,
+      "districtText": "영주시",
+      "localityText": "풍기읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 22,
+      "provinceLabel": "경북",
+      "extraKRW": 15000,
+      "districtText": "경주시",
+      "localityText": "안강읍, 양남면, 외동읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 23,
+      "provinceLabel": "경북",
+      "extraKRW": 15000,
+      "districtText": "봉화군",
+      "localityText": "춘양면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 24,
+      "provinceLabel": "경북",
+      "extraKRW": 20000,
+      "districtText": "경주시",
+      "localityText": "서면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 25,
+      "provinceLabel": "경북",
+      "extraKRW": 20000,
+      "districtText": "상주시, 영덕군, 영양군, 울진군, 청송군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 26,
+      "provinceLabel": "경북",
+      "extraKRW": 20000,
+      "districtText": "안동시",
+      "localityText": "풍천면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 27,
+      "provinceLabel": "경북",
+      "extraKRW": 20000,
+      "districtText": "칠곡군",
+      "localityText": "동명면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 28,
+      "provinceLabel": "경북",
+      "extraKRW": 40000,
+      "districtText": "울릉군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 29,
+      "provinceLabel": "대구",
+      "extraKRW": 10000,
+      "districtText": "달성군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 30,
+      "provinceLabel": "대구",
+      "extraKRW": 15000,
+      "districtText": "달성군",
+      "localityText": "구지면, 유가읍, 하빈면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 31,
+      "provinceLabel": "대구",
+      "extraKRW": 20000,
+      "districtText": "군위군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 32,
+      "provinceLabel": "울산",
+      "extraKRW": 10000,
+      "districtText": "울주군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 33,
+      "provinceLabel": "울산",
+      "extraKRW": 20000,
+      "districtText": "울주군",
+      "localityText": "서생면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 34,
+      "provinceLabel": "인천",
+      "extraKRW": 10000,
+      "districtText": "강화군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 35,
+      "provinceLabel": "인천",
+      "extraKRW": 20000,
+      "districtText": "중구",
+      "localityText": "운남동, 운북동, 운서동, 을왕동, 중산동",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 36,
+      "provinceLabel": "인천",
+      "extraKRW": 20000,
+      "districtText": "영종구",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 37,
+      "provinceLabel": "인천",
+      "extraKRW": 20000,
+      "districtText": "영종구",
+      "localityText": "남북동, 덕교동, 무의동, 운남동, 운북동, 운서동, 을왕동, 중산동",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 38,
+      "provinceLabel": "전남광주통합특별시",
+      "extraKRW": 10000,
+      "districtText": "강진군",
+      "localityText": "마량면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 39,
+      "provinceLabel": "전남광주통합특별시",
+      "extraKRW": 10000,
+      "districtText": "곡성군, 광양시, 나주시, 담양군, 보성군, 신안군, 영암군, 장성군, 장흥군, 진도군, 함평군, 해남군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 40,
+      "provinceLabel": "전남광주통합특별시",
+      "extraKRW": 10000,
+      "districtText": "영광군",
+      "localityText": "법성면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 41,
+      "provinceLabel": "전남광주통합특별시",
+      "extraKRW": 15000,
+      "districtText": "해남군",
+      "localityText": "문내면, 송지면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 42,
+      "provinceLabel": "전남광주통합특별시",
+      "extraKRW": 20000,
+      "districtText": "고흥군, 구례군, 완도군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 43,
+      "provinceLabel": "전남광주통합특별시",
+      "extraKRW": 20000,
+      "districtText": "신안군",
+      "localityText": "지도읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 44,
+      "provinceLabel": "전남광주통합특별시",
+      "extraKRW": 20000,
+      "districtText": "장흥군",
+      "localityText": "관산읍, 대덕읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 45,
+      "provinceLabel": "전남광주통합특별시",
+      "extraKRW": 20000,
+      "districtText": "함평군",
+      "localityText": "해보면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 46,
+      "provinceLabel": "전북",
+      "extraKRW": 10000,
+      "districtText": "고창군, 남원시, 무주군, 순창군, 완주군, 임실군, 장수군, 진안군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 47,
+      "provinceLabel": "전북",
+      "extraKRW": 10000,
+      "districtText": "익산시",
+      "localityText": "금마면, 삼기면, 함열읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 48,
+      "provinceLabel": "전북",
+      "extraKRW": 15000,
+      "districtText": "남원시",
+      "localityText": "인월면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 49,
+      "provinceLabel": "전북",
+      "extraKRW": 15000,
+      "districtText": "완주군",
+      "localityText": "고산면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 50,
+      "provinceLabel": "전북",
+      "extraKRW": 15000,
+      "districtText": "익산시",
+      "localityText": "용안면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 51,
+      "provinceLabel": "제주",
+      "extraKRW": 10000,
+      "districtText": "전체",
+      "localityText": "-",
+      "scope": "province-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 52,
+      "provinceLabel": "제주",
+      "extraKRW": 20000,
+      "districtText": "제주시",
+      "localityText": "구좌읍, 애월읍, 우도면, 조천읍, 추자면, 한경면, 한림읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 53,
+      "provinceLabel": "제주",
+      "extraKRW": 25000,
+      "districtText": "서귀포시",
+      "localityText": "강정동, 남원읍, 대정읍, 대포동, 도순동, 동홍동, 법환동, 보목동, 상예동, 색달동, 서귀동, 서호동, 서홍동, 성산읍, 송산동, 신효동, 안덕면, 영남동, 용흥동, 월평동, 정방동, 중문동, 중앙동, 천지동, 토평동, 표선면, 하예동, 하원동, 하효동, 호근동, 회수동",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 54,
+      "provinceLabel": "충남",
+      "extraKRW": 10000,
+      "districtText": "계룡시, 보령시, 청양군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 55,
+      "provinceLabel": "충남",
+      "extraKRW": 10000,
+      "districtText": "공주시",
+      "localityText": "반포면, 신풍면, 이인면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 56,
+      "provinceLabel": "충남",
+      "extraKRW": 10000,
+      "districtText": "당진시",
+      "localityText": "대호지면, 합덕읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 57,
+      "provinceLabel": "충남",
+      "extraKRW": 10000,
+      "districtText": "서산시",
+      "localityText": "해미면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 58,
+      "provinceLabel": "충남",
+      "extraKRW": 10000,
+      "districtText": "태안군",
+      "localityText": "안면읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 59,
+      "provinceLabel": "충북",
+      "extraKRW": 10000,
+      "districtText": "단양군, 영동군, 옥천군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 60,
+      "provinceLabel": "충북",
+      "extraKRW": 10000,
+      "districtText": "음성군",
+      "localityText": "맹동면",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 61,
+      "provinceLabel": "충북",
+      "extraKRW": 10000,
+      "districtText": "충주시",
+      "localityText": "주덕읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 62,
+      "provinceLabel": "충북",
+      "extraKRW": 10000,
+      "districtText": "청주시 청원구",
+      "localityText": "내수읍, 오창읍",
+      "scope": "named-localities-only",
+      "matchStatus": "unresolved"
+    },
+    {
+      "row": 63,
+      "provinceLabel": "충북",
+      "extraKRW": 20000,
+      "districtText": "보은군, 증평군, 진천군",
+      "localityText": "-",
+      "scope": "district-wide-displayed",
+      "matchStatus": "unresolved"
+    }
+  ],
+  "exceptions": [
+    "강릉시 일반 10000원 / 주문진읍 20000원 중복: 우선순위 확인 필요",
+    "가평군 일반 10000원 / 설악면 20000원 중복: 우선순위 확인 필요",
+    "달성군 일반 10000원 / 구지면·유가읍·하빈면 15000원 중복: 우선순위 확인 필요",
+    "울주군 일반 10000원 / 서생면 20000원 중복: 우선순위 확인 필요",
+    "인천 중구와 영종구 표기 동시 존재: 현행 행정명 대조 전 미확정",
+    "전남광주통합특별시 표기: 전국 원장 행정명과 불일치, 임의 변환 금지",
+    "제주 전체 10000원과 제주시·서귀포시 일부 20000/25000원 중복: 확인 전 최종금액 미확정"
+  ]
+}
