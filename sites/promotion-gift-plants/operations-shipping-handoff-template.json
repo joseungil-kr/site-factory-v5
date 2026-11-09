@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "status": "empty-operations-handoff-template",
+  "description": "Non-personal regional shipping operational rules. Do not populate without authorized verified seller operational evidence.",
+  "requiredFields": [
+    "regionProvince",
+    "regionDistrict",
+    "regionLocality",
+    "sku",
+    "effectiveFrom",
+    "effectiveTo",
+    "deliveryAvailable",
+    "orderCutoffLocalTime",
+    "shippingSurchargeRule",
+    "overlapPriorityRule",
+    "exceptions",
+    "verifiedByRole",
+    "evidenceReference",
+    "verifiedAt"
+  ],
+  "records": [],
+  "fieldRules": {
+    "regionProvince": "official administrative province name, source verified",
+    "regionDistrict": "official district name",
+    "regionLocality": "official locality name or null for district-wide scope",
+    "sku": "verified SKU such as D144/D156/D152/D026; use ALL only if operations confirms identical rule",
+    "effectiveFrom": "YYYY-MM-DD",
+    "effectiveTo": "YYYY-MM-DD or null",
+    "deliveryAvailable": "true/false/unknown; unknown is not true",
+    "orderCutoffLocalTime": "HH:MM Asia/Seoul or null if unknown",
+    "shippingSurchargeRule": "explicit KRW and applicable scope, not inferred from missing table rows",
+    "overlapPriorityRule": "explicit seller-confirmed precedence for district vs locality surcharge",
+    "exceptions": "nonpersonal SKU/date/area exceptions",
+    "verifiedByRole": "team/role only, no employee name",
+    "evidenceReference": "nonpersonal document id or official seller URL",
+    "verifiedAt": "ISO8601 timestamp"
+  },
+  "privacy": "No recipient names, phone numbers, personal addresses, transaction IDs, individual delivery cases or customer data.",
+  "publicationGate": "Unknown/missing operational fields must not be silently filled; candidate locality pages remain unpublished pending editorial and technical quality approval."
+}
