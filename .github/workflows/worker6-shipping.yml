@@ -1,0 +1,42 @@
+name: Worker6 seller surcharge research and pageType regression
+on:
+  push:
+    branches: [site/v51-promotion-gift-plants-20261109]
+    paths:
+      - scripts/worker6_shipping_crosscheck.py
+      - sites/promotion-gift-plants/seller-shipping-raw-rows.json
+      - .github/workflows/worker6-shipping.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Extract conservative crosscheck and regress pageType
+        run: |
+          python scripts/worker6_shipping_crosscheck.py
+          python -m unittest tests.test_worker6_page_type tests.test_worker6_evidence_sections -v
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('reports/promotion-gift-plants/shipping/seller-surcharge-crosscheck.json')
+          data=json.loads(p.read_text())
+          assert data['sourceRows']==63
+          assert data['candidateLocalities']==5034
+          assert data['finalPriceConfirmed'] is False
+          assert data['deliveryCoverageConfirmed'] is False
+          print('CROSSCHECK_OK',data['counts'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: worker6-seller-shipping-crosscheck
+          path: |
+            reports/promotion-gift-plants/shipping/
+            sites/promotion-gift-plants/seller-shipping-raw-rows.json
+          if-no-files-found: warn
