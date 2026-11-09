@@ -1,0 +1,170 @@
+{
+  "schemaVersion": 2,
+  "project": "Site Factory V5.1 worker6",
+  "status": "research-and-preflight; publication not yet released",
+  "siteId": "promotion-gift-plants",
+  "proposedHostname": "promotionplant.nalmada.net",
+  "workerZone": "nalmada.net",
+  "brand": "꽃이랑",
+  "phone": "1844-0644",
+  "orderBaseUrl": "https://fwith.co.kr",
+  "titlePattern": "{지역명} 승진화분 주문, 축하화분 당일 배달",
+  "keywordGroups": [
+    "승진화분",
+    "영전화분",
+    "취임화분",
+    "축하화분",
+    "당일 배달 가능 여부",
+    "승진 리본 문구"
+  ],
+  "regionInventory": {
+    "path": "data/regions/nationwide_locality_candidates_5034.json",
+    "blobSha": "525eb4b5c9f9f046ce2bcbd96a3dcfb343be399d",
+    "localities": 5034,
+    "provinces": 17,
+    "districts": 250,
+    "parentUnmatchedIncluded": 1438,
+    "excluded": 0,
+    "verification": "GitHub source inventory checked; current administrative status not certified"
+  },
+  "pagePlan": {
+    "regionalDetail": 5034,
+    "provinceHubs": 17,
+    "districtHubs": 250,
+    "homepage": 1,
+    "total": 5302,
+    "numbering": "/r/00001.html through /r/05034.html; hub URLs assigned after mapping validation",
+    "targetPageCount": 5302,
+    "qaMinimumOnePercent": 54,
+    "qaThreshold": 85
+  },
+  "purposePools": {
+    "promotion": {
+      "focus": [
+        "새 직함 표기",
+        "회사명·부서·받는 사람",
+        "리본 문구",
+        "근무지 변경",
+        "상품 크기와 책상 공간"
+      ],
+      "productSkus": [
+        "D144"
+      ]
+    },
+    "transfer": {
+      "focus": [
+        "영전·전보 표현 구분",
+        "새 근무지",
+        "수령 담당자",
+        "행사일과 실제 출근일"
+      ],
+      "productSkus": [
+        "D144"
+      ]
+    },
+    "congratulations": {
+      "focus": [
+        "축하 대상·관계",
+        "선물 수령 날짜",
+        "받는 장소",
+        "식물 선택·관리"
+      ],
+      "productSkus": [
+        "D144"
+      ]
+    },
+    "sameDayInquiry": {
+      "focus": [
+        "정확한 주소",
+        "희망 수령일·시간",
+        "지역·재고·접수 가능 여부 확인",
+        "상품 상세 주문 링크"
+      ],
+      "productSkus": [
+        "D144"
+      ]
+    }
+  },
+  "research": {
+    "topic": [
+      {
+        "source": "https://xn--9m1bt77dma.com/plant/promotion",
+        "checkedOn": "2026-11-09",
+        "note": "승진·영전·취임 리본 문구와 난·관엽 비교를 다룸; 경쟁사 주장과 가격은 자사 근거로 재사용 금지"
+      },
+      {
+        "source": "https://www.lolflower.com/order/basket.html",
+        "checkedOn": "2026-11-09",
+        "note": "승진 난 상품과 주문·배송 안내가 함께 제시됨; 배송 시간 약속은 경쟁사 고유 주장"
+      }
+    ],
+    "price": [
+      {
+        "source": "https://fwith.co.kr/shop/item.php?it_id=D144",
+        "checkedOn": "2026-11-09",
+        "sku": "D144",
+        "observedPriceKRW": 53000,
+        "note": "검색 결과에 상품명·53,000원 표시 확인; 배포 전 직접 원문·주문 UI 재검증 필요"
+      }
+    ],
+    "order": [
+      {
+        "source": "https://fwith.co.kr/shop/item.php?it_id=D144",
+        "checkedOn": "2026-11-09",
+        "note": "금전수 탁상용 D144 상품 상세·수량·주문 흐름 존재; 배송 가능 시간/지역 보장 근거 없음"
+      }
+    ],
+    "region": [
+      {
+        "source": "https://github.com/joseungil-kr/site-factory-v5/blob/main/data/regions/NATIONWIDE_SOURCES_20261104.md",
+        "checkedOn": "2026-11-09",
+        "note": "5034 후보/17 광역/250 시군구, 상위 미매칭 1438 보존"
+      }
+    ]
+  },
+  "productEvidence": {
+    "D144": {
+      "name": "금전수 탁상용",
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=D144",
+      "observedPriceKRW": 53000,
+      "checkedOn": "2026-11-09",
+      "imageUseApproved": false,
+      "imageApprovalEvidence": null,
+      "pricePublicationGate": "fresh live check and exact product mapping"
+    }
+  },
+  "imagePolicy": {
+    "source": "docs/IMAGE_SOURCE_POLICY_20261030.md",
+    "legacyPromotionPlantAssets": "HOLD for new public reuse; generation provenance not confirmed",
+    "realProductImages": "explicit approval evidence required",
+    "generatedIllustration": "original file, verbatim prompt, tool result, UTC time if available, original/final hashes required"
+  },
+  "deliveryClaimPolicy": "Title pattern is the user's required SEO wording, not a guarantee. Visible copy must ask for destination, date and availability confirmation before payment; no invented cutoff or coverage.",
+  "publication": {
+    "userApprovedNewSitePublicRelease": true,
+    "requiresSeparateApproval": [
+      "DNS change",
+      "authentication or permission change",
+      "secret change",
+      "payment",
+      "personal data exposure",
+      "irreversible deletion"
+    ],
+    "deploymentReady": false,
+    "reason": "image rights, full product/current price, 5302 pages, 54 sample QA, live host mapping and Cloudflare state not yet verified"
+  },
+  "isolation": {
+    "branch": "site/v51-promotion-gift-plants-20261109",
+    "doNotTouch": [
+      "existing operating sites",
+      "site/v51-county-funeral-ownerprivate-20261107",
+      "existing Worker bindings",
+      "existing DNS"
+    ]
+  },
+  "chatHandoff": {
+    "channel": "this conversation only",
+    "chatUrl": null,
+    "note": "Exact conversation URL not available in connector context; do not invent one."
+  }
+}
