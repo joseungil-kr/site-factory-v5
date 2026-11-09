@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "project": "Site Factory V5.1 worker6",
-  "status": "research-and-preflight; publication not yet released",
+  "status": "site-spec and purpose pool inputs prepared; generation not run",
   "siteId": "promotion-gift-plants",
   "proposedHostname": "promotionplant.nalmada.net",
   "workerZone": "nalmada.net",
@@ -164,7 +164,7 @@
   },
   "chatHandoff": {
     "channel": "this conversation only",
-    "chatUrl": null,
-    "note": "Exact conversation URL not available in connector context; do not invent one."
+    "chatUrl": "https://chatgpt.com/c/6af13332-006c-83ec-afc0-5d9fd0fc2eae",
+    "note": "User supplied the exact single execution conversation URL on 2026-11-09."
   }
 }
