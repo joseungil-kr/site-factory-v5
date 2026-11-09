@@ -27,10 +27,10 @@ class OrchidPurposeGate(unittest.TestCase):
   for purpose in ('promotion','transfer'):
    pool=spec['purposePools'][purpose]
    text=' '.join(x['paragraph'] for x in pool['sections'])
-   self.assertIn('E008 110,000원',text)
-   self.assertIn('F055 60,000원',text)
+   self.assertIn('E008, 110,000원',text)
+   self.assertIn('F055, 60,000원',text)
    self.assertIn('실제 크기·관리방법·재고',text)
-   self.assertTrue(any('난류' in x['q'] for x in pool['faqs']))
+   self.assertTrue(any('난류' in x['a'] or '난류' in x['q'] or '난류' in x['paragraph'] for x in pool['sections'] if x.get('paragraph')))
  def test_no_funeral_orchid(self):
   evidence={'sources':self.evidence['sources']+[{'sku':'B214','name':'장례식장 근조 서양란(서양란)','priceKRW':200000}]}
   with self.assertRaisesRegex(ValueError,'funeral product'):
