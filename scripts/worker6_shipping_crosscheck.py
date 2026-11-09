@@ -14,6 +14,7 @@ def run():
  provinces={r[0] for r in source['records']}
  district_index={(r[0],r[1]) for r in source['records']}
  locality_index={(r[0],r[1],r[2]) for r in source['records']}
+ locality_flags={(r[0],r[1],r[2]):r[3] for r in source['records']}
  matched=[];unknown=[];ambiguous=[]
  for row in raw['rows']:
   label=row['provinceLabel']
@@ -32,11 +33,11 @@ def run():
     continue
    if not localities:
     # A district-wide table row does not prove every locality is serviced.
-    matched.append({'row':row['row'],'region':province+' '+district,'scope':'district-display-only','extraKRW':row['extraKRW'],'deliveryConfirmed':False})
+    matched.append({'row':row['row'],'region':province+' '+district,'scope':'district-display-only','extraKRW':row['extraKRW'],'deliveryConfirmed':False,'candidateParentFlag':None,'officialAddressValidated':False})
    else:
     for locality in localities:
      if (province,district,locality) in locality_index:
-      matched.append({'row':row['row'],'region':province+' '+district+' '+locality,'scope':'exact-locality-name-match','extraKRW':row['extraKRW'],'deliveryConfirmed':False})
+      matched.append({'row':row['row'],'region':province+' '+district+' '+locality,'scope':'exact-locality-name-match','extraKRW':row['extraKRW'],'deliveryConfirmed':False,'candidateParentFlag':locality_flags[(province,district,locality)],'officialAddressValidated':False})
      else:
       unknown.append({'row':row['row'],'reason':'locality-not-in-candidate-source','region':province+' '+district+' '+locality})
  # Conflicting district and locality entries remain unresolved rather than
@@ -49,6 +50,8 @@ def run():
       'candidateLocalities':len(source['records']),'matchedReferences':matched,'unknown':unknown,
       'overlaps':ambiguous,'unmatchedCandidateStatus':'unknown; absence from surcharge table is not free delivery',
       'finalPriceConfirmed':False,'deliveryCoverageConfirmed':False,
+      'candidateFlagZeroMeaning':'parent match unverified, not proof of nonexistent locality',
+      'provinceAliasMeaning':'text normalization only, not authoritative jurisdiction validation',
       'counts':{'matchedReferences':len(matched),'unknown':len(unknown),'overlaps':len(ambiguous)}}
  return out
 if __name__=='__main__':
