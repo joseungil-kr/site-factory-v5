@@ -2,9 +2,11 @@
 from __future__ import annotations
 import json
 from pathlib import Path
+import sys
+ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT))
 from v5.purpose_render import assemble
 from v5.audit import similarity
-ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/'sites/promotion-gift-plants'
 def run():
     records=json.loads((SITE/'gangjin-two-page-experiment.json').read_text(encoding='utf-8'))['pages']
