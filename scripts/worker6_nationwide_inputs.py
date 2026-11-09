@@ -25,8 +25,8 @@ def prepare():
         context=('새 부서와 직함' if purpose=='promotion' else '새 근무지의 수령 담당자' if purpose=='transfer' else '축하 문구와 배치 공간' if purpose=='congratulations' else '희망 도착 시간과 상세 주소')
         p={'id':f'w6-{number:05d}','number':number,'region':region,'purpose':purpose,'topic':context,
            'title':TITLE.format(region=region),
-           'intro':f'{region}에서 {context}을 기준으로 화분을 비교합니다.',
-           'sections':[{'heading':'선택 상황','paragraph':f'{region}에서 선물을 준비한다면 {context}을 먼저 정리해 주세요.'},
+           'intro':f'{region} 지역의 화분 선물은 목적별 수령 조건을 기준으로 비교합니다. 확인 항목: {context}.',
+           'sections':[{'heading':'선택 상황','paragraph':f'{region} 지역의 선물을 준비한다면 다음 확인 항목을 먼저 정리해 주세요: {context}.'},
                        {'heading':'주문 정보','paragraph':'상품번호, 상세 주소, 수령 담당자, 희망 수령일을 확인한 뒤 주문 링크에서 상품을 선택합니다.'}],
            'productSkus':SKUS[purpose] if digest%2 else list(reversed(SKUS[purpose])),
            'faq':[{'q':'상품 주문은 어디에서 하나요?','a':'각 상품의 상세 링크에서 확인할 수 있습니다.'}],
