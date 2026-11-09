@@ -30,7 +30,7 @@ jobs:
         run: python -m v5 build --site promotion-gift-plants --mode preview
       - name: Audit and validate five page routes and products
         run: |
-          python -m v5 audit --site promotion-gift-plants
+          python -m v5 audit --site promotion-gift-plants || { cat reports/promotion-gift-plants/audit.json; exit 1; }
           python - <<'PY'
           from pathlib import Path
           from html.parser import HTMLParser
