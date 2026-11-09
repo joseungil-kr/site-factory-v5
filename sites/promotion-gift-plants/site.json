@@ -1,0 +1,39 @@
+{
+  "id": "promotion-gift-plants",
+  "status": "preview",
+  "brand": "꽃이랑",
+  "siteTitle": "승진·영전·축하화분 주문",
+  "domain": null,
+  "workerName": null,
+  "locale": "ko-KR",
+  "phone": "1844-0644",
+  "keyword": "승진화분",
+  "region": "전국",
+  "theme": "classic",
+  "imagePool": [
+    "plant-a.svg"
+  ],
+  "imageLibrary": "promotion-plant",
+  "orderBaseUrl": "https://fwith.co.kr",
+  "publishEnabled": false,
+  "imageAssetsApproved": false,
+  "cookiePrivacyReviewed": false,
+  "analytics": {
+    "enabled": false
+  },
+  "siteSearch": {
+    "enabled": false
+  },
+  "staticAssetSoftLimit": 18000,
+  "source": "Worker6 preview only; existing promotion-plant SVG is non-public preview fixture and not cleared for new-site release",
+  "indexNow": {
+    "enabled": false,
+    "key": null
+  },
+  "navigation": [
+    {
+      "label": "홈",
+      "href": "/"
+    }
+  ]
+}
