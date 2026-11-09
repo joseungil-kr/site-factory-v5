@@ -38,16 +38,20 @@ jobs:
           PY
       - name: V5.1 audit
         run: python -m v5 audit --site promotion-gift-plants
-      - name: Capture 390px and 1440px actual Chromium screenshots
+      - name: Install Korean fonts and Chromium
         run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk
           npm install --no-save --no-package-lock playwright@1.56.1
-          npx playwright install chromium
-          mkdir -p reports/promotion-gift-plants/screenshots
-          for page in index 2 3 4; do
-            for width in 390 1440; do
-              npx playwright screenshot --browser chromium --viewport-size "${width},900" --wait-for-timeout 800 "file://$PWD/dist/promotion-gift-plants/${page}.html" "reports/promotion-gift-plants/screenshots/${page}-${width}.png"
-            done
-          done
+          npx playwright install --with-deps chromium
+          fc-match 'Noto Sans CJK KR'
+      - name: Serve built site over HTTP and verify full-page rendering
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory dist/promotion-gift-plants > /tmp/worker6-http.log 2>&1 &
+          SERVER_PID=$!
+          trap 'kill "$SERVER_PID" || true' EXIT
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/ >/dev/null && break || sleep 1; done
+          node scripts/worker6-browser-qa.mjs
       - name: Upload V5.1 renderer output
         if: always()
         uses: actions/upload-artifact@v4
