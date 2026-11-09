@@ -55,18 +55,18 @@ def may_make_confirmed_customer_claim(record):
         return False
     if not isinstance(x["exactQuote"], str) or not x["exactQuote"].strip():
         return False
-    if not x["pageOrSection"]:
+    if not isinstance(x["pageOrSection"], (str, int)) or isinstance(x["pageOrSection"], bool) or not str(x["pageOrSection"]).strip():
         return False
-    if not x["documentVenue"] or not x["targetVenue"]:
+    if not isinstance(x["documentVenue"], str) or not isinstance(x["targetVenue"], str) or not x["documentVenue"].strip() or not x["targetVenue"].strip():
         return False
     if x["documentVenue"].strip() != x["targetVenue"].strip():
         return False
-    if not isinstance(x["eventYear"], int):
+    if type(x["eventYear"]) is not int or not (1900 <= x["eventYear"] <= 2100):
         return False
-    if not x.get("currentRuleIndependentlyVerified", False):
+    if x.get("currentRuleIndependentlyVerified") is not True:
         return False
-    if x.get("contradictionUnresolved", False):
+    if x.get("contradictionUnresolved", False) is not False:
         return False
-    if x.get("sellerReportedOnly", False):
+    if x.get("sellerReportedOnly", False) is not False:
         return False
     return True
