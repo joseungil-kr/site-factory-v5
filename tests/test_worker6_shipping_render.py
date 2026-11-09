@@ -32,6 +32,12 @@ class SellerShippingContract(unittest.TestCase):
   x=lookup('인천광역시','영종구','운서동')
   self.assertEqual(x['state'],'overlap-unknown-priority')
   self.assertFalse(x['deliveryAvailabilityKnown'])
+ def test_candidate_flag_zero_not_official_address(self):
+  from scripts.worker6_shipping_crosscheck import run
+  result=run()
+  self.assertFalse(result['deliveryCoverageConfirmed'])
+  self.assertIn('unverified',result['candidateFlagZeroMeaning'])
+  self.assertTrue(all(x['officialAddressValidated'] is False for x in result['matchedReferences']))
  def test_source_visible(self):
   for region in [('경기도','파주시','적성면'),('경기도','가평군','설악면'),('전라남도','강진군','대구면')]:
    result=lookup(*region)
