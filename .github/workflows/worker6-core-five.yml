@@ -17,6 +17,7 @@ on:
       - tests/test_worker6_catalog_consistency.py
       - tests/test_worker6_catalog_full_output.py
       - tests/test_worker6_orchid_purpose.py
+      - tests/test_worker6_operator_five_pages.py
       - sites/promotion-gift-plants/ORCHID_PROMOTION_TRANSFER_EDITORIAL_DRAFT.md
       - sites/promotion-gift-plants/operator-service-confirmation-20261109.json
       - sites/promotion-gift-plants/products.json
@@ -39,7 +40,7 @@ jobs:
           python-version: '3.12'
       - name: Evidence and section contract regression
         run: |
-          python -m unittest tests.test_worker6_evidence_sections tests.test_worker6_section_contract tests.test_worker6_page_type tests.test_worker6_core_roles tests.test_worker6_source_links tests.test_worker6_catalog_consistency tests.test_worker6_catalog_full_output tests.test_worker6_orchid_purpose -v
+          python -m unittest tests.test_worker6_evidence_sections tests.test_worker6_section_contract tests.test_worker6_page_type tests.test_worker6_core_roles tests.test_worker6_source_links tests.test_worker6_catalog_consistency tests.test_worker6_catalog_full_output tests.test_worker6_orchid_purpose tests.test_worker6_operator_five_pages -v
       - name: Prepare five pages and V5.1 plan check
         run: |
           python scripts/worker6_core_five_preview.py
@@ -73,6 +74,9 @@ jobs:
               assert 'de_change_content.jpg' in html
               assert '참고 원문 보기' in html
               assert '법정 권리' in html
+              assert '08:00~23:00' in html and '06:00~20:00' in html
+              assert '전국 당일배송 서비스' in html
+              assert '23시 전화 주문이 그날 도착한다는 뜻은 아닙니다' in html
               rows.append({'page':n,'path':str(p),'bytes':len(html),'productLinks':6,'policySourceLink':True})
           assert all(('href="/'+str(i)+'.html"') in (root/'index.html').read_text(encoding='utf-8') for i in range(2,6))
           (report/'core-five-routes.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding='utf-8')
