@@ -1,0 +1,112 @@
+{
+  "checkedAt": "2026-11-09",
+  "scope": "Only two named venues from flower seller notice: KINTEX Goyang and Partyum Roy Incheon",
+  "sellerNotice": {
+    "url": "https://fwith.co.kr/page/notice.php",
+    "heading": "3단화환 반입불가 대체상품 배송지",
+    "sourceUpdatedAt": null,
+    "publishedAt": null,
+    "observations": [
+      {
+        "venue": "고양 킨텍스",
+        "exactQuote": "고양 킨텍스 - 예식장만 화환가능, 행사장은 화분만 가능",
+        "locationSpecificity": "KINTEX venue complex; wedding vs event distinction, exact hall unspecified"
+      },
+      {
+        "venue": "인천 파티움로이",
+        "exactQuote": "인천 파티움로이 - 난 종류만 반입가능",
+        "locationSpecificity": "named wedding venue, specific hall/date not specified"
+      }
+    ],
+    "classification": "seller-reported/current-unverified; posted date absent"
+  },
+  "venues": [
+    {
+      "name": "고양 킨텍스",
+      "sellerReported": "Wedding halls may accept wreaths; event venues only potted plants, per seller notice",
+      "officialSources": [
+        {
+          "url": "https://www.kintex.com/download/formatModal/8.%EC%A0%84%EC%8B%9C%EC%A3%BC%EC%B5%9C%EC%9E%90%EB%A7%A4%EB%89%B4%EC%96%BC.pdf",
+          "type": "KINTEX official exhibition organizer manual",
+          "sourceUpdatedAt": null,
+          "checkedAt": "2026-11-09",
+          "observation": "Exhibition organizer procedures and logistics; no explicit current all-event flowerpot-only/wedding-wreath exception verified in reviewed excerpts"
+        },
+        {
+          "url": "https://www.kintex.com/download/formatModal/3.%ED%99%94%EC%83%81%EC%83%81%EB%8B%B4%EC%8B%A4%EC%9D%B4%EC%9A%A9%EC%95%88%EB%82%B4.pdf",
+          "type": "KINTEX official video meeting room guide",
+          "sourceUpdatedAt": null,
+          "checkedAt": "2026-11-09",
+          "observation": "Room-specific item-inbound consultation and prohibited goods guidance; does not establish wedding/exhibition flower policies"
+        }
+      ],
+      "otherOrganizerEvidence": [
+        {
+          "url": "https://www.kes.org/bbs/down.asp?id=kor_etc&no=1384",
+          "type": "separate exhibition organizer document",
+          "sourceUpdatedAt": null,
+          "observation": "For that event, large wreaths and large potted plants prohibited inside exhibition hall; event-specific, not KINTEX-wide",
+          "scope": "not facility-wide confirmation"
+        }
+      ],
+      "officialCurrentRuleConfirmed": false,
+      "applicabilityUnverified": [
+        "wedding hall identity",
+        "exact event hall",
+        "organizer permission",
+        "event date",
+        "wreath versus plant size/placement"
+      ],
+      "customerDecision": "Before selecting wreath or potted plant, give exact event name/hall/date and product type to event organizer/venue; ask whether this specific event accepts it and where delivery should be received.",
+      "allowed": [
+        "Seller notice distinguishes wedding from event use",
+        "Event-specific confirmation required"
+      ],
+      "forbidden": [
+        "All KINTEX events allow potted plants",
+        "All KINTEX weddings allow wreaths",
+        "Venue-wide present regulation confirmed",
+        "A specific event will accept this order"
+      ]
+    },
+    {
+      "name": "인천 파티움로이",
+      "sellerReported": "Only orchid-type products permitted, per seller notice",
+      "officialSourcesFound": [],
+      "otherEvidence": [
+        {
+          "url": "https://www.itwed.co.kr/store/hall.htm?idx=55&mode=listview",
+          "sourceUpdatedAt": "2016-03-23",
+          "observation": "Old third-party venue listing, no inbound plant policy; venue identification only"
+        },
+        {
+          "url": "https://opengo.kr/57aaf0e1262982255c0173f9",
+          "sourceUpdatedAt": null,
+          "observation": "Third-party public-business data display, no current product admission rule"
+        }
+      ],
+      "officialCurrentRuleConfirmed": false,
+      "applicabilityUnverified": [
+        "venue currently operating under same name",
+        "specific hall/event",
+        "orchid category definition",
+        "seller's actual E008/F055 SKU acceptance",
+        "placement and delivery procedure"
+      ],
+      "customerDecision": "Ask venue organizer whether orchids alone are permitted for this event and whether chosen orchid SKU can be received; confirm precise hall and receiving contact before ordering.",
+      "allowed": [
+        "Seller notice says orchid types only",
+        "Ask whether E008 oriental orchid/F055 western orchid are accepted"
+      ],
+      "forbidden": [
+        "All orchids guaranteed entry",
+        "Any other plant always prohibited today",
+        "All Incheon venues have this rule",
+        "Current official venue policy verified"
+      ]
+    }
+  ],
+  "decision": "No official current confirmation of either exact seller-reported rule was found in accessible official venue materials. Treat as seller-reported/current-unverified; no new region-wide rules, no publication as guaranteed current venue policy.",
+  "noOutreach": true,
+  "noDeployment": true
+}
