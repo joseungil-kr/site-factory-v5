@@ -74,5 +74,45 @@
       "use": "Only include when exact SKU plant species and care requirements verified."
     }
   ],
-  "conclusion": "Two verified own SKUs and 63 seller surcharge rows cannot justify 5302 unique SEO pages; source-backed product choice, recipient workflows, verified locality delivery rules and substantial distinct needs must be acquired."
+  "conclusion": "Two verified own SKUs and 63 seller surcharge rows cannot justify 5302 unique SEO pages; source-backed product choice, recipient workflows, verified locality delivery rules and substantial distinct needs must be acquired.",
+  "additionalOwnSellerCandidates": [
+    {
+      "sku": "D026",
+      "name": "아로우카리아 대형",
+      "priceKRW": 90000,
+      "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=D026",
+      "options": 0,
+      "extraOptions": 0,
+      "shipping": "주문시 결제",
+      "status": "indexed seller product detail observed 2026-11-09; direct HTML verification pending"
+    },
+    {
+      "sku": "D152",
+      "name": "레드카네이션 화분",
+      "priceKRW": 50000,
+      "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=D152",
+      "options": 0,
+      "extraOptions": 0,
+      "shipping": "주문시 결제",
+      "status": "indexed seller product detail observed 2026-11-09; direct HTML verification pending"
+    },
+    {
+      "category": "행운목",
+      "sourceUrl": "https://fwith.co.kr/shop/search.php?q=%ED%96%89%EC%9A%B4%EB%AA%A9",
+      "resultCount": 7,
+      "observedPriceRangeKRW": [
+        80000,
+        130000
+      ],
+      "status": "indexed seller search results; individual product detail and delivery eligibility pending"
+    }
+  ],
+  "ownSellerNotice": {
+    "url": "https://fwith.co.kr/page/notice.php",
+    "observed": "Venue-specific restrictions on wreaths, some allow potted plants, baskets or orchids; these are venue/event-specific, not nationwide plant-delivery coverage.",
+    "usage": "Only for exact matching venue and product after current confirmation; do not transplant into locality pages."
+  },
+  "plantCareResearch": {
+    "status": "not verified for exact SKU; generic agricultural greenhouse sources are not sufficient for species-specific household care claims"
+  }
 }
