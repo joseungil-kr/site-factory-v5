@@ -1,0 +1,32 @@
+import unittest
+from scripts.worker6_shipping_render import lookup,evidence_section
+class SellerShippingContract(unittest.TestCase):
+ def test_exact_locality(self):
+  x=lookup('경기도','파주시','적성면')
+  self.assertEqual(x['state'],'exact-locality-display')
+  self.assertEqual([(r['row'],r['extraKRW']) for r in x['candidates']],[(7,10000)])
+ def test_overlap_not_resolved(self):
+  x=lookup('경기도','가평군','설악면')
+  self.assertEqual(x['state'],'overlap-unknown-priority')
+  self.assertEqual({r['extraKRW'] for r in x['candidates']},{10000,20000})
+  self.assertIn('우선 적용',evidence_section(x)['paragraph'])
+ def test_unlisted_is_not_free(self):
+  x=lookup('전라남도','강진군','대구면')
+  self.assertEqual(x['state'],'not-listed-unknown')
+  self.assertFalse(x['absenceMeansFree'])
+  self.assertIn('미기재는 무료배송을 의미하지 않습니다',evidence_section(x)['paragraph'])
+ def test_alias_not_official_validation(self):
+  x=lookup('경기도','파주시','적성면')
+  self.assertTrue(x['aliasOnlyNotOfficialAddressValidation'])
+  self.assertFalse(x['deliveryAvailabilityKnown'])
+  self.assertFalse(x['finalShippingPriceKnown'])
+ def test_unknown_province(self):
+  x=lookup('전남광주통합특별시','강진군','마량면')
+  self.assertEqual(x['state'],'not-listed-unknown')
+ def test_source_visible(self):
+  for region in [('경기도','파주시','적성면'),('경기도','가평군','설악면'),('전라남도','강진군','대구면')]:
+   result=lookup(*region)
+   p=evidence_section(result)['paragraph']
+   self.assertIn(result['sourceUrl'],p)
+   self.assertIn(result['checkedAt'],p)
+if __name__=='__main__':unittest.main()
