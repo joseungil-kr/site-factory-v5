@@ -34,3 +34,10 @@
 - 실패 fixture: 킨텍스 PDF HTTP 502 미열람, KES 2023 코엑스→킨텍스 오연결, 게시일 없는 판매처 공지, 검색 발췌. 정상 fixture는 **가상 구조검사 통과**이지 시설 실제 규정 검증이 아니다.
 - 코엑스 KES 2023 개최정보는 코엑스 공식 행사페이지에서 감독이 확인. KES history.asp는 감독 브라우저 404였으므로 도구별 접근 결과를 구분한다. 꽃이랑 공지 두 문구는 seller-reported/current-unverified 유지.
 - 고객에게는 현재 시설 담당자·행사 주최자에게 확인할 질문으로만 안내한다. 전국 목표·운영조건·비공개 상태 유지.
+
+## 2026-11-09 엄격 타입 경계 및 실제 경로 확인
+- 감독 재현 결함: `currentRuleIndependentlyVerified="false"` 문자열이 참으로 평가되고, `eventYear=True`가 Python 정수로 취급되었다. `is True`, `is False`, `type(eventYear) is int`로 타입을 고정했다. 모순·판매처 전용 플래그도 문자열 `"false"`를 신뢰하지 않도록 수정했다.
+- `tests/test_worker6_venue_evidence_gate.py`에 문자열 false, 불리언 연도, 문자열 연도, 모순/판매처 플래그 경계값을 추가했다.
+- **연결 범위 한계:** 현재 확인한 실제 고객 HTML 생성 경로 `scripts/worker6_operator_three_diagnostic.py`, `scripts/worker6_core_five_preview.py`, `v5/purpose_render.py`는 행사장 원장 `TWO_VENUE_ADMISSION_EVIDENCE_20261109.json`을 읽거나 `may_make_confirmed_customer_claim()`을 호출하지 않는다. 따라서 게이트는 **독립 도우미와 테스트에만 적용**되며 고객주장 생성에 통합됐다고 보고하면 안 된다. 현재 행사장 원장은 연구자료이고 자동 고객 확정문구 입력 경로가 없다.
+- **향후 연결 조건:** 행사장 원장을 실제 고객 주장 입력으로 연결하는 개발이 생기면 반드시 `may_make_confirmed_customer_claim()` 결과가 False인 자료는 확정문구 생성 불가, 미확인 판매처 공지는 질문형 안내만 허용하도록 통합테스트를 먼저 작성한다. 지금은 존재하지 않는 생성 경로를 가정해 가짜 통합검사를 만들지 않는다.
+- 회귀테스트 성공은 구조적 오용 차단 확인일 뿐, 시설의 실제 현행 반입규정을 증명하지 않는다.
