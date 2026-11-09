@@ -5,17 +5,21 @@ ROOT=Path(__file__).resolve().parents[1]
 SITE=ROOT/'sites/promotion-gift-plants'
 from copy import deepcopy
 
+def product_summary(items):
+    """Single source for product count, names, prices and cards."""
+    ordered=sorted(items,key=lambda p:(p['priceKRW'],p['sku']))
+    return {'count':len(ordered),
+            'label':' / '.join(f"{p['name']} {p['priceKRW']:,}원 ({p['sku']})" for p in ordered),
+            'skus':[p['sku'] for p in ordered],
+            'priceBands':sorted({p['priceKRW']//10000 for p in ordered})}
+
 def generate_inputs(source,base_spec,site_input):
     spec=deepcopy(base_spec)
-    product_ids=['D144','D156','D152','D026']
-    assert {x['sku'] for x in source['sources']}==set(product_ids)
-    def product_summary(items):
-        """Single source for product count, names, prices and cards."""
-        ordered=sorted(items,key=lambda p:(p['priceKRW'],p['sku']))
-        return {'count':len(ordered),
-                'label':' / '.join(f"{p['name']} {p['priceKRW']:,}원 ({p['sku']})" for p in ordered),
-                'skus':[p['sku'] for p in ordered],
-                'priceBands':sorted({p['priceKRW']//10000 for p in ordered})}
+    product_ids=[x['sku'] for x in source['sources']]
+    if not product_ids or len(set(product_ids))!=len(product_ids):
+        raise ValueError('nonempty unique product SKUs required')
+    if any(type(x.get('priceKRW')) is not int or x['priceKRW']<=0 or not x.get('name') for x in source['sources']):
+        raise ValueError('verified name and positive integer price required')
     summary=product_summary(source['sources'])
     assert len(summary['skus'])==len(product_ids)
     spec['purposePools']['home']={
