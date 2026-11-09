@@ -4,6 +4,8 @@ on:
     branches: [site/v51-promotion-gift-plants-20261109]
     paths:
       - scripts/worker6_operator_three_diagnostic.py
+      - tests/test_worker6_recipient_paths.py
+      - sites/promotion-gift-plants/JEOKSEONG_DANWOL_ADDRESS_SOURCE_AUDIT_20261109.json
       - scripts/worker6_core_five_preview.py
       - sites/promotion-gift-plants/operator-service-confirmation-20261109.json
       - scripts/worker6_shipping_render.py
@@ -27,7 +29,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Operator source and contract regressions
-        run: python -m unittest tests.test_worker6_operator_contract tests.test_worker6_shipping_render tests.test_worker6_page_type tests.test_worker6_buyer_modules -v
+        run: python -m unittest tests.test_worker6_operator_contract tests.test_worker6_shipping_render tests.test_worker6_page_type tests.test_worker6_buyer_modules tests.test_worker6_recipient_paths -v
       - name: Render actual six V5.1 HTML with original similarity metric
         run: python scripts/worker6_operator_three_diagnostic.py
       - name: Prepare real preview static assets for local HTTP test
@@ -51,6 +53,8 @@ jobs:
               assert '참고 원문 보기' in html
               assert html.count('지역별 지점에서 발송하며 전국 당일배송 서비스를 안내합니다')==1
               assert html.count('data-product-sku=')==6
+              for q in ('회사명과 새 부서, 건물 층·호실을 확인했나요?', '도로명주소와 건물번호, 동·호수를 확인했나요?', '행사 시작시각과 물품 반입 가능 시간을 확인했나요?'):
+                  assert html.count(q)==1, (n,q)
           print('DIAGNOSTIC_6_HTML_OK',json.dumps(d['pairs'],ensure_ascii=False))
           PY
       - name: Install browser and Korean fonts
