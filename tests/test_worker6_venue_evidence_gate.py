@@ -9,6 +9,21 @@ class VenueEvidenceGateTests(unittest.TestCase):
    currentRuleIndependentlyVerified=True)
  def test_full_text_current_matching_venue_structurally_passes(self):
   self.assertTrue(may_make_confirmed_customer_claim(self.base()))
+ def test_string_false_independent_verification_rejected(self):
+  x=self.base();x["currentRuleIndependentlyVerified"]="false"
+  self.assertFalse(may_make_confirmed_customer_claim(x))
+ def test_bool_event_year_rejected(self):
+  x=self.base();x["eventYear"]=True
+  self.assertFalse(may_make_confirmed_customer_claim(x))
+ def test_string_false_contradiction_rejected(self):
+  x=self.base();x["contradictionUnresolved"]="false"
+  self.assertFalse(may_make_confirmed_customer_claim(x))
+ def test_string_false_seller_flag_rejected(self):
+  x=self.base();x["sellerReportedOnly"]="false"
+  self.assertFalse(may_make_confirmed_customer_claim(x))
+ def test_string_event_year_rejected(self):
+  x=self.base();x["eventYear"]="2026"
+  self.assertFalse(may_make_confirmed_customer_claim(x))
  def test_inaccessible_kintex_pdf_fails(self):
   x=self.base();x.update(readMode="unavailable",exactQuote=None,pageOrSection=None)
   self.assertFalse(may_make_confirmed_customer_claim(x))
