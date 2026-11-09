@@ -11,7 +11,8 @@ class CoreGuideRoles(unittest.TestCase):
   s=Path('scripts/worker6_core_five_preview.py').read_text(encoding='utf-8')
   for phrase in ('문의할 정보:','판매처에 확인할 항목:','결제 판단'):
    self.assertIn(phrase,s)
-  self.assertNotIn("pool['sections'].append",s)
+  self.assertIn("pool['sections']=[",s)
+  self.assertIn("returns_copy",s)
  def test_reference_is_not_service_promise(self):
   s=Path('scripts/worker6_core_five_preview.py').read_text(encoding='utf-8')
   self.assertIn('리본 포함·문구 입력·무료 제공 여부는 확인되지 않았습니다',s)
