@@ -23,6 +23,13 @@ def _text(value, page):
     if not isinstance(value, str) or not value.strip():
         raise ConfigError('purpose pool text must be nonempty')
     # Only a known, escaped-at-rendering placeholder is interpolated.
+    page_type=page.get('pageType')
+    if page_type=='purpose-guide':
+        if '{region}' in value:
+            raise ConfigError('purpose-guide copy must not interpolate region')
+        return value
+    if page_type not in (None,'regional-detail','province-hub','district-hub','homepage'):
+        raise ConfigError('unknown pageType')
     return value.replace('{region}', page['region'])
 
 
