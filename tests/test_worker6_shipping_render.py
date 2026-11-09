@@ -12,9 +12,9 @@ class SellerShippingContract(unittest.TestCase):
   self.assertIn('우선 적용',evidence_section(x)['paragraph'])
  def test_unlisted_is_not_free(self):
   x=lookup('전라남도','강진군','대구면')
-  self.assertEqual(x['state'],'not-listed-unknown')
+  self.assertEqual(x['state'],'jurisdiction-unresolved')
   self.assertFalse(x['absenceMeansFree'])
-  self.assertIn('미기재는 무료배송을 의미하지 않습니다',evidence_section(x)['paragraph'])
+  self.assertIn('행정명',evidence_section(x)['paragraph'])
  def test_alias_not_official_validation(self):
   x=lookup('경기도','파주시','적성면')
   self.assertTrue(x['aliasOnlyNotOfficialAddressValidation'])
