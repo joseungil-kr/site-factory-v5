@@ -1,4 +1,4 @@
-"""Private 3-region diagnostic HTML, not a publishable or audit-passing build."""
+"""Private six-region same-purpose controlled HTML, not a publishable build."""
 from pathlib import Path
 import json,sys
 ROOT=Path(__file__).resolve().parents[1]
@@ -7,6 +7,9 @@ sys.path.insert(0,str(ROOT/'scripts'))
 from worker6_shipping_render import lookup,evidence_section
 from v5.purpose_render import render,assemble
 from v5.audit import similarity
+from worker6_core_five_preview import generate_inputs,operator_policy
+from v5 import markup
+import re, shutil
 SITE=ROOT/'sites/promotion-gift-plants'
 out=ROOT/'reports/promotion-gift-plants/operator-three'
 out.mkdir(parents=True,exist_ok=True)
@@ -18,30 +21,12 @@ seller=json.loads((SITE/'core-five-seller-evidence.json').read_text(encoding='ut
 operator=json.loads((SITE/'operator-service-confirmation-20261109.json').read_text(encoding='utf-8'))
 spec=json.loads((SITE/'site-spec.json').read_text(encoding='utf-8'))
 sku=[x['sku'] for x in products]
-product_copy=' / '.join(f"{p['name']} {p['referencePrice']:,}원 ({p['sku']})" for p in sorted(products,key=lambda x:x['referencePrice']))
-operator_copy=('사업자 운영확인에 따르면 지역별 지점에서 발송하며 전국 당일배송 서비스를 제공합니다. '
- '주문전화 1844-0644 접수 안내 시간은 08:00~23:00이고, 배송 가능 시간대는 지역 꽃집 영업시간에 따른 06:00~20:00입니다. '
- '이는 특정 주문의 당일 도착 보장이 아니며 접수 마감·재고·실제 배송 가능 여부·최종 배송비는 전화로 확인해야 합니다. '
- '특히 23시 전화 주문이 그날 배송된다는 뜻은 아닙니다.')
-modules=json.loads((SITE/'customer-decision-modules-20261109.json').read_text(encoding='utf-8'))
-module_by_id={x['id']:x for x in modules['modules']}
-common_sections=[
- {'slot':'order','role':'required','heading':'전국 공통 주문·배송 운영안내','paragraph':operator_copy}]
-common_faq=[
- {'q':'전국 당일배송 서비스를 이용할 수 있나요?','a':'사업자 운영확인상 전국 당일배송 서비스가 가능하지만 개별 주문의 실제 도착과 마감은 전화 확인이 필요합니다.'},
- {'q':'주문전화와 배송 가능 시간은 같은가요?','a':'전화 주문 08~23시, 배송 가능 시간대 06~20시로 구분하며 지역 꽃집 운영시간에 따릅니다.'}]
-def module_section(module_id,slot):
- m=module_by_id[module_id]
- return {'slot':slot,'role':'required','heading':m['heading'],'paragraph':m['body'],
-         **({'sourceUrl':m['sourceUrl']} if 'sourceUrl' in m else {})}
-def scenario_pool(state):
- fee=modules['editorialStructure']['feeModuleByVerifiedSellerRowState'][state]
- # All recipient options are present for every region. No arbitrary locality assignment.
- ids=['budget-and-placement','title-and-sender','workplace-receipt','home-receipt','venue-receipt','order-call-timing',fee]
- return {'productSkus':sku,
- 'introductions':['승진 축하화분을 예산·축하 문구·수령 장소에 따라 선택하세요. 회사·자택·행사장 중 받는 분에게 맞는 방법을 확인하고 지역별 배송비는 주문 전에 상담합니다.'],
- 'sections':[module_section(mid,'order' if mid in ('order-call-timing',fee) else 'choice') for mid in ids],
- 'faqs':common_faq}
+# Reuse the exact real promotion buyer-decision pool and shared operator source.
+source=json.loads((SITE/'core-five-seller-evidence.json').read_text(encoding='utf-8'))
+base_spec,_,_,_=generate_inputs(source,spec,site,operator_source=operator)
+shared=operator_policy(operator)
+promotion=base_spec['purposePools']['promotion']
+assert sum(x.get('paragraph')==shared for x in promotion['sections'])==1
 cases=[('경기도','파주시','적성면'),('경기도','양평군','단월면'),
        ('경기도','가평군','설악면'),('경기도','포천시','이동면'),
        ('전라남도','강진군','대구면'),('전라남도','영광군','법성면')]
@@ -51,27 +36,39 @@ for i,(province,district,locality) in enumerate(cases,1):
  page={'id':f'worker6-operator-region-{i}','number':i,'region':match['region'],
  'pageType':'regional-detail','purpose':'promotion','title':match['region']+' 승진화분 주문 안내',
  'productSkus':sku,'evidenceSections':[evidence_section(match)]}
- page['purposePool']=scenario_pool(match['state'])
+ page['purposePool']=promotion
  pages.append(page)
  records.append({'region':match['region'],'state':match['state'],'sourceRows':[x['row'] for x in match['candidates']]})
 texts=[]
+normalized=[]
+consumer_banned=('지역 후보 원장','원문 행이 없다고 판단할 수 없습니다','지역별 시설 현황이 아닙니다')
 for page in pages:
  pools={'promotion':page['purposePool']}
  assembled=assemble(page,pools,products)
- texts.append({'region':page['region'],'text':assembled['intro']+'\n'+'\n'.join(x['heading']+' '+x['paragraph'] for x in assembled['sections'])})
+ body=assembled['intro']+'\n'+'\n'.join(x['heading']+' '+x['paragraph'] for x in assembled['sections'])
+ texts.append({'region':page['region'],'text':body})
+ # Remove place-name tokens only for an additional diagnostic, not to alter output.
+ norm=body
+ for other in pages:
+  for token in other['region'].split():norm=norm.replace(token,'[지역]')
+ normalized.append(norm)
+ assert not any(x in body for x in consumer_banned)
  html=render(site,page,pages,products,[],pools)
  assert 'noindex' in html
  assert all('it_id='+x in html for x in sku)
  assert '08:00~23:00' in html and '06:00~20:00' in html
- assert module_by_id['order-call-timing']['body'] in html
+ assert html.count(shared)==1
+ assert not any(x in html for x in consumer_banned)
  assert '참고 원문 보기' in html
+ assert all(html.count('data-product-sku="'+x+'"')==1 for x in sku)
  (out/f'{page["number"]}.html').write_text(html,encoding='utf-8')
 pairs=[{'pair':[texts[i]['region'],texts[j]['region']],'similarity':similarity(texts[i]['text'],texts[j]['text'])}
  for i in range(len(texts)) for j in range(i+1,len(texts))]
+normalizedPairs=[{'pair':[texts[i]['region'],texts[j]['region']],'similarity':similarity(normalized[i],normalized[j])} for i in range(len(texts)) for j in range(i+1,len(texts))]
 report={'source':'user provided operator confirmation, not external verification',
  'qualityGateThresholdExclusive':0.49,'auditPassed':all(p['similarity']<0.49 for p in pairs),
- 'pairs':pairs,'regions':records,'bodies':texts,'publicationApproved':False,
+ 'pairs':pairs,'nameRemovedPairs':normalizedPairs,'regions':records,'bodies':texts,'publicationApproved':False,
  'failedPairs':[p for p in pairs if p['similarity']>=0.49],
- 'scenarioEvidenceIsLocalFact':False,'selectionRule':'all recipient choices on every region; fee state only controls fee guidance'}
+ 'scenarioEvidenceIsLocalFact':False,'selectionRule':'identical real promotion pool and six SKUs; only evidenced seller fee row differs'}
 (out/'diagnostic.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-print('SIX_DIAGNOSTIC',json.dumps({'pairs':pairs,'auditPassed':report['auditPassed']},ensure_ascii=False))
+print('SIX_DIAGNOSTIC',json.dumps({'pairs':pairs,'nameRemovedPairs':normalizedPairs,'auditPassed':report['auditPassed']},ensure_ascii=False))
