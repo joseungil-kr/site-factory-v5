@@ -33,20 +33,22 @@ def lookup(province,district,locality,source=None):
         'finalShippingPriceKnown':False,'deliveryAvailabilityKnown':False,
         'absenceMeansFree':False,'aliasOnlyNotOfficialAddressValidation':True}
 def evidence_section(result):
+    """Customer-facing action; preserve exact raw rows and matching status in ledger."""
     rows=result['candidates']
-    if result['state']=='jurisdiction-unresolved':
-        description=f"{result['region']}의 행정명과 판매처 배송비 표의 지역명 연결이 확인되지 않았습니다. 원문 행이 없다고 판단할 수 없습니다."
-    elif result['state']=='exact-locality-display':
+    if result['state']=='exact-locality-display':
         item=rows[0]
-        description=f"판매처 추가 배송비 표 {item['row']}행에는 {result['region']}에 추가 배송비 {item['extraKRW']:,}원이 표시됩니다."
+        description=(f"{result['region']}의 판매처 추가 배송비 표에는 {item['extraKRW']:,}원이 표시됩니다. "
+                     "상품과 상세 주소에 실제 적용되는 최종 요금은 전화로 확인하세요.")
     elif result['state']=='overlap-unknown-priority':
-        pairs=', '.join(f"{x['row']}행 {x['extraKRW']:,}원" for x in rows)
-        description=f"판매처 표에는 {result['region']}에 겹쳐 적용될 수 있는 항목({pairs})이 있습니다. 어떤 금액이 우선 적용되는지 확인되지 않았습니다."
+        amounts=' / '.join(f"{x['extraKRW']:,}원" for x in rows)
+        description=(f"{result['region']}의 판매처 배송비 표에는 {amounts} 두 금액이 표시됩니다. "
+                     "상품번호와 상세 주소를 알려주시면 상담으로 최종 적용 요금을 확인할 수 있습니다.")
     elif result['state']=='district-display-only':
-        pairs=', '.join(f"{x['row']}행 {x['extraKRW']:,}원" for x in rows)
-        description=f"판매처 표의 시군구 단위 항목({pairs})에 {result['region']}의 상위 지역이 표시됩니다. 개별 읍면동에 실제 적용되는지는 확인되지 않았습니다."
+        description=(f"{result['region']}의 상위 지역에 추가 배송비가 표시됩니다. "
+                     "읍면동 상세 주소와 상품번호를 알려주시면 실제 적용 요금을 상담할 수 있습니다.")
     else:
-        description=f"판매처의 확인된 추가 배송비 표에서 {result['region']}의 정확한 읍면동 행을 찾지 못했습니다. 미기재는 무료배송을 의미하지 않습니다."
-    return {'heading':'배송비 표에 표시된 범위',
-      'paragraph':description+' 사업자 운영확인상 지역별 지점 발송으로 전국 당일배송 서비스가 가능합니다. 다만 해당 주문의 도착 가능 시각·마감·재고와 최종 추가요금은 전화 1844-0644로 확인합니다. 출처: '+result['sourceUrl']+' (확인일 '+result['checkedAt']+').',
+        description=(f"{result['region']}에 보낼 상품번호와 정확한 배송지를 알려주시면 "
+                     "추가 배송비와 수령 방법을 전화로 확인할 수 있습니다. 표에 별도 금액이 보이지 않아도 무료배송으로 확정하지 않습니다.")
+    return {'heading':'배송비와 수령 방법 상담',
+      'paragraph':description+' 전화 1844-0644로 희망 수령일·시간도 함께 알려주세요. 판매처 표 확인일: '+result['checkedAt']+'.',
       'sourceUrl':result['sourceUrl'],'checkedOn':result['checkedAt']}
