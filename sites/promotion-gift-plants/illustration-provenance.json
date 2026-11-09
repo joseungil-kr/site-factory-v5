@@ -24,5 +24,22 @@
       "prompt": "A warmly lit minimalist desk vignette features two ribbon-adorned plants, a blank tent-fold greeting card, and neatly arranged office accessories against a softly blurred workspace. A lush green plant in a white pot with a pale green bow sits beside a red poinsettia-style plant in a cream pot tied with red, while books, a pen holder, shelving, and gentle window light complete the serene scene."
     }
   ],
-  "rights": "AI-generated illustration; no real product image reuse permission claimed"
+  "rights": "AI-generated illustration; no real product image reuse permission claimed",
+  "rasterHandoff": {
+    "artifact": "worker6-generated-raster-handoff.zip",
+    "integrationStatus": "local generated WebP package; not yet uploaded into repository image library",
+    "renderingPolicy": "banner illustration with visible '연출 이미지 · 실제 판매 상품 사진 아님' caption; no Product image binding",
+    "webp": [
+      {
+        "name": "a_bright_softly_lit_modern_office_desk_still_lif.webp",
+        "sha256": "6c75e9c0f5b31c200812187276f59370ea1d59d441ca3bfed1810843636a2482",
+        "bytes": 44880
+      },
+      {
+        "name": "a_bright_softly_lit_indoor_desk_office_scene_in_a.webp",
+        "sha256": "5d9e359054e9aba0241cd8d7413099a81477e3305d6198eaebde7091caa8011f",
+        "bytes": 41926
+      }
+    ]
+  }
 }
