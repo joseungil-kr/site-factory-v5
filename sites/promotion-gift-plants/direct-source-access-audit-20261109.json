@@ -1,0 +1,75 @@
+{
+  "checkedAt": "2026-11-09",
+  "method": "Direct URL open via web source reader; distinguishes full-body access from snippets",
+  "competitors": [
+    {
+      "url": "https://www.hwabun.com/congrats-plant-message/",
+      "access": "cache-miss",
+      "title": null,
+      "sections": null,
+      "productComparison": null,
+      "orderFields": null,
+      "mobileFlow": null
+    },
+    {
+      "url": "https://guide.15660001.com/승진-축하-화분-추천/",
+      "access": "direct-url-inaccessible",
+      "title": null,
+      "sections": null,
+      "productComparison": null,
+      "orderFields": null,
+      "mobileFlow": null
+    },
+    {
+      "url": "https://15660001.com/bbs/board.php?bo_table=information&wr_id=9",
+      "access": "redirected-full-text",
+      "resolvedUrl": "https://guide.15660001.com/승진-축하-화분-추천/",
+      "title": "승진 축하 화분 추천 — 승진·취임 선물 고르는 법과 리본 문구 (39,000원부터)",
+      "sections": [
+        "주문 방법",
+        "선물 선택",
+        "예산별 가격",
+        "리본 문구",
+        "전국 배송"
+      ],
+      "productComparison": "39,000원 특가 동양란은 광역시 제한, 55,000원 철골소심, 67,000원 산천보세, 78,000원 만천홍 B, 86,000원 대훈, 108,000원 이상 상위상품 등 자체 판매가와 주문 링크",
+      "orderFields": [
+        "받는 분 성함·직위·연락처·회사·부서·층·호실",
+        "도착 희망 날짜·시간",
+        "리본 문구·보내는 사람 회사명"
+      ],
+      "mobileFlow": "HTML text contains category menu, phone, Kakao CTA, product links; actual mobile browser interaction and 390px screenshot NOT observed",
+      "sellerSpecificClaimsNotReusable": [
+        "3시간 배송",
+        "연중무휴",
+        "전화 상담시간",
+        "리본 좌우 방향"
+      ],
+      "evidenceLines": "35-145"
+    }
+  ],
+  "ownSeller": [
+    {
+      "url": "https://fwith.co.kr/bbs/content.php?co_id=congratulatory_words",
+      "access": "cache-miss",
+      "claimsAllowed": false
+    },
+    {
+      "url": "https://fwith.co.kr/bbs/content.php?co_id=management_tips",
+      "access": "cache-miss",
+      "claimsAllowed": false
+    },
+    {
+      "url": "https://fwith.co.kr/shop/item.php?it_id=D026",
+      "access": "cache-miss",
+      "claimsAllowed": false
+    },
+    {
+      "url": "https://fwith.co.kr/shop/item.php?it_id=D152",
+      "access": "cache-miss",
+      "claimsAllowed": false
+    }
+  ],
+  "finding": "Only one competitor's redirected body was actually readable; no first-party ribbon, care or additional SKU detail verified. Do not claim full three competitor review or mobile flow inspection.",
+  "sourceCitation": "turn770600view2"
+}
