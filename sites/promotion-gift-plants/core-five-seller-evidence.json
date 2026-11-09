@@ -1,0 +1,45 @@
+{
+  "checkedAt": "2026-11-09",
+  "verificationMethod": "Seller public product detail HTML; D144 direct page, D156 indexed seller page after direct fetch cache miss",
+  "sources": [
+    {
+      "sku": "D144",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=D144",
+      "name": "금전수 탁상용",
+      "priceKRW": 53000,
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "purchaseAction": "바로구매/장바구니",
+      "phone": "1844-0644",
+      "seasonalAppearanceMayVary": true
+    },
+    {
+      "sku": "D156",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=D156",
+      "name": "포인세티아 소형",
+      "priceKRW": 60000,
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "purchaseAction": "바로구매",
+      "phone": "1844-0644",
+      "seasonalAppearanceMayVary": true
+    }
+  ],
+  "delivery": {
+    "source": "https://fwith.co.kr/shop/item.php?it_id=D144",
+    "fact": "지역별 추가 배송비 표 존재; 정확한 주소에 따른 배송비 확인 필요",
+    "sameDayGuaranteed": false,
+    "inventoryVerified": false,
+    "cutoffVerified": false,
+    "openingHoursVerified": false
+  },
+  "imageRightsVerified": false,
+  "productSelection": {
+    "promotion": "D144 is named tabletop; D156 is named small. No verified actual dimensions.",
+    "transfer": "Use new workplace and actual recipient date; no claim of delivery acceptance.",
+    "congratulations": "Compare product name and gift placement; decoration can vary by season.",
+    "sameDayInquiry": "Confirm address/time and availability before purchase; no guaranteed delivery."
+  }
+}
