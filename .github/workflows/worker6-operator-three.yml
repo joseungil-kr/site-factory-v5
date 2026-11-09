@@ -8,6 +8,7 @@ on:
       - sites/promotion-gift-plants/customer-decision-modules-20261109.json
       - tests/test_worker6_buyer_modules.py
       - tests/test_worker6_shipping_render.py
+      - sites/promotion-gift-plants/customer-decision-modules-20261109.json
       - tests/test_worker6_operator_contract.py
       - .github/workflows/worker6-operator-three.yml
   workflow_dispatch:
