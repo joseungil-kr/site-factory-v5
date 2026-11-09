@@ -20,6 +20,10 @@ class SellerShippingContract(unittest.TestCase):
   self.assertTrue(x['aliasOnlyNotOfficialAddressValidation'])
   self.assertFalse(x['deliveryAvailabilityKnown'])
   self.assertFalse(x['finalShippingPriceKnown'])
+ def test_actual_unlisted_row_with_resolved_province(self):
+  x=lookup('경기도','파주시','문산읍')
+  self.assertEqual(x['state'],'not-listed-unknown')
+  self.assertIn('미기재는 무료배송을 의미하지 않습니다',evidence_section(x)['paragraph'])
  def test_unknown_province(self):
   x=lookup('전남광주통합특별시','강진군','마량면')
   self.assertEqual(x['state'],'jurisdiction-unresolved')
