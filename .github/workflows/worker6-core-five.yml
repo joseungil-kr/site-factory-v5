@@ -7,6 +7,7 @@ on:
       - v5/purpose_render.py
       - tests/test_worker6_page_type.py
       - scripts/worker6_core_five_preview.py
+      - sites/promotion-gift-plants/direct-source-access-audit-20261109.json
       - tests/test_worker6_evidence_sections.py
       - .github/workflows/worker6-core-five.yml
   workflow_dispatch:
