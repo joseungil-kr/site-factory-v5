@@ -6,6 +6,10 @@ on:
       - scripts/worker6-browser-qa.mjs
       - v5/purpose_render.py
       - tests/test_worker6_page_type.py
+      - v5/markup.py
+      - v5/purpose_render.py
+      - sites/promotion-gift-plants/products.json
+      - tests/test_worker6_source_links.py
       - scripts/worker6_core_five_preview.py
       - tests/test_worker6_core_roles.py
       - sites/promotion-gift-plants/direct-source-access-audit-20261109.json
@@ -25,7 +29,7 @@ jobs:
           python-version: '3.12'
       - name: Evidence and section contract regression
         run: |
-          python -m unittest tests.test_worker6_evidence_sections tests.test_worker6_section_contract tests.test_worker6_page_type tests.test_worker6_core_roles -v
+          python -m unittest tests.test_worker6_evidence_sections tests.test_worker6_section_contract tests.test_worker6_page_type tests.test_worker6_core_roles tests.test_worker6_source_links -v
       - name: Prepare five pages and V5.1 plan check
         run: |
           python scripts/worker6_core_five_preview.py
@@ -48,8 +52,10 @@ jobs:
               assert 'noindex' in html
               assert 'fwith.co.kr/shop/item.php?it_id=D144' in html
               assert 'fwith.co.kr/shop/item.php?it_id=D156' in html
+              assert 'fwith.co.kr/shop/item.php?it_id=D026' in html
+              assert 'fwith.co.kr/shop/item.php?it_id=D152' in html
               assert 'href="tel:18440644"' in html
-              assert html.count('data-product-sku=')>=2
+              assert html.count('data-product-sku=')>=4
               rows.append({'page':n,'path':str(p),'bytes':len(html),'productLinks':2})
           assert all(('href="/'+str(i)+'.html"') in (root/'index.html').read_text(encoding='utf-8') for i in range(2,6))
           (report/'core-five-routes.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding='utf-8')
