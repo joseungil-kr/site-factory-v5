@@ -214,6 +214,9 @@ def generate_inputs(source,base_spec,site_input,require_orchids=True):
     transfer['faqs']=[
       {'q':'영전 선물은 발령일에 보내야 하나요?','a':'발령 발표일과 새 근무지 첫 출근일이 다를 수 있으므로 실제 수령 가능한 날짜를 확인하세요.'},
       {'q':'이전 근무지와 새 근무지 중 어디로 보내나요?','a':'받는 분이 실제 수령할 새 근무지 주소와 담당자를 확인한 뒤 주문하세요.'}]
+    for purpose in ('promotion','transfer'):
+        spec['purposePools'][purpose]['sections'].append(
+          section('결제 전 교환·환불 안내 확인',returns_copy,'order',returns_url))
     spec['pageTypes']=['homepage','purpose-guide']
     spec['targetPageCount']=5
     spec['publishPolicy']['mode']='preview'
