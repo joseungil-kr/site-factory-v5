@@ -27,7 +27,7 @@ class SellerShippingContract(unittest.TestCase):
  def test_unknown_province(self):
   x=lookup('전남광주통합특별시','강진군','마량면')
   self.assertEqual(x['state'],'jurisdiction-unresolved')
-  self.assertIn('행정명',evidence_section(x)['paragraph'])
+  self.assertIn('정확한 배송지',evidence_section(x)['paragraph'])
  def test_gunwi_alias_and_parent_uncertain(self):
   x=lookup('대구광역시','군위군','군위읍')
   self.assertEqual(x['state'],'district-display-only')
