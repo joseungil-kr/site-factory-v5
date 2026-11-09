@@ -1,0 +1,60 @@
+name: Worker6 Gangjin evidence experiment
+on:
+  push:
+    branches: [site/v51-promotion-gift-plants-20261109]
+    paths:
+      - scripts/worker6_gangjin_experiment.py
+      - sites/promotion-gift-plants/gangjin-two-page-experiment.json
+      - .github/workflows/worker6-gangjin.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  experiment:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build isolated cited two-page input
+        run: |
+          python scripts/worker6_gangjin_experiment.py
+          python -m v5 plan-check --site promotion-gift-plants
+          python -m v5 build --site promotion-gift-plants --mode preview
+      - name: Audit unchanged 49 percent quality gate
+        run: |
+          python -m v5 audit --site promotion-gift-plants
+      - name: Capture text and source evidence
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from html.parser import HTMLParser
+          class Body(HTMLParser):
+              def __init__(self):super().__init__();self.text=[]
+              def handle_data(self,t):
+                  if t.strip():self.text.append(t.strip())
+          root=Path('dist/promotion-gift-plants')
+          report=Path('reports/promotion-gift-plants')
+          report.mkdir(parents=True,exist_ok=True)
+          rows=[]
+          for n in (1,2):
+              p=root/('index.html' if n==1 else '2.html')
+              if not p.exists():continue
+              parser=Body();parser.feed(p.read_text(encoding='utf-8'))
+              rows.append({'number':n,'html':str(p),'bodyText':'\\n'.join(parser.text)})
+          (report/'gangjin-body-comparison.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2),encoding='utf-8')
+          print('BODY_CAPTURE',len(rows))
+          PY
+      - name: Archive real HTML and comparison
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: worker6-gangjin-two-page-evidence
+          path: |
+            dist/promotion-gift-plants/
+            reports/promotion-gift-plants/
+          if-no-files-found: warn
