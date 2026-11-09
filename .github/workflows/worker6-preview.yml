@@ -34,6 +34,18 @@ jobs:
               assert 'fwith.co.kr/shop/item.php?it_id=' in html
               print(f'HTML_OK {path} {len(html)} bytes')
           PY
+      - name: V5.1 audit
+        run: python -m v5 audit --site promotion-gift-plants
+      - name: Capture 390px and 1440px actual Chromium screenshots
+        run: |
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install chromium
+          mkdir -p reports/promotion-gift-plants/screenshots
+          for page in index 2 3 4; do
+            for width in 390 1440; do
+              npx playwright screenshot --browser chromium --viewport-size "${width},900" --wait-for-timeout 800 "file://$PWD/dist/promotion-gift-plants/${page}.html" "reports/promotion-gift-plants/screenshots/${page}-${width}.png"
+            done
+          done
       - name: Upload V5.1 renderer output
         if: always()
         uses: actions/upload-artifact@v4
