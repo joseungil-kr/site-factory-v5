@@ -27,6 +27,16 @@ guide_introductions={
 }
 for purpose,intro in guide_introductions.items():
     spec['purposePools'][purpose]['introductions']=[intro]
+# Real decision modules from observed competitor guide patterns, written for
+# verified own products only. Do not imply seller supports unverified ribbon options.
+decision_modules={
+ 'promotion':('승진 선물의 예산과 수령 자리','5만 원대 D144 금전수 탁상용과 6만 원 D156 포인세티아 소형을 먼저 비교합니다. 받는 분의 새 직함과 책상·공용공간 중 실제 배치할 장소를 확인하고, 상품 크기는 판매처에 문의합니다.'),
+ 'transfer':('영전·전보에서 먼저 확인할 것','발령일과 새 근무지에 실제 출근하는 날짜가 다를 수 있습니다. 이전 부서가 아니라 새 수령 주소와 담당자 연락처를 확인한 다음 D144 또는 D156의 배송 가능 여부를 문의합니다.'),
+ 'congratulations':('축하 메시지와 보내는 사람 표기','축하 문구는 받는 사람과의 관계에 맞게 직접 작성합니다. 보내는 사람의 회사명·부서·이름을 정확히 준비하고, 리본이나 메시지 제공 여부 및 입력 방식은 상품 주문 전에 판매처에 확인합니다.'),
+ 'sameDayInquiry':('당일 요청을 위한 문의 순서','희망 배송지의 시군구·읍면동과 상세 건물, D144 또는 D156 상품번호, 희망 수령 시각, 수령 담당자 연락처를 준비합니다. 배송 가능 여부와 최종 배송비가 확인된 다음 결제 여부를 결정합니다.')
+}
+for purpose,(heading,paragraph) in decision_modules.items():
+    spec['purposePools'][purpose]['sections'].append({'slot':'choice','role':'required','heading':heading,'paragraph':paragraph})
 spec['pageTypes']=['homepage','purpose-guide']
 spec['targetPageCount']=5
 spec['publishPolicy']['mode']='preview'
