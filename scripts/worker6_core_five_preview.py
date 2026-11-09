@@ -18,6 +18,15 @@ spec['purposePools']['home']={
  ],
  'faqs':[{'q':'가격과 옵션은 확인되었나요?','a':'D144 53,000원, D156 60,000원이며 두 상품의 선택·추가옵션은 0개로 표시됩니다.'},{'q':'당일 배송이 보장되나요?','a':'아닙니다. 주소와 희망 시간을 전달해 가능 여부를 먼저 확인해야 합니다.'}]
 }
+# Purpose guides have no geographic location; never inject fake region labels.
+guide_introductions={
+ 'promotion':'승진 선물은 새 자리에서 바로 놓을 수 있는 형태인지가 먼저입니다. 금전수 탁상용 D144는 책상 선물 후보로, 포인세티아 소형 D156은 다른 분위기의 소형 선물 후보로 비교할 수 있습니다.',
+ 'transfer':'영전·전보 선물은 새 근무지에서 실제 수령할 사람이 있는 날짜를 기준으로 준비합니다. 포인세티아 소형 D156과 금전수 탁상용 D144의 상세를 비교하세요.',
+ 'congratulations':'축하화분을 고를 때는 받는 분의 선호와 놓을 자리를 먼저 생각해 보세요. D156 포인세티아 소형과 D144 금전수 탁상용의 상품 정보를 비교할 수 있습니다.',
+ 'sameDayInquiry':'오늘 축하화분을 보내려면 상품 선택보다 상세 주소와 수령 가능한 시간을 먼저 확인해야 합니다. D144와 D156의 당일 배송 가능 여부는 주소와 접수 시점에 따라 별도 확인이 필요합니다.'
+}
+for purpose,intro in guide_introductions.items():
+    spec['purposePools'][purpose]['introductions']=[intro]
 spec['pageTypes']=['homepage','purpose-guide']
 spec['targetPageCount']=5
 spec['publishPolicy']['mode']='preview'
