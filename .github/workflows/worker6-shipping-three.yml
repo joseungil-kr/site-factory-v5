@@ -4,6 +4,7 @@ on:
     branches: [site/v51-promotion-gift-plants-20261109]
     paths:
       - scripts/worker6_shipping_render.py
+      - scripts/worker6_shipping_crosscheck.py
       - scripts/worker6_shipping_three_preview.py
       - tests/test_worker6_shipping_render.py
       - .github/workflows/worker6-shipping-three.yml
