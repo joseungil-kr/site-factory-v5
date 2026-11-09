@@ -64,7 +64,8 @@ def assemble(page, pools, products, *, service=False):
         selected=required+([_chosen(alternatives,page,'section:'+slot)] if alternatives else [])
         for section in selected:
             resolved_sections.append({'heading':_text(section.get('heading'),page),
-                                      'paragraph':_text(section.get('paragraph'),page)})
+                                      'paragraph':_text(section.get('paragraph'),page),
+                                      **({'sourceUrl':section['sourceUrl']} if isinstance(section.get('sourceUrl'),str) and section['sourceUrl'].startswith('https://') else {})})
     # Evidence-backed per-page content is optional and only accepted with
     # explicit source metadata. No regional claims are inferred from a name.
     evidence=page.get('evidenceSections',[])
@@ -77,7 +78,7 @@ def assemble(page, pools, products, *, service=False):
         if not item['sourceUrl'].startswith('https://') or not re.fullmatch(r'\d{4}-\d{2}-\d{2}',item['checkedOn']):
             raise ConfigError('invalid evidence source URL/date')
         resolved_sections.append({'heading':_text(item['heading'],page),
-                                  'paragraph':_text(item['paragraph'],page)})
+                                  'paragraph':_text(item['paragraph'],page), 'sourceUrl':item['sourceUrl']})
     if any(not isinstance(f,dict) or not f.get('q') or not f.get('a') for f in faqs):
         raise ConfigError('invalid purpose pool FAQ')
     ordered_faq=sorted(enumerate(faqs),key=lambda pair:hashlib.sha256((page['id']+':faq:'+str(pair[0])).encode()).digest())
