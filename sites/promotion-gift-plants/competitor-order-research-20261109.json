@@ -1,0 +1,78 @@
+{
+  "observedAt": "2026-11-09",
+  "searchEnvironment": "Web search engine results in ChatGPT web research; not a reproducible Naver SERP position; no rank or ranking causality claimed",
+  "queries": [
+    "승진화분 주문 축하화분 당일배달 상품 가격 리본 주문 안내",
+    "승진 축하 화분 당일배송 온라인 주문 상품 비교",
+    "site:fwith.co.kr/shop/item.php 승진화분 D144 D156 D149"
+  ],
+  "observations": [
+    {
+      "url": "https://www.hwabun.com/congrats-plant-message/",
+      "publisher": "화분닷컴",
+      "kind": "competitor editorial",
+      "observed": "Purpose-based ribbon phrases for promotion, inauguration, office move and anniversaries; examples categorized by recipient relationship; nine plant suggestions and 40,000–119,000 KRW advertised range.",
+      "decisionUtility": "Buyer can choose ribbon wording before picking plant; ribbon placement statements are seller-specific and cannot be copied as own service promise.",
+      "status": "direct search result text"
+    },
+    {
+      "url": "https://guide.15660001.com/승진-축하-화분-추천/",
+      "publisher": "국민플라워",
+      "kind": "competitor guide",
+      "observed": "Budget tiers 39,000 KRW, 50,000 KRW, 60–90k KRW and 100k+ with named products and explicit regional restriction for lowest priced orchid.",
+      "decisionUtility": "Budget comparison with product-specific delivery exception helps avoid choosing an ineligible low-price item.",
+      "status": "direct search result text"
+    },
+    {
+      "url": "https://15660001.com/bbs/board.php?bo_table=information&wr_id=9",
+      "publisher": "국민플라워",
+      "kind": "competitor editorial",
+      "observed": "Promotion, inauguration and transfer ribbon examples and sender-name fields. Ribbon side guidance differs from hwabun.com.",
+      "decisionUtility": "Recipient title and sender identity are meaningful order fields; conflicting ribbon-side conventions must be confirmed with seller.",
+      "status": "direct search result text"
+    },
+    {
+      "url": "https://fwith.co.kr/shop/item.php?it_id=D156",
+      "publisher": "꽃이랑",
+      "kind": "own seller",
+      "observed": "D156 poinsettia small 60,000 KRW, zero selection/additional options, shipping charged at order, 1844-0644; seller lists detailed surcharge exceptions.",
+      "decisionUtility": "Actual SKU and order controls can be used; not proof of delivery availability or inventory.",
+      "status": "direct search result text and supervisor original HTML confirmation"
+    }
+  ],
+  "notVerified": [
+    "No ranking position or traffic outcome",
+    "No own seller ribbon field fulfillment promise",
+    "No nationwide product-specific eligibility for D144/D156",
+    "No plant care guide from independently verified source yet",
+    "No reliable additional own SKU product prices beyond D144/D156"
+  ],
+  "editorialModules": [
+    {
+      "id": "budget",
+      "requiredEvidence": "Own seller confirmed SKU price, composition and options",
+      "use": "Compare actual verified own products, not competitor prices as own."
+    },
+    {
+      "id": "ribbon",
+      "requiredEvidence": "Own seller ribbon text field and fulfillment support",
+      "use": "Draft sender/recipient text and confirm availability; competitor left/right conventions conflict."
+    },
+    {
+      "id": "recipient",
+      "requiredEvidence": "Customer-supplied workplace, receiving person, appointment date",
+      "use": "Purpose-specific decision checklist without fabricated locality."
+    },
+    {
+      "id": "delivery",
+      "requiredEvidence": "Seller actual region-specific fee and eligibility",
+      "use": "Quote displayed surcharge with conflicts, do not claim coverage."
+    },
+    {
+      "id": "plantCare",
+      "requiredEvidence": "Species identification and credible horticulture source",
+      "use": "Only include when exact SKU plant species and care requirements verified."
+    }
+  ],
+  "conclusion": "Two verified own SKUs and 63 seller surcharge rows cannot justify 5302 unique SEO pages; source-backed product choice, recipient workflows, verified locality delivery rules and substantial distinct needs must be acquired."
+}
