@@ -111,6 +111,28 @@ def generate_inputs(source,base_spec,site_input):
         pool=spec['purposePools'][purpose]
         pool['sections'].append({'slot':'order','role':'required','heading':'결제 전 교환·환불 안내 확인',
                                   'paragraph':returns_copy,'sourceUrl':returns_url})
+    # Purpose-fit validation: a promotion/transfer guide must offer both
+    # seller-verified oriental and western orchids, not funeral products.
+    seller_by_sku={x['sku']:x for x in source['sources']}
+    orchid_evidence={'E008':('일향금','동양란'),'F055':('연핑크 호접란','서양란')}
+    for orchid_sku,(expected_name,expected_category) in orchid_evidence.items():
+        x=seller_by_sku.get(orchid_sku)
+        if not x or x.get('name')!=expected_name or x.get('category')!=expected_category:
+            raise ValueError('promotion/transfer orchid evidence missing: '+orchid_sku)
+    if any(x['name'].startswith('장례식장 근조') for x in source['sources']):
+        raise ValueError('funeral product must not be presented as promotion orchid')
+    orchid_copy=('난류를 고려한다면 동양란 일향금 E008 110,000원과 '
+                 '서양란 연핑크 호접란 F055 60,000원을 비교할 수 있습니다. '
+                 '이는 꽃이랑 상품 상세에서 확인된 이름·가격·카테고리이며 '
+                 '품종별 실제 크기·관리방법·재고·배송가능 시간은 확인되지 않았습니다. '
+                 '일반 관엽화분과 난류 중 받는 분의 선호, 배치 장소와 예산을 기준으로 선택하세요.')
+    for purpose in ('promotion','transfer'):
+        pool=spec['purposePools'][purpose]
+        pool['sections'].insert(1,{'slot':'choice','role':'required',
+             'heading':'승진·영전 선물에 난류를 포함해 비교',
+             'paragraph':orchid_copy})
+        pool['faqs'].append({'q':'승진·영전에 난류 상품도 고를 수 있나요?',
+            'a':'꽃이랑 확인 상품으로 동양란 일향금 E008 110,000원과 서양란 연핑크 호접란 F055 60,000원이 있습니다. 주문 전 실제 상품 상태와 배송 가능 시간을 확인하세요.'})
     spec['pageTypes']=['homepage','purpose-guide']
     spec['targetPageCount']=5
     spec['publishPolicy']['mode']='preview'
