@@ -13,7 +13,8 @@ class BuyerModules(unittest.TestCase):
   self.assertTrue(all(x['decision'] and len(x['body'])>80 for x in self.modules.values()))
  def test_recipient_scenarios_not_region_claims(self):
   for x in ('workplace-receipt','home-receipt','venue-receipt'):
-   self.assertIn('선택',self.modules[x]['body'] if x!='workplace-receipt' else self.modules[x]['heading']+self.modules[x]['body'])
+   self.assertTrue(any(term in self.modules[x]['body'] for term in ('상황','수령','사무실')))
+   self.assertFalse(any(term in self.modules[x]['body'] for term in ('파주시','가평군','강진군')))
   self.assertIn('not verified regional differences',self.data['limitations'])
  def test_operator_general_service_not_undeliverable(self):
   for args in [('경기도','파주시','적성면'),('경기도','가평군','설악면'),('전라남도','강진군','대구면')]:
