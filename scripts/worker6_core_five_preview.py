@@ -234,34 +234,35 @@ def generate_inputs(source,base_spec,site_input,require_orchids=True,operator_so
     for purpose in ('promotion','transfer'):
         spec['purposePools'][purpose]['sections'].append(
           section('결제 전 교환·환불 안내 확인',returns_copy,'order',returns_url))
+    if require_orchids:
     # Distinct buyer jobs: general congratulations chooses an occasion/message,
-    # while same-day inquiry checks a live fulfillment decision in ordered steps.
-    congrats=spec['purposePools']['congratulations']
-    congrats['introductions']=['축하할 사유와 받는 분과의 관계를 먼저 정한 다음 선물 예산·상품 종류를 고릅니다. 행사 당일 수령이 필요한지, 받는 분이 실제로 받을 수 있는 날짜도 확인하세요.']
-    congrats['sections']=[
-      {'slot':'choice','role':'required','heading':'축하 사유와 받는 분 관계 확인',
-       'paragraph':'개업·기념일·성과 축하 등 실제 사유를 먼저 확인하세요. 거래처에 보낸다면 회사명과 담당자 호칭을, 가족이나 지인에게 보낸다면 친밀한 표현을 선택할 수 있습니다. 보내는 사람은 회사·부서·성명을 따로 정리해 문구에 누락되지 않도록 합니다.'},
-      {'slot':'choice','role':'required','heading':'선물 종류와 예산 결정',
-       'paragraph':f"예산과 받는 분 선호에 따라 {item('D152')} 화분과 {item('D144')} 탁상용을 비교하거나, 난류를 선호한다면 {item('F055')} 서양란을 확인하세요. 상품명은 실제 크기·재고 보장이 아니므로 놓을 장소를 확인한 뒤 선택합니다."},
-      {'slot':'choice','role':'required','heading':'축하 메시지 작성 예',
-       'paragraph':'거래처: “뜻깊은 성과를 진심으로 축하드립니다.” — “○○회사 대표 ○○○”. 지인: “기쁜 날을 함께 축하해요.” — “친구 ○○○”. 메시지는 직접 작성한 참고 예시이며 리본 제작·제공 여부는 별도 확인합니다.'},
-      {'slot':'order','role':'required','heading':'행사 일정과 수령인 확인',
-       'paragraph':'행사 날짜, 행사장 또는 회사·자택 중 실제 수령 장소, 수령 담당자와 연락 가능한 시간을 확인하세요. 행사 시작 전 수령이 필요하다면 희망 시각을 구체적으로 전달하고 판매처와 실제 도착 가능 시간을 상담합니다.'}]
-    congrats['faqs']=[
-      {'q':'축하 메시지는 어떻게 정하나요?','a':'축하 사유와 보내는 사람 관계에 맞는 표현을 직접 정하고 발신자 이름을 확인하세요. 리본 제공은 별도 확인합니다.'},
-      {'q':'행사일에 맞춰 받을 수 있나요?','a':'행사일과 희망 수령시각, 수령 담당자를 알려주고 개별 주문의 도착 가능 시간을 상담하세요.'}]
-    day=spec['purposePools']['sameDayInquiry']
-    day['introductions']=['당일배송 문의는 상품을 고른 다음 현재 접수 시각과 지역 꽃집의 실제 배송 가능 시간대를 대조하는 절차입니다. 전국 당일배송 서비스 안내와 개별 주문의 도착 확정은 구분합니다.']
-    day['sections']=[
-      {'slot':'choice','role':'required','heading':'1단계 · 상품과 배송지 정보를 준비',
-       'paragraph':'선택한 상품번호, 수량, 시도·시군구·읍면동·건물·층·호실, 수령인에게 연락 가능한 방법과 희망 수령시각을 정리하세요. 실제 상품 재고와 주문 접수 마감은 전화 상담으로 확인합니다.'},
-      {'slot':'order','role':'required','heading':'2단계 · 전화로 당일 수령 가능 시간 확인',
-       'paragraph':'1844-0644에 선택 상품번호와 상세 주소를 알려주고 해당 주문의 도착 가능 시각, 접수 마감, 지역 추가 배송비, 부재 시 수령방법을 확인합니다. 전국 당일배송 서비스를 안내하더라도 원하는 시각의 도착이 자동 확정되는 것은 아닙니다.'},
-      {'slot':'order','role':'required','heading':'3단계 · 판매처 답변을 확인하고 결제',
-       'paragraph':'상담에서 확인한 수령 가능 시간과 최종 추가요금을 주문 내용과 대조합니다. 받는 분이 실제 수령할 수 있는지 확인한 다음 결제하고, 배송시간이나 비용이 맞지 않으면 주문 전에 조건을 다시 조정하세요.'}]
-    day['faqs']=[
-      {'q':'늦은 밤에 주문하면 바로 받을 수 있나요?','a':'전화 주문 가능 시간과 지역 꽃집의 배송 가능 시간대는 다릅니다. 23시 전화 접수는 당일 도착 보장이 아닙니다.'},
-      {'q':'전화할 때 무엇을 알려줘야 하나요?','a':'상품번호·수량·상세 배송지·희망 시각을 알려주고 마감·재고·최종 추가요금을 확인하세요.'}]
+        # while same-day inquiry checks a live fulfillment decision in ordered steps.
+        congrats=spec['purposePools']['congratulations']
+        congrats['introductions']=['축하할 사유와 받는 분과의 관계를 먼저 정한 다음 선물 예산·상품 종류를 고릅니다. 행사 당일 수령이 필요한지, 받는 분이 실제로 받을 수 있는 날짜도 확인하세요.']
+        congrats['sections']=[
+          {'slot':'choice','role':'required','heading':'축하 사유와 받는 분 관계 확인',
+           'paragraph':'개업·기념일·성과 축하 등 실제 사유를 먼저 확인하세요. 거래처에 보낸다면 회사명과 담당자 호칭을, 가족이나 지인에게 보낸다면 친밀한 표현을 선택할 수 있습니다. 보내는 사람은 회사·부서·성명을 따로 정리해 문구에 누락되지 않도록 합니다.'},
+          {'slot':'choice','role':'required','heading':'선물 종류와 예산 결정',
+           'paragraph':f"예산과 받는 분 선호에 따라 {item('D152')} 화분과 {item('D144')} 탁상용을 비교하거나, 난류를 선호한다면 {item('F055')} 서양란을 확인하세요. 상품명은 실제 크기·재고 보장이 아니므로 놓을 장소를 확인한 뒤 선택합니다."},
+          {'slot':'choice','role':'required','heading':'축하 메시지 작성 예',
+           'paragraph':'거래처: “뜻깊은 성과를 진심으로 축하드립니다.” — “○○회사 대표 ○○○”. 지인: “기쁜 날을 함께 축하해요.” — “친구 ○○○”. 메시지는 직접 작성한 참고 예시이며 리본 제작·제공 여부는 별도 확인합니다.'},
+          {'slot':'order','role':'required','heading':'행사 일정과 수령인 확인',
+           'paragraph':'행사 날짜, 행사장 또는 회사·자택 중 실제 수령 장소, 수령 담당자와 연락 가능한 시간을 확인하세요. 행사 시작 전 수령이 필요하다면 희망 시각을 구체적으로 전달하고 판매처와 실제 도착 가능 시간을 상담합니다.'}]
+        congrats['faqs']=[
+          {'q':'축하 메시지는 어떻게 정하나요?','a':'축하 사유와 보내는 사람 관계에 맞는 표현을 직접 정하고 발신자 이름을 확인하세요. 리본 제공은 별도 확인합니다.'},
+          {'q':'행사일에 맞춰 받을 수 있나요?','a':'행사일과 희망 수령시각, 수령 담당자를 알려주고 개별 주문의 도착 가능 시간을 상담하세요.'}]
+        day=spec['purposePools']['sameDayInquiry']
+        day['introductions']=['당일배송 문의는 상품을 고른 다음 현재 접수 시각과 지역 꽃집의 실제 배송 가능 시간대를 대조하는 절차입니다. 전국 당일배송 서비스 안내와 개별 주문의 도착 확정은 구분합니다.']
+        day['sections']=[
+          {'slot':'choice','role':'required','heading':'1단계 · 상품과 배송지 정보를 준비',
+           'paragraph':'선택한 상품번호, 수량, 시도·시군구·읍면동·건물·층·호실, 수령인에게 연락 가능한 방법과 희망 수령시각을 정리하세요. 실제 상품 재고와 주문 접수 마감은 전화 상담으로 확인합니다.'},
+          {'slot':'order','role':'required','heading':'2단계 · 전화로 당일 수령 가능 시간 확인',
+           'paragraph':'1844-0644에 선택 상품번호와 상세 주소를 알려주고 해당 주문의 도착 가능 시각, 접수 마감, 지역 추가 배송비, 부재 시 수령방법을 확인합니다. 전국 당일배송 서비스를 안내하더라도 원하는 시각의 도착이 자동 확정되는 것은 아닙니다.'},
+          {'slot':'order','role':'required','heading':'3단계 · 판매처 답변을 확인하고 결제',
+           'paragraph':'상담에서 확인한 수령 가능 시간과 최종 추가요금을 주문 내용과 대조합니다. 받는 분이 실제 수령할 수 있는지 확인한 다음 결제하고, 배송시간이나 비용이 맞지 않으면 주문 전에 조건을 다시 조정하세요.'}]
+        day['faqs']=[
+          {'q':'늦은 밤에 주문하면 바로 받을 수 있나요?','a':'전화 주문 가능 시간과 지역 꽃집의 배송 가능 시간대는 다릅니다. 23시 전화 접수는 당일 도착 보장이 아닙니다.'},
+          {'q':'전화할 때 무엇을 알려줘야 하나요?','a':'상품번호·수량·상세 배송지·희망 시각을 알려주고 마감·재고·최종 추가요금을 확인하세요.'}]
     # Append the SAME operational policy to every page, without purpose-specific rewording.
     for purpose in ('home','promotion','transfer','congratulations','sameDayInquiry'):
         pool=spec['purposePools'][purpose]
