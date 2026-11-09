@@ -1,0 +1,28 @@
+{
+  "createdOn": "2026-11-09",
+  "purpose": "Non-product illustrative scene for worker6 preview; not proof of delivered goods, product SKU or inventory",
+  "status": "original raster generated locally, NOT YET linked in V5 imagePool or published",
+  "images": [
+    {
+      "localPath": "/mnt/data/a_bright_softly_lit_modern_office_desk_still_lif.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sha256": "e6072f37dfd7e05957ae3421cb7cc11aa6f6b1b9100a908e374724549414f872",
+      "generationId": "41d7d15b-66c3-40cb-a866-f5648e2bdfaa",
+      "prompt": "A warm, minimalist office vignette features two ribbon-adorned potted plants and a blank bordered card on a sunlit wooden desk, with stacked neutral notebooks at the edge. The softly blurred background includes a chair, bright window greenery, shelving with muted binders and a small plant, while gentle shadows and airy lighting create a polished, gift-like atmosphere."
+    },
+    {
+      "localPath": "/mnt/data/a_bright_softly_lit_indoor_desk_office_scene_in_a.png",
+      "dimensions": [
+        1254,
+        1254
+      ],
+      "sha256": "f0773b3dacf36405d2c0d2765c6f456cc4002646a14ccc109b15259dcbe5bd84",
+      "generationId": "696f8b32-ad92-4dcf-b99b-8110d5d2a85f",
+      "prompt": "A warmly lit minimalist desk vignette features two ribbon-adorned plants, a blank tent-fold greeting card, and neatly arranged office accessories against a softly blurred workspace. A lush green plant in a white pot with a pale green bow sits beside a red poinsettia-style plant in a cream pot tied with red, while books, a pen holder, shelving, and gentle window light complete the serene scene."
+    }
+  ],
+  "rights": "AI-generated illustration; no real product image reuse permission claimed"
+}
