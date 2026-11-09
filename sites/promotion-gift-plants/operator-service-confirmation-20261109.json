@@ -1,0 +1,31 @@
+{
+  "recordedOn": "2026-11-09",
+  "sourceType": "user-provided seller operational confirmation relayed by supervisor",
+  "sourceQuote": "전국 지역별 독립 문서 유지. 지역별 배송 가능함. 마감,추가요금은 전화상담. 지역별 지점에서 바로 발송하기 떄문에 어느 지역이나 당일 베송 가능. 주문전화는 08-23시까지. 배송은 지역별로 꽃집 운영시간에 따름 (06시-20시 배송가능)",
+  "scope": "nationwide general operational guidance, not verified branch-by-branch",
+  "orderPhone": "1844-0644",
+  "phoneOrderHours": {
+    "start": "08:00",
+    "end": "23:00",
+    "timezone": "Asia/Seoul",
+    "type": "phone order acceptance"
+  },
+  "deliveryWindow": {
+    "earliestPossible": "06:00",
+    "latestPossible": "20:00",
+    "timezone": "Asia/Seoul",
+    "type": "possible window depending on local florist operating hours",
+    "guaranteed": false
+  },
+  "regionalDispatch": true,
+  "nationwideSameDayAvailableAsGeneralService": true,
+  "individualSameDayArrivalGuaranteed": false,
+  "individualCutoff": "phone-confirm",
+  "regionalSurcharge": "phone-confirm",
+  "stock": "phone-confirm",
+  "branchAddressesVerified": false,
+  "sourceVerifiedExternally": false,
+  "applicabilityStart": "2026-11-09 user confirmation; precise policy effective date not supplied",
+  "privacy": "No personal order data collected",
+  "contentRule": "State nationwide same-day service is available by local florist dispatch per operator, but confirm order-specific availability, cutoff, fees and actual arrival by phone. Do not infer 23:00 order implies same-day delivery."
+}
