@@ -17,6 +17,7 @@ on:
       - tests/test_worker6_catalog_consistency.py
       - tests/test_worker6_catalog_full_output.py
       - tests/test_worker6_orchid_purpose.py
+      - sites/promotion-gift-plants/ORCHID_PROMOTION_TRANSFER_EDITORIAL_DRAFT.md
       - sites/promotion-gift-plants/products.json
       - sites/promotion-gift-plants/orchid-product-direct-evidence-20261109.json
       - sites/promotion-gift-plants/core-five-seller-evidence.json
