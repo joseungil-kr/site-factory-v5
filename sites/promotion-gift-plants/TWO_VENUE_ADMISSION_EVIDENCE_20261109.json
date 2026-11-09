@@ -30,25 +30,35 @@
           "type": "KINTEX official exhibition organizer manual",
           "sourceUpdatedAt": null,
           "checkedAt": "2026-11-09",
-          "observation": "Exhibition organizer procedures and logistics; no explicit current all-event flowerpot-only/wedding-wreath exception verified in reviewed excerpts"
+          "observation": "Previous summary was not backed by a recorded page number or exact quotation. Retracted. No conclusion about absence or presence of flower/wreath policy in the entire PDF.",
+          "accessAttemptedAt": "2026-11-09",
+          "accessResult": "HTTP 502 Bad Gateway (web reader)",
+          "documentFullTextRead": false,
+          "pageNumberVerified": null,
+          "exactQuoteVerified": null,
+          "documentYearVerified": null,
+          "documentTitleVerified": false,
+          "evidenceLevel": "URL/filename only; actual PDF pages and full body not verified",
+          "maySupportVenueRule": false
         },
         {
           "url": "https://www.kintex.com/download/formatModal/3.%ED%99%94%EC%83%81%EC%83%81%EB%8B%B4%EC%8B%A4%EC%9D%B4%EC%9A%A9%EC%95%88%EB%82%B4.pdf",
           "type": "KINTEX official video meeting room guide",
           "sourceUpdatedAt": null,
           "checkedAt": "2026-11-09",
-          "observation": "Room-specific item-inbound consultation and prohibited goods guidance; does not establish wedding/exhibition flower policies"
+          "observation": "Previous summary was not backed by a recorded page number or exact quotation. Retracted. No conclusion about absence or presence of flower/wreath policy in the entire PDF.",
+          "accessAttemptedAt": "2026-11-09",
+          "accessResult": "HTTP 502 Bad Gateway (web reader)",
+          "documentFullTextRead": false,
+          "pageNumberVerified": null,
+          "exactQuoteVerified": null,
+          "documentYearVerified": null,
+          "documentTitleVerified": false,
+          "evidenceLevel": "URL/filename only; actual PDF pages and full body not verified",
+          "maySupportVenueRule": false
         }
       ],
-      "otherOrganizerEvidence": [
-        {
-          "url": "https://www.kes.org/bbs/down.asp?id=kor_etc&no=1384",
-          "type": "separate exhibition organizer document",
-          "sourceUpdatedAt": null,
-          "observation": "For that event, large wreaths and large potted plants prohibited inside exhibition hall; event-specific, not KINTEX-wide",
-          "scope": "not facility-wide confirmation"
-        }
-      ],
+      "otherOrganizerEvidence": [],
       "officialCurrentRuleConfirmed": false,
       "applicabilityUnverified": [
         "wedding hall identity",
@@ -67,7 +77,30 @@
         "All KINTEX weddings allow wreaths",
         "Venue-wide present regulation confirmed",
         "A specific event will accept this order"
-      ]
+      ],
+      "unrelatedEventReferences": [
+        {
+          "url": "https://www.kes.org/bbs/down.asp?id=kor_etc&no=1384",
+          "type": "separate exhibition organizer document",
+          "sourceUpdatedAt": null,
+          "observation": "Indexed PDF excerpt states prohibition of large wreaths and large potted plants; KES 2023 venue independently confirmed as COEX A,B halls, not KINTEX. Remove from KINTEX official/venue verification evidence.",
+          "scope": "COEX event-specific rule, NOT KINTEX evidence",
+          "accessAttemptedAt": "2026-11-09",
+          "accessResult": "HTTP 403 Forbidden direct open; indexed search excerpts available",
+          "documentFullTextRead": false,
+          "exactQuoteFromIndexedExcerpt": "전시장 내에는 전시 진행 및 참관에 방해가 될 수 있는 대형 화환 및 대형 화분을 반입할 수 없습니다.",
+          "quoteEvidenceLevel": "indexed search excerpt only; exact PDF page number not verified",
+          "pageNumberVerified": null,
+          "eventName": "KES 2023 (제54회 한국전자전)",
+          "eventYear": 2023,
+          "eventDates": "2023-10-24 to 2023-10-27",
+          "eventVenue": "COEX A,B홀, 서울 강남구",
+          "eventVenueEvidenceUrl": "https://www.kes.org/kor/intro/history.asp",
+          "eventVenueCrosscheckUrl": "https://www.coex.co.kr/exhibitions/%ED%95%9C%EA%B5%AD%EC%A0%84%EC%9E%90%EC%A0%84-5/",
+          "kintexRelated": false
+        }
+      ],
+      "officialDocumentAbsenceConclusionSupported": false
     },
     {
       "name": "인천 파티움로이",
@@ -106,7 +139,17 @@
       ]
     }
   ],
-  "decision": "No official current confirmation of either exact seller-reported rule was found in accessible official venue materials. Treat as seller-reported/current-unverified; no new region-wide rules, no publication as guaranteed current venue policy.",
+  "decision": "Seller notice remains seller-reported/current-unverified. KINTEX PDF URLs returned 502, with no verified title/year/page/quotation, so no document-wide absence claim. KES 2023 event took place at COEX, not KINTEX; indexed prohibition excerpt is unrelated to KINTEX. No official current rule for either named venue established.",
   "noOutreach": true,
-  "noDeployment": true
+  "noDeployment": true,
+  "auditCorrection": {
+    "checkedAt": "2026-11-09",
+    "reason": "Supervisor requested reproducible page-level evidence; PDF direct reads failed, and KES venue was incorrectly associated with KINTEX.",
+    "claimWithdrawn": [
+      "KINTEX official manuals were substantively reviewed for flower policy",
+      "KES 2023 flower prohibition is KINTEX supporting evidence",
+      "No KINTEX-wide rule exists because no passage was found in full manuals"
+    ],
+    "sourceQualityRule": "If PDF full body is not accessible, record HTTP error and indexed excerpt separately; no page/title/year/quote invention and no absence inference. Event organizer rules must be venue-checked before being used as venue evidence."
+  }
 }
