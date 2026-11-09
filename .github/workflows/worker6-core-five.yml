@@ -7,6 +7,7 @@ on:
       - v5/purpose_render.py
       - tests/test_worker6_page_type.py
       - scripts/worker6_core_five_preview.py
+      - tests/test_worker6_core_roles.py
       - sites/promotion-gift-plants/direct-source-access-audit-20261109.json
       - tests/test_worker6_evidence_sections.py
       - .github/workflows/worker6-core-five.yml
@@ -24,7 +25,7 @@ jobs:
           python-version: '3.12'
       - name: Evidence and section contract regression
         run: |
-          python -m unittest tests.test_worker6_evidence_sections tests.test_worker6_section_contract tests.test_worker6_page_type -v
+          python -m unittest tests.test_worker6_evidence_sections tests.test_worker6_section_contract tests.test_worker6_page_type tests.test_worker6_core_roles -v
       - name: Prepare five pages and V5.1 plan check
         run: |
           python scripts/worker6_core_five_preview.py
