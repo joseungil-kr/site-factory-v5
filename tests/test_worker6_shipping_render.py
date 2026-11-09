@@ -9,7 +9,7 @@ class SellerShippingContract(unittest.TestCase):
   x=lookup('경기도','가평군','설악면')
   self.assertEqual(x['state'],'overlap-unknown-priority')
   self.assertEqual({r['extraKRW'] for r in x['candidates']},{10000,20000})
-  self.assertIn('우선 적용',evidence_section(x)['paragraph'])
+  self.assertIn('최종 적용 요금',evidence_section(x)['paragraph'])
  def test_unlisted_is_not_free(self):
   x=lookup('전라남도','강진군','대구면')
   self.assertEqual(x['state'],'jurisdiction-unresolved')
@@ -23,7 +23,7 @@ class SellerShippingContract(unittest.TestCase):
  def test_actual_unlisted_row_with_resolved_province(self):
   x=lookup('경기도','파주시','문산읍')
   self.assertEqual(x['state'],'not-listed-unknown')
-  self.assertIn('미기재는 무료배송을 의미하지 않습니다',evidence_section(x)['paragraph'])
+  self.assertIn('무료배송으로 확정하지 않습니다',evidence_section(x)['paragraph'])
  def test_unknown_province(self):
   x=lookup('전남광주통합특별시','강진군','마량면')
   self.assertEqual(x['state'],'jurisdiction-unresolved')
