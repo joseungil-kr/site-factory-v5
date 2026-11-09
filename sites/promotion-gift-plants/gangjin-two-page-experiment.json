@@ -1,0 +1,74 @@
+{
+  "version": 1,
+  "checkedOn": "2026-11-09",
+  "sources": {
+    "administration": "https://www.law.go.kr/LSW/ordinInfoP.do?ordinSeq=789575",
+    "delivery": "https://fwith.co.kr/shop/item.php?it_id=A012",
+    "education": "https://www.jne.go.kr/upload/jinro/na/bbs_394/ntt_5169460/doc_4090afe8-9e5e-4996-ac73-ca5c9b71ab401772a5121b02801.pdf"
+  },
+  "cautions": [
+    "Administrative office address is not recipient delivery address",
+    "Facility listing is not delivery coverage",
+    "Only Maryang-myeon appears explicitly in Gangjin surcharge row; no zero-fee inference"
+  ],
+  "pages": [
+    {
+      "region": "전라남도 강진군 대구면",
+      "id": "w6-03877",
+      "purpose": "promotion",
+      "productSkus": [
+        "D144",
+        "D156"
+      ],
+      "evidenceSections": [
+        {
+          "heading": "대구면 수령 주소를 적을 때",
+          "paragraph": "대구면은 강진군의 읍·면 소재지 조례에 대구면 수동길 18로 면사무소 소재지가 기재되어 있습니다. 이 주소는 행정기관의 소재지를 확인하는 참고 정보이며, 축하화분을 받는 사람의 실제 주소는 아닙니다. 수령지가 대구면의 어느 도로·건물인지 확인하고 건물명, 담당자, 연락처를 별도로 적어야 합니다.",
+          "sourceUrl": "https://www.law.go.kr/LSW/ordinInfoP.do?ordinSeq=789575",
+          "checkedOn": "2026-11-09"
+        },
+        {
+          "heading": "대구면의 수령 장소를 혼동하지 않도록",
+          "paragraph": "전라남도교육청 진로체험처 자료에는 대구면의 한국민화뮤지엄, 비취에물들다, 탐진청자가 기재돼 있습니다. 이 목록은 해당 시설이 꽃배달을 받거나 특정 배송시간에 열려 있다는 뜻이 아닙니다. 행사 장소가 해당 시설이라고 전달받았다면 정확한 행사장 이름과 실제 수령 담당자를 주문 전에 확인해야 합니다.",
+          "sourceUrl": "https://www.jne.go.kr/upload/jinro/na/bbs_394/ntt_5169460/doc_4090afe8-9e5e-4996-ac73-ca5c9b71ab401772a5121b02801.pdf",
+          "checkedOn": "2026-11-09"
+        },
+        {
+          "heading": "대구면 배송비 확인",
+          "paragraph": "꽃이랑 공개 상품 상세의 추가 배송비 표에서 강진군에 별도로 명시된 읍면은 마량면입니다. 대구면의 개별 추가요금이 표에 적혀 있지 않더라도 무료배송이나 당일 배송을 보장하는 근거는 아닙니다. D144 또는 D156 상품번호와 대구면의 정확한 배송지를 전달해 최종 배송비와 수령 가능 날짜를 확인하세요.",
+          "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=A012",
+          "checkedOn": "2026-11-09"
+        }
+      ]
+    },
+    {
+      "region": "전라남도 강진군 성전면",
+      "id": "w6-03881",
+      "purpose": "transfer",
+      "productSkus": [
+        "D156",
+        "D144"
+      ],
+      "evidenceSections": [
+        {
+          "heading": "성전면 새 근무지의 주소 확인",
+          "paragraph": "강진군 읍면사무소 소재지 조례에는 성전면사무소 소재지가 강진군 성전면 예향로 16으로 기재되어 있습니다. 면사무소의 주소를 수령인의 직장 주소로 대신 입력하면 안 됩니다. 영전·전보 선물을 보낼 때는 발령받은 기관의 정확한 건물과 부서, 실제 수령일을 따로 확인해야 합니다.",
+          "sourceUrl": "https://www.law.go.kr/LSW/ordinInfoP.do?ordinSeq=789575",
+          "checkedOn": "2026-11-09"
+        },
+        {
+          "heading": "성전면 행사·기관명 확인",
+          "paragraph": "전라남도교육청 진로체험처 목록은 성전면에 안전교육종합체험관, 전라남도환경산업진흥원, 이한영차 문화원 등 여러 시설을 소개합니다. 같은 성전면 안에서도 수령 기관이 서로 다를 수 있으므로 시설 이름만 듣고 배송지를 정하지 말고 정확한 기관명과 수령 부서·층수를 확인하세요. 목록은 해당 기관의 화분 수령 가능 여부를 증명하지 않습니다.",
+          "sourceUrl": "https://www.jne.go.kr/upload/jinro/na/bbs_394/ntt_5169460/doc_4090afe8-9e5e-4996-ac73-ca5c9b71ab401772a5121b02801.pdf",
+          "checkedOn": "2026-11-09"
+        },
+        {
+          "heading": "성전면 배송비와 발령 일정",
+          "paragraph": "꽃이랑 공개 상품 상세에는 강진군 마량면의 추가 배송비가 따로 표시돼 있습니다. 성전면의 개별 요금이 명시되지 않았다는 이유로 배송비를 0원으로 확정할 수 없습니다. 영전·전보는 발령일과 실제 출근일이 다를 수 있으니 D156 또는 D144 상품번호, 성전면 상세 주소, 수령 가능한 날짜를 함께 상담해 주세요.",
+          "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=A012",
+          "checkedOn": "2026-11-09"
+        }
+      ]
+    }
+  ]
+}
