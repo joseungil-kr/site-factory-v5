@@ -1,0 +1,112 @@
+{
+  "checkedAt": "2026-11-09",
+  "scope": "Three localities only: Gyeonggi Gapyeong Seorak-myeon, Pocheon Idong-myeon, Paju Jeokseong-myeon. Public source reads only; no outreach, personal data, production or regeneration.",
+  "facts": [
+    {
+      "region": "경기도 가평군 설악면",
+      "kind": "seller-fee-overlap",
+      "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=D144",
+      "sourceUpdatedAt": null,
+      "sourcePublishedAt": null,
+      "sourceObservation": "배송정보 > 추가 배송비 안내, 경기 10,000원 가평군·연천군·포천시 (-), 경기 20,000원 가평군 설악면",
+      "rawTableRows": [
+        {
+          "internalLedgerRow": 5,
+          "display": "경기 | 10,000원 | 가평군, 연천군, 포천시 | -",
+          "extraKRW": 10000
+        },
+        {
+          "internalLedgerRow": 8,
+          "display": "20,000원 | 가평군 | 설악면",
+          "extraKRW": 20000
+        }
+      ],
+      "verified": "Two simultaneously displayed entries; final applicable fee not established",
+      "priorityRuleFound": false,
+      "sourceTextForPriority": "No precedence or additive rule found in inspected product-page shipping section; absence of explanation is limited to this page",
+      "currentness": "Displayed when checked, effective date and applicability to particular SKU/order unknown",
+      "customerDecision": "Do not choose 10k/20k or add them. Provide SKU, full address and desired time and ask which row applies and what final surcharge is.",
+      "allowedClaims": [
+        "Seller page displays both 10,000 and 20,000 won entries",
+        "Final surcharge requires phone consultation"
+      ],
+      "forbiddenClaims": [
+        "20,000 won is guaranteed final fee",
+        "higher/lower row automatically wins",
+        "both fees accumulate",
+        "local branch inventory/arrival confirmed"
+      ]
+    },
+    {
+      "region": "경기도 포천시 이동면",
+      "kind": "seller-fee-overlap",
+      "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=D144",
+      "sourceUpdatedAt": null,
+      "sourcePublishedAt": null,
+      "sourceObservation": "배송정보 > 추가 배송비 안내, 경기 10,000원 가평군·연천군·포천시 (-), 경기 20,000원 포천시 이동면",
+      "rawTableRows": [
+        {
+          "internalLedgerRow": 5,
+          "display": "경기 | 10,000원 | 가평군, 연천군, 포천시 | -",
+          "extraKRW": 10000
+        },
+        {
+          "internalLedgerRow": 9,
+          "display": "20,000원 | 포천시 | 이동면",
+          "extraKRW": 20000
+        }
+      ],
+      "verified": "Two simultaneously displayed entries; final applicable fee not established",
+      "priorityRuleFound": false,
+      "sourceTextForPriority": "No precedence or additive rule found in inspected product-page shipping section; absence of explanation is limited to this page",
+      "currentness": "Displayed when checked, effective date and applicability to particular SKU/order unknown",
+      "customerDecision": "Provide product code and precise 이동면 destination; ask whether upper 포천시 row or 이동면 row applies and what final additional fee is.",
+      "allowedClaims": [
+        "Seller page displays two overlapping fee entries",
+        "Final additional fee is consulted by telephone"
+      ],
+      "forbiddenClaims": [
+        "20,000 won final surcharge confirmed",
+        "specific dispatch branch exists at stated address",
+        "same-day arrival for an individual order guaranteed"
+      ]
+    },
+    {
+      "region": "경기도 파주시 적성면",
+      "kind": "official-administrative-to-legal-ri",
+      "sourceUrl": "https://dong.paju.go.kr/dong/dong_01/dong_sub08/dong_sub08_02.jsp",
+      "sourceUpdatedAt": null,
+      "sourceAsOf": "2026-09-16 (general status table; jurisdiction table has no separately stated as-of date)",
+      "sourceObservation": "관할구역 현황: 마지1리 | 마지리; 마지2리 | 마지리; 마지3리 | 마지리",
+      "rawTableRows": [
+        {
+          "display": "마지1리 | 마지리"
+        },
+        {
+          "display": "마지2리 | 마지리"
+        },
+        {
+          "display": "마지3리 | 마지리"
+        }
+      ],
+      "verified": "Administrative ri and legal ri crosswalk explicitly shown in municipality page",
+      "currentness": "Page general status is dated 2026-09-16; crosswalk's independent effective date not stated, recheck before using as current address validation",
+      "contradictionsFound": false,
+      "customerDecision": "If customer says 마지1리/2리/3리, ask for actual road name, building number and detailed address or legal parcel address; use 마지리 as a clarification aid, not a fabricated delivery address.",
+      "allowedClaims": [
+        "Municipal source maps 마지1/2/3리 to 법정 마지리",
+        "A road/building number is still needed to identify the delivery destination"
+      ],
+      "forbiddenClaims": [
+        "All 마지리 addresses deliverable to specific hour",
+        "administrative ri alone identifies building",
+        "military housing is valid delivery venue",
+        "branch address or delivery history verified"
+      ]
+    }
+  ],
+  "crossSourcePolicy": "Operator-confirmed nationwide local dispatch and possible same-day service remains unchanged. Phone orders 08:00–23:00; delivery possible 06:00–20:00 subject to local florist hours. Individual arrival, cutoff, inventory and surcharge require 1844-0644 consultation.",
+  "newEvidenceAssessment": "The overlap of fee entries and the administrative/legal ri crosswalk are directly useful for preparing different consultation questions. No new seller priority rule or region-specific arrival/inventory evidence found. These facts do not establish distinct independent 5,302 regional pages.",
+  "nextInvestigationOnlyIfNewSource": "Seller-authored explicit fee precedence or order quote; authoritative current road/building-number validation or real documented ambiguous address (without retaining personal address). Do not repeatedly query the same unchanged product table.",
+  "publicationApproved": false
+}
