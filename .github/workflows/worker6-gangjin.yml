@@ -3,6 +3,7 @@ on:
   push:
     branches: [site/v51-promotion-gift-plants-20261109]
     paths:
+      - v5/purpose_render.py
       - scripts/worker6_gangjin_experiment.py
       - sites/promotion-gift-plants/gangjin-two-page-experiment.json
       - .github/workflows/worker6-gangjin.yml
