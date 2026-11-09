@@ -25,3 +25,12 @@
 - 실제 주문 주소 혼동, 현행 공식 주소 대응, 검증된 지역별 상품·배송비 예외 등 **새로운 고객 구매결정 근거**가 확보될 때만 지역 고유 모듈을 추가한다.
 - 49% 게이트 완화, 임의 문단 삭제, 동의어 치환, 무관 시설·지명 나열, 추정 지점·반입규칙·실적 작성 금지.
 - 개인정보를 포함한 주문 사례를 수집·저장하지 않는다.
+
+## 행사장 원문근거 필수 계약 (2026-11-09 보강)
+- 외부 원문 필수필드: `readMode`(`full-text`/`excerpt`/`metadata`/`unavailable`), `exactQuote`, `pageOrSection`, `documentVenue`, `eventYear`, `targetVenue`, `checkedAt`, `sourceUpdatedAt`. 원문에 없는 값은 null. 확인일과 원문 수정일은 분리한다.
+- PDF 접근 실패는 unavailable, 검색 발췌만 있으면 excerpt, URL/파일명만 있으면 metadata. 미열람 원문의 제목·연도·쪽번호·인용을 창작하지 않으며, 검색 발췌에 없다는 이유로 문서 전체에 규정이 없다고 결론 내리지 않는다.
+- 현행 시설 확정주장 연결 조건: full-text, 정확 인용, 쪽/절, 행사장 일치, 행사연도, 독립적으로 확인된 현행 적용범위. 장소가 다르거나 판매처 공지만 있으면 차단. 다른 행사 규정 전용 금지.
+- 기존 원장도 `scripts/worker6_venue_evidence_gate.py`의 `normalize()`로 최소 정규화한다. 불명확한 자료를 full-text로 승격하지 않는다. `may_make_confirmed_customer_claim()`은 구조적 오용 방지일 뿐 외부 사실 확인이 아니다.
+- 실패 fixture: 킨텍스 PDF HTTP 502 미열람, KES 2023 코엑스→킨텍스 오연결, 게시일 없는 판매처 공지, 검색 발췌. 정상 fixture는 **가상 구조검사 통과**이지 시설 실제 규정 검증이 아니다.
+- 코엑스 KES 2023 개최정보는 코엑스 공식 행사페이지에서 감독이 확인. KES history.asp는 감독 브라우저 404였으므로 도구별 접근 결과를 구분한다. 꽃이랑 공지 두 문구는 seller-reported/current-unverified 유지.
+- 고객에게는 현재 시설 담당자·행사 주최자에게 확인할 질문으로만 안내한다. 전국 목표·운영조건·비공개 상태 유지.
