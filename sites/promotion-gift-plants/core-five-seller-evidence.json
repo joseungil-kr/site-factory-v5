@@ -1,6 +1,6 @@
 {
   "checkedAt": "2026-11-09",
-  "verificationMethod": "D144 worker direct seller page; D156 worker indexed seller text plus supervisor direct seller page at approx 2026-11-09 03:23 UTC. Original publication/crawl time unknown. D026 and D152 supervisor directly verified around 03:35–03:36 UTC; worker direct access cache miss.",
+  "verificationMethod": "D144 worker direct seller page; D156 worker indexed seller text plus supervisor direct seller page at approx 2026-11-09 03:23 UTC. Original publication/crawl time unknown. D026 and D152 supervisor directly verified around 03:35–03:36 UTC; worker direct access cache miss. E008 and F055 direct official product HTML verified 2026-11-09 by worker.",
   "sources": [
     {
       "sku": "D144",
@@ -112,6 +112,50 @@
       "workerDirectOriginalHtmlVerified": false,
       "workerAccess": "cache-miss",
       "verificationStatus": "supervisor-direct-confirmed"
+    },
+    {
+      "sku": "E008",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=E008",
+      "name": "일향금",
+      "priceKRW": 110000,
+      "category": "동양란",
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "observationCheckedAt": "2026-11-09",
+      "directOriginalHtmlVerified": true,
+      "verificationStatus": "worker-direct-public-seller-html",
+      "sourceMethod": "web reader direct official seller product HTML",
+      "unverified": [
+        "stock",
+        "height",
+        "dimensions",
+        "image rights",
+        "SKU-specific care",
+        "individual delivery"
+      ]
+    },
+    {
+      "sku": "F055",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=F055",
+      "name": "연핑크 호접란",
+      "priceKRW": 60000,
+      "category": "서양란",
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "observationCheckedAt": "2026-11-09",
+      "directOriginalHtmlVerified": true,
+      "verificationStatus": "worker-direct-public-seller-html",
+      "sourceMethod": "web reader direct official seller product HTML",
+      "unverified": [
+        "stock",
+        "height",
+        "dimensions",
+        "image rights",
+        "SKU-specific care",
+        "individual delivery"
+      ]
     }
   ],
   "delivery": {
