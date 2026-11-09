@@ -1,0 +1,63 @@
+{
+  "checkedOn": "2026-11-09",
+  "method": "Direct publicly accessible seller product HTML opened through web reader",
+  "catalogCategoryEvidence": "fwith.co.kr product pages explicitly identify 동양란 and 서양란; category listing URL /shop/list.php?ca_id=50 returned cache miss, therefore no claim of complete category inventory",
+  "candidates": [
+    {
+      "sku": "E008",
+      "name": "일향금",
+      "category": "동양란",
+      "priceKRW": 110000,
+      "url": "https://fwith.co.kr/shop/item.php?it_id=E008",
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "directFullBody": true,
+      "sourceRef": "turn928362search2",
+      "purposeFit": "승진·영전 시 난류를 원하는 고객에게 제시할 비교 후보. 실제 품종 크기·화분 높이·재고·지역별 도착·사진권리 미확인."
+    },
+    {
+      "sku": "F055",
+      "name": "연핑크 호접란",
+      "category": "서양란",
+      "priceKRW": 60000,
+      "url": "https://fwith.co.kr/shop/item.php?it_id=F055",
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "directFullBody": true,
+      "sourceRef": "turn912745search3",
+      "purposeFit": "승진·영전 시 서양란 후보를 원하는 고객에게 제시. 색상은 상품명 표기만 인정, 실제 상품 형태·관리·재고 미확인."
+    }
+  ],
+  "excluded": [
+    {
+      "sku": "B214",
+      "name": "장례식장 근조 서양란(서양란)",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=B214",
+      "reason": "Seller category 근조화환; not automatically appropriate for 승진/영전 even though orchid term appears."
+    },
+    {
+      "sku": "B103",
+      "name": "장례식장 근조 서양란(화이트)",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=B103",
+      "reason": "Funeral category and naming; do not substitute as promotion orchid."
+    },
+    {
+      "sku": "A119",
+      "name": "파반느",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=A119",
+      "reason": "꽃바구니, additional options 2; not orchid and not automatically equivalent to zero-option plant."
+    }
+  ],
+  "unverified": [
+    "complete orchid category stock",
+    "live inventory",
+    "actual plant dimensions",
+    "care instructions per SKU",
+    "image rights",
+    "SKU-by-region delivery promise",
+    "final shipping fee"
+  ],
+  "usage": "Only exact own seller product links, displayed prices and option counts may be used. Purpose fit is editorial suggestion, not seller's promised recommendation."
+}
