@@ -187,7 +187,10 @@ def faq_markup(page):
 def article_body(page):
     return ('<article class="article-content" data-content-id="'+h(page['id'])+'">'+''.join(
         f'<section class="document-section" id="section-{i}"><span class="section-index">{i:02d}</span>'
-        f'<h2>{h(s["heading"])}</h2><p>{h(s["paragraph"])}</p></section>'
+        f'<h2>{h(s["heading"])}</h2><p>{h(s["paragraph"])}</p>'
+        +(f'<p class="source-reference"><a href="{h(s["sourceUrl"])}" target="_blank" rel="noopener noreferrer">참고 원문 보기</a></p>'
+          if isinstance(s.get('sourceUrl'),str) and s['sourceUrl'].startswith('https://') else '')
+        +'</section>'
         for i,s in enumerate(page['sections'],1))+'</article>')
 
 
