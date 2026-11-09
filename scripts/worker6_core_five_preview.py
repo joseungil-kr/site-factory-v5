@@ -263,6 +263,14 @@ def generate_inputs(source,base_spec,site_input,require_orchids=True,operator_so
         day['faqs']=[
           {'q':'늦은 밤에 주문하면 바로 받을 수 있나요?','a':'전화 주문 가능 시간과 지역 꽃집의 배송 가능 시간대는 다릅니다. 23시 전화 접수는 당일 도착 보장이 아닙니다.'},
           {'q':'전화할 때 무엇을 알려줘야 하나요?','a':'상품번호·수량·상세 배송지·희망 시각을 알려주고 마감·재고·최종 추가요금을 확인하세요.'}]
+    # Preserve seller-posted return/exchange source on every purpose after
+    # replacing purpose-specific sections, never interpret it as statutory law.
+    for purpose in ('home','promotion','transfer','congratulations','sameDayInquiry'):
+        pool=spec['purposePools'][purpose]
+        if not any(x.get('sourceUrl')==returns_url for x in pool['sections']):
+            pool['sections'].append({'slot':'order','role':'required',
+                'heading':'결제 전 교환·환불 안내 확인',
+                'paragraph':returns_copy,'sourceUrl':returns_url})
     # Append the SAME operational policy to every page, without purpose-specific rewording.
     for purpose in ('home','promotion','transfer','congratulations','sameDayInquiry'):
         pool=spec['purposePools'][purpose]
