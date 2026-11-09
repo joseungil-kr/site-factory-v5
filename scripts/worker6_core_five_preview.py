@@ -29,7 +29,7 @@ purposes=[('home','전국 승진·영전·축하화분 안내','승진·영전·
  ('sameDayInquiry','당일 배송 문의 안내','당일 축하화분 주문 가능 여부 확인')]
 pages=[]
 for i,(purpose,region,title) in enumerate(purposes,1):
-    pages.append({'id':f'w6-core-{i:02d}','number':i,'region':region,'purpose':purpose,
+    pages.append({'id':f'w6-core-{i:02d}','number':i,'region':region,'pageType':'purpose-guide','purpose':purpose,
       'title':title,'topic':purpose,'intro':'상품 선택과 수령 정보를 비교합니다.',
       'sections':[{'heading':'상품 선택','paragraph':'상품 상세를 확인합니다.'},{'heading':'주문 순서','paragraph':'배송지와 수령일을 확인합니다.'}],
       'productSkus':product_ids if purpose in ('home','promotion','sameDayInquiry') else list(reversed(product_ids)),
