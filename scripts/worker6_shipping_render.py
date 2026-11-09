@@ -48,5 +48,5 @@ def evidence_section(result):
     else:
         description=f"판매처의 확인된 추가 배송비 표에서 {result['region']}의 정확한 읍면동 행을 찾지 못했습니다. 미기재는 무료배송을 의미하지 않습니다."
     return {'heading':'배송비 표에 표시된 범위',
-      'paragraph':description+' 최종 배송비와 실제 배송 가능 여부는 확인되지 않았습니다. 상품번호와 상세 주소를 전달해 주문 전 확인하세요. 출처: '+result['sourceUrl']+' (확인일 '+result['checkedAt']+').',
+      'paragraph':description+' 사업자 운영확인상 지역별 지점 발송으로 전국 당일배송 서비스가 가능합니다. 다만 해당 주문의 도착 가능 시각·마감·재고와 최종 추가요금은 전화 1844-0644로 확인합니다. 출처: '+result['sourceUrl']+' (확인일 '+result['checkedAt']+').',
       'sourceUrl':result['sourceUrl'],'checkedOn':result['checkedAt']}
