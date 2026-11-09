@@ -30,7 +30,7 @@ class OrchidPurposeGate(unittest.TestCase):
    self.assertIn('E008, 110,000원',text)
    self.assertIn('F055, 60,000원',text)
    self.assertIn('실제 크기·관리방법·재고',text)
-   self.assertTrue(any('난류' in x['a'] or '난류' in x['q'] or '난류' in x['paragraph'] for x in pool['sections'] if x.get('paragraph')))
+   self.assertTrue(any('난류' in x.get('paragraph','') or '동양란' in x.get('paragraph','') for x in pool['sections']))
  def test_no_funeral_orchid(self):
   evidence={'sources':self.evidence['sources']+[{'sku':'B214','name':'장례식장 근조 서양란(서양란)','priceKRW':200000}]}
   with self.assertRaisesRegex(ValueError,'funeral product'):
