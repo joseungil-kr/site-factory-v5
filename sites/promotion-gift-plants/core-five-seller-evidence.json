@@ -1,6 +1,6 @@
 {
   "checkedAt": "2026-11-09",
-  "verificationMethod": "D144 worker direct seller page; D156 worker indexed seller text plus supervisor direct seller page at approx 2026-11-09 03:23 UTC. Original publication/crawl time unknown.",
+  "verificationMethod": "D144 worker direct seller page; D156 worker indexed seller text plus supervisor direct seller page at approx 2026-11-09 03:23 UTC. Original publication/crawl time unknown. D026 and D152 supervisor directly verified around 03:35–03:36 UTC; worker direct access cache miss.",
   "sources": [
     {
       "sku": "D144",
@@ -50,6 +50,68 @@
         "evidenceOrigin": "supervisor-reported direct observation, not worker's direct fetch"
       },
       "workerDirectOriginalHtmlVerified": false
+    },
+    {
+      "sku": "D026",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=D026",
+      "name": "아로우카리아 대형",
+      "priceKRW": 90000,
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "observationCheckedAt": "2026-11-09 UTC03:35–03:36 approx",
+      "supervisorDirectVerification": {
+        "method": "supervisor cloud browser directly opened original seller product",
+        "atApprox": "2026-11-09T03:35:00Z",
+        "facts": [
+          "product name",
+          "price",
+          "zero choice and additional options",
+          "shipping paid at order"
+        ],
+        "notVerified": [
+          "height",
+          "dimensions",
+          "inventory",
+          "image rights",
+          "delivery coverage",
+          "same-day delivery"
+        ]
+      },
+      "workerDirectOriginalHtmlVerified": false,
+      "workerAccess": "cache-miss",
+      "verificationStatus": "supervisor-direct-confirmed"
+    },
+    {
+      "sku": "D152",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=D152",
+      "name": "레드카네이션 화분",
+      "priceKRW": 50000,
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "observationCheckedAt": "2026-11-09 UTC03:35–03:36 approx",
+      "supervisorDirectVerification": {
+        "method": "supervisor cloud browser directly opened original seller product",
+        "atApprox": "2026-11-09T03:36:00Z",
+        "facts": [
+          "product name",
+          "price",
+          "zero choice and additional options",
+          "shipping paid at order"
+        ],
+        "notVerified": [
+          "height",
+          "dimensions",
+          "inventory",
+          "image rights",
+          "delivery coverage",
+          "same-day delivery"
+        ]
+      },
+      "workerDirectOriginalHtmlVerified": false,
+      "workerAccess": "cache-miss",
+      "verificationStatus": "supervisor-direct-confirmed"
     }
   ],
   "delivery": {
