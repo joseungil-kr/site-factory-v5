@@ -100,6 +100,19 @@ for purpose in ('promotion','transfer','congratulations','sameDayInquiry'):
            'congratulations':'축하 사유와 받는 분의 선호를 기준으로 선택하세요.',
            'sameDayInquiry':'당일 배송 가능 여부는 상품번호와 상세 주소로 판매처에 확인하세요.'}[purpose]))
     pool['faqs'][0]['a']='배송 가능 여부와 도착 시간은 판매처에 확인해야 합니다.'
+# Seller-posted returns guidance is a general checkout consideration, not
+# proof of locality delivery and not a legal determination.
+returns_url='https://fwith.co.kr/data/common/flower379/de_change_content.jpg'
+returns_copy=('판매처 게시 안내에는 불량·파손·주문과 전혀 다른 상품의 환불 가능, '
+ '주소 오기·수취 거부 시 교환·환불 제한, 배송 당일 문제 신고, '
+ '결제 후 배송 불가·재고 없음 시 전액 환불이 표시되어 있습니다. '
+ '계절·지역 소재 차이와 배송완료 당일 교환·왕복배송료 관련 조건도 있으므로 '
+ '결제 전에 원문을 확인하세요. 이는 판매처 게시 안내의 요약이며 법정 권리나 '
+ '특정 지역 배송 가능 여부를 판단한 내용이 아닙니다.')
+for purpose in ('home','promotion','transfer','congratulations','sameDayInquiry'):
+    pool=spec['purposePools'][purpose]
+    pool['sections'].append({'slot':'order','role':'required','heading':'결제 전 교환·환불 안내 확인',
+                              'paragraph':returns_copy,'sourceUrl':returns_url})
 spec['pageTypes']=['homepage','purpose-guide']
 spec['targetPageCount']=5
 spec['publishPolicy']['mode']='preview'
