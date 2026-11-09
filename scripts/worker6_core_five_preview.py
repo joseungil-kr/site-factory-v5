@@ -13,7 +13,7 @@ def product_summary(items):
             'skus':[p['sku'] for p in ordered],
             'priceBands':sorted({p['priceKRW']//10000 for p in ordered})}
 
-def generate_inputs(source,base_spec,site_input):
+def generate_inputs(source,base_spec,site_input,require_orchids=True):
     spec=deepcopy(base_spec)
     product_ids=[x['sku'] for x in source['sources']]
     if not product_ids or len(set(product_ids))!=len(product_ids):
@@ -115,10 +115,11 @@ def generate_inputs(source,base_spec,site_input):
     # seller-verified oriental and western orchids, not funeral products.
     seller_by_sku={x['sku']:x for x in source['sources']}
     orchid_evidence={'E008':('일향금','동양란'),'F055':('연핑크 호접란','서양란')}
-    for orchid_sku,(expected_name,expected_category) in orchid_evidence.items():
-        x=seller_by_sku.get(orchid_sku)
-        if not x or x.get('name')!=expected_name or x.get('category')!=expected_category:
-            raise ValueError('promotion/transfer orchid evidence missing: '+orchid_sku)
+    if require_orchids:
+        for orchid_sku,(expected_name,expected_category) in orchid_evidence.items():
+            x=seller_by_sku.get(orchid_sku)
+            if not x or x.get('name')!=expected_name or x.get('category')!=expected_category:
+                raise ValueError('promotion/transfer orchid evidence missing: '+orchid_sku)
     if any(x['name'].startswith('장례식장 근조') for x in source['sources']):
         raise ValueError('funeral product must not be presented as promotion orchid')
     orchid_copy=('난류를 고려한다면 동양란 일향금 E008 110,000원과 '
@@ -126,7 +127,7 @@ def generate_inputs(source,base_spec,site_input):
                  '이는 꽃이랑 상품 상세에서 확인된 이름·가격·카테고리이며 '
                  '품종별 실제 크기·관리방법·재고·배송가능 시간은 확인되지 않았습니다. '
                  '일반 관엽화분과 난류 중 받는 분의 선호, 배치 장소와 예산을 기준으로 선택하세요.')
-    for purpose in ('promotion','transfer'):
+    for purpose in (('promotion','transfer') if require_orchids else ()):
         pool=spec['purposePools'][purpose]
         pool['sections'].insert(1,{'slot':'choice','role':'required',
              'heading':'승진·영전 선물에 난류를 포함해 비교',
