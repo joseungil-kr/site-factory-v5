@@ -27,10 +27,19 @@
       "url": "https://www.yp21.go.kr/dw/contents.do?key=218",
       "type": "official township overview",
       "facts": [
-        "단월면 has 17 법정리 listed as a count",
-        "official office address is 단월면 보룡길 53"
+        "원문 상단에 법정리 17개 표시",
+        "원문 하단에 9개 리 서술",
+        "최종수정일 2022-01-05"
       ],
-      "orderUse": "Legal-ri count confirms administrative granularity but does not establish a unique address ambiguity or a flower delivery advantage; office address is not an assumed recipient."
+      "orderUse": "현행 법정리 개수로 인용하거나 지역 구매본문에 삽입 금지. 주소 식별은 고객이 제공하는 실제 도로명주소/법정리 주소를 공식 주소검색으로 개별 확인해야 함.",
+      "checkedAt": "2026-11-09",
+      "sourceUpdatedAt": "2022-01-05",
+      "observedDisplayValues": [
+        "상단: 법정리 17개 표시",
+        "하단: 유래 설명에는 9개 리 서술"
+      ],
+      "internalInconsistency": "동일 원문에서 17개 법정리와 9개 리 서술이 함께 존재하며 범위/기준 차이가 원문만으로 해소되지 않음",
+      "currentLegalRiCountVerified": false
     },
     {
       "region": "both",
@@ -52,7 +61,7 @@
       "orderUse": "Future address validation data model; no individual delivery location validated here."
     }
   ],
-  "finding": "Jeokseong has directly evidenced administrative-ri to legal-ri conversion examples; Danwol official sources found only township legal-ri count and generic address schema, not a validated specific name collision or local delivery constraint. Thus differences do not yet justify distinct full buyer-guide bodies.",
+  "finding": "적성면 마지1/2/3→법정 마지리 대응은 감독이 공식 원문에서 독립 확인. 단월면 원문은 최종수정 2022-01-05이며 상단 17개와 하단 9개 리 서술이 공존하여 현행 법정리 수 미확인. 숫자 모두 고객 본문 사용 금지. 지역별 배송 차이 근거는 여전히 없음.",
   "doNotPublish": [
     "municipal office address as recipient",
     "all legal-ri names as SEO padding",
@@ -67,5 +76,11 @@
     "seller-confirmed actual surcharge precedence when overlaps occur"
   ],
   "privacy": "Do not collect or store recipient personal addresses, names, or order examples.",
-  "publicationApproved": false
+  "publicationApproved": false,
+  "provenanceRule": {
+    "checkedAt": "검토자가 실제 확인한 날짜. sourceUpdatedAt과 구분",
+    "sourceUpdatedAt": "원문에 명시된 최종수정일, 없으면 null",
+    "conflict": "원문 내 수치·정의·범위가 충돌하면 observedDisplayValues에 각각 보존하고 verified=false; 외부 독립근거로 해소 전 본문 사용 금지",
+    "publication": "현행 여부 미확인 수치·기관 주소·법정리 목록을 구매본문에 사용하지 않음"
+  }
 }
