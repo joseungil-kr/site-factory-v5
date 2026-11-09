@@ -116,5 +116,73 @@
       "image rights",
       "delivery guarantee"
     ]
+  },
+  {
+    "sku": "E008",
+    "name": "일향금",
+    "referencePrice": 110000,
+    "priceConfirmed": true,
+    "priceEvidence": "https://fwith.co.kr/shop/item.php?it_id=E008 official seller direct HTML checked 2026-11-09",
+    "priceCheckedOn": "2026-11-09",
+    "verifiedLive": true,
+    "imageUrl": null,
+    "imageUseApproved": false,
+    "imageApprovalEvidence": null,
+    "imageApprovedFor": [],
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=E008",
+    "source": "worker direct public official seller HTML 2026-11-09",
+    "lastLiveCheckedOn": "2026-11-09",
+    "lastLiveEvidence": "direct original page text",
+    "orderOptionsObserved": {
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "regionSurchargeListed": true
+    },
+    "productCharacteristicsVerified": [
+      "동양란"
+    ],
+    "unverified": [
+      "dimensions",
+      "height",
+      "stock",
+      "care",
+      "image rights",
+      "delivery guarantee"
+    ]
+  },
+  {
+    "sku": "F055",
+    "name": "연핑크 호접란",
+    "referencePrice": 60000,
+    "priceConfirmed": true,
+    "priceEvidence": "https://fwith.co.kr/shop/item.php?it_id=F055 official seller direct HTML checked 2026-11-09",
+    "priceCheckedOn": "2026-11-09",
+    "verifiedLive": true,
+    "imageUrl": null,
+    "imageUseApproved": false,
+    "imageApprovalEvidence": null,
+    "imageApprovedFor": [],
+    "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=F055",
+    "source": "worker direct public official seller HTML 2026-11-09",
+    "lastLiveCheckedOn": "2026-11-09",
+    "lastLiveEvidence": "direct original page text",
+    "orderOptionsObserved": {
+      "choiceOptions": 0,
+      "extraOptions": 0,
+      "shippingPayment": "주문시 결제",
+      "regionSurchargeListed": true
+    },
+    "productCharacteristicsVerified": [
+      "서양란"
+    ],
+    "unverified": [
+      "dimensions",
+      "height",
+      "stock",
+      "care",
+      "image rights",
+      "delivery guarantee"
+    ]
   }
 ]
