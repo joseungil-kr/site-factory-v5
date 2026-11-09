@@ -9,7 +9,7 @@
 | 4 [후속2](https://chatgpt.com/c/6aefe651-5454-83ee-815d-b132c320d82d) | Clinicflower·clinicopen·clinicpresent / `fix/clinic-rss-full-content-20261105` / `aa3efe4b1c686512b38a0f240db5aeeac70ab394` | RSS CI와 전체 문서 편집 품질은 별개. 사이트당5302는 이전 보고 수량. 운영소스 연결 및 품질 검증 미완. 기존 사이트 수정·배포 금지. |
 | 5 [기존 작업 창구](https://chatgpt.com/c/6ae713bb-de70-83e8-9f3c-316a979aec53) | 신규 전국 군 근조화환 / `site/v51-county-funeral-ownerprivate-20261107` / `1812a4aa1f12f9104d19fbad57fedad5a1697dfe` | 내용 기준 `ceb3c53a8d804d4103cb3d244098564a7da2dfe6`. 95HTML·103파일·38화면·10표본90–93은 작업자 보고. run42442541265/42442541272/42442541305 성공과 독립 편집검수는 구분. 비공개 실제 배포·owner200/비인가401·403 미확인. 생성 규칙 개선→재생성→동일/신규 표본 검수 담당. |
 
-| 6 [현재 대화: 유일 실무 창구, 정확한 URL 미확보] | 승진·축하화분 / `site/v51-promotion-gift-plants-20261109` / 착수 기준 main `268ea32bb33b5f12a911700b3ac7220ba2779732` | 2026-11-09 사용자 직접 지시 수신. `sites/promotion-gift-plants/research-preflight.json`에 5,034 지역·5,302 목표 페이지, 목적별 풀·상품·권리·배송·승인 게이트 기록. 최신 편집 PASS 85점. 신규 공개 지시 수신, 실제 생성·QA·배포·HTTP 미완료. 기존 운영 사이트 및 군 근조화환 브랜치 수정 금지. 정확한 현재 대화 URL 확보 시 보완. |
+| 6 [유일 실무 창구](https://chatgpt.com/c/6af13332-006c-83ec-afc0-5d9fd0fc2eae) | 승진·축하화분 / `site/v51-promotion-gift-plants-20261109` / 착수 기준 main `268ea32bb33b5f12a911700b3ac7220ba2779732` | 2026-11-09 사용자 직접 지시 수신. `sites/promotion-gift-plants/research-preflight.json`에 5,034 지역·5,302 목표 페이지, 목적별 풀·상품·권리·배송·승인 게이트 기록. 최신 편집 PASS 85점. 신규 공개 지시 수신, 실제 생성·QA·배포·HTTP 미완료. 기존 운영 사이트 및 군 근조화환 브랜치 수정 금지. 현재 대화 URL 사용자 직접 제공 및 원장 반영. 입력 계약·POOL 작성 단계. |
 
 ## 배포·외부 의존
 - Todayflower: V4 RSS 배포 경로는 V5 `0ca5705aa12950da571f089b2d4ac7256111f77e`와 artifact13036248347 사용. 새 브랜치 HEAD가 배포본이라는 뜻이 아니다.
