@@ -4,6 +4,9 @@ on:
     branches: [site/v51-promotion-gift-plants-20261109]
     paths:
       - scripts/worker6_operator_three_diagnostic.py
+      - scripts/worker6_shipping_render.py
+      - sites/promotion-gift-plants/customer-decision-modules-20261109.json
+      - tests/test_worker6_buyer_modules.py
       - tests/test_worker6_operator_contract.py
       - .github/workflows/worker6-operator-three.yml
   workflow_dispatch:
@@ -19,7 +22,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Operator source and contract regressions
-        run: python -m unittest tests.test_worker6_operator_contract tests.test_worker6_shipping_render tests.test_worker6_page_type -v
+        run: python -m unittest tests.test_worker6_operator_contract tests.test_worker6_shipping_render tests.test_worker6_page_type tests.test_worker6_buyer_modules -v
       - name: Render actual three V5.1 HTML with original similarity metric
         run: python scripts/worker6_operator_three_diagnostic.py
       - name: Validate output, noindex and provenance
