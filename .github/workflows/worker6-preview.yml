@@ -1,0 +1,46 @@
+name: Worker6 V5.1 four-purpose preview
+on:
+  push:
+    branches:
+      - site/v51-promotion-gift-plants-20261109
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: V5.1 plan-check
+        run: python -m v5 plan-check --site promotion-gift-plants
+      - name: V5.1 common renderer preview
+        run: python -m v5 build --site promotion-gift-plants --mode preview
+      - name: Verify four distinct purposes and noindex
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          pages=json.loads(Path('sites/promotion-gift-plants/pages.json').read_text())
+          assert {p['purpose'] for p in pages}=={'promotion','transfer','congratulations','sameDayInquiry'}
+          assert len({tuple(p['productSkus']) for p in pages})==4
+          for i in range(1,5):
+              path=Path('dist/promotion-gift-plants')/('index.html' if i==1 else f'{i}.html')
+              html=path.read_text(encoding='utf-8')
+              assert 'noindex' in html and '<html' in html
+              assert 'fwith.co.kr/shop/item.php?it_id=' in html
+              print(f'HTML_OK {path} {len(html)} bytes')
+          PY
+      - name: Upload V5.1 renderer output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: worker6-four-purpose-v51-preview
+          path: |
+            dist/promotion-gift-plants/
+            reports/promotion-gift-plants/
+          if-no-files-found: warn
+          retention-days: 14
