@@ -7,6 +7,15 @@ source=json.loads((SITE/'core-five-seller-evidence.json').read_text(encoding='ut
 spec=json.loads((SITE/'site-spec.json').read_text(encoding='utf-8'))
 product_ids=['D144','D156','D152','D026']
 assert {x['sku'] for x in source['sources']}==set(product_ids)
+def product_summary(items):
+    """Single source for product count, names, prices and cards."""
+    ordered=sorted(items,key=lambda p:(p['priceKRW'],p['sku']))
+    return {'count':len(ordered),
+            'label':' / '.join(f"{p['name']} {p['priceKRW']:,}원 ({p['sku']})" for p in ordered),
+            'skus':[p['sku'] for p in ordered],
+            'priceBands':sorted({p['priceKRW']//10000 for p in ordered})}
+summary=product_summary(source['sources'])
+assert len(summary['skus'])==len(product_ids)
 spec['purposePools']['home']={
  'productSkus':product_ids,
  'introductions':['승진·영전·일반 축하 선물과 당일 문의의 차이를 먼저 살펴보세요. 판매처에서 확인한 금전수 탁상용 D144와 포인세티아 소형 D156을 비교하고 목적별 안내에서 주문 순서를 선택할 수 있습니다.'],
@@ -18,6 +27,13 @@ spec['purposePools']['home']={
  ],
  'faqs':[{'q':'가격과 옵션은 확인되었나요?','a':'D152 50,000원, D144 53,000원, D156 60,000원, D026 90,000원이며 네 상품의 선택·추가옵션은 0개로 표시됩니다.'},{'q':'당일 배송이 보장되나요?','a':'아닙니다. 주소와 희망 시간을 전달해 가능 여부를 먼저 확인해야 합니다.'}]
 }
+# Derive every home product claim from the same catalog as product cards.
+home=spec['purposePools']['home']
+home['productSkus']=summary['skus']
+home['introductions']=[f"승진·영전·일반 축하 선물과 당일 문의를 비교합니다. 판매처에서 확인한 상품 {summary['count']}종을 예산과 상품명상 형태로 살펴보고 목적별 안내를 선택하세요."]
+home['sections'][1]['heading']=f"판매처에서 확인한 상품 {summary['count']}종"
+home['sections'][1]['paragraph']=f"확인된 상품과 가격: {summary['label']}. 각 상품의 실제 크기, 현재 재고, 배송 가능 여부는 확인이 필요합니다."
+home['faqs'][0]['a']=f"확인된 상품 {summary['count']}종: {summary['label']}. 표시 가격은 결제 시 다시 확인하세요."
 # Purpose guides have no geographic location; never inject fake region labels.
 guide_introductions={
  'promotion':'승진 선물은 새 자리에서 바로 놓을 수 있는 형태인지가 먼저입니다. 금전수 탁상용 D144는 책상 선물 후보로, 포인세티아 소형 D156은 다른 분위기의 소형 선물 후보로 비교할 수 있습니다.',
@@ -72,6 +88,18 @@ choice_copy={
 }
 for purpose,copy in choice_copy.items():
     spec['purposePools'][purpose]['sections'][0]['paragraph']=copy
+# Recompute all price/SKU listings from the verified seller catalog.
+for purpose in ('promotion','transfer','congratulations','sameDayInquiry'):
+    pool=spec['purposePools'][purpose]
+    pool['productSkus']=summary['skus']
+    pool['sections'][0]['paragraph']=(
+        f"판매처 확인 상품 {summary['count']}종: {summary['label']}. "
+        +"탁상용·소형·대형은 상품명 표기이며 실제 치수와 재고는 확인되지 않았습니다. "
+        +({'promotion':'승진 선물은 새 직함과 수령 공간을 확인해 선택하세요.',
+           'transfer':'영전·전보는 새 근무지의 배치 장소와 수령일을 확인하세요.',
+           'congratulations':'축하 사유와 받는 분의 선호를 기준으로 선택하세요.',
+           'sameDayInquiry':'당일 배송 가능 여부는 상품번호와 상세 주소로 판매처에 확인하세요.'}[purpose]))
+    pool['faqs'][0]['a']='배송 가능 여부와 도착 시간은 판매처에 확인해야 합니다.'
 spec['pageTypes']=['homepage','purpose-guide']
 spec['targetPageCount']=5
 spec['publishPolicy']['mode']='preview'
@@ -86,7 +114,7 @@ for i,(purpose,region,title) in enumerate(purposes,1):
     pages.append({'id':f'w6-core-{i:02d}','number':i,'region':region,'pageType':'purpose-guide','purpose':purpose,
       'title':title,'topic':purpose,'intro':'상품 선택과 수령 정보를 비교합니다.',
       'sections':[{'heading':'상품 선택','paragraph':'상품 상세를 확인합니다.'},{'heading':'주문 순서','paragraph':'배송지와 수령일을 확인합니다.'}],
-      'productSkus':product_ids if purpose in ('home','promotion','sameDayInquiry') else list(reversed(product_ids)),
+      'productSkus':summary['skus'],
       'faq':[{'q':'주문 방법은?','a':'상품 상세 링크에서 확인합니다.'}]})
 (SITE/'pages.json').write_text(json.dumps(pages,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 (SITE/'regions.json').write_text(json.dumps({'source':'purpose-based guides, not locality delivery evidence','regions':[{'name':p['region'],'code':None,'level':'purpose-guide'} for p in pages]},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
