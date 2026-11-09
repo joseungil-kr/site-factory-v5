@@ -14,7 +14,7 @@ class SellerShippingContract(unittest.TestCase):
   x=lookup('전라남도','강진군','대구면')
   self.assertEqual(x['state'],'jurisdiction-unresolved')
   self.assertFalse(x['absenceMeansFree'])
-  self.assertIn('행정명',evidence_section(x)['paragraph'])
+  self.assertIn('정확한 배송지',evidence_section(x)['paragraph'])
  def test_alias_not_official_validation(self):
   x=lookup('경기도','파주시','적성면')
   self.assertTrue(x['aliasOnlyNotOfficialAddressValidation'])
@@ -46,6 +46,6 @@ class SellerShippingContract(unittest.TestCase):
   for region in [('경기도','파주시','적성면'),('경기도','가평군','설악면'),('전라남도','강진군','대구면')]:
    result=lookup(*region)
    p=evidence_section(result)['paragraph']
-   self.assertIn(result['sourceUrl'],p)
+   self.assertEqual(evidence_section(result)['sourceUrl'],result['sourceUrl'])
    self.assertIn(result['checkedAt'],p)
 if __name__=='__main__':unittest.main()
