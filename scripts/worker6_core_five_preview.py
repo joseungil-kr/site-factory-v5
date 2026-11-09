@@ -13,8 +13,27 @@ def product_summary(items):
             'skus':[p['sku'] for p in ordered],
             'priceBands':sorted({p['priceKRW']//10000 for p in ordered})}
 
-def generate_inputs(source,base_spec,site_input,require_orchids=True):
+def operator_policy(source):
+    """One verified operator record, one customer-facing policy for all pages."""
+    if not (source['regionalDispatch'] and source['nationwideSameDayAvailableAsGeneralService']):
+        raise ValueError('operator nationwide dispatch confirmation required')
+    if source['individualSameDayArrivalGuaranteed'] or source['deliveryWindow']['guaranteed']:
+        raise ValueError('individual arrival must not be guaranteed')
+    phone=source['orderPhone']
+    order=source['phoneOrderHours']
+    delivery=source['deliveryWindow']
+    if source['individualCutoff']!='phone-confirm' or source['regionalSurcharge']!='phone-confirm':
+        raise ValueError('order cutoff and regional surcharge require consultation')
+    return (f"지역별 지점에서 발송하며 전국 당일배송 서비스를 안내합니다. "
+            f"전화 주문은 {order['start']}~{order['end']}, "
+            f"배송 가능 시간대는 지역 꽃집 운영시간에 따른 {delivery['earliestPossible']}~{delivery['latestPossible']}입니다. "
+            f"개별 주문의 당일 도착시각·접수 마감·재고·추가요금은 {phone}로 확인하세요. "
+            "23시 전화 주문이 그날 도착한다는 뜻은 아닙니다.")
+
+def generate_inputs(source,base_spec,site_input,require_orchids=True,operator_source=None):
     spec=deepcopy(base_spec)
+    operator_source=operator_source or json.loads((SITE/'operator-service-confirmation-20261109.json').read_text(encoding='utf-8'))
+    shared_operator_copy=operator_policy(operator_source)
     product_ids=[x['sku'] for x in source['sources']]
     if not product_ids or len(set(product_ids))!=len(product_ids):
         raise ValueError('nonempty unique product SKUs required')
@@ -157,10 +176,7 @@ def generate_inputs(source,base_spec,site_input,require_orchids=True):
     def section(heading,paragraph,slot='choice',source_url=None):
         return {'slot':slot,'role':'required','heading':heading,'paragraph':paragraph,
                 **({'sourceUrl':source_url} if source_url else {})}
-    operator_info=('지역별 지점에서 발송하며 전국 당일배송 서비스를 안내합니다. '
-        '전화 주문은 08:00~23:00, 배송 가능 시간대는 지역 꽃집 운영시간에 따른 06:00~20:00입니다. '
-        '개별 주문의 도착시각·접수마감·재고·추가요금은 1844-0644로 확인하세요. '
-        '23시 전화 주문이 당일 도착을 뜻하지 않습니다.')
+    operator_info=shared_operator_copy
     if require_orchids:
         promotion=spec['purposePools']['promotion']
         promotion['introductions']=['승진은 받는 분의 새 직책을 확인한 다음 축하할 관계와 선물 예산을 정하고, 마지막에 수령할 부서와 날짜를 확인하는 순서로 준비합니다.']
@@ -218,6 +234,31 @@ def generate_inputs(source,base_spec,site_input,require_orchids=True):
     for purpose in ('promotion','transfer'):
         spec['purposePools'][purpose]['sections'].append(
           section('결제 전 교환·환불 안내 확인',returns_copy,'order',returns_url))
+    # Append the SAME operational policy to every page, without purpose-specific rewording.
+    for purpose in ('home','promotion','transfer','congratulations','sameDayInquiry'):
+        pool=spec['purposePools'][purpose]
+        pool['sections']=[x for x in pool['sections'] if x.get('heading')!='전화 주문과 배송 가능 시간']
+        pool['sections'].append({'slot':'order','role':'required',
+            'heading':'전화 주문시간과 배송 가능 시간',
+            'paragraph':shared_operator_copy})
+    # The nationwide service is operator-confirmed; only per-order arrival is conditional.
+    for purpose in ('home','congratulations','sameDayInquiry'):
+        pool=spec['purposePools'][purpose]
+        pool['faqs']=[x for x in pool['faqs'] if x.get('q')!='당일 배송이 보장되나요?']
+        pool['faqs'].append({'q':'전국 당일배송 서비스를 이용할 수 있나요?',
+          'a':'지역별 지점 발송으로 전국 당일배송 서비스를 안내합니다. 주문별 도착시각과 마감·추가요금은 전화상담으로 확인하세요.'})
+    day=spec['purposePools']['sameDayInquiry']
+    day['sections']=[dict(x,paragraph=x['paragraph'].replace(
+        '해당 주소 배송 가능 여부 / 접수 마감',
+        '개별 주문의 실제 도착 가능 시간 / 접수 마감').replace(
+        '배송 가능 여부와 시간·요금에 대한 판매처 답변',
+        '도착 시간·접수 마감·추가요금에 대한 판매처 답변'))
+        for x in day['sections']]
+    home=spec['purposePools']['home']
+    home['sections']=[dict(x,paragraph=x['paragraph'].replace(
+        '주소별 최종 요금과 당일 배송 가능 시간은 확정되어 있지 않습니다',
+        '전국 당일배송 서비스를 안내하며 개별 주문의 도착 시간과 최종 요금은 전화로 확인합니다'))
+        for x in home['sections']]
     spec['pageTypes']=['homepage','purpose-guide']
     spec['targetPageCount']=5
     spec['publishPolicy']['mode']='preview'
