@@ -1,5 +1,6 @@
 import { chromium } from 'playwright';
 import fs from 'node:fs';
+const pageNames=(process.env.WORKER6_PAGES || 'index,2,3,4').split(',');
 import path from 'node:path';
 const root='reports/promotion-gift-plants';
 const screenshots=path.join(root,'screenshots');
@@ -7,7 +8,7 @@ fs.mkdirSync(screenshots,{recursive:true});
 const browser=await chromium.launch({headless:true});
 const checks=[];
 let failures=[];
-for(const page of ['index','2','3','4']){
+for(const page of pageNames){
   for(const width of [390,1440]){
     const ctx=await browser.newContext({viewport:{width,height:900},deviceScaleFactor:1});
     const tab=await ctx.newPage();
