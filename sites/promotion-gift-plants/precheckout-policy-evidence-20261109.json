@@ -94,15 +94,35 @@
       "resolution": "product measurements"
     },
     {
-      "field": "refundPolicy",
-      "source": "교환/반품은 이미지이며 텍스트로 구체 조건 확인 불가",
-      "resolution": "seller original policy image/terms"
-    },
-    {
       "field": "regionalReceiving",
       "source": "배송 갤러리 빈 목록과 후기만으로 수령 가능 장소 검증 불가",
       "resolution": "seller fulfillment and recipient facility"
+    },
+    {
+      "field": "refundPolicyLegalEffect",
+      "source": "seller posted policy image inspected, statutory rights and enforceability not independently assessed",
+      "resolution": "legal/consumer rights review if necessary"
     }
   ],
-  "decision": "Can use order payer name and seasonal appearance notice in purpose guides, but not convert them into locality coverage claims."
+  "decision": "Can use order payer name and seasonal appearance notice in purpose guides, but not convert them into locality coverage claims.",
+  "returnExchangeSupervisorObservation": {
+    "atApprox": "2026-11-09T03:41:00Z",
+    "method": "supervisor cloud browser direct image reading",
+    "sourceUrl": "https://fwith.co.kr/data/common/flower379/de_change_content.jpg",
+    "status": "seller-posted image policy, not independent legal interpretation",
+    "sellerPostedSummary": [
+      "불량·파손·주문과 전혀 다른 상품은 환불 가능 표기",
+      "계절·지역 소재 차이로 이미지와 다른 경우 취소·환불 불가 표기",
+      "식물 배송완료 당일 교환 및 왕복 배송료 고객 부담 표기",
+      "문제 발생 시 배송 당일 고객센터 연락 안내",
+      "주소 오기·수취 거부 시 교환·환불 불가 표기",
+      "결제 후 배송 불가·재고 없음 시 전액 환불 표기"
+    ],
+    "cautions": [
+      "모든 취소가 불가능하다는 뜻 아님",
+      "법정 소비자 권리의 유효 범위를 단정하지 않음",
+      "지역별 배송 가능 여부를 증명하지 않음",
+      "주문 전 원문과 판매처 안내 재확인 필요"
+    ]
+  }
 }
