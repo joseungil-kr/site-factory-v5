@@ -22,7 +22,16 @@ class SellerShippingContract(unittest.TestCase):
   self.assertFalse(x['finalShippingPriceKnown'])
  def test_unknown_province(self):
   x=lookup('전남광주통합특별시','강진군','마량면')
-  self.assertEqual(x['state'],'not-listed-unknown')
+  self.assertEqual(x['state'],'jurisdiction-unresolved')
+  self.assertIn('행정명',evidence_section(x)['paragraph'])
+ def test_gunwi_alias_and_parent_uncertain(self):
+  x=lookup('대구광역시','군위군','군위읍')
+  self.assertEqual(x['state'],'district-display-only')
+  self.assertTrue(x['aliasOnlyNotOfficialAddressValidation'])
+ def test_yeongjong_district_name_unresolved(self):
+  x=lookup('인천광역시','영종구','운서동')
+  self.assertEqual(x['state'],'overlap-unknown-priority')
+  self.assertFalse(x['deliveryAvailabilityKnown'])
  def test_source_visible(self):
   for region in [('경기도','파주시','적성면'),('경기도','가평군','설악면'),('전라남도','강진군','대구면')]:
    result=lookup(*region)
