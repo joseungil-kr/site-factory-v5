@@ -23,6 +23,29 @@ jobs:
           python scripts/worker6_gangjin_experiment.py
           python -m v5 plan-check --site promotion-gift-plants
           python -m v5 build --site promotion-gift-plants --mode preview
+      - name: Compare assembled body regardless of build outcome
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          from v5.purpose_render import assemble
+          from v5.audit import similarity
+          site=Path('sites/promotion-gift-plants')
+          pages=json.loads((site/'pages.json').read_text())
+          pools=json.loads((site/'site-spec.json').read_text())['purposePools']
+          products=json.loads((site/'products.json').read_text())
+          bodies=[]
+          for p in pages:
+            a=assemble(p,pools,products)
+            text=' '.join([a['intro']]+[x['paragraph'] for x in a['sections']])
+            bodies.append({'id':p['id'],'region':p['region'],'purpose':p['purpose'],'text':text,'length':len(text),'sectionHeadings':[x['heading'] for x in a['sections']]})
+          score=similarity(bodies[0]['text'],bodies[1]['text'])
+          out=Path('reports/promotion-gift-plants')
+          out.mkdir(parents=True,exist_ok=True)
+          (out/'gangjin-assembled-comparison.json').write_text(json.dumps({'similarity':score,'threshold':0.49,'pass':score<0.49,'pages':bodies},ensure_ascii=False,indent=2),encoding='utf-8')
+          print('GANGJIN_SIMILARITY',score,'PASS',score<0.49)
+          PY
       - name: Audit unchanged 49 percent quality gate
         run: |
           python -m v5 audit --site promotion-gift-plants
