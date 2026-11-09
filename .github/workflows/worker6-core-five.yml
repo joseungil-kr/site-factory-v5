@@ -44,7 +44,7 @@ jobs:
               assert 'noindex' in html
               assert 'fwith.co.kr/shop/item.php?it_id=D144' in html
               assert 'fwith.co.kr/shop/item.php?it_id=D156' in html
-              assert 'href="tel:1844-0644"' in html
+              assert 'href="tel:18440644"' in html
               assert html.count('data-product-sku=')>=2
               rows.append({'page':n,'path':str(p),'bytes':len(html),'productLinks':2})
           assert all(('href="/'+str(i)+'.html"') in (root/'index.html').read_text(encoding='utf-8') for i in range(2,6))
