@@ -1,4 +1,5 @@
-import unittest
+import unittest,json
+from pathlib import Path
 from scripts.worker6_venue_evidence_gate import normalize,validate,may_make_confirmed_customer_claim
 class VenueEvidenceGateTests(unittest.TestCase):
  def base(self):
@@ -42,6 +43,24 @@ class VenueEvidenceGateTests(unittest.TestCase):
    eventYear=2023,accessAttemptedAt="2026-11-09",sourceUpdatedAt=None)
   self.assertEqual(normalize(x)["readMode"],"excerpt")
   self.assertFalse(may_make_confirmed_customer_claim(x))
+ def test_actual_corrected_ledger_all_unconfirmed(self):
+  d=json.loads(Path("sites/promotion-gift-plants/TWO_VENUE_ADMISSION_EVIDENCE_20261109.json").read_text(encoding="utf-8"))
+  k=d["venues"][0]
+  for source in k["officialSources"]:
+   x=dict(source,targetVenue="고양 킨텍스",documentVenue="고양 킨텍스")
+   self.assertEqual(normalize(x)["readMode"],"unavailable")
+   self.assertFalse(may_make_confirmed_customer_claim(x))
+  for source in k["unrelatedEventReferences"]:
+   x=dict(source,targetVenue="고양 킨텍스")
+   self.assertEqual(normalize(x)["readMode"],"excerpt")
+   self.assertFalse(may_make_confirmed_customer_claim(x))
+  for entry in d["sellerNotice"]["observations"]:
+   x=dict(readMode="full-text",exactQuote=entry["exactQuote"],
+    pageOrSection=d["sellerNotice"]["heading"],documentVenue=entry["venue"],
+    targetVenue=entry["venue"],eventYear=None,checkedAt=d["checkedAt"],
+    sourceUpdatedAt=d["sellerNotice"]["sourceUpdatedAt"],
+    sellerReportedOnly=True,currentRuleIndependentlyVerified=False)
+   self.assertFalse(may_make_confirmed_customer_claim(x))
  def test_missing_quote_section_or_year_fails(self):
   for key in ("exactQuote","pageOrSection","eventYear"):
    x=self.base();x[key]=None
