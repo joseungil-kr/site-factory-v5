@@ -1,0 +1,37 @@
+{
+  "status": "BLOCKED_BY_CONTENT_QUALITY_NOT_TECHNICAL",
+  "run": "42554639987",
+  "failure": "Body similarity over 49%: (0.9730337078651685, 3877, 3881)",
+  "examples": [
+    {
+      "number": 3877,
+      "region": "전라남도 강진군 대구면",
+      "sourceFlag": 0
+    },
+    {
+      "number": 3881,
+      "region": "전라남도 강진군 성전면",
+      "sourceFlag": 0
+    }
+  ],
+  "diagnosis": [
+    "Both records are in the same district and have unverified locality status (flag=0).",
+    "V5.1 assemble overwrites per-page intro and sections with four purpose pools.",
+    "All four purposes have one introduction, four required sections, zero variant sections.",
+    "Page IDs and region labels do not provide independently verified locality-specific shopping information.",
+    "Selecting purposes or swapping product order cannot make substantively distinct articles."
+  ],
+  "requirementsForNewAttempt": [
+    "Evidence-backed locality delivery coverage, surcharges, cutoff and actual service limitations from seller; absent evidence no local delivery claim.",
+    "Verified local receiving context or facility facts with source and date; do not infer from place names.",
+    "Purpose and recipient-specific, non-repetitive modules with substantive product comparison; no synonym swaps or reordered duplicates.",
+    "Record source IDs per page; fail closed if distinct factual modules unavailable.",
+    "Keep >=0.49 similarity failure as hard gate; stage limited verified pages rather than silently reduce full target."
+  ],
+  "decision": "Do not rerun identical nationwide HTML build until new evidence-backed source modules exist; retain 5302 candidate inventory as research backlog.",
+  "imagePackage": "sandbox:/mnt/data/worker6-generated-raster-handoff.zip",
+  "webp": [
+    "/mnt/data/promotion-gift-plants/a_bright_softly_lit_modern_office_desk_still_lif.webp",
+    "/mnt/data/promotion-gift-plants/a_bright_softly_lit_indoor_desk_office_scene_in_a.webp"
+  ]
+}
