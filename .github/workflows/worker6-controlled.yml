@@ -1,0 +1,29 @@
+name: Worker6 controlled content experiment
+on:
+  push:
+    branches: [site/v51-promotion-gift-plants-20261109]
+    paths:
+      - scripts/worker6_controlled_comparison.py
+      - .github/workflows/worker6-controlled.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run same-purpose same-product before and after comparison
+        run: |
+          python scripts/worker6_controlled_comparison.py
+          python -m unittest tests.test_worker6_section_contract -v
+      - name: Preserve comparison JSON
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: worker6-controlled-evidence-before-after
+          path: reports/promotion-gift-plants/controlled/
+          if-no-files-found: warn
