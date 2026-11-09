@@ -28,7 +28,7 @@ class OperatorFivePages(unittest.TestCase):
     self.assertIn('1844-0644',html)
     self.assertNotIn('당일배송 서비스가 불가능',html)
   day=render(site,pages[4],pages,self.products,[],spec['purposePools'])
-  self.assertIn('개별 주문의 실제 도착 가능 시간',day)
+  self.assertIn('해당 주문의 도착 가능 시각',day)
  def test_single_source_change_propagates_to_all_pages(self):
   changed=copy.deepcopy(self.operator)
   changed['phoneOrderHours']['start']='09:00'
