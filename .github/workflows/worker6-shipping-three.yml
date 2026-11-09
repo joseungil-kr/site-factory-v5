@@ -7,6 +7,7 @@ on:
       - scripts/worker6_shipping_crosscheck.py
       - scripts/worker6_shipping_three_preview.py
       - tests/test_worker6_shipping_render.py
+      - sites/promotion-gift-plants/competitor-order-research-20261109.json
       - .github/workflows/worker6-shipping-three.yml
   workflow_dispatch:
 permissions:
