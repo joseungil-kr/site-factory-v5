@@ -58,6 +58,19 @@ def assemble(page, pools, products, *, service=False):
         for section in selected:
             resolved_sections.append({'heading':_text(section.get('heading'),page),
                                       'paragraph':_text(section.get('paragraph'),page)})
+    # Evidence-backed per-page content is optional and only accepted with
+    # explicit source metadata. No regional claims are inferred from a name.
+    evidence=page.get('evidenceSections',[])
+    if not isinstance(evidence,list):
+        raise ConfigError('invalid evidenceSections')
+    for item in evidence:
+        if not isinstance(item,dict) or not all(isinstance(item.get(k),str) and item[k].strip()
+                for k in ('heading','paragraph','sourceUrl','checkedOn')):
+            raise ConfigError('evidence section requires heading, paragraph and source metadata')
+        if not item['sourceUrl'].startswith('https://') or not re.fullmatch(r'\\d{4}-\\d{2}-\\d{2}',item['checkedOn']):
+            raise ConfigError('invalid evidence source URL/date')
+        resolved_sections.append({'heading':_text(item['heading'],page),
+                                  'paragraph':_text(item['paragraph'],page)})
     if any(not isinstance(f,dict) or not f.get('q') or not f.get('a') for f in faqs):
         raise ConfigError('invalid purpose pool FAQ')
     ordered_faq=sorted(enumerate(faqs),key=lambda pair:hashlib.sha256((page['id']+':faq:'+str(pair[0])).encode()).digest())
