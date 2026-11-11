@@ -39,6 +39,8 @@ class Document(HTMLParser):
         self.phone = 0
         self.seen_text = []
         self.fact_ids = []
+        self.fact_topics = []
+        self._heading = None
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if tag == "meta":
@@ -49,6 +51,8 @@ class Document(HTMLParser):
             self.images.append(a)
         elif tag == "article" and "data-fact-id" in a:
             self.fact_ids.append(a["data-fact-id"])
+        elif tag == "h3":
+            self._heading = []
         elif tag == "h1":
             self.h1 += 1
         elif tag == "a" and a.get("href") == "tel:1844-0644":
@@ -59,7 +63,12 @@ class Document(HTMLParser):
         self.seen_text.append(data)
         if self._paragraph is not None:
             self._paragraph.append(data)
+        if self._heading is not None:
+            self._heading.append(data)
     def handle_endtag(self, tag):
+        if tag == "h3" and self._heading is not None:
+            self.fact_topics.append(" ".join("".join(self._heading).split()))
+            self._heading = None
         if tag == "p" and self._paragraph is not None:
             self.paragraphs.append(" ".join("".join(self._paragraph).split()))
             self._paragraph = None
@@ -89,10 +98,12 @@ def check(site, path, public):
     if any(source.count(x) > 0 for x in FILLERS): issues.append("EDITORIAL_FILLER")
     substantive = [p for p in doc.paragraphs if len(p) >= 40]
     if len(substantive) != len(set(substantive)): issues.append("DUPLICATE_PARAGRAPH")
-    if len(doc.fact_ids) != (12 if site=="clinicpresent" else 9):
+    if len(doc.fact_ids) != (9 if site=="clinicpresent" else 7):
         issues.append("FACT_COUNT")
     if len(doc.fact_ids) != len(set(doc.fact_ids)):
         issues.append("DUPLICATE_FACT_ID")
+    if site=="clinicpresent" and "꽃 구성" in doc.fact_topics and "꽃 색상 취향" in doc.fact_topics:
+        issues.append("SEMANTIC_FLOWER_OVERLAP")
     repeated={phrase:source.count(phrase) for phrase in REGRESSION_PHRASES if source.count(phrase)>1}
     if repeated: issues.append("REPEATED_ADVICE_PHRASE")
     if site == "clinicpresent":
