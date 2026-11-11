@@ -69,6 +69,12 @@ jobs:
           assert sum(r["scopeKind"]=="explicit_locality_row" for r in compared)==4
           assert sum(r["scopeKind"]=="broader_or_ambiguous_seller_row" for r in compared)==16
           assert sum(r["scopeKind"]=="no_seller_row" for r in compared)==30
+          scope=json.loads((root/"shipping-strict-scope.json").read_text())
+          assert len(scope["sellerFeeScopeRows"])==20
+          assert (scope["exactLocalityRows"],scope["broaderContextRows"],scope["noEvidenceSampleRows"])==(4,16,30)
+          assert all(row["localityPostedFeeKRW"] is None for row in scope["sellerFeeScopeRows"]
+                     if row["scopeKind"]!="explicit_locality_row")
+          assert all(row["skuIds"]==["B205","C030"] for row in scope["sellerFeeScopeRows"])
           for r in compared:
               before=(root/"before-html"/(r["code"]+".html")).read_text()
               after=(root/"html"/(r["code"]+".html")).read_text()
