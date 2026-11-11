@@ -94,6 +94,22 @@ jobs:
                   print('ACTUAL_162',json.dumps({'sampleSize':len(rows),'countBySite':d['countBySite'],'automatedFailCount':d['automatedFailCount'],'scoreBySite':{site:{'min':min(x['score'] for x in rows if x['site']==site),'max':max(x['score'] for x in rows if x['site']==site)} for site in d['countBySite']},'firstSampleBySite':{site:next(x for x in rows if x['site']==site) for site in d['countBySite']}},ensure_ascii=False))
               else: print('ACTUAL_SEO',json.dumps(d,ensure_ascii=False))
           PY
+      - name: Retain exact 162 generated HTML samples
+        run: |
+          python - <<'PY'
+          import json, shutil
+          from pathlib import Path
+          dist=Path('/tmp/clinic-audit-20261111/public/sites')
+          out=Path('/tmp/clinic-samples')
+          rows=json.loads(Path('/tmp/clinic-162-report.json').read_text())['rows']
+          for row in rows:
+              src=dist/row['site']/row['path']
+              dest=out/row['site']/row['path']
+              dest.parent.mkdir(parents=True,exist_ok=True)
+              shutil.copyfile(src,dest)
+          assert len(list(out.rglob('*.html')))==162
+          print('SAMPLE_HTML_ARCHIVED',len(list(out.rglob('*.html'))))
+          PY
       - name: Publish only QA logs as artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -108,3 +124,4 @@ jobs:
             /tmp/clinic-seo.log
             /tmp/clinic-162-report.json
             /tmp/clinic-162.log
+            /tmp/clinic-samples/
