@@ -1,0 +1,62 @@
+name: Clinic intent hub offline prototype smoke and UI
+on:
+  push:
+    branches:
+      - prototype/clinic-intent-hub-20261111
+    paths:
+      - '.github/workflows/clinic-intent-hub-prototype-20261111.yml'
+      - 'prototypes/clinic-intent-hub-20261111/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: clinic-intent-hub-prototype-20261111
+  cancel-in-progress: false
+jobs:
+  offline-prototype:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Verify pinned inputs and compile offline builder
+        run: |
+          python -m py_compile prototypes/clinic-intent-hub-20261111/build.py prototypes/clinic-intent-hub-20261111/test_browser.py
+          node --check prototypes/clinic-intent-hub-20261111/app.js
+          git rev-parse HEAD
+      - name: Build isolated prototype only
+        run: |
+          python prototypes/clinic-intent-hub-20261111/build.py --output /tmp/clinic-intent-hub-prototype
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          out=Path('/tmp/clinic-intent-hub-prototype')
+          report=json.loads((out/'build-report.json').read_text())
+          assert report['prototypeHTML']==1 and report['newRegionalHTML']==0
+          assert report['legacyComparisonRecords']==324 and report['legacyURLsModified']==0
+          assert len(list(out.glob('*.html')))==1
+          print('ONE_HTML_NO_REGION_DETAILS_PASS', json.dumps(report,ensure_ascii=False))
+          PY
+      - name: Install Korean font and browser audit tools
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          python -m pip install --disable-pip-version-check playwright Pillow
+          fc-match 'Noto Sans CJK KR'
+      - name: Run mobile and desktop purchase flows with no external navigation
+        run: |
+          python prototypes/clinic-intent-hub-20261111/test_browser.py /tmp/clinic-intent-hub-prototype --out /tmp/clinic-intent-hub-browser
+      - name: Upload prototype HTML data and screenshots only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clinic-intent-hub-prototype-20261111
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            /tmp/clinic-intent-hub-prototype/
+            /tmp/clinic-intent-hub-browser/
