@@ -362,20 +362,67 @@ REQUIRED_TOPICS = {
     'clinicpresent': ('화환 규격', '꽃 구성', '현장 반입', '리본 문구', '배송비 문의'),
 }
 
+# Concept ownership is stricter than topic IDs: different historical topic IDs
+# can contain the same purchasing advice (e.g. flower composition vs color taste).
+# One owner per semantic cluster is selected across body AND sidebar.
+SEMANTIC_CLUSTERS = {
+    'clinicflower': {
+        '식물 크기':'placement', '설치 위치':'placement',
+        '빛과 관리':'plant-care', '물주기':'plant-care',
+        '받는 사람 이름':'ribbon', '리본 문구':'ribbon',
+        '직원 수령':'handover', '사전 연락':'handover',
+    },
+    'clinicopen': {
+        '행사 날짜':'schedule', '행사 이후':'schedule',
+        '준비 완료':'venue-ready', '행사 장소':'venue-ready',
+        '수령 담당자':'handover', '바쁜 시간':'handover',
+        '리본 제작':'ribbon', '메시지 취향':'ribbon',
+        '행사 현장 인계':'installation', '건물 출입':'installation',
+    },
+    'clinicpresent': {
+        '꽃 구성':'flower-choice', '꽃 색상 취향':'flower-choice', '꽃 수급':'flower-choice',
+        '화환 규격':'wreath-size', '엘리베이터 운반':'wreath-size', '고층 건물':'wreath-size',
+        '리본 문구':'ribbon', '짧은 문구':'ribbon', '단체 리본':'ribbon',
+        '공동 발신':'ribbon', '영문 리본':'ribbon', '축하 표현':'ribbon',
+        '현장 반입':'venue-access', '건물 관리실':'venue-access', '출입 통제':'venue-access',
+        '화환 놓을 곳':'placement', '현장 포토존':'placement', '배너 위치':'placement',
+        '배송비 문의':'delivery-cost', '도서 지역':'delivery-cost',
+        '행사 시간':'timing', '오픈식 시간':'timing', '반입 시간 제한':'timing',
+        '행사 후 회수':'post-event', '행사 이후 처리':'post-event',
+        '발신자 표시':'sender', '직함 확인':'sender', '정식 상호':'sender',
+        '현장 설치 요청':'installation', '주요 출입구':'installation',
+        '배송 당일 연락':'recipient-contact', '행사 담당 변경':'recipient-contact',
+        '화환 수량':'space', '소규모 행사':'space',
+        '차량 반입':'vehicle-access', '주차장 출입':'vehicle-access',
+    },
+}
+
+def semantic_cluster(site, topic):
+    return SEMANTIC_CLUSTERS[site].get(topic, 'fact:'+topic)
+
 def decision_units(site, seed):
     facts = SITE_META[site]['facts']
     required = REQUIRED_TOPICS[site]
     topic_ids = {topic:i for i,(topic,_,_,_) in enumerate(facts)}
     assert len(topic_ids)==len(facts), (site, 'ambiguous factual IDs')
     must = [topic_ids[t] for t in required]
-    # Each general fact owns its context and one action; no second role/perspective
-    # may repeat the same advice to inflate body length.
     remaining = sorted((i for i in range(len(facts)) if i not in must),
                        key=lambda i:key_sort(seed+'|fact-id',i))
-    content_limit = 9 if site!='clinicpresent' else 12
-    body_ids = must + remaining[:content_limit-len(must)]
-    side_ids = remaining[content_limit-len(must):content_limit-len(must)+2]
-    assert len(set(body_ids+side_ids))==len(body_ids)+len(side_ids)
+    body_ids=[];side_ids=[];owners=set()
+    content_limit = 7 if site!='clinicpresent' else 9
+    for idx in must+remaining:
+        cluster=semantic_cluster(site,facts[idx][0])
+        if cluster in owners:
+            continue  # Don't manufacture extra paragraphs from the same advice.
+        owners.add(cluster)
+        if len(body_ids)<content_limit:
+            body_ids.append(idx)
+        elif len(side_ids)<2:
+            side_ids.append(idx)
+        else:
+            break
+    assert len(body_ids)==content_limit and len(side_ids)==2,(site,body_ids,side_ids)
+    assert len({semantic_cluster(site,facts[idx][0]) for idx in body_ids+side_ids})==content_limit+2
     return body_ids, side_ids
 
 def advice_sentences(site, ids):
@@ -436,7 +483,7 @@ def render_region(site,rec,pool,mode):
         '<p>'+esc(meta['intro'])+' '+esc(place)+'에 보내는 경우 정확한 수령 주소와 희망 날짜를 전화로 확인해주세요.</p>'
         '<a class="call heroCall" href="tel:1844-0644">☎ 전화주문 1844-0644</a></div></section>'
         +media_html(site,path)+'<section class="section alt"><div class="wrap"><div class="heading"><h2>'+esc(place)+' 주문 전 검토할 내용</h2>'
-        '<p>화분을 주문할 때는 관리와 수령 조건을, 축하화환은 행사 장소와 설치 조건을 구분해 확인하세요.</p></div><div class="grid3">'+''.join(sections)+'</div></div></section>'
+        '<p>받는 분의 상황에 맞는 상품 선택과 수령 조건을 정리했습니다.</p></div><div class="grid3">'+''.join(sections)+'</div></div></section>'
         '<section class="section"><div class="wrap"><div class="heading"><h2>자주 묻는 질문</h2></div><div class="faq">'+faq+'</div>'
         '<p>다른 지역명도 찾아보려면 <a href="'+district_path(p,d)+'">'+esc(p+' '+d)+' 지역 목록</a>을 이용하세요.</p>'
         '</div></section>'+insights)
