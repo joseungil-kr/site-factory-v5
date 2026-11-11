@@ -21,7 +21,7 @@ jobs:
       - name: Independent source mapping and regressions
         run: |
           python -m unittest tests.test_worker6_source_independence_audit -v
-          python scripts/worker6_source_independence_audit.py
+          python -m scripts.worker6_source_independence_audit
       - name: Upload source evidence only
         if: always()
         uses: actions/upload-artifact@v4
