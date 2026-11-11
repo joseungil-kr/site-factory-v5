@@ -69,9 +69,13 @@ def generate():
         if not r["wreathpriceMatchedIds"]:continue
         assert r["sellerPostedFeeSku"]=="B205"
         proof.append({"number":r["number"],"code":r["regionCode"],"name":r["regionName"],
-                      "sku":"B205","amountKRW":r["sellerPostedFeeKRW"],
-                      "sourceURL":r["sellerPostedFeeSourceURL"],"observedAt":"2026-11-11",
-                      "currentEffective":False,"pageRole":"research-only-not-detail"})
+                      "parent":" ".join(r["regionName"].split()[:-1]),
+                      "province":r["regionName"].split()[0],
+                      "guideAnchor":"intent-"+str(common_id),
+                      "verifiedPostedFee":{"sku":"B205","amountKRW":r["sellerPostedFeeKRW"],
+                          "sourceURL":r["sellerPostedFeeSourceURL"],"observedAt":"2026-11-11",
+                          "publishedAt":None,"currentEffective":False},
+                      "pageRole":"research-only-not-detail"})
     assert len(proof)==3
     assert len({e["code"] for e in entries})==333
     assert len({e["number"] for e in entries})==333
@@ -132,7 +136,10 @@ function render(){
  }
 }
 q.addEventListener('input',render);province.addEventListener('change',render);
-for(const p of proof){const li=document.createElement('li');li.textContent=p.name+' · 상품 B205 게시 추가배송비 '+p.amountKRW.toLocaleString('ko-KR')+'원 (2026-11-11 조회, 현행 적용 미확인)';$('proof-list').append(li);}
+for(const p of proof){const li=document.createElement('li'),btn=document.createElement('button');btn.type='button';
+ btn.textContent=p.name+' · B205 게시 요율 근거 선택 (333개 탐색 지역과 별도)';
+ btn.addEventListener('click',()=>{selectRegion(p);$('selection-status').textContent='별도 B205 연구 사례 · 333개 대상과 별도';});
+ li.append(btn);$('proof-list').append(li);}
 render();"""
     script='<script type="application/json" id="data">'+script_data+'</script><script>'+js+'</script>'
     OUT.mkdir(parents=True,exist_ok=True)
