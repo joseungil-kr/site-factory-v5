@@ -1,0 +1,91 @@
+name: Clinic isolated offline build and 162-page QA
+on:
+  push:
+    branches:
+      - fix/clinic-editorial-qa-isolated-20261111
+    paths:
+      - '.github/workflows/clinic-isolated-build-test-20261111.yml'
+      - 'sites/nalmada-shared3/build_national.py'
+      - 'scripts/audit_clinic_162_offline.py'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: clinic-isolated-20261111
+  cancel-in-progress: false
+jobs:
+  isolated-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Confirm safe isolated scope and source syntax
+        run: |
+          python -m py_compile sites/nalmada-shared3/build_national.py sites/nalmada-shared3/rss_feed.py scripts/audit_clinic_162_offline.py
+          git rev-parse HEAD
+      - name: Generate 2 real source records per site in memory
+        run: |
+          python - <<'PY'
+          import sys, json, collections
+          from pathlib import Path
+          sys.path.insert(0, str(Path("sites/nalmada-shared3").resolve()))
+          import build_national as m
+          root=Path(".")
+          regions=m.parse_regions(json.loads((root/"data/regions/nationwide_locality_candidates_5034.json").read_text()))
+          original=json.loads((root/"sites/clinicflower-preview/clinicflower-copy-pool-720.json").read_text())
+          m.ORIGINAL_BLOCKS=original["blocks"]
+          pool=m.generate_extra_pool()
+          m.GENERATED_BY_TOPIC={}
+          for site,rows in pool["items"].items():
+              d=collections.defaultdict(list)
+              for row in rows:d[row["topic"]].append(row)
+              m.GENERATED_BY_TOPIC[site]=d
+          m.ORIGINAL_BY_TOPIC=collections.defaultdict(list)
+          for row in original["blocks"]:
+              if row["category"] in ("병원 특화","치과 특화","한의원 특화","공통 실무"):
+                  m.ORIGINAL_BY_TOPIC[row["topic"]].append(row)
+          m.ORIGINAL_WREATH_BY_SUBTOPIC=collections.defaultdict(list)
+          for row in original["blocks"]:
+              if row["category"]!="공통 실무" or row["topic"] not in ("수령 장소","선물 목적","예산","리본 문구","배송 확인","주문 방법"):continue
+              if any(x in row["body"] for x in ("화분","식물","관엽","물주기","화기","꽃바구니","실내","분갈이")):continue
+              key=row["topic"]+"|"+row.get("subtopic",row["title"])
+              m.ORIGINAL_WREATH_BY_SUBTOPIC[key].append(row)
+          assert len(m.ORIGINAL_WREATH_BY_SUBTOPIC)>=45
+          for site in m.SITE_META:
+              for rec in (regions[0],regions[-1]):
+                  markup,substance=m.render_region(site,rec,pool,"public")
+                  assert 'property="og:image"' in markup
+                  assert markup.count('class="clinic-image"')==1
+                  assert 'rel="canonical"' in markup
+                  assert 'tel:1844-0644' in markup
+                  if site=="clinicpresent":
+                      assert "celebration-wreath.webp" in markup
+                      assert "화분과 화환 중 받는 분에게" not in markup
+                  print("SMOKE_PASS",site,rec[0],len(markup),len(substance))
+          PY
+      - name: Offline nationwide build - no deploy or network API
+        run: |
+          python sites/nalmada-shared3/build_national.py --root . --output /tmp/clinic-audit-20261111 --mode public --audit-json /tmp/clinic-build-report.json > /tmp/clinic-build.log
+          python sites/nalmada-shared3/qa_seo_images.py /tmp/clinic-audit-20261111 --output /tmp/clinic-seo-audit.json > /tmp/clinic-seo.log
+      - name: Inspect 162 real generated HTML pages
+        run: |
+          python scripts/audit_clinic_162_offline.py /tmp/clinic-audit-20261111 --output /tmp/clinic-162-report.json > /tmp/clinic-162.log
+      - name: Publish only QA logs as artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clinic-isolated-qa-20261111
+          if-no-files-found: warn
+          retention-days: 7
+          path: |
+            /tmp/clinic-build-report.json
+            /tmp/clinic-build.log
+            /tmp/clinic-seo-audit.json
+            /tmp/clinic-seo.log
+            /tmp/clinic-162-report.json
+            /tmp/clinic-162.log
