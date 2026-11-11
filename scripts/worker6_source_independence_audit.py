@@ -15,12 +15,15 @@ def analyze():
           for p in catalog if p.get('priceConfirmed')}
     assert len(skus)==6
     locality=[p for p in pages if p['pageKind']=='locality-detail']
+    source_rows=json.loads((ROOT/'data/regions/nationwide_locality_candidates_5034.json').read_text(encoding='utf-8'))['records']
+    address_parts={' '.join((province,district,locality)):(province,district,locality) for province,district,locality,_ in source_rows}
+    assert len(address_parts)==len(locality)
     buckets=defaultdict(list);fee=Counter();flags=Counter()
     examples=[]
     for p in locality:
         # Four purposes are chosen by a hash of the place name, not by buyer intent.
         purpose=p['purpose']
-        province,district,local_name=p['region'].split(' ',2)
+        province,district,local_name=address_parts[p['region']]
         match=lookup(province,district,local_name)
         flags[str(p['sourceFlag'])]+=1
         fee[match['state']]+=1
