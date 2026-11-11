@@ -1,0 +1,139 @@
+{
+  "surveyDate": "2026-11-11",
+  "purpose": "Historic confirmed openings, not current order leads",
+  "scope": "official institution/municipal public information; no personal patient data",
+  "approvedCases": [
+    {
+      "id": "suwon-2026",
+      "region": "경기도 수원시 장안구 연무동",
+      "target": "어울림건강생활지원센터",
+      "event": "개소·운영시작",
+      "eventDate": "2026-03-26",
+      "noticeDate": "2026-06-02",
+      "address": "경기도 수원시 장안구 경수대로744번길 55",
+      "floor": "연무마을 어울림터 3~4층",
+      "officialSources": [
+        {
+          "id": "SUWON-CENTER",
+          "url": "https://health.suwon.go.kr/board_view.asp?bd_gubn=&no=5&page_code=sub051103",
+          "publisher": "수원시보건소",
+          "scope": "센터 개소·운영 시작일·주소·층수",
+          "noticeDate": "2026-06-02",
+          "accessEvidence": "search-indexed source; page opening returned cache miss"
+        },
+        {
+          "id": "SUWON-CITY",
+          "url": "https://www.suwon.go.kr/web/board/BD_board.view.do?bbsCd=1043&seq=20260414092346075",
+          "publisher": "수원특례시",
+          "scope": "센터 개소 사실·주소·연무마을 어울림터 층수",
+          "noticeDate": "2026-04-14",
+          "accessEvidence": "official page opened and searched"
+        },
+        {
+          "id": "SUWON-COUNCIL",
+          "url": "https://council.suwon.go.kr/viewer/minutes.do?mem_sch=01009&schwrd=&uid=14521",
+          "publisher": "수원시의회",
+          "scope": "2026-03-26 개소 사후 실적보고",
+          "noticeDate": null,
+          "accessEvidence": "official minutes search-indexed"
+        }
+      ],
+      "intent": "과거 개소 사실을 근거로 한 개원 축하화분 구매정보의 역사적 사례 검토",
+      "decision": [
+        "과거 운영 개시일과 게시일을 명확히 구분한다",
+        "공식 안내 주소와 연무마을 어울림터 3~4층을 실수령 장소로 자동 확정하지 않는다",
+        "화분 반입 가능 여부·담당자·현재 가격과 배송비는 공식 출처가 확인해 주지 않는다"
+      ],
+      "skus": [
+        "D144",
+        "D149"
+      ],
+      "legacy": {
+        "site": "clinicopen",
+        "index": 547,
+        "path": "/r/00547.html"
+      },
+      "status": "HISTORICAL_CONFIRMED_NOT_CURRENT_EVENT"
+    },
+    {
+      "id": "seoul-2019",
+      "region": "서울특별시 종로구 연건동",
+      "target": "서울대학교병원 대한외래",
+      "event": "개원 기념식",
+      "eventDate": "2019-04-03",
+      "startOfCare": "2019-02-25",
+      "noticeDate": "2019-04-05",
+      "address": "서울특별시 종로구 대학로 101",
+      "floor": "대한외래는 지하층 진료 공간으로 공식 병원 자료에 소개",
+      "officialSources": [
+        {
+          "id": "SNUH-NEWS",
+          "url": "https://www.snuh.org/board/B003/view.do?bbs_no=4782&pageIndex=1&searchKey=&searchWord=",
+          "publisher": "서울대학교병원",
+          "scope": "대한외래 개원 기념식 2019-04-03, 2019-04-05 보도",
+          "noticeDate": "2019-04-05",
+          "accessEvidence": "official page full text opened"
+        },
+        {
+          "id": "SNUH-HISTORY",
+          "url": "https://dept.snuh.org/dept/HHCC/content.do?menuId=003013",
+          "publisher": "서울대학교병원",
+          "scope": "2019-02-25 대한외래 개원·진료 개시와 04-03 기념식 구분",
+          "noticeDate": null,
+          "accessEvidence": "institution history"
+        },
+        {
+          "id": "SNUH-ADDRESS",
+          "url": "https://www.snuh.org/content/E003002007.do",
+          "publisher": "서울대학교병원",
+          "scope": "종로구 대학로 101 및 건물안내",
+          "noticeDate": null,
+          "accessEvidence": "official location page"
+        }
+      ],
+      "intent": "2019년 이미 종료된 대한외래 개원행사 관련 축하화환 구매조건의 역사적 사례",
+      "decision": [
+        "진료 개시와 기념식 날짜가 다름을 구분한다",
+        "대한외래 건물 안내는 수령·배송 허가 경로의 근거가 아니다",
+        "행사 종료 사례로 현재 행사 주문을 유도하지 않는다"
+      ],
+      "skus": [
+        "C200",
+        "C206"
+      ],
+      "legacy": {
+        "site": "clinicpresent",
+        "index": 3222,
+        "path": "/r/03222.html"
+      },
+      "status": "HISTORICAL_CONFIRMED_NOT_CURRENT_EVENT"
+    }
+  ],
+  "deferredCases": [
+    {
+      "id": "ansan-2023",
+      "region": "경기도 안산시 단원구",
+      "target": "단원보건소 구강보건센터",
+      "reportedDate": "2023-07-01",
+      "url": "https://www.ansan.go.kr/ansantalktalk/UPDIR/newsletter/3547469391_TBcCwyNo_c53451fe1e6e52193db71ddda7cb569fb46c08b1.pdf",
+      "originalPublicationDate": "2022-12-29",
+      "reason": "2023-01 municipal newsletter announces a future 2023-07-01 date. Completion confirmation not independently found, so cannot assert actual opening occurred.",
+      "status": "DEFERRED_NO_POST_EVENT_PROOF"
+    },
+    {
+      "id": "suwon-relocation",
+      "region": "수원",
+      "target": "현재 의료기관 이전",
+      "reason": "No specific newly relocated healthcare institution with dated official transfer notice verified in this scope.",
+      "status": "DEFERRED_NO_SPECIFIC_RELOCATION_EVIDENCE"
+    }
+  ],
+  "limits": [
+    "No proof of flower receiving permission or installations",
+    "No current live opening events verified",
+    "No permission to contact facilities",
+    "Do not infer delivery coverage from addresses",
+    "Historical seller price as of 2026-11-05 only; current price, stock, timing, shipping fee unknown"
+  ],
+  "retailerSource": "sites/nalmada-shared3/clinic-retail-candidate-ledger-20261111.json"
+}
