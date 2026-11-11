@@ -63,6 +63,39 @@ class ThreeRegionTest(unittest.TestCase):
             self.assertEqual(hashlib.sha256(before.read_bytes()).hexdigest(),
                              self.report["originalHtml"][n]["sha256"])
 
+    def test_limited_official_munae_location_and_namwon_held(self):
+        followup={x["id"]:x for x in self.ledger["followupClaimMap"]}
+        self.assertEqual(set(followup),{"M1","M2"})
+        self.assertEqual(followup["M1"]["regionNumber"],1039)
+        self.assertEqual(followup["M2"]["regionNumber"],1039)
+        official=next(s for s in self.ledger["sources"]
+                      if s["id"]=="KFCPI_FUNERAL_FACILITIES_PDF_2025")
+        self.assertIn("kfcpi.or.kr",official["url"])
+        self.assertEqual(official["checkedOn"],"2026-11-11")
+        self.assertIsNone(official["publicationDate"])
+        self.assertFalse(official["currentOperationChecked"])
+        self.assertTrue(self.report["officialFacilityProofDoesNotGrantDelivery"])
+        self.assertTrue(self.report["namwonStillHeldForExactFacilityAddress"])
+        self.assertEqual(self.report["additionalOfficialFacilityLocationFindings"],1)
+        self.assertEqual(self.report["additionalOfficialFacilityClaims"],2)
+        self.assertEqual(self.index.count('data-facility-location-only="true"'),1)
+        for item in ("우수영장례식장","관광레저로 534-5","061-533-4440",
+                     "현재 영업·인수 위치·외부화환 반입·B205 배송 가능 여부는 확인되지 않았습니다",
+                     "URL 디렉터리 날짜는 2025-09-29"):
+            self.assertIn(item,self.index)
+        self.assertIn('data-evidence-ids="M1"',self.index)
+        self.assertIn('data-evidence-ids="M2"',self.index)
+        self.assertIn('data-hold-region="1039"',self.index)
+        self.assertIn('data-hold-region="4360"',self.index)
+        self.assertIn("본문 발행·갱신일은 확인되지 않았습니다",self.index)
+        self.assertNotIn("우수영장례식장",self.seoseok)
+        self.assertNotIn("우수영장례식장으로 배송 가능합니다",self.index)
+        attempts=self.ledger["followupResearch"]["attempts"]
+        self.assertEqual(len(attempts),5)
+        self.assertEqual(self.ledger["followupResearch"]["publicationCandidateCount"],0)
+        self.assertIn("no_exact_official_facility_row",
+                      self.ledger["followupResearch"]["findings"][1]["editorialDecision"])
+
     def test_distinct_workflow_and_rerun_reproducibility(self):
         for x in ("1. 수령 시설부터 정확히 지정",
                   "2. 상품 선택과 비용을 구분",
