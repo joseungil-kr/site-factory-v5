@@ -157,12 +157,14 @@ def apply(root:Path, selected:list, evidence_dir:Path):
         (original/path.name).write_text(before,encoding="utf-8")
         after=transform(before, entries.get(code), ledger["venueNotices"])
         (changed/path.name).write_text(after,encoding="utf-8")
-        # QA-only dist tree: expose candidate HTML to real Chromium screenshotter.
-        if code in entries:
-            path.write_text(after,encoding="utf-8")
-        assert (after==before) if code not in entries else (after!=before)
-        compare.append(dict(code=code,regionName=row["name"],matched=code in entries,
-                    postedAdditionalFeeKRW=entries[code]["postedAdditionalFeeKRW"] if code in entries else None,
+        # Isolated QA tree only; no deployment or production generator mutation.
+        path.write_text(after,encoding="utf-8")
+        assert after != before
+        scope=scope_class(entries.get(code))
+        compare.append(dict(code=code,regionName=row["name"],matched=scope=="explicit_locality_row",
+                    contextual=scope=="broader_or_ambiguous_seller_row",
+                    scopeKind=scope,
+                    postedAdditionalFeeKRW=entries[code]["postedAdditionalFeeKRW"] if scope=="explicit_locality_row" else None,
                     sourceSkuIds=entries[code]["sourceSkuIds"] if code in entries else [],
                     sellerSources=entries[code]["sourceUrls"] if code in entries else [],
                     sourcesAsOf="2026-11-11" if code in entries else None,
@@ -179,16 +181,18 @@ def apply(root:Path, selected:list, evidence_dir:Path):
         out=transform(text,entries.get(code),ledger["venueNotices"])
         (reg_after/p.name).write_text(out,encoding="utf-8")
         assert 'noindex,nofollow' in out
-    assert sum(row["changed"] for row in compare)==20
-    assert sum(not row["changed"] for row in compare)==30
+    assert sum(row["changed"] for row in compare)==50
+    assert sum(row["scopeKind"]=="explicit_locality_row" for row in compare)==4
+    assert sum(row["contextual"] for row in compare)==16
+    assert sum(row["scopeKind"]=="no_seller_row" for row in compare)==30
     (evidence_dir/"shipping-overlay-audit.json").write_text(
         json.dumps(dict(ledgerSHA256=hashlib.sha256(LEDGER.read_bytes()).hexdigest(),
             sourceType="2026-11-11 indexed seller page, current checkout unverified",
-            matched20=True,unmatched30Untouched=True,actualDeliveryConfirmed=0,
+            localityExplicit4=True,broaderOnly16=True,noFeeSource30=True,actualDeliveryConfirmed=0,
             venueRestrictionsConditional=True,comparison=compare),
             ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     with (evidence_dir/"shipping-50.csv").open("w",encoding="utf-8-sig",newline="") as f:
-        cols=["code","regionName","matched","postedAdditionalFeeKRW","sourceSkuIds",
+        cols=["code","regionName","matched","contextual","scopeKind","postedAdditionalFeeKRW","sourceSkuIds",
               "sellerSources","sourcesAsOf","liveDeliveryAvailable","sellerFeeCurrentlyEffective",
               "beforeSHA256","afterSHA256","changed"]
         w=csv.DictWriter(f,fieldnames=cols);w.writeheader()
