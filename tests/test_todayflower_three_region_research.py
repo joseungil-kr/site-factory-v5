@@ -42,7 +42,7 @@ class ThreeRegionTest(unittest.TestCase):
         self.assertIn("별관",self.seoseok)
         self.assertIn("033-430-4558",self.seoseok)
         self.assertIn("20,000원",self.seoseok)
-        self.assertIn("상품 B205",self.seoseok)
+        self.assertIn("근조 특대 3단 화환 B205",self.seoseok)
         self.assertIn("판매처 게시일·변경일 미상",self.seoseok)
         self.assertNotIn("배송 확정",self.seoseok)
         self.assertNotIn("현재 배송 가능합니다",self.seoseok)
