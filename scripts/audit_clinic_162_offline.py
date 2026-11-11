@@ -19,6 +19,14 @@ FILLERS = (
 )
 UNSUPPORTED = ("무료배송 보장", "전국 당일배송 보장", "100% 당일 도착", "배송 완료 사례")
 SHOPPING_TERMS = ("화분", "식물", "관엽", "분갈이", "물주기")
+REGRESSION_PHRASES = (
+    "한의원 입구와 대기실에 어울리는 크기·색감을 함께 살펴보세요.",
+    "금전수·녹보수의 사진과 가격을 비교해 놓을 자리에 어울리는 화분을 골라보세요.",
+    "배송 연락을 받을 분과 시간대를 함께 정해 보세요.",
+    "판매처 상품가격에 배송지별 추가 배송비를 더해 예산을 살펴보시면 좋습니다.",
+    "배송을 원활하게 하려면 수령자와 연락이 되는지가 중요합니다.",
+)
+
 class Document(HTMLParser):
     def __init__(self):
         super().__init__(convert_charrefs=True)
@@ -30,6 +38,7 @@ class Document(HTMLParser):
         self.h1 = 0
         self.phone = 0
         self.seen_text = []
+        self.fact_ids = []
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
         if tag == "meta":
@@ -38,6 +47,8 @@ class Document(HTMLParser):
             self.links.append(a)
         elif tag == "img":
             self.images.append(a)
+        elif tag == "article" and "data-fact-id" in a:
+            self.fact_ids.append(a["data-fact-id"])
         elif tag == "h1":
             self.h1 += 1
         elif tag == "a" and a.get("href") == "tel:1844-0644":
@@ -58,6 +69,13 @@ def sample(paths, count=54):
     ranked = sorted(paths, key=lambda p: hashlib.sha256(("clinic-editorial-20261111|" + p.name).encode()).digest())
     return sorted(ranked[:count])
 
+def sample_new(paths, previous, count=54):
+    used={p.name for p in previous}
+    ranked=sorted((p for p in paths if p.name not in used and p.name!="00139.html"),
+                  key=lambda p:hashlib.sha256(("clinic-editorial-new-20261111|"+p.name).encode()).digest())
+    assert len(ranked)>=count
+    return sorted(ranked[:count])
+
 def check(site, path, public):
     doc = Document()
     source = path.read_text(encoding="utf-8")
@@ -71,6 +89,12 @@ def check(site, path, public):
     if any(source.count(x) > 0 for x in FILLERS): issues.append("EDITORIAL_FILLER")
     substantive = [p for p in doc.paragraphs if len(p) >= 40]
     if len(substantive) != len(set(substantive)): issues.append("DUPLICATE_PARAGRAPH")
+    if len(doc.fact_ids) != (12 if site=="clinicpresent" else 9):
+        issues.append("FACT_COUNT")
+    if len(doc.fact_ids) != len(set(doc.fact_ids)):
+        issues.append("DUPLICATE_FACT_ID")
+    repeated={phrase:source.count(phrase) for phrase in REGRESSION_PHRASES if source.count(phrase)>1}
+    if repeated: issues.append("REPEATED_ADVICE_PHRASE")
     if site == "clinicpresent":
         # '화분' may occur once in an honest wreath-vs-plant comparison, but
         # plant-choice advice cannot be passed off as wreath purchasing guidance.
@@ -90,6 +114,7 @@ def check(site, path, public):
     score = max(0, 100 - 15 * len(issues))
     return {"site":site, "path":path.relative_to(sitebase).as_posix(), "score":score,
             "automatedPass":not issues and score >= 90, "issues":issues,
+            "factIds":doc.fact_ids, "repeatEvidence":repeated,
             "paragraphs":len(doc.paragraphs), "images":len(doc.images),
             "phoneLinks":doc.phone, "customerUsefulnessHumanReviewed":False,
             "retailProductPriceAndLinkHumanReviewed":False}
@@ -101,14 +126,22 @@ def main():
     args = ap.parse_args()
     public = args.dist / "public"
     rows = []
+    sample_sets = {}
     for site in SITES:
         sitebase = public / "sites" / site
         paths = list((sitebase / "r").glob("*.html"))
-        for file in sample(paths):
+        old=sample(paths)
+        fresh=sample_new(paths,old)
+        fixed=[sitebase/"r"/"00139.html"]
+        assert all(p.is_file() for p in fixed)
+        sample_sets[site]={"previous54":[p.name for p in old],
+                          "new54":[p.name for p in fresh],"fixedRegression":"00139.html"}
+        for file in old+fresh+fixed:
             rows.append(check(site, file, public))
     result = {"scope": "pinned isolated build; not current live byte parity",
-              "sampleMethod": "sha256-ranked deterministic IDs, 54 per site",
-              "sampleSize":len(rows), "countBySite":{s:sum(x["site"] == s for x in rows) for s in SITES},
+              "sampleMethod": "previous deterministic 54 + disjoint new 54 + fixed 00139 per site",
+              "sampleSize":len(rows), "sampleSets":sample_sets,
+              "countBySite":{s:sum(x["site"] == s for x in rows) for s in SITES},
               "automatedFailCount":sum(not x["automatedPass"] for x in rows),
               "humanReviewed":False, "releaseApproved":False, "rows":rows}
     args.output.parent.mkdir(parents=True, exist_ok=True)
