@@ -27,6 +27,8 @@ def run(root:Path,out:Path):
                     context=browser.new_context(viewport={"width":width,"height":height},device_scale_factor=1)
                     page=context.new_page()
                     page.goto("http://127.0.0.1:18766/r/00139.html",wait_until="networkidle")
+                    # Disable the page's smooth-scroll animation for deterministic hit testing.
+                    page.evaluate("() => {document.documentElement.style.scrollBehavior='auto';document.body.style.scrollBehavior='auto'}")
                     page.evaluate("() => document.fonts.ready")
                     metrics=page.evaluate("""() => {
                       const fixed=document.querySelector('.mobileCall');
@@ -58,7 +60,7 @@ def run(root:Path,out:Path):
                     # Explicitly scroll footer CTA to the center of the unobstructed viewport
                     hit=page.evaluate("""() => {
                       const a=document.querySelector('.footCall .call');
-                      a.scrollIntoView({block:'center',inline:'nearest'});
+                      a.scrollIntoView({behavior:'instant',block:'center',inline:'nearest'});
                       const r=a.getBoundingClientRect(),x=Math.max(1,Math.min(innerWidth-1,(r.left+r.right)/2)),y=Math.max(1,Math.min(innerHeight-1,(r.top+r.bottom)/2));
                       const target=document.elementFromPoint(x,y);
                       return {ctaTop:r.top,ctaBottom:r.bottom,x,y,hit:!!(target&&(target===a||a.contains(target))),targetTag:target?.tagName,scrollY};
