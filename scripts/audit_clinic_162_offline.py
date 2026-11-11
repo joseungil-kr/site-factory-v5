@@ -98,7 +98,7 @@ def check(site, path, public):
     if any(source.count(x) > 0 for x in FILLERS): issues.append("EDITORIAL_FILLER")
     substantive = [p for p in doc.paragraphs if len(p) >= 40]
     if len(substantive) != len(set(substantive)): issues.append("DUPLICATE_PARAGRAPH")
-    if len(doc.fact_ids) != (9 if site=="clinicpresent" else 7):
+    if len(doc.fact_ids) != {"clinicflower":6,"clinicopen":5,"clinicpresent":9}[site]:
         issues.append("FACT_COUNT")
     if len(doc.fact_ids) != len(set(doc.fact_ids)):
         issues.append("DUPLICATE_FACT_ID")
