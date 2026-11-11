@@ -44,6 +44,9 @@ jobs:
         continue-on-error: true
         run: |
           node --version
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-match 'Noto Sans CJK KR' | grep -i 'NotoSansCJK'
           npx --yes playwright@1.56.1 install chromium
           for name in facility-ansan-gd sku-b101-daebunam no-source-2852; do
             npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "390,844" --full-page \
