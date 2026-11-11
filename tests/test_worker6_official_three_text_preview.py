@@ -19,6 +19,9 @@ class OfficialThree(unittest.TestCase):
    self.assertIn(term,body)
    self.assertIn('공식자료 확인일 2026-11-11',body)
    self.assertIn('D144',body)
+   self.assertIn('2026-11-09 당시 확인 가격',body)
+   self.assertIn('현재 가격은 주문 전 판매처에서 다시 확인하세요',body)
+   self.assertIn('실제 배송 가능 여부는 미확인',body)
    self.assertIn('noindex,nofollow',body)
    self.assertNotIn('<img',body)
  def test_fee_exact_rows_and_scope(self):
