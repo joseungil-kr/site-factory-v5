@@ -21,6 +21,9 @@ def load_ledger():
                if s["url"] is not None)
     for fact in data["facts"]:
         assert fact["sourceId"] in sources
+        assert len(fact["regionCodes"]) == len(fact["regionNames"])
+        assert len(set(fact["regionCodes"])) == len(fact["regionCodes"])
+        assert all(name.strip() for name in fact["regionNames"])
         assert fact["publicationStatus"] == "seller-listed-undated"
         assert fact["liveStatus"] == "unverified"
         assert fact["regionCodes"] or fact["displayPolicy"].endswith("unmapped") or fact["kind"] == "sku_listing"
@@ -85,6 +88,7 @@ def evidence_detail_payload(*, region_code, facility=None, sku=None, ledger=None
     data = ledger or load_ledger()
     facts = match_specific_facts(region_code=region_code, facility=facility,
                                  sku=sku, ledger=data)
+    sources = {s["id"]: s for s in data["sources"]}
     return {
         "role": "evidence_detail" if facts else "general_buying_guide",
         "regionCode": region_code,
@@ -93,7 +97,11 @@ def evidence_detail_payload(*, region_code, facility=None, sku=None, ledger=None
                 "id": f["id"], "kind": f["kind"], "sku": f["sku"],
                 "facility": f["facilityName"], "condition": f.get("condition"),
                 "amountKRW": f.get("amountKRW"),
-                "sourceURL": next(s["url"] for s in data["sources"] if s["id"] == f["sourceId"]),
+                "sourceURL": sources[f["sourceId"]]["url"],
+                "sourceObservedAt": sources[f["sourceId"]]["observedAt"],
+                "sourcePublicationDate": sources[f["sourceId"]]["publicationDate"],
+                "regionName": f["regionNames"][f["regionCodes"].index(region_code)],
+                "sourcePublicationStatus": f["publicationStatus"],
                 "verifiedCurrent": False,
                 "unknown": f["unknown"],
             }
