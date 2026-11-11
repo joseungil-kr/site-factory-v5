@@ -110,38 +110,72 @@ jobs:
           assert len(list(out.rglob('*.html')))==324  # fixed 00139 is already among previous 54
           print('SAMPLE_HTML_ARCHIVED',len(list(out.rglob('*.html'))))
           PY
-      - name: Capture three-site mobile and desktop regression screenshots
+      - name: Install Korean fonts and browser inspection dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          python -m pip install --disable-pip-version-check playwright Pillow
+          fc-match 'Noto Sans CJK KR'
+      - name: Capture and verify full-page mobile and desktop screenshots
         run: |
           python - <<'PY'
-          import shutil,subprocess,time,urllib.request
+          import json,shutil,subprocess,time,urllib.request
           from pathlib import Path
+          from PIL import Image,ImageChops
+          from playwright.sync_api import sync_playwright
           dist=Path('/tmp/clinic-audit-20261111/public')
           shots=Path('/tmp/clinic-screens');shots.mkdir(exist_ok=True)
-          chrome=next((x for x in ('google-chrome','google-chrome-stable','chromium','chromium-browser') if shutil.which(x)),None)
+          chrome=next((shutil.which(x) for x in ('google-chrome','google-chrome-stable','chromium','chromium-browser') if shutil.which(x)),None)
           if not chrome: raise RuntimeError('No installed headless Chromium/Chrome')
-          for site in ('clinicflower','clinicopen','clinicpresent'):
-              root=dist/'sites'/site
-              link=root/'assets'
-              if not link.exists(): link.symlink_to(Path('../../assets'))
-              proc=subprocess.Popen(['python','-m','http.server','18765','--bind','127.0.0.1','--directory',str(root)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+          evidence=[]
+          with sync_playwright() as playwright:
+              browser=playwright.chromium.launch(executable_path=chrome,headless=True,args=['--no-sandbox'])
               try:
-                  ready=False
-                  for _ in range(30):
+                  for site in ('clinicflower','clinicopen','clinicpresent'):
+                      root=dist/'sites'/site
+                      link=root/'assets'
+                      if not link.exists():link.symlink_to(Path('../../assets'))
+                      proc=subprocess.Popen(['python','-m','http.server','18765','--bind','127.0.0.1','--directory',str(root)],stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
                       try:
-                          urllib.request.urlopen('http://127.0.0.1:18765/r/00139.html',timeout=2)
-                          ready=True;break
-                      except Exception:time.sleep(.2)
-                  if not ready:raise RuntimeError('Local HTTP failed for '+site)
-                  for width,height,label in ((390,844,'mobile-390'),(1440,900,'desktop-1440')):
-                      out=shots/(site+'-00139-'+label+'.png')
-                      subprocess.run([chrome,'--headless=new','--no-sandbox','--disable-gpu',
-                          '--hide-scrollbars','--force-device-scale-factor=1','--window-size='+str(width)+','+str(height),
-                          '--screenshot='+str(out),'http://127.0.0.1:18765/r/00139.html'],
-                          check=True,timeout=50,stdout=subprocess.DEVNULL,stderr=subprocess.PIPE)
-                      assert out.exists() and out.stat().st_size>5000,(site,label)
-                      print('SCREEN_CAPTURED',site,label,out.stat().st_size)
+                          ready=False
+                          for _ in range(30):
+                              try:
+                                  urllib.request.urlopen('http://127.0.0.1:18765/r/00139.html',timeout=2)
+                                  ready=True;break
+                              except Exception:time.sleep(.2)
+                          if not ready:raise RuntimeError('Local HTTP failed for '+site)
+                          for width,height,label in ((390,844,'mobile-390'),(1440,900,'desktop-1440')):
+                              context=browser.new_context(viewport={'width':width,'height':height},device_scale_factor=1)
+                              page=context.new_page()
+                              response=page.goto('http://127.0.0.1:18765/r/00139.html',wait_until='networkidle',timeout=30000)
+                              assert response and response.status==200
+                              metrics=page.evaluate("""async () => {
+                                await document.fonts.ready;
+                                const imgs=Array.from(document.images);
+                                await Promise.all(imgs.map(img=>img.decode()));
+                                const imgResults=imgs.map(img=>({src:img.src,loaded:img.complete && img.naturalWidth>0,naturalWidth:img.naturalWidth,rect:img.getBoundingClientRect().toJSON()}));
+                                return {fontStatus:document.fonts.status,fontKR:document.fonts.check('16px "Noto Sans CJK KR"','한글'),width:innerWidth,scrollWidth:document.documentElement.scrollWidth,height:innerHeight,scrollHeight:document.documentElement.scrollHeight,images:imgResults};
+                              }""")
+                              assert metrics['fontStatus']=='loaded' and metrics['fontKR'],(site,label,'font unavailable',metrics)
+                              assert metrics['images'] and all(img['loaded'] and img['naturalWidth']>=768 for img in metrics['images']),(site,label,'image unavailable',metrics)
+                              assert metrics['scrollWidth']<=width+2,(site,label,'horizontal overflow',metrics)
+                              assert metrics['scrollHeight']>height+100,(site,label,'no full-page content',metrics)
+                              out=shots/(site+'-00139-'+label+'.png')
+                              page.screenshot(path=str(out),full_page=True,animations='disabled',timeout=30000)
+                              with Image.open(out) as bitmap:
+                                  assert bitmap.width==width and bitmap.height>=metrics['scrollHeight']-2,(site,label,'not full page',bitmap.size,metrics)
+                                  # A decoded image with no visible ink can be an invisible or broken layout.
+                                  sample=bitmap.crop((0,min(bitmap.height-1,300),bitmap.width,min(bitmap.height,1000))).convert('RGB')
+                                  assert ImageChops.difference(sample,Image.new('RGB',sample.size,'white')).getbbox(),(site,label,'blank image region')
+                                  metrics['pngSize']=[bitmap.width,bitmap.height]
+                              evidence.append({'site':site,'viewport':label,'metrics':metrics,'file':out.name,'bytes':out.stat().st_size})
+                              print('FULL_SCREEN_PASS',site,label,out.stat().st_size,metrics['pngSize'],metrics['fontKR'],len(metrics['images']))
+                              context.close()
+                      finally:
+                          proc.terminate();proc.wait(timeout=10)
               finally:
-                  proc.terminate();proc.wait(timeout=10)
+                  browser.close()
+          (shots/'visual-evidence.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
       - name: Publish only QA logs as artifact
         if: always()
