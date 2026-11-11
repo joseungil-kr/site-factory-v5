@@ -1,7 +1,7 @@
 """3 intent-consistent ribbon page examples, same original article extraction."""
 import json,hashlib,re,unittest
 from pathlib import Path
-from scripts.build_todayflower_ribbon_intent_pilot import audit,ROOTOUT,INTENT,ROLES,choose
+from scripts.build_todayflower_ribbon_intent_pilot import audit,ROOTOUT,INTENT,ROLES,choose,BUYER_SITUATIONS,select_role
 from scripts.audit_todayflower_semantic_gate import article,score,LIMIT
 from v5.audit import grams
 
@@ -18,6 +18,15 @@ class RibbonIntentPilotTest(unittest.TestCase):
         self.assertEqual(self.report["chosenNumbers"][0],4582)
         self.assertEqual(self.report["chosenNumbers"][1:],sorted(self.report["chosenNumbers"][1:]))
         self.assertEqual([x["role"] for x in self.rows],list(ROLES))
+        self.assertEqual([x["buyerSituation"] for x in self.rows],list(BUYER_SITUATIONS))
+        self.assertEqual([select_role(x["buyerSituation"]) for x in self.rows],list(ROLES))
+        for row in self.rows:
+            rendered=(ROOTOUT/f'candidate-{row["number"]}.html').read_text(encoding="utf-8")
+            self.assertIn(row["roleLabel"],rendered)
+            self.assertNotIn("<strong>"+row["role"]+"</strong>",rendered)
+            self.assertNotIn("search_index_excerpt;",rendered)
+        with self.assertRaises(AssertionError):
+            select_role({"senderType":"company","approvalOwner":"self","eventPurpose":"formal_event"})
         self.assertTrue(all(x["topic"]==INTENT for x in self.rows))
         self.assertEqual(self.report["crossPopulationPairs"],3*len(self.population))
         self.assertFalse(self.report["competitionRankingVerified"])
