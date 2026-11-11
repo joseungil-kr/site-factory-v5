@@ -4,6 +4,9 @@ on:
     branches: [site/v51-promotion-gift-plants-20261109]
     paths:
       - scripts/worker6_three_buyer_design_preview.py
+      - scripts/worker6_illustration_integrity.py
+      - assets/library/promotion-plant/a_bright_softly_lit_modern_office_desk_still_lif.webp
+      - assets/library/promotion-plant/a_bright_softly_lit_indoor_desk_office_scene_in_a.webp
       - .github/workflows/worker6-three-buyer-designs.yml
   workflow_dispatch:
 permissions:
