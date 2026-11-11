@@ -6,9 +6,20 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 sys.path.insert(0,str(ROOT/'scripts'))
 from worker6_core_five_preview import generate_inputs,operator_policy
-from worker6_operator_three_diagnostic import with_required_receipt_paths
+
 from worker6_shipping_render import lookup,evidence_section
 from v5.purpose_render import assemble,render
+def with_required_receipt_paths(pool):
+    # Same three required questions as the six-region controlled preview.
+    result=deepcopy(pool)
+    required=[
+      ('수령 장소 선택 · 회사·사무실','회사나 사무실에서 받을 경우 회사명과 새 부서, 건물 층·호실을 확인했나요? 근무하는 날짜와 실제 수령 담당자를 확인하고 상품을 받을 자리를 정하세요.'),
+      ('수령 장소 선택 · 자택','자택에서 받을 경우 도로명주소와 건물번호, 동·호수를 확인했나요? 받는 분이 집에 있는 시간과 부재 시 연락·수령 방법을 먼저 확인하세요.'),
+      ('수령 장소 선택 · 행사장','행사장에서 받을 경우 행사 시작시각과 물품 반입 가능 시간을 확인했나요? 수령 창구와 담당자를 확인하고 희망 도착시각을 전화로 상담하세요.')]
+    for heading,paragraph in required:
+        if not any(x.get('heading')==heading for x in result['sections']):
+            result['sections'].append({'slot':'choice','role':'required','heading':heading,'paragraph':paragraph})
+    return result
 SITE=ROOT/'sites/promotion-gift-plants'
 OUT=ROOT/'reports/promotion-gift-plants/three-buyer-designs'
 OUT.mkdir(parents=True,exist_ok=True)
