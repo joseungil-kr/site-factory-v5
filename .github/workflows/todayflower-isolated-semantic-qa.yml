@@ -1,0 +1,104 @@
+name: Todayflower isolated semantic QA (no deploy)
+on:
+  push:
+    branches:
+      - qa/todayflower-semantic-20261111
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: todayflower-isolated-qa
+  cancel-in-progress: false
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert isolated input and no public deployment
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('sites/todayflower-nalmada/site.json').read_text())
+          assert s['id']=='todayflower-nalmada'
+          assert s['publishEnabled'] is False and s['indexNow']['enabled'] is False
+          assert s['todayflowerNational']['previewOnly'] is True
+          print('ISOLATED_NO_DEPLOY_POLICY_PASS')
+          PY
+      - name: Existing national generator and similarity tests
+        id: original
+        continue-on-error: true
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_pilot.py -v
+          python -m unittest discover -s tests -p test_todayflower_copy_quality.py -v
+          python -m unittest discover -s tests -p test_todayflower_national.py -v
+          python -m v5 plan-check --site todayflower-nalmada
+      - name: Generate all 5070 files only to isolated runner dist
+        id: build
+        continue-on-error: true
+        run: |
+          python -m v5 build --site todayflower-nalmada --mode preview
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('dist/todayflower-nalmada')
+          assert len(list(p.glob('*.html'))) == 5071
+          print('GENERATED_HTML_COUNT',len(list(p.glob('*.html'))))
+          PY
+      - name: Existing official static audit
+        id: official
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: python -m v5 audit --site todayflower-nalmada
+      - name: Fixed 51 customer-copy score ledger
+        id: sample
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: python scripts/audit_todayflower_customer.py
+      - name: 333 complete pairs and fixed 51 plus 51 new actual HTML
+        id: semantic
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: python scripts/audit_todayflower_semantic_gate.py
+      - name: Save actual rendered HTML from both 51-page sample cohorts
+        if: always()
+        run: |
+          python - <<'PY'
+          import json,shutil
+          from pathlib import Path
+          p=Path('reports/todayflower-nalmada/semantic-isolated-qa.json')
+          if not p.exists():raise SystemExit(0)
+          rows=json.loads(p.read_text())['samples']
+          out=Path('reports/todayflower-nalmada/rendered-102-html')
+          out.mkdir(parents=True,exist_ok=True)
+          root=Path('dist/todayflower-nalmada')
+          for row in rows:shutil.copy2(root/row['htmlFile'],out/row['htmlFile'])
+          print('SAVED_REAL_HTML',len(list(out.glob('*.html'))))
+          PY
+      - name: Upload bounded QA evidence only (no deployment)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-isolated-semantic-${{ github.sha }}
+          path: |
+            reports/todayflower-nalmada/
+          if-no-files-found: warn
+          retention-days: 3
+      - name: Explicitly fail any original or semantic gate
+        if: always()
+        env:
+          ORIGINAL: ${{ steps.original.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+          OFFICIAL: ${{ steps.official.outcome }}
+          SAMPLE: ${{ steps.sample.outcome }}
+          SEMANTIC: ${{ steps.semantic.outcome }}
+        run: |
+          printf 'original=%s build=%s official=%s sample=%s semantic=%s\\n' "$ORIGINAL" "$BUILD" "$OFFICIAL" "$SAMPLE" "$SEMANTIC"
+          test "$ORIGINAL" = success
+          test "$BUILD" = success
+          test "$OFFICIAL" = success
+          test "$SAMPLE" = success
+          test "$SEMANTIC" = success
