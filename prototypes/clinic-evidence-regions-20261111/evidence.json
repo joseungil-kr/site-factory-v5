@@ -1,0 +1,250 @@
+{
+  "retrievedAt": "2026-11-11",
+  "scope": "3 representative local buying decision examples; no medical/patient data",
+  "sourceStatus": "Official facility/HIRA source captures, not current delivery permission",
+  "facilityExamplesAreNotNewOpenings": true,
+  "sources": [
+    {
+      "id": "A-LOCATION",
+      "publisher": "안산시 단원보건소",
+      "url": "https://ansan.go.kr/health/common/cntnts/selectContents.do?cntnts_id=C0001633",
+      "observed": "2026-11-11",
+      "scope": "위치·건물정보 일부",
+      "status": "search indexed official source"
+    },
+    {
+      "id": "A-FLOOR",
+      "publisher": "안산시 단원보건소",
+      "url": "https://ansan.go.kr/health/common/cntnts/selectContents.do?cntnts_id=C0001637",
+      "observed": "2026-11-11",
+      "scope": "층별안내 중 1층, 2층",
+      "status": "search indexed official source"
+    },
+    {
+      "id": "S-ADDRESS",
+      "publisher": "서울대학교병원",
+      "url": "https://www.snuh.org/content/E003002007.do",
+      "observed": "2026-11-11",
+      "scope": "주소·시설 목록",
+      "status": "opened official page"
+    },
+    {
+      "id": "S-MAP",
+      "publisher": "서울대학교병원",
+      "url": "https://www.snuh.org/content/E003002007.do",
+      "observed": "2026-11-11",
+      "scope": "원내위치도의 건물 구분",
+      "status": "opened official page"
+    },
+    {
+      "id": "S-ROUTE",
+      "publisher": "서울대학교병원",
+      "url": "https://www.snuh.org/content/E003011.do",
+      "observed": "2026-11-11",
+      "scope": "대한외래 B1 층별 연결통로",
+      "status": "search indexed official source"
+    },
+    {
+      "id": "W-HIRA",
+      "publisher": "건강보험심사평가원",
+      "url": "https://www.hira.or.kr/ra/hosp/hospInfoAjax.do?isNewWindow=Y&isPopupYn=Y&ykiho=JDQ4MTYyMiM1MSMkMSMkMCMkODkkMzgxMzUxIzExIyQxIyQzIyQ2MiQzNjE4MzIjNTEjJDEjJDYjJDgz",
+      "observed": "2026-11-11",
+      "scope": "병원 기본 주소·전화",
+      "status": "opened public hospital information"
+    },
+    {
+      "id": "W-SITE",
+      "publisher": "아주대학교병원",
+      "url": "https://hosp.ajoumc.or.kr/",
+      "observed": "2026-11-11",
+      "scope": "병원 이용안내 메뉴의 오시는 길, 주차, 층별 위치 분리",
+      "status": "search indexed official source"
+    }
+  ],
+  "cases": [
+    {
+      "id": "ansan-opening",
+      "region": "경기도 안산시",
+      "purpose": "개원식 화분",
+      "title": "안산 개원식 화분 — 주소와 수령 층을 먼저 구분하는 사례",
+      "facility": "안산시 단원보건소",
+      "facilityRelation": "공식 위치·층별 정보의 예시이며 개원·이전·꽃 배송 대상이라는 주장이 아님",
+      "address": "경기도 안산시 단원구 화랑로 250",
+      "facts": [
+        {
+          "id": "A1",
+          "claim": "안산시 단원보건소의 안내 주소는 안산시 단원구 화랑로 250이다.",
+          "source": "A-LOCATION"
+        },
+        {
+          "id": "A2",
+          "claim": "단원보건소 안내에는 1층 민원접수실·진료실과 2층 치과진료실·구강교육실이 구분되어 있다.",
+          "source": "A-FLOOR"
+        }
+      ],
+      "decisions": [
+        {
+          "title": "기관명·건물주소 재확인",
+          "text": "개원식 선물을 보낼 실제 기관이 단원보건소와 다른 곳인지부터 구분하세요. 예시 시설의 주소를 임의로 주문지에 입력하지 마세요.",
+          "sourceFacts": [
+            "A1"
+          ]
+        },
+        {
+          "title": "수령 층과 담당자 지정",
+          "text": "동일 시설 안에도 층별 기능이 다르다는 공식 안내를 참고하여, 실제 수령처의 층·인계 담당자·출입 가능 시간을 별도로 문의하세요.",
+          "sourceFacts": [
+            "A2"
+          ]
+        },
+        {
+          "title": "행사일과 상품 선택",
+          "text": "진료 시작일과 개원 행사일이 다른지 확인하고 화분 크기·희망 수령 시각을 판매처에 상담하세요.",
+          "sourceFacts": []
+        }
+      ],
+      "skus": [
+        "D149",
+        "D144"
+      ],
+      "unknown": [
+        "예시 시설의 외부 꽃 반입 허용 여부",
+        "해당 지역 주문의 재고·배송비·수령 가능시간",
+        "실제 신규 개원 기관과 행사일"
+      ]
+    },
+    {
+      "id": "seoul-relocation",
+      "region": "서울특별시 종로구",
+      "purpose": "의료기관 이전 축하화분",
+      "title": "서울 종로구 의료기관 이전 축하 — 복수 건물과 연결통로 확인 사례",
+      "facility": "서울대학교병원",
+      "facilityRelation": "기존 의료기관의 위치 참조 사례로, 서울대학교병원의 현재 이전·개원 행사 사실을 의미하지 않음",
+      "address": "서울특별시 종로구 대학로 101",
+      "facts": [
+        {
+          "id": "S1",
+          "claim": "서울대학교병원의 공식 주소는 서울특별시 종로구 대학로 101이다.",
+          "source": "S-ADDRESS"
+        },
+        {
+          "id": "S2",
+          "claim": "서울대학교병원 원내위치도에는 본관·대한외래·암병원·어린이병원 등 여러 건물이 나뉘어 표시된다.",
+          "source": "S-MAP"
+        },
+        {
+          "id": "S3",
+          "claim": "대한외래 지하 1층에는 본관·암병원·어린이병원·치과병원 연결통로가 안내되어 있다.",
+          "source": "S-ROUTE"
+        }
+      ],
+      "decisions": [
+        {
+          "title": "이전 전·후 주소 구분",
+          "text": "이전 축하 주문에서는 옛 주소가 아닌 실제 새 주소와 공식 상호를 확인해야 합니다. 소개한 서울대학교병원 주소를 다른 의료기관의 이전 주소로 대체하지 마세요.",
+          "sourceFacts": [
+            "S1"
+          ]
+        },
+        {
+          "title": "건물명까지 구체화",
+          "text": "한 주소에 여러 건물이 있는 사례이므로 수령 건물명, 입구, 층, 받는 분의 연락 방법을 주문 전 분리해 확인하세요.",
+          "sourceFacts": [
+            "S2"
+          ]
+        },
+        {
+          "title": "연결통로와 반입 경로는 별개",
+          "text": "공식 안내의 병원 간 연결통로는 방문객 길찾기 정보입니다. 화분 운송·반입 허가 통로라는 근거는 없으므로 해당 수령처에 별도 확인하세요.",
+          "sourceFacts": [
+            "S3"
+          ]
+        }
+      ],
+      "skus": [
+        "D144",
+        "D149"
+      ],
+      "unknown": [
+        "특정 이전 의료기관의 이전 사실·신주소",
+        "시설별 선물 수령 규정",
+        "판매처의 해당 주소 배송 가능 여부"
+      ]
+    },
+    {
+      "id": "suwon-celebration",
+      "region": "경기도 수원시 영통구",
+      "purpose": "병원 개원 축하화환",
+      "title": "수원 영통구 병원 개원 축하화환 — 실제 행사장과 시설 주소를 분리하는 사례",
+      "facility": "아주대학교병원",
+      "facilityRelation": "공적 등록 위치를 보여 주는 참고 시설이며 아주대학교병원이 새로 개원했거나 화환을 받는다는 주장이 아님",
+      "address": "경기도 수원시 영통구 월드컵로 164",
+      "facts": [
+        {
+          "id": "W1",
+          "claim": "건강보험심사평가원 병원정보의 아주대학교병원 주소는 경기도 수원시 영통구 월드컵로 164이다.",
+          "source": "W-HIRA"
+        },
+        {
+          "id": "W2",
+          "claim": "아주대학교병원 공식 홈페이지는 오시는 길·주차안내·층별 위치안내를 서로 다른 이용 안내 항목으로 제공한다.",
+          "source": "W-SITE"
+        }
+      ],
+      "decisions": [
+        {
+          "title": "공식 시설 주소와 개원 행사장 비교",
+          "text": "병원 소재지와 축하화환을 세울 실제 행사장이 같은지 확인하세요. 이 병원의 등록주소가 다른 개원 행사의 배송 주소라는 근거는 없습니다.",
+          "sourceFacts": [
+            "W1"
+          ]
+        },
+        {
+          "title": "차량 도착과 화환 반입 구분",
+          "text": "공식 안내에서 위치·주차·층별 정보가 분리되어 있으므로 행사 담당자에게 화환 반입 장소와 설치 가능 여부를 별도 확인해야 합니다.",
+          "sourceFacts": [
+            "W2"
+          ]
+        },
+        {
+          "title": "상품 규격과 행사장 허용 확인",
+          "text": "화환의 단수와 크기를 정하기 전에 설치 허용 여부·수령 담당자·행사 시간을 확인하고 판매처에 최종 비용을 상담하세요.",
+          "sourceFacts": []
+        }
+      ],
+      "skus": [
+        "C200",
+        "C206"
+      ],
+      "unknown": [
+        "행사 시설의 축하화환 반입·설치 규정",
+        "개원식이 실제 열리는 의료기관 및 행사 장소",
+        "현재 꽃 구성·재고·배송시간·추가비"
+      ]
+    }
+  ],
+  "retailer": {
+    "source": "sites/nalmada-shared3/clinic-retail-candidate-ledger-20261111.json",
+    "priceStatus": "2026-11-05 seller snapshot; current price/stock/fees/availability unverified",
+    "sellerRecheck": {
+      "D144": {
+        "searchIndexed": "2026-11-11",
+        "catalogPriceObserved": 53000,
+        "liveHTTPVerified": false
+      },
+      "C206": {
+        "searchIndexed": "2026-11-11",
+        "catalogPriceObserved": 120000,
+        "liveHTTPVerified": false
+      },
+      "D149": {
+        "searchIndexed": null,
+        "liveHTTPVerified": false
+      },
+      "C200": {
+        "searchIndexed": null,
+        "liveHTTPVerified": false
+      }
+    }
+  }
+}
