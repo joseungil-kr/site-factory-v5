@@ -187,7 +187,7 @@ def main():
         json.dumps({"recordCount":333,"records":mapped_event,
                     "qualityGatePassed":False,
                     "scope":"isolated editorial candidate rule, not existing URL changes"},
-                   ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
+                   ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     (OUT/"analysis.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     # Only a small number of real original HTML samples, no new bulk pages.
     dist=ROOT/"dist"/SITE
