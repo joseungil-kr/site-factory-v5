@@ -1,0 +1,143 @@
+{
+  "surveyDateKST": "2026-11-11",
+  "cutoff": "2026-11-11",
+  "futureWindow": "after 2026-11-11",
+  "scope": "Limited official healthcare institution or municipality postings only. No nationwide candidate generation.",
+  "maxQualifiedCases": 2,
+  "qualifiedCases": [],
+  "candidateHTMLGenerated": 0,
+  "acceptanceRules": [
+    "named healthcare institution",
+    "direct institution or municipality primary-source notice",
+    "explicit future opening or relocation date still supportable",
+    "not merely an anniversary, job start, academic institution, or historic notice",
+    "no inference of flower admission, delivery or installation"
+  ],
+  "reviewed": [
+    {
+      "id": "songdo-severance",
+      "name": "송도세브란스병원",
+      "category": "HISTORIC_OFFICIAL_TARGET_SUPERSEDED_AND_CURRENT_UNCERTAIN",
+      "region": "인천 연수구 송도동",
+      "sources": [
+        {
+          "publisher": "인천광역시 / 인천경제자유구역청",
+          "published": "2022-12-28",
+          "url": "https://www.incheon.go.kr/IC010205/view?beginDt=2022-05-15&curPage=704&endDt=&repSeq=DOM_0000000006455888&srchMainManagerDeptNm=&srchRepContents=&srchRepTitle=",
+          "observed": "2026-11-11",
+          "claim": "2026년 12월 개원 목표",
+          "standing": "outdated original plan"
+        },
+        {
+          "publisher": "인천경제자유구역청",
+          "published": "2021",
+          "url": "https://www.ifez.go.kr/main/pst/view.do?pst_id=noti03&pst_sn=269408&search=",
+          "observed": "2026-11-11",
+          "claim": "2026년 12월경 개원 목표",
+          "standing": "outdated initial target"
+        },
+        {
+          "publisher": "뉴시스 (인천경제청 및 연세의료원 발언 보도)",
+          "published": "2026-09-18",
+          "url": "https://nwww.newsis.com/view/NISX20260918_0003795202",
+          "observed": "2026-11-11",
+          "claim": "연세의료원은 2028년 말 준공·개원을 목표로 한다는 계획; 정확한 개원일 확정 아님",
+          "standing": "later timeline, still conditional"
+        },
+        {
+          "publisher": "기호일보",
+          "published": "2026-11-05",
+          "url": "https://www.kihoilbo.co.kr/news/articleView.html?idxno=3040052",
+          "observed": "2026-11-11",
+          "claim": "공사 착공 지연 및 2028년 말 일정 불확실성",
+          "standing": "recent secondary reporting; not a confirmed institutional event notice"
+        }
+      ],
+      "decision": "DEFER",
+      "reason": "Official 2026-12 target is superseded; no confirmed opening event day, receiving policy, or reliable current specific opening date. 2028 end is a conditional construction target, not a flower-delivery purchase lead.",
+      "futureEventDateConfirmed": null,
+      "recipientReceivingPolicy": null,
+      "flowerDeliveryPermission": null
+    },
+    {
+      "id": "pyeongchang-dental",
+      "name": "서울진심치과의원",
+      "category": "MUNICIPAL_USER_POSTED_HIRING_NOT_OFFICIAL_INSTITUTION_NOTICE",
+      "region": "강원도 평창군",
+      "sources": [
+        {
+          "publisher": "평창군청 열린광장 구인구직 (민간인 게시)",
+          "published": "2026-11-09",
+          "url": "https://www.pc.go.kr/portal/participation/participation-openplace/participation-openplace-guin?articleSeq=333079",
+          "observed": "2026-11-11",
+          "claim": "게시자가 2027년 1월 말 신규 개원 준비를 언급",
+          "standing": "unverified applicant-supplied recruitment copy, not independently confirmed clinic or municipal institutional opening notice"
+        }
+      ],
+      "decision": "DEFER",
+      "reason": "Hosted on municipality domain but content is third-party job posting; no directly attributable hospital/municipality official verified notice, exact event day, delivery address or receiving rules.",
+      "futureEventDateConfirmed": null,
+      "recipientReceivingPolicy": null,
+      "flowerDeliveryPermission": null
+    },
+    {
+      "id": "gyeonggi-public-postpartum-centers",
+      "name": "안성·평택 공공산후조리원",
+      "category": "OFFICIAL_CROSS_SCOPE_TIMELINES",
+      "region": "경기도 안성·평택",
+      "sources": [
+        {
+          "publisher": "경기도의회 보건복지위원회 회의록",
+          "published": "2026-06-11",
+          "url": "https://kms.ggc.go.kr/cms/mntsViewer.do?mntsId=15576",
+          "observed": "2026-11-11",
+          "claim": "평택 2027년 3월 개원 준비, 안성 2028년 1월 개원 준비라고 도 보건건강국장이 설명",
+          "standing": "planning not exact ceremony date, public postpartum centers not identified operating clinics"
+        }
+      ],
+      "decision": "OUT_OF_SCOPE",
+      "reason": "Sanhujoriwon development planning rather than a named hospital/clinic opening or relocation purchase target. No exact address, opening ceremony date or flower acceptance rule.",
+      "futureEventDateConfirmed": null,
+      "recipientReceivingPolicy": null,
+      "flowerDeliveryPermission": null
+    },
+    {
+      "id": "ewha-academic-anniversary",
+      "name": "이화여대 임상치의학대학원 23주년 학술대회",
+      "category": "FALSE_POSITIVE_ANNIVERSARY",
+      "region": "서울",
+      "sources": [
+        {
+          "publisher": "이화여자대학교 임상치의학대학원",
+          "published": "2026-10 (search index; exact notice date unconfirmed)",
+          "url": "https://dentist.ewha.ac.kr/dentist/notice/notice.do?articleNo=799579&mode=view",
+          "observed": "2026-11-11",
+          "claim": "2026-12-06 개원 23주년 기념 학술대회",
+          "standing": "anniversary conference, not opening of a new hospital"
+        }
+      ],
+      "decision": "EXCLUDE",
+      "reason": "A scheduled academic anniversary event, not new healthcare institution opening/relocation.",
+      "futureEventDateConfirmed": null
+    }
+  ],
+  "validation": {
+    "officialSourceWithPreciselyVerifiedFutureClinicOpeningDay": 0,
+    "qualified": 0,
+    "generatedHTML": 0,
+    "existingProductionHTMLModified": 0,
+    "searchSettingsModified": 0,
+    "gitFilesAdded": [
+      "research/clinic-future-openings/2026-11-11-limited-evidence.json",
+      "research/clinic-future-openings/2026-11-11-limited-report.md"
+    ],
+    "limitations": [
+      "Latest source accessible online may not represent all notices nationwide.",
+      "Third-party job posting must not be treated as government-verified notice.",
+      "2028 completion target does not establish a specific ceremony or shipping lead.",
+      "This review deliberately does not ask facilities or scrape personal medical records.",
+      "No current product prices, stock, fees, facility receipt permission or phone contact verified."
+    ]
+  },
+  "decision": "NO_BUYER_HTML_CREATED; CLOSE_LIMITED_RESEARCH_SCOPE"
+}
