@@ -130,7 +130,7 @@ def html_doc(p,ledger):
             '<meta name="robots" content="noindex,nofollow"><title>'+h(p["region"])+' 축하 리본 문구 · '+h(p["roleLabel"])+'</title>'
             '<style>'+STYLE+'</style></head><body><main><header><div class="tag">격리 사용자 상황별 후보 · 운영 미반영</div>'
             '<h1>'+h(p["region"])+' 축하 리본 문구</h1>'
-            '<p>지명만으로 문서 내용이 달라지는 것은 아닙니다. 이 후보는 <strong>'+h(p["role"])+'</strong>'
+            '<p>지명만으로 문서 내용이 달라지는 것은 아닙니다. 이 후보는 <strong>'+h(p["roleLabel"])+'</strong>'
             ' 구매 상황에 한정된 편집 테스트입니다.</p></header>'
             '<article class="article-content"><p data-copy="intro">'+h(p["intro"])+'</p>'+sections+'</article>'
             +meta+refs+'</main></body></html>')
