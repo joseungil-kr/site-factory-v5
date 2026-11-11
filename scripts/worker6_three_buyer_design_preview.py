@@ -69,8 +69,8 @@ for c,p in zip(cases,pages):
  html=render(site,p,pages,products,[],pool)
  # Keep the renderer's numbered URL contract and suppress links to non-existent
  # pages 4/5 in this three-page isolated preview (never change global renderer).
- html=re.sub(r'<a\\b[^>]*href="/(?:4|5)\\.html"[^>]*>.*?</a>', '', html, flags=re.S)
- html=re.sub(r'<a\\b[^>]*href="/(?:4|5)\\.html"[^>]*>', '', html)
+ html=re.sub(r'<a\b[^>]*href="/(?:4|5)\.html"[^>]*>.*?</a>', '', html, flags=re.S)
+ html=re.sub(r'<a\b[^>]*href="/(?:4|5)\.html"[^>]*>', '', html)
  assert 'href="/4.html"' not in html and 'href="/5.html"' not in html
  for q in ('회사명과 새 부서, 건물 층·호실을 확인했나요?',
            '도로명주소와 건물번호, 동·호수를 확인했나요?',
