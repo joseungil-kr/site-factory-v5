@@ -1,0 +1,75 @@
+{
+  "checkedAt": "2026-11-11",
+  "sourceUpdatedAtPolicy": "unavailable unless source explicitly provides date",
+  "seller": {
+    "sku": "D144",
+    "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=D144",
+    "checkedAt": "2026-11-09",
+    "scope": "seller-displayed surcharge rows only; no final fee or availability"
+  },
+  "cases": [
+    {
+      "id": "jeokseong",
+      "region": "경기도 파주시 적성면",
+      "sku": "D144",
+      "productPurpose": "승진·사무실 수령",
+      "official": {
+        "url": "https://www.paju.go.kr/www/www_02/city/city_indus/city_indus_03/city_indus_03_06.jsp",
+        "checkedAt": "2026-11-11",
+        "sourceUpdatedAt": null,
+        "quote": "위 치 : 경기도 파주시 적성면 가월리 1844번지 일원",
+        "scope": "적성일반산업단지 사업개요의 위치; 특정 기업·화분 수령처 아님"
+      },
+      "buyerQuestion": "산업단지 내 기업으로 보내는 경우 단지 이름이 아니라 실제 회사명·도로명·건물번호·수령 부서를 확인했나요?",
+      "sellerRowIds": [
+        7
+      ],
+      "feeState": "exact-locality-display"
+    },
+    {
+      "id": "seorak",
+      "region": "경기도 가평군 설악면",
+      "sku": "D144",
+      "productPurpose": "축하·행사 수령",
+      "official": {
+        "url": "https://www.gp.go.kr/seolak/contents.do?key=386",
+        "checkedAt": "2026-11-11",
+        "sourceUpdatedAt": null,
+        "quote": "경기도 가평군 설악면 한서로 8 (우 12467)",
+        "scope": "설악면 행정복지센터 청사 주소; 행사장·개별 수령 허가 아님"
+      },
+      "buyerQuestion": "수령처가 설악면 행정복지센터라고 지정된 경우에만 한서로 8인지 확인하고, 행사명·담당자·반입 가능시간을 별도로 확인했나요?",
+      "sellerRowIds": [
+        5,
+        8
+      ],
+      "feeState": "overlap-unknown-priority"
+    },
+    {
+      "id": "idong",
+      "region": "경기도 포천시 이동면",
+      "sku": "D144",
+      "productPurpose": "영전·자택 또는 기관 수령",
+      "official": {
+        "url": "https://www.pocheon.go.kr/edm/contents.do?key=10624",
+        "checkedAt": "2026-11-11",
+        "sourceUpdatedAt": "2026-01-01 (기관·시설 표 기준일)",
+        "quote": "이동면사무소 031)538-4550(二東面,IDONG-MYEON)이동면 화동로 2048",
+        "scope": "2026-01-01 기준 이동면 기관 목록의 행정복지센터 주소; 화분 반입 승인 아님"
+      },
+      "buyerQuestion": "실제 수령지가 이동면 행정복지센터인 경우에만 화동로 2048을 대조하고, 자택 수령이면 이 주소를 사용하지 말고 수령인 주소를 확인했나요?",
+      "sellerRowIds": [
+        5,
+        9
+      ],
+      "feeState": "overlap-unknown-priority"
+    }
+  ],
+  "policy": {
+    "facilityAcceptanceConfirmed": false,
+    "localDeliveryGuaranteed": false,
+    "finalSurchargeConfirmed": false,
+    "productPhotoUsed": false,
+    "regionalUniquenessProven": false
+  }
+}
