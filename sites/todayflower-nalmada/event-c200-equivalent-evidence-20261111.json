@@ -52,6 +52,17 @@
       "publisherUpdate": null,
       "quoteSnippet": null,
       "scope": "SKU, name, order URL only; no verified current ribbon UI, stock, price or delivery"
+    },
+    {
+      "id": "FLOWER119_3TIER",
+      "url": "https://www.flower119.co.kr/products/6735",
+      "kind": "other merchant",
+      "observedAs": "indexed long product page body",
+      "retrieval": "direct_open_cache_miss",
+      "lastCheckedOn": "2026-11-11",
+      "publisherUpdate": null,
+      "quoteSnippet": "메시지 카드/리본 무료",
+      "scope": "Flower119 product is not Todayflower C200; never transfer price/size/delivery/ribbon policy"
     }
   ],
   "checks": [
@@ -75,7 +86,8 @@
       "id": "EV3",
       "customerQuestion": "C200을 선택할 때 상품 옵션·실제 규격을 확인했는가?",
       "sourceIds": [
-        "PINNED_TODAYFLOWER_C200"
+        "PINNED_TODAYFLOWER_C200",
+        "FLOWER119_3TIER"
       ],
       "type": "catalog-backed SKU identity plus editorial questions",
       "contentSlot": "product_choice",
@@ -107,6 +119,6 @@
   "directCompetitorFullBodyOpened": 0,
   "oneflowerOpenedReadableBodyLines": 1,
   "noNewRegionalScenarioAssumption": true,
-  "stoppedResearch": "new URLs searched and opened; full relevant competitor body not obtained; no bypass or repeat cache misses",
+  "stoppedResearch": "New flower119 indexed product content reviewed; direct URL also failed cache miss; full direct original still not verified. No repeat attempts or bypass.",
   "editorialSourceReuse": "Observed buying questions only. Do not reproduce competitor text, policies, marketing guarantees, or merchandise rates."
 }
