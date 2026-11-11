@@ -32,9 +32,17 @@ def check(out):
                 assert "축하 2단 오브제" in new and "근조용으로 전용하지 않습니다" in new
                 assert "바로 주문 가능한 확정 SKU는 없습니다" in new
                 assert "C205" not in new
+                assert 'data-role="operator-dated-policy"' in new
+                assert "2018-10-01" in new
+                assert "신근조화환대" in new
+                assert "기존 3단화환 반입 금지" in new
+                assert "현재" in new and "확인한 결과는 아닙니다" in new
+                assert "축하용 C030을" in new and "근조용 대체상품으로 권장하지 않습니다" in new
             else:
                 assert "전날" in new and "당일" in new
                 assert "근조 특대" not in new
+                assert 'data-role="operator-dated-policy"' not in new
+                assert hashlib.sha256(new.encode()).hexdigest()=="8ef8ae5cf6ef019aad3262498df7ef1ff613dd94f38ee342ea566d747c3611ed", "Wonju HTML changed without new operator evidence"
             for width in (390,1440):
                 page=browser.new_page(viewport={"width":width,"height":900},
                                       device_scale_factor=1)
