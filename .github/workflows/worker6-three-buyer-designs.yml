@@ -1,0 +1,59 @@
+name: Worker6 three sourced buyer designs private QA
+on:
+  push:
+    branches: [site/v51-promotion-gift-plants-20261109]
+    paths:
+      - scripts/worker6_three_buyer_design_preview.py
+      - .github/workflows/worker6-three-buyer-designs.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and inspect three actual private HTML pages
+        run: |
+          python scripts/worker6_three_buyer_design_preview.py
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('reports/promotion-gift-plants/three-buyer-designs')
+          rows=json.loads((p/'manifest.json').read_text())
+          assert len(rows)==3
+          for row in rows:
+              h=(p/(row['id']+'.html')).read_text()
+              t=(p/(row['id']+'.txt')).read_text()
+              assert row['allRecipientQuestions']
+              assert len(t)>250 and 'noindex' in h
+              for sku in row['productSkus']:
+                  assert 'it_id='+sku in h
+              assert '1844-0644' in h
+          print('THREE_PRIVATE_HTML_PASS',len(rows))
+          PY
+      - name: Install Korean font and browser
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: HTTP 390 and 1440 screenshots
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory reports/promotion-gift-plants/three-buyer-designs >/tmp/worker6-three-http.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID" || true' EXIT
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/jeokseong-office.html >/dev/null && break || sleep 1; done
+          WORKER6_PAGES=jeokseong-office,seorak-venue,idong-home node scripts/worker6-browser-qa.mjs
+          cp reports/promotion-gift-plants/browser-qa.json reports/promotion-gift-plants/three-buyer-designs/browser-qa.json
+          cp -R reports/promotion-gift-plants/screenshots reports/promotion-gift-plants/three-buyer-designs/screenshots
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: worker6-three-buyer-private-real-html
+          path: reports/promotion-gift-plants/three-buyer-designs/
+          if-no-files-found: warn
