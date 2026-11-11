@@ -21,9 +21,13 @@ def load_ledger():
                if s["url"] is not None)
     for fact in data["facts"]:
         assert fact["sourceId"] in sources
-        assert len(fact["regionCodes"]) == len(fact["regionNames"])
         assert len(set(fact["regionCodes"])) == len(fact["regionCodes"])
         assert all(name.strip() for name in fact["regionNames"])
+        if fact["regionCodes"]:
+            assert len(fact["regionCodes"]) == len(fact["regionNames"])
+        else:
+            # Unmapped seller venues remain unmatchable to any region.
+            assert fact["displayPolicy"].endswith("unmapped") or fact["kind"] == "sku_listing"
         assert fact["publicationStatus"] == "seller-listed-undated"
         assert fact["liveStatus"] == "unverified"
         assert fact["regionCodes"] or fact["displayPolicy"].endswith("unmapped") or fact["kind"] == "sku_listing"
