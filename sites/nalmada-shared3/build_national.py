@@ -620,6 +620,10 @@ def generate(root:Path,output:Path,mode='preview',expected_total=15906):
             doc=file.read_text(encoding='utf-8')
             for ref in re.findall(r'<a\s[^>]*href="([^"]+)"',doc):
                 if ref.startswith('tel:') or ref.startswith('#') or ref.startswith('mailto:'):continue
+                if ref.startswith('https://fwith.co.kr/shop/item.php?it_id='):
+                    allowed={RETAIL_LEDGER[x]['orderUrl'] for x in CANDIDATE_SKUS[site]}
+                    if ref not in allowed:raise RuntimeError('Unapproved retailer URL '+ref)
+                    continue
                 if not ref.startswith('/'):raise RuntimeError('Unexpected outbound/internal URL '+ref)
                 dest=ref.split('#')[0] or source_path
                 if dest not in urls:raise RuntimeError(f'Broken link {source_path} -> {dest}')
