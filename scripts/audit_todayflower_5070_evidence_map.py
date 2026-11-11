@@ -60,18 +60,40 @@ def build_rows():
     def contextual(code):
         return sorted(f["id"] for f in facts if code in f["regionCodes"])
 
+    # The first 33 hand-edited pages are NOT in the region ledger's order.
+    # Never zip pages with locations: exact full-name and pinned-code joins only.
+    location_by_name = {}
+    location_by_code = {}
+    for loc in locations:
+        name, code = loc["name"], loc["code"]
+        assert name not in location_by_name, ("ambiguous region name", name)
+        assert code not in location_by_code, ("ambiguous region code", code)
+        location_by_name[name] = loc
+        location_by_code[code] = loc
+    pilot_by_name = {}
+    for loc in original_regions:
+        assert loc["name"] not in pilot_by_name, ("ambiguous pilot name", loc["name"])
+        pilot_by_name[loc["name"]] = loc
+    assert len(location_by_name) == len(location_by_code) == len(locations)
+    assert len(pilot_by_name) == len(original_regions) == 33
+
     rows = []
-    for i, (page, location) in enumerate(zip(pages, locations)):
-        n = page["number"]
+    for i, page in enumerate(pages):
+        n, name = page["number"], page["region"]
+        assert name in location_by_name, ("missing exact page region", n, name)
+        location = location_by_name[name]
         code = location["code"]
-        assert page["region"] == location["name"], (n, page["region"], location["name"])
-        assert code in valid_codes
-        assert code == (original_regions[i]["code"] if i < 33 else page["legalCode"])
-        assert len(code) == 10 and code.isdecimal()
+        assert code in valid_codes and len(code) == 10 and code.isdecimal()
         assert location["level"] in ("legal-dong", "municipality", "ward")
+        if i < 33:
+            assert name in pilot_by_name, ("missing pilot region", n, name)
+            assert code == pilot_by_name[name]["code"], ("pilot code mismatch", n, name)
+        else:
+            assert code == page["legalCode"], ("generated code mismatch", n, name)
         if code in official:
-            assert official[code] == location["name"]
-        assert location["name"].startswith("경기도 안산시") if i < 33 else True
+            assert official[code] == name, ("official code/name mismatch", n, code, name)
+        if i < 33:
+            assert name.startswith("경기도 안산시"), ("unexpected pilot region", n, name)
 
         skus = page["productSkus"]
         assert skus and set(skus) <= products
@@ -156,7 +178,8 @@ def verify(rows, pages, ledger, official, original_regions):
     expected = [*range(1, 404), *range(405, 5072)]
     assert [r["number"] for r in rows] == expected
     assert rows[0]["urlPath"] == "/" and "/404.html" not in {x["urlPath"] for x in rows}
-    assert [x["regionCode"] for x in rows[:33]] == [r["code"] for r in original_regions]
+    assert {x["regionCode"] for x in rows[:33]} == {r["code"] for r in original_regions}
+    assert {x["regionName"]:x["regionCode"] for x in rows[:33]} == {r["name"]:r["code"] for r in original_regions}
     assert len({x["regionCode"] for x in rows}) == 5070
 
     facts = {f["id"]: f for f in ledger["facts"]}
