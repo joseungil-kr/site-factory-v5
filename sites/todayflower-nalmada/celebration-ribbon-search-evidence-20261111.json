@@ -159,5 +159,61 @@
     "고정 상품원장 SKU·주문 링크만 사용",
     "지역명 자체가 구매결정 차이를 만드는 근거로 간주하지 않음",
     "49% 점수는 사람 편집 완료 인정이 아님"
-  ]
+  ],
+  "followup20261111": {
+    "purpose": "previous direct-open cache misses, independently selected competitor originals",
+    "searchRankingVerified": false,
+    "rank": null,
+    "searches": [
+      "축하화환 리본 문구 주문서 입력 안내 예식장 화환 보내는사람 본문 사이트",
+      "행사장 축하화환 반입 주문 확인사항 공식 판매처 행사 화환 배송 리본"
+    ],
+    "observations": [
+      {
+        "sourceId": "INDEX_FLORI_FULL",
+        "url": "https://flori.ai.kr/blog/wreath-order-form/",
+        "domain": "flori.ai.kr",
+        "checkedOn": "2026-11-11",
+        "searchResult": "full indexed article text available",
+        "directOpen": "failed_cache_miss",
+        "scope": "search-engine supplied long article body (not live page render)",
+        "originalTextFragments": [
+          "전화한 분의 연락처와 리본에 인쇄할 이름을 다른 칸에 받아요.",
+          "문구가 바뀌면 두 줄을 다시 보내요."
+        ],
+        "outcome": "indexed-body-reviewed_direct-access-not-verified"
+      },
+      {
+        "sourceId": "INDEX_SAMSIK_FULL",
+        "url": "https://samsik.net/shop/ribbon-preview/",
+        "domain": "samsik.net",
+        "checkedOn": "2026-11-11",
+        "searchResult": "long indexed page including FAQ",
+        "directOpen": "failed_cache_miss",
+        "scope": "merchant-specific interface text, not Todayflower product specification",
+        "originalTextFragments": [
+          "화환 리본 문구 미리보기",
+          "보내는 분: 회사명·직함·성함을 그대로 씁니다."
+        ],
+        "outcome": "indexed-body-reviewed_direct-access-not-verified"
+      },
+      {
+        "sourceId": "INDEX_FLOWERNAME_FULL",
+        "url": "https://flowername.co.kr/blog/post.php?slug=yesikjang-hwahwan-banip",
+        "domain": "flowername.co.kr",
+        "checkedOn": "2026-11-11",
+        "searchResult": "long indexed article with venue questions",
+        "directOpen": "failed_cache_miss",
+        "scope": "other seller site; FAQ about venue contact only, no Todayflower guarantee",
+        "originalTextFragments": [
+          "외부 화환 반입이 가능한지, 자체 화환만 받는지",
+          "설치 가능한 시간대"
+        ],
+        "outcome": "indexed-body-reviewed_direct-access-not-verified"
+      }
+    ],
+    "stoppedBecause": "3 direct URL opens returned cache miss; ordinary HTTP from container unavailable via DNS. No bypass, no false direct access or rank claim.",
+    "directlyOpenedNewCompetitorOrigins": 0,
+    "indexedFullTextNewSourcesReviewed": 3
+  }
 }
