@@ -2,7 +2,7 @@
 
 No internet, binary upload, deployment, or official regional archive needed.
 """
-import re
+import inspect
 import unittest
 import build
 
@@ -19,7 +19,7 @@ class MobileCards(unittest.TestCase):
             '.overflow td:nth-last-child(2){white-space:nowrap',
         ]:
             self.assertIn(declaration,css)
-        self.assertIn('noindex,nofollow',build.build.__code__.co_consts.__str__())
+        self.assertIn('noindex,nofollow',inspect.getsource(build.build))
     def test_catalogue_links_untouched(self):
         expected={'B201':59000,'B203':79000,'B205':109000,
                   'C205':149000,'C030':200000}
