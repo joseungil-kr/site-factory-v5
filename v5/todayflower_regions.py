@@ -127,23 +127,34 @@ def _make_page(code,name,number):
     # The permutation is derived from the legal code, not invented local facts.
     # Use different scenario slots in each section and FAQ; avoid copying the
     # same fixed blocks into every page under the same intent.
+    # Each advice sentence owns one customer decision slot.  The previous
+    # layout consumed 6/12 selection, 3/12 recipient and 3/12 delivery
+    # sentences in the *main article* alone, then reused almost the entire
+    # remaining pool in FAQs.  Across hundreds of same-intent pages that
+    # made the bodies near-identical even when the sentence order changed.
+    #
+    # Keep distinct buyer decisions: suitability, receipt/contact,
+    # seller-specific SKU comparison, and scheduling/total cost.
+    # FAQ advice draws other slots, never reusing an article sentence.
+    # Fewer but relevant decisions are preferable to padding with
+    # invented region-specific availability or repeated instructions.
     sections=[
         {"heading":intent+" 상품과 선택 기준",
-         "paragraph":one("selection",6)+" "+one("selection",0)},
+         "paragraph":one("selection",0)+" "+one("selection",1)},
         {"heading":"수령 주소와 인계 담당자",
-         "paragraph":one("receiver",1)+" "+one("receiver",8)+" "+one("receiver",10)},
+         "paragraph":one("receiver",0)+" "+one("receiver",1)},
         {"heading":"상품 사진·규격·옵션 비교",
-         "paragraph":one("selection",5)+" "+compare+" "+one("selection",9)},
+         "paragraph":one("selection",2)+" "+compare+" "+one("selection",3)},
         {"heading":"배송 일정과 최종 결제금액",
-         "paragraph":one("delivery",0)+" "+one("delivery",3)+" "+one("delivery",10)}
+         "paragraph":one("delivery",0)+" "+one("delivery",1)}
     ]
     faqs=[
         {"q":f"{name}에서 "+q1,
-         "a":one("delivery",5)+" "+one("receiver",6)},
+         "a":one("delivery",2)+" "+one("receiver",2)},
         {"q":q2,
-         "a":one("selection",2)+" "+one("selection",11)},
+         "a":one("selection",4)+" "+one("selection",5)},
         {"q":f"{name} 꽃배달을 주문할 때 어떤 정보를 준비하면 좋나요?",
-         "a":one("receiver",4)+" "+one("delivery",7)}
+         "a":one("receiver",3)+" "+one("delivery",3)}
     ]
 
     return {
