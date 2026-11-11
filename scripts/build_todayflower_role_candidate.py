@@ -78,6 +78,7 @@ def candidate_rows():
 
 def build():
     rows,pages,event,selected,evidence=candidate_rows()
+    evidence_sample={r["number"] for r in rows if r["wreathpriceMatchedIds"]}
     by_num={r["number"]:r for r in rows}
     by_page={p["number"]:p for p in pages}
     assert len(rows)==5070
