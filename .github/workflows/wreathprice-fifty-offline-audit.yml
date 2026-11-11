@@ -65,24 +65,33 @@ jobs:
           overlay=json.loads((root/"shipping-overlay-audit.json").read_text())
           compared=overlay["comparison"]
           assert len(compared)==50
-          assert sum(r["changed"] for r in compared)==20
-          assert sum(not r["changed"] for r in compared)==30
+          assert sum(r["changed"] for r in compared)==50
+          assert sum(r["scopeKind"]=="explicit_locality_row" for r in compared)==4
+          assert sum(r["scopeKind"]=="broader_or_ambiguous_seller_row" for r in compared)==16
+          assert sum(r["scopeKind"]=="no_seller_row" for r in compared)==30
           for r in compared:
               before=(root/"before-html"/(r["code"]+".html")).read_text()
               after=(root/"html"/(r["code"]+".html")).read_text()
-              assert (before != after)==r["changed"]
+              assert before!=after and r["changed"]
               assert "noindex,nofollow" in before and "noindex,nofollow" in after
-              old_caution="해당 수령지의 실제 주문 가능 여부와 추가 비용은 현재 검증된 자료가 없습니다."
-              if not r["matched"]:
-                  assert not r["postedAdditionalFeeKRW"] and before==after
-                  assert old_caution in after
-              else:
-                  assert old_caution in before and old_caution not in after
-                  assert "B205·C030 상품 상세에는 게시 추가배송비 요율이 있으나" in after
+              for role in ("product-comparison","region-navigation","purchase-guidance"):
+                  assert 'data-role="'+role+'"' in after
+              assert 'class="customer-choice"' not in after
+              assert after.count('shop/item.php?it_id=')==before.count('shop/item.php?it_id=')==5
+              assert after.count('<img ')==before.count('<img ')==5
+              if r["scopeKind"]=="explicit_locality_row":
+                  assert r["postedAdditionalFeeKRW"] is not None
+                  assert 'data-scope="explicit_locality_row"' in after
                   assert "현재 주문에 적용되는 요금인지 확인되지 않았습니다" in after
-                  assert "해당 수령지의 실제 주문 가능 여부와 최종 적용 추가비용은 아직 확인되지 않았습니다" in after
-                  assert "B201·B203·C205의 동일 요율 적용은 확인하지 못했습니다" in after
-                  assert "현재 유효성을 확정하지 않습니다" in after
+              elif r["scopeKind"]=="broader_or_ambiguous_seller_row":
+                  assert r["postedAdditionalFeeKRW"] is None
+                  assert 'data-scope="broader_or_ambiguous_seller_row"' in after
+                  assert "이 읍면동의 게시 추가배송비" in after
+                  assert "여기에는 금액을 표시하지 않습니다" in after
+              else:
+                  assert r["postedAdditionalFeeKRW"] is None
+                  assert 'data-role="seller-evidence"' not in after
+              assert "noindex,nofollow" in after
           for code in ("1111010100","1111010200","1123010100"):
               assert (root/"regressions-before"/(code+".html")).is_file()
               assert (root/"regressions"/(code+".html")).is_file()
