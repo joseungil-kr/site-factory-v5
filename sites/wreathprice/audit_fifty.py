@@ -12,6 +12,7 @@ from collections import defaultdict, Counter
 from html.parser import HTMLParser
 from pathlib import Path
 import expand_lower
+import shipping_evidence_overlay
 
 SEED = "wreathprice-qa-20261111"
 PRODUCTS = dict(B201="59,000원", B203="79,000원", B205="109,000원",
@@ -62,6 +63,9 @@ def audit(archive, evidence):
     evidence.mkdir(parents=True, exist_ok=True)
     snapshots = evidence / "html"
     snapshots.mkdir(exist_ok=True)
+    applied=shipping_evidence_overlay.apply(root,selected,evidence)
+    matched={x['code']:x for x in applied if x['matched']}
+    assert len(matched)==20
     rows, signatures = [], []
     for r in selected:
         path = root / "locality" / (r["code"] + ".html")
@@ -92,8 +96,13 @@ def audit(archive, evidence):
                          html_sha256=hashlib.sha256(body.encode()).hexdigest(),
                          utility=utility,accuracy=accuracy,semantic_uniqueness=0,
                          product_price_links=commerce,score=utility+accuracy+commerce,
+                         posted_fee_source_skus="B205,C030" if r["code"] in matched else "",
+                         posted_fee_krw=matched[r["code"]]["postedAdditionalFeeKRW"] if r["code"] in matched else "",
+                         posted_fee_currently_effective="unverified",
+                         delivery_available="unverified",
                          disposition="FAIL: no verified regional service evidence",
-                         reason="Common price/FAQ template; shipping coverage and fees unverified"))
+                         reason=("Seller posted fee available for B205/C030 only; checkout/availability unverified; shared regional template" if r["code"] in matched
+                                 else "No region-specific posted fee; checkout/availability unverified; shared regional template")))
     # Keep historical failing pages even when they are not selected by the fixed seed.
     regression_codes=("1111010100","1111010200","1123010100")
     regressions=evidence/"regressions"
@@ -117,6 +126,8 @@ def audit(archive, evidence):
                    suffix_counts=dict(Counter(r["suffix"] for r in rows)),
                    sampled_actual_html_read=50, normalized_repeated_count=normalized_repeats,
                    pass_count=0, index_eligible=0, noindex=True,
+                   shipping_posted_20=20,shipping_unmatched_30=30,delivery_confirmed=0,
+                   evidence_overlay_file='shipping-overlay-audit.json',
                    known_regression_html=regression_sha,
                    sources="Pinned official region ZIP + local generator output",
                    note="Prices are historical reference values, not live checkout validation")
