@@ -78,7 +78,8 @@ def audit(archive, evidence):
         correct = (all(count == 1 for count in sku_links.values())
                    and all(p in rendered for p in PRODUCTS.values()))
         guarded = (facts.meta == ["noindex,nofollow"]
-                   and "배송 가능 여부" in rendered
+                   and ("주문 가능 여부" in rendered or "배송 가능 여부" in rendered)
+                   and ("검증된 자료가 없습니다" in rendered or "확인되지 않았습니다" in rendered)
                    and "최종" in rendered)
         usable = ("수령 시설" in rendered and "주소" in rendered
                   and "리본" in rendered and "주문" in rendered)
@@ -93,6 +94,17 @@ def audit(archive, evidence):
                          product_price_links=commerce,score=utility+accuracy+commerce,
                          disposition="FAIL: no verified regional service evidence",
                          reason="Common price/FAQ template; shipping coverage and fees unverified"))
+    # Keep historical failing pages even when they are not selected by the fixed seed.
+    regression_codes=("1111010100","1111010200","1123010100")
+    regressions=evidence/"regressions"
+    regressions.mkdir(exist_ok=True)
+    regression_sha={}
+    for code in regression_codes:
+        body=(root/"locality"/(code+".html")).read_text(encoding="utf-8")
+        (regressions/(code+".html")).write_text(body,encoding="utf-8")
+        assert 'noindex,nofollow' in body
+        assert all('shop/item.php?it_id='+sku in body for sku in PRODUCTS)
+        regression_sha[code]=hashlib.sha256(body.encode()).hexdigest()
     # Same-purpose locality repetition is a source property, not a hash uniqueness test.
     normalized_repeats = len(signatures)-len(set(signatures))
     with (evidence/"scores.csv").open("w",encoding="utf-8-sig",newline="") as f:
@@ -105,6 +117,7 @@ def audit(archive, evidence):
                    suffix_counts=dict(Counter(r["suffix"] for r in rows)),
                    sampled_actual_html_read=50, normalized_repeated_count=normalized_repeats,
                    pass_count=0, index_eligible=0, noindex=True,
+                   known_regression_html=regression_sha,
                    sources="Pinned official region ZIP + local generator output",
                    note="Prices are historical reference values, not live checkout validation")
     (evidence/"summary.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
