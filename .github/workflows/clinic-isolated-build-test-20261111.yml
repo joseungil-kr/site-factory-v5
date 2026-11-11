@@ -40,6 +40,8 @@ jobs:
           regions=m.parse_regions(json.loads((root/"data/regions/nationwide_locality_candidates_5034.json").read_text()))
           original=json.loads((root/"sites/clinicflower-preview/clinicflower-copy-pool-720.json").read_text())
           m.ORIGINAL_BLOCKS=original["blocks"]
+          ledger=json.loads((root/"sites/nalmada-shared3/clinic-retail-candidate-ledger-20261111.json").read_text())
+          m.RETAIL_LEDGER={row["sku"]:row for row in ledger["items"]}
           pool=m.generate_extra_pool()
           m.GENERATED_BY_TOPIC={}
           for site,rows in pool["items"].items():
