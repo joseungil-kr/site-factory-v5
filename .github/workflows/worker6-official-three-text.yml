@@ -5,6 +5,7 @@ on:
     paths:
       - scripts/worker6_official_three_text_preview.py
       - tests/test_worker6_official_three_text_preview.py
+      - scripts/worker6-official-three-screenshots.cjs
       - sites/promotion-gift-plants/THREE_OFFICIAL_LOCALITY_BUYER_EVIDENCE_20261111.json
       - .github/workflows/worker6-official-three-text.yml
   workflow_dispatch:
@@ -62,9 +63,7 @@ jobs:
                   count+=1
           print('HTTP_PAGES_OK 5 INTERNAL_LINKS_OK',count)
           PY
-          WORKER6_PAGES=index,1,2,3 node scripts/worker6-browser-qa.mjs
-          cp reports/promotion-gift-plants/browser-qa.json reports/promotion-gift-plants/official-three-text/browser-qa.json
-          cp -R reports/promotion-gift-plants/screenshots reports/promotion-gift-plants/official-three-text/screenshots
+          node scripts/worker6-official-three-screenshots.cjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
