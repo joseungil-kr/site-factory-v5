@@ -1,0 +1,47 @@
+name: Clinic official historic opening evidence offline QA
+on:
+  push:
+    branches:
+      - research/clinic-confirmed-openings-20261111
+    paths:
+      - 'prototypes/clinic-confirmed-openings-20261111/**'
+      - '.github/workflows/clinic-confirmed-openings-offline-20261111.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: clinic-historic-evidence-offline-20261111
+  cancel-in-progress: false
+jobs:
+  offline-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Syntax and pinned-source build only
+        run: |
+          python -m py_compile prototypes/clinic-confirmed-openings-20261111/build.py prototypes/clinic-confirmed-openings-20261111/test.py
+          python prototypes/clinic-confirmed-openings-20261111/build.py --out /tmp/clinic-historical-candidates
+      - name: Install Korean font and browser dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          python -m pip install --disable-pip-version-check playwright Pillow
+      - name: Reproduce same-region old HTML and verify 390/1440 screenshots
+        run: |
+          python prototypes/clinic-confirmed-openings-20261111/test.py --build /tmp/clinic-historical-candidates --out /tmp/clinic-historical-audit
+      - name: Archive private samples and source evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clinic-historical-opening-evidence-20261111
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            /tmp/clinic-historical-candidates/
+            /tmp/clinic-historical-audit/
