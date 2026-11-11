@@ -60,12 +60,12 @@ jobs:
         id: sample
         if: steps.build.outcome == 'success'
         continue-on-error: true
-        run: python scripts/audit_todayflower_customer.py
+        run: python -m scripts.audit_todayflower_customer
       - name: 333 complete pairs and fixed 51 plus 51 new actual HTML
         id: semantic
         if: steps.build.outcome == 'success'
         continue-on-error: true
-        run: python scripts/audit_todayflower_semantic_gate.py
+        run: python -m scripts.audit_todayflower_semantic_gate
       - name: Save actual rendered HTML from both 51-page sample cohorts
         if: always()
         run: |
