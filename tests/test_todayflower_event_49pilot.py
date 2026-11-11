@@ -54,6 +54,20 @@ class EqualIntentTest(unittest.TestCase):
    rec=next(r for r in self.report["candidateMapping"] if r["number"]==p["number"])
    self.assertEqual(hashlib.sha256(orig.read_bytes()).hexdigest(),rec["originalHtmlSHA256"])
    self.assertEqual(hashlib.sha256(html.encode()).hexdigest(),rec["candidateSHA256"])
+ def test_question_trace_is_literal_in_correct_section(self):
+  source_ids={x["id"] for x in self.report["sourceEvidence"]}
+  for r in self.report["candidateMapping"]:
+   page=next(p for p in self.models if p["number"]==r["number"])
+   trace=r["sourceQuestionRuleHtmlTrace"]
+   self.assertEqual(len(trace),3)
+   for i,link in enumerate(trace):
+    self.assertEqual(link["question"],page["questions"][i])
+    self.assertIn(link["sourceId"],source_ids)
+    self.assertFalse(link["verifiedDirectOpen"])
+    self.assertIn(link["exactQuoteFromOwnDraft"],page["sections"][int(link["section"].split("-")[1])]["paragraph"])
+    self.assertIn(link["exactQuoteFromOwnDraft"],(OUT/f'candidate-{page["number"]}.html').read_text(encoding="utf-8"))
+  self.assertEqual({r["number"] for r in self.report["candidateMapping"]},set(REGRESSIONS))
+
  def test_source_constraints_and_reproducibility(self):
   self.assertFalse(self.report["sourceRankingVerified"])
   self.assertFalse(self.report["sourceDirectOpened"])
