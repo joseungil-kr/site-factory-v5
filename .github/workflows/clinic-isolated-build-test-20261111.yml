@@ -7,6 +7,7 @@ on:
       - '.github/workflows/clinic-isolated-build-test-20261111.yml'
       - 'sites/nalmada-shared3/build_national.py'
       - 'scripts/audit_clinic_162_offline.py'
+      - 'scripts/audit_clinic_cta_scroll.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -177,6 +178,9 @@ jobs:
                   browser.close()
           (shots/'visual-evidence.json').write_text(json.dumps(evidence,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
           PY
+      - name: Inspect fixed mobile CTA through actual scroll and hit tests
+        run: |
+          python scripts/audit_clinic_cta_scroll.py /tmp/clinic-audit-20261111 /tmp/clinic-cta-scroll
       - name: Publish only QA logs as artifact
         if: always()
         uses: actions/upload-artifact@v4
@@ -193,3 +197,4 @@ jobs:
             /tmp/clinic-162.log
             /tmp/clinic-samples/
             /tmp/clinic-screens/
+            /tmp/clinic-cta-scroll/
