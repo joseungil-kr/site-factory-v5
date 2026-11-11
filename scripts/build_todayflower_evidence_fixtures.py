@@ -14,6 +14,7 @@ CASES = [
     ("facility-ansan-gd", "4127000000", "안산 빌라드지디 GD컨벤션 7층 그레이스켈리홀", None),
     ("sku-b101-daebunam", "4127311200", None, "B101"),
     ("no-source-2852", None, None, None),
+    ("region-daebunam-navigation", "4127311200", None, None),
 ]
 CSS = """*{box-sizing:border-box}body{margin:0;font:16px/1.8 'Noto Sans CJK KR','Malgun Gothic',system-ui,sans-serif;background:#f5f7f5;color:#173b30}.wrap{max-width:940px;margin:auto;padding:32px 22px}.hero{background:#e2f1e7;padding:32px;border-radius:18px}h1{font-size:clamp(25px,4vw,39px);line-height:1.35}h2{font-size:21px}.evidence{padding:24px;background:white;border:1px solid #dce6de;border-radius:15px;margin:16px 0}.meta{color:#506d5d}.tag{font-size:13px;font-weight:800;color:#215a44}.noted{font-size:14px;color:#51675d}a{color:#155942;word-break:break-all}.footer{padding:18px 0}@media(max-width:390px){.wrap{padding:14px}.hero{padding:19px}.evidence{padding:17px}h1{font-size:27px}h2{font-size:19px}}"""
 
@@ -69,6 +70,10 @@ def main():
     for label, code, facility, sku in CASES:
         payload=evidence_detail_payload(region_code=code, facility=facility,
                                         sku=sku, ledger=ledger)
+        if not payload["facts"] and code:
+            payload["role"]=decide_role(region_code=code,
+                                        selected_skus=([sku] if sku else ()),
+                                        facility=facility,ledger=ledger)
         html=render(label,payload)
         path=OUT/(label+".html")
         path.write_text(html,encoding="utf-8")
@@ -80,6 +85,7 @@ def main():
     assert results[0]["role"]=="evidence_detail"
     assert results[1]["role"]=="evidence_detail"
     assert results[2]["role"]=="general_buying_guide"
+    assert results[3]["role"]=="regional_navigation" and not results[3]["factIds"]
     # A source fee never crosses from B101 to B205/C200/C206 or an unrelated region.
     assert not evidence_detail_payload(region_code="4127311200",sku="B205")["facts"]
     assert not evidence_detail_payload(region_code="4127311200",sku="C200")["facts"]
