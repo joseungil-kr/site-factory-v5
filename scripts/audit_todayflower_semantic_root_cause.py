@@ -116,6 +116,9 @@ def main():
     # Source article is unchanged generated content; candidate is the
     # historical source-specific, noindex HTML from the existing generator.
     original=article(all_pages[4582])
+    assert all_pages[4582]["topic"]=="축하 리본 문구", (
+        "Original 4582 buying intent changed: review again before comparing",
+        all_pages[4582]["topic"])
     candidate_file=THREE_BASE/"seoseok-4582.html"
     assert candidate_file.is_file(), "Generate existing three-region QA output first"
     candidate_raw=candidate_file.read_text(encoding="utf-8")
@@ -143,6 +146,11 @@ def main():
                   "maximum":list(maxi),"retainedFailures":True},
         "representative":representative,
         "seoSeok":{"number":4582,"regionalCode":mapped[4582]["regionCode"],
+            "originalBuyerIntent":all_pages[4582]["topic"],
+            "candidateBuyerIntent":"조문 근조화환",
+            "sameBuyerIntent":False,
+            "replacementForExisting4582Allowed":False,
+            "similarityInterpretation":"Different intent (original: celebration ribbon copy; candidate: condolence wreath); overlap is descriptive only, not evidence of effective same-intent differentiation.",
             "actualCandidateFile":str(candidate_file.relative_to(ROOT)),
             "originalArticle":original,"candidateBuyerSections":candidate,
             "candidateSourceIds":[x["id"] for x in buyer_claims],
