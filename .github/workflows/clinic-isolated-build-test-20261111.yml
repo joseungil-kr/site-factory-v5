@@ -75,6 +75,25 @@ jobs:
       - name: Inspect 162 real generated HTML pages
         run: |
           python scripts/audit_clinic_162_offline.py /tmp/clinic-audit-20261111 --output /tmp/clinic-162-report.json > /tmp/clinic-162.log
+      - name: Print audit figures from generated files
+        if: always()
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for file in ('clinic-build-report.json','clinic-seo-audit.json','clinic-162-report.json'):
+              p=Path('/tmp')/file
+              if not p.exists():
+                  print('MISSING_REPORT',file)
+                  continue
+              d=json.loads(p.read_text())
+              if file=='clinic-build-report.json':
+                  print('ACTUAL_BUILD',json.dumps({'htmlCount':d.get('htmlCount'),'assetCount':d.get('assetCount'),'sites':{k:{kk:vv for kk,vv in x.items() if kk not in ('paths','regionalNarrative')} for k,x in d.get('sites',{}).items()}},ensure_ascii=False))
+              elif file=='clinic-162-report.json':
+                  rows=d['rows']
+                  print('ACTUAL_162',json.dumps({'sampleSize':len(rows),'countBySite':d['countBySite'],'automatedFailCount':d['automatedFailCount'],'scoreBySite':{site:{'min':min(x['score'] for x in rows if x['site']==site),'max':max(x['score'] for x in rows if x['site']==site)} for site in d['countBySite']},'firstSampleBySite':{site:next(x for x in rows if x['site']==site) for site in d['countBySite']}},ensure_ascii=False))
+              else: print('ACTUAL_SEO',json.dumps(d,ensure_ascii=False))
+          PY
       - name: Publish only QA logs as artifact
         if: always()
         uses: actions/upload-artifact@v4
