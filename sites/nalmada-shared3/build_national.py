@@ -409,7 +409,7 @@ def decision_units(site, seed):
     remaining = sorted((i for i in range(len(facts)) if i not in must),
                        key=lambda i:key_sort(seed+'|fact-id',i))
     body_ids=[];side_ids=[];owners=set()
-    content_limit = 7 if site!='clinicpresent' else 9
+    content_limit = {'clinicflower':6, 'clinicopen':5, 'clinicpresent':9}[site]
     for idx in must+remaining:
         cluster=semantic_cluster(site,facts[idx][0])
         if cluster in owners:
