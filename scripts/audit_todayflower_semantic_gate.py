@@ -85,8 +85,13 @@ def main():
     assert len(fixed) == 51
     salt = "todayflower-extra-20261111:"
     exclude = {p["id"] for p in fixed}
-    extras = sorted((p for p in pages if p["id"] not in exclude),
-                    key=lambda p: hashlib.sha256((salt + p["id"]).encode()).digest())[:51]
+    # /2852.html is a mandatory real-HTML regression example supplied
+    # by the user's independent audit, not merely a corpus-level assertion.
+    mandatory = by_number[2852]
+    assert mandatory["id"] not in exclude
+    extras = [mandatory] + sorted(
+        (p for p in pages if p["id"] not in exclude and p["id"] != mandatory["id"]),
+        key=lambda p: hashlib.sha256((salt + p["id"]).encode()).digest())[:50]
     assert len(extras) == 51 and all(x["id"] not in exclude for x in extras)
     samples = []
     for group, selected in (("fixed", fixed), ("additional", extras)):
