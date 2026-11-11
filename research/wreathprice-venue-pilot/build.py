@@ -159,6 +159,8 @@ def main(archive, out):
         folder=out/record["id"]
         (folder/"assets").mkdir(parents=True)
         (folder/"before.html").write_text(old,encoding="utf-8")
+        if record["id"]=="sejong-eunhasu":
+            record={**record,"operatorPolicyFollowup":evidence["operatorPolicyFollowup"]["sejong"]}
         (folder/"index.html").write_text(document(record,STYLE,None),encoding="utf-8")
         (folder/"assets"/"style.css").write_text(STYLE,encoding="utf-8")
         fn=("funeral-wreath.webp" if record["eventType"]=="funeral" else "celebration-wreath.webp")
