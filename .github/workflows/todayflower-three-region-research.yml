@@ -1,0 +1,85 @@
+name: Todayflower 3-region evidence buyer editorial QA (NO DEPLOY)
+on:
+  push:
+    branches:
+      - qa/todayflower-semantic-20261111
+    paths:
+      - "sites/todayflower-nalmada/isolated-three-region-evidence-20261111.json"
+      - "scripts/build_todayflower_three_region_research.py"
+      - "tests/test_todayflower_three_region_research.py"
+      - ".github/workflows/todayflower-three-region-research.yml"
+  pull_request:
+    branches:
+      - site/todayflower-nalmada-pilot-20261030
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  research-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Assert no deploy/index/policy side effects
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('sites/todayflower-nalmada/site.json').read_text())
+          assert s['publishEnabled'] is False
+          assert s['indexNow']['enabled'] is False
+          assert s['todayflowerNational']['previewOnly'] is True
+          print('ISOLATED_POLICY_OK')
+          PY
+      - name: Generate unchanged original 5070 preview comparator
+        run: |
+          python -m v5 build --site todayflower-nalmada --mode preview
+          test "$(find dist/todayflower-nalmada -maxdepth 1 -name '*.html' | wc -l | tr -d ' ')" = "5071"
+      - name: Evidence sentence claims, reproducibility, originals and source links
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_three_region_research.py -v
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          p=Path('reports/todayflower-nalmada/three-region-research')
+          x=json.loads((p/'audit.json').read_text())
+          assert x['regionCandidates']==3 and x['evidenceLedDetailCandidates']==1 and x['heldForMissingFacilityEvidence']==2
+          assert x['factsMapped']==4 and not x['editorialApproved']
+          assert x['published']==0 and x['currentDeliveryVerified']==0
+          for f,sha in x['candidateFiles'].items():
+            assert (p/f).is_file() and hashlib.sha256((p/f).read_bytes()).hexdigest()==sha
+          for n in (1039,4360,4582):
+            assert (p/'original-html'/f'{n}.html').is_file()
+          print('THREE_REGION_ACTUAL_FILES_AND_HASH_PASS')
+          PY
+      - name: Chromium 390/1440 real HTML comparison screenshots
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          npx --yes playwright@1.56.1 install chromium
+          root=reports/todayflower-nalmada/three-region-research
+          mkdir -p "$root/screens"
+          for width in 390 1440; do
+            if test "$width" = 390; then height=844; else height=900; fi
+            for f in seoseok-4582.html index.html; do
+              stem="${f%.html}"
+              npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "$width,$height" --full-page "file://$PWD/$root/$f" "$root/screens/$stem-$width.png"
+            done
+            for n in 1039 4360 4582; do
+              npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "$width,$height" --full-page "file://$PWD/$root/original-html/$n.html" "$root/screens/original-$n-$width.png"
+            done
+          done
+          test "$(find "$root/screens" -name '*.png' | wc -l | tr -d ' ')" = 10
+      - name: Upload bounded research and screens only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-three-region-research-${{ github.sha }}
+          path: reports/todayflower-nalmada/three-region-research/
+          retention-days: 7
+          if-no-files-found: warn
