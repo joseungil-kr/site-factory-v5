@@ -22,6 +22,25 @@ ROOTOUT=ROOT/"reports"/SITE/"celebration-ribbon-intent-pilot"
 SOURCE=ROOT/"sites"/SITE/"celebration-ribbon-search-evidence-20261111.json"
 INTENT="축하 리본 문구"
 ROLES=("personal_greeting","company_official_sender","joint_group_approval")
+ROLE_LABELS={"personal_greeting":"개인 명의 축하",
+             "company_official_sender":"회사·부서 공식 명의",
+             "joint_group_approval":"공동·단체 명의"}
+# Situations are EXPLICIT editorial test inputs, not inferred from geography.
+BUYER_SITUATIONS=(
+ {"senderType":"individual","approvalOwner":"self","eventPurpose":"personal_celebration"},
+ {"senderType":"company","approvalOwner":"corporate_officer","eventPurpose":"formal_event"},
+ {"senderType":"joint_group","approvalOwner":"group_representative","eventPurpose":"shared_celebration"},
+)
+def select_role(buyer):
+    assert buyer["eventPurpose"] in ("personal_celebration","formal_event","shared_celebration")
+    assert buyer["senderType"] in ("individual","company","joint_group")
+    assert buyer["approvalOwner"] in ("self","corporate_officer","group_representative")
+    mapping={("individual","self","personal_celebration"):"personal_greeting",
+             ("company","corporate_officer","formal_event"):"company_official_sender",
+             ("joint_group","group_representative","shared_celebration"):"joint_group_approval"}
+    key=buyer["senderType"],buyer["approvalOwner"],buyer["eventPurpose"]
+    assert key in mapping,"Unsupported sender/approval context must not silently fall back"
+    return mapping[key]
 STYLE="""*{box-sizing:border-box}body{margin:0;background:#f7f8f6;color:#173629;font:16px/1.75 'Noto Sans CJK KR',system-ui,sans-serif}main{max-width:1000px;padding:24px;margin:auto}header{background:#e8f1e9;padding:24px;border-radius:16px}h1{font-size:clamp(26px,4vw,36px);line-height:1.3}h2{font-size:21px}section{background:white;border:1px solid #dfe5dc;border-radius:14px;padding:23px;margin:16px 0}a{color:#13623c;overflow-wrap:anywhere}.caution{color:#755626}.tag{font-size:13px;color:#2c6b46;font-weight:700}.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}.split div{background:#f2f5f0;padding:12px;border-radius:10px}dt{font-weight:700}dd{margin:2px 0 12px}li{margin:7px 0}@media(max-width:520px){main{padding:10px}header{padding:18px}section{padding:16px}.split{grid-template-columns:1fr}}"""
 def h(t): return escape(str(t),quote=True)
 def sha(t):return hashlib.sha256(t.encode("utf-8")).hexdigest()
@@ -80,7 +99,8 @@ def build_candidate(source,role,products):
               "joint_group_approval":"공동 발신·단체명 변경과 주문 책임을 정리해야 하는 경우"}[role]
     intro=subtitle+". 축하 리본 문구와 보내는 분 표기를 주문 전에 서로 다른 항목으로 확정합니다."
     return {"number":source["number"],"pageId":source["id"],"region":source["region"],
-            "originalIntent":source["topic"],"topic":INTENT,"role":role,"intro":intro,
+            "originalIntent":source["topic"],"topic":INTENT,"role":role,
+            "roleLabel":ROLE_LABELS[role],"intro":intro,
             "sections":[{"heading":x,"paragraph":y} for x,y in sections[role]],
             "productSkus":[sku],"productName":item["name"],"orderUrl":item["orderUrl"],
             "sampleOnly":True,"buyerQuestions":["Q_PURPOSE","Q_SENDER","Q_PHRASE","Q_LENGTH","Q_CHECKOUT"],
@@ -100,11 +120,14 @@ def html_doc(p,ledger):
     refs+='리본 선택 흐름은 경쟁자료의 관찰 주제를 참고했지만 문장과 예시는 새로 작성한 편집 제안입니다.</p><ul>'
     for src in ledger["sources"]:
         if src["id"] in ("COMP_ORDER","COMP_EXAMPLES","COMP_RIBBON","SELLER_C206"):
-            refs+='<li><a href="'+h(src["url"])+'">'+h(src["title"])+'</a> — '+h(src["access"])+'</li>'
+            refs+='<li><a href="'+h(src["url"])+'">'+h(src["title"])+'</a> — '+h(status_labels.get(src["access"],"확인범위가 제한된 자료"))+'</li>'
     refs+='</ul></section>'
+    status_labels={"search_index_excerpt; direct open cache miss":"검색에 표시된 요약 확인 · 원문 직접 열기 실패",
+                   "seller indexed product page snippet, direct open cache miss":"판매처 검색 요약 확인 · 직접 열기 실패",
+                   "direct page read failed; use pinned Todayflower catalog only":"원문 접근 실패 · 기존 상품원장만 사용"}
     return ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
-            '<meta name="robots" content="noindex,nofollow"><title>'+h(p["region"])+' 축하 리본 문구 · '+h(p["role"])+'</title>'
+            '<meta name="robots" content="noindex,nofollow"><title>'+h(p["region"])+' 축하 리본 문구 · '+h(p["roleLabel"])+'</title>'
             '<style>'+STYLE+'</style></head><body><main><header><div class="tag">격리 사용자 상황별 후보 · 운영 미반영</div>'
             '<h1>'+h(p["region"])+' 축하 리본 문구</h1>'
             '<p>지명만으로 문서 내용이 달라지는 것은 아닙니다. 이 후보는 <strong>'+h(p["role"])+'</strong>'
@@ -132,8 +155,10 @@ def audit():
     base={p["number"]:p for p in selected}
     original_candidates=sorted([p["number"] for p in selected])
     assert 4582 in original_candidates
-    for source_page,role in zip(selected,ROLES):
+    for source_page,buyer in zip(selected,BUYER_SITUATIONS):
+        role=select_role(buyer)
         row=build_candidate(source_page,role,source["products"])
+        row["buyerSituation"]=buyer
         page_html=html_doc(row,ledger)
         doc=OUT/f'candidate-{row["number"]}.html'
         doc.write_text(page_html,encoding="utf-8")
@@ -177,6 +202,8 @@ def audit():
     summary={
       "originalIntent":INTENT,"candidateCount":3,"chosenNumbers":[x["number"] for x in pages],
       "selectionPolicy":"4582 plus lowest numbered two same-intent, C SKU pages; no score-based selection",
+      "roleAssignment":"explicit buyerSituation input senderType/approvalOwner/eventPurpose, never inferred from region or randomized",
+      "buyerSituations":list(BUYER_SITUATIONS),
       "sameIntentOriginalPopulation":len(population),"exactMethod":"scripts.audit_todayflower_semantic_gate.article+score / v5.audit.grams n=5, whitespace removed",
       "threshold":LIMIT,"pairwise":pairs,
       "crossPopulationPairs":len(cross),
