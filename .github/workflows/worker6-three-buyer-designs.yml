@@ -70,6 +70,34 @@ jobs:
           trap 'kill "$PID" || true' EXIT
           for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/ >/dev/null && break || sleep 1; done
           WORKER6_PAGES=index,2,3 node scripts/worker6-browser-qa.mjs
+          python - <<'PY'
+          from html.parser import HTMLParser
+          from urllib.request import urlopen
+          from urllib.parse import urljoin,urlsplit
+          class A(HTMLParser):
+              def __init__(self):super().__init__();self.links=[]
+              def handle_starttag(self,t,a):
+                  if t=='a':
+                      h=dict(a).get('href')
+                      if h and h.startswith('/'):self.links.append(h)
+          base='http://127.0.0.1:8765'
+          expected={'/':'적성면','/2.html':'설악면','/3.html':'이동면'}
+          visited=set()
+          for path,label in expected.items():
+              with urlopen(base+path) as response:
+                  assert response.status==200
+                  html=response.read().decode('utf-8')
+              assert label in html,(path,label)
+              parser=A();parser.feed(html)
+              for href in parser.links:
+                  target=urlsplit(href).path
+                  assert target in expected,(path,target)
+                  with urlopen(urljoin(base,href)) as response:
+                      assert response.status==200,(path,href,response.status)
+                  visited.add((path,target))
+          print('HTTP_INTERNAL_LINKS_OK',len(visited),'all three purposes')
+          PY
+
           cp reports/promotion-gift-plants/browser-qa.json reports/promotion-gift-plants/three-buyer-designs/browser-qa.json
           cp -R reports/promotion-gift-plants/screenshots reports/promotion-gift-plants/three-buyer-designs/screenshots
       - uses: actions/upload-artifact@v4
