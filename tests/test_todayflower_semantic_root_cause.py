@@ -42,6 +42,10 @@ class RootCauseTest(unittest.TestCase):
     def test_real_SeoSeok_html_and_claim_sources(self):
         block=self.report["seoSeok"]
         self.assertEqual(block["number"],4582)
+        self.assertEqual(block["originalBuyerIntent"],"축하 리본 문구")
+        self.assertEqual(block["candidateBuyerIntent"],"조문 근조화환")
+        self.assertFalse(block["sameBuyerIntent"])
+        self.assertFalse(block["replacementForExisting4582Allowed"])
         self.assertEqual(block["candidateClaimCount"],4)
         self.assertEqual(set(block["candidateSourceIds"]),{"S1","S2","S3","S4"})
         self.assertIn("서석장례식장",block["candidateBuyerSections"])
