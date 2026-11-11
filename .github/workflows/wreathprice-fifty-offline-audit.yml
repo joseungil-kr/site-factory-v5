@@ -62,7 +62,27 @@ jobs:
           assert len(rows)==50
           assert all((root/r["html_path"]).is_file() for r in rows)
           assert all("noindex,nofollow" in (root/r["html_path"]).read_text() for r in rows)
-          print("FIFTY_HTML_SOURCE_READ_VERIFIED",len(rows))
+          overlay=json.loads((root/"shipping-overlay-audit.json").read_text())
+          compared=overlay["comparison"]
+          assert len(compared)==50
+          assert sum(r["changed"] for r in compared)==20
+          assert sum(not r["changed"] for r in compared)==30
+          for r in compared:
+              before=(root/"before-html"/(r["code"]+".html")).read_text()
+              after=(root/"html"/(r["code"]+".html")).read_text()
+              assert (before != after)==r["changed"]
+              assert "noindex,nofollow" in before and "noindex,nofollow" in after
+              if not r["matched"]:
+                  assert not r["postedAdditionalFeeKRW"] and before==after
+              else:
+                  assert "B201·B203·C205의 동일 요율 적용은 확인하지 못했습니다" in after
+                  assert "현재 유효성을 확정하지 않습니다" in after
+          for code in ("1111010100","1111010200","1123010100"):
+              assert (root/"regressions-before"/(code+".html")).is_file()
+              assert (root/"regressions"/(code+".html")).is_file()
+          assert (root/"screens").exists() is False
+          print("FIFTY_HTML_SOURCE_READ_VERIFIED",len(rows),
+                "FEE_ROWS_20_UNTOUCHED_30_REGRESSIONS_3")
           PY
       - name: Install Chromium Playwright for screenshots
         run: |
