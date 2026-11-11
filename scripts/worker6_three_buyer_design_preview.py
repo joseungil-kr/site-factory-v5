@@ -9,6 +9,7 @@ from worker6_core_five_preview import generate_inputs,operator_policy
 
 from worker6_shipping_render import lookup,evidence_section
 from v5.purpose_render import assemble,render
+from worker6_illustration_integrity import verify_illustrations,require_rendered_illustrations,EXPECTED,LABEL
 def with_required_receipt_paths(pool):
     # Same three required questions as the six-region controlled preview.
     result=deepcopy(pool)
@@ -62,6 +63,10 @@ for i,c in enumerate(cases,1):
  p['purposePool']=pool
  pages.append(p)
 rows=[]
+# The original generated WebPs must be transferred unchanged to this exact
+# repository path. Preview refuses to substitute unrelated or missing assets.
+image_dir=ROOT/'assets/library/promotion-plant'
+verified_images=verify_illustrations(image_dir)
 for c,p in zip(cases,pages):
  pool={'%s'%p['purpose']:p['purposePool']}
  a=assemble(p,pool,products)
@@ -72,6 +77,13 @@ for c,p in zip(cases,pages):
  html=re.sub(r'<a\b[^>]*href="/(?:4|5)\.html"[^>]*>.*?</a>', '', html, flags=re.S)
  html=re.sub(r'<a\b[^>]*href="/(?:4|5)\.html"[^>]*>', '', html)
  assert 'href="/4.html"' not in html and 'href="/5.html"' not in html
+ # These are reference illustrations only, never actual SKU photos.
+ banner='<figure class="worker6-illustrations">'+''.join(
+     '<img src="/assets/images/'+file.name+'" alt="승진·축하 화분 선물 연출 이미지, 실제 상품 사진 아님" loading="lazy" decoding="async">'
+     for file in verified_images) + '<figcaption>'+LABEL+'</figcaption></figure>'
+ html=html.replace('</main>',banner+'</main>')
+ assert banner in html, 'expected main landmark for non-product image disclosure'
+ require_rendered_illustrations(html)
  for q in ('회사명과 새 부서, 건물 층·호실을 확인했나요?',
            '도로명주소와 건물번호, 동·호수를 확인했나요?',
            '행사 시작시각과 물품 반입 가능 시간을 확인했나요?',c['question']):
@@ -83,6 +95,6 @@ for c,p in zip(cases,pages):
  (OUT/('index.html' if p['number']==1 else str(p['number'])+'.html')).write_text(html,encoding='utf-8')
  (OUT/(c['id']+'.txt')).write_text(body,encoding='utf-8')
  rows.append({'id':c['id'],'region':c['region'],'purpose':c['purpose'],'productSkus':c['productSkus'],'sourceUrl':c['url'],
-              'filename':'index.html' if p['number']==1 else str(p['number'])+'.html','htmlBytes':len(html.encode()),'bodyChars':len(body),'allRecipientQuestions':True,'publicationApproved':False})
+              'filename':'index.html' if p['number']==1 else str(p['number'])+'.html','htmlBytes':len(html.encode()),'bodyChars':len(body),'allRecipientQuestions':True,'illustrations':list(EXPECTED),'publicationApproved':False})
  (OUT/'manifest.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print('THREE_BUYER_DESIGNS',json.dumps(rows,ensure_ascii=False))
