@@ -33,7 +33,7 @@ const PURPOSES = {
 };
 const $ = (id) => document.getElementById(id);
 const state = { regions: [], selected: null, purpose: "flower", products: {}, ready: false };
-function normalize(s) {return String(s || "").normalize("NFC").toLocaleLowerCase("ko").replace(/\\s+/g," ").trim();}
+function normalize(s) {return String(s || "").normalize("NFC").toLocaleLowerCase("ko").replace(/\s+/g," ").trim();}
 function e(tag, className, text) {
   const n=document.createElement(tag);
   if(className)n.className=className;
