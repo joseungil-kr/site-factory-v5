@@ -40,6 +40,8 @@ class Document(HTMLParser):
         self.seen_text = []
         self.fact_ids = []
         self.fact_topics = []
+        self.skus = []
+        self.all_anchors = []
         self._heading = None
     def handle_starttag(self, tag, attrs):
         a = dict(attrs)
@@ -51,6 +53,10 @@ class Document(HTMLParser):
             self.images.append(a)
         elif tag == "article" and "data-fact-id" in a:
             self.fact_ids.append(a["data-fact-id"])
+        elif tag == "article" and a.get("data-sku"):
+            self.skus.append(a["data-sku"])
+        elif tag == "a":
+            self.all_anchors.append(a.get("href",""))
         elif tag == "h3":
             self._heading = []
         elif tag == "h1":
@@ -98,10 +104,20 @@ def check(site, path, public):
     if any(source.count(x) > 0 for x in FILLERS): issues.append("EDITORIAL_FILLER")
     substantive = [p for p in doc.paragraphs if len(p) >= 40]
     if len(substantive) != len(set(substantive)): issues.append("DUPLICATE_PARAGRAPH")
-    if len(doc.fact_ids) != {"clinicflower":6,"clinicopen":5,"clinicpresent":9}[site]:
+    if len(doc.fact_ids) != 3:
         issues.append("FACT_COUNT")
     if len(doc.fact_ids) != len(set(doc.fact_ids)):
         issues.append("DUPLICATE_FACT_ID")
+    target_skus={"clinicflower":{"D144","D149"},"clinicopen":{"D144","D149"},"clinicpresent":{"C200","C206"}}[site]
+    if set(doc.skus)!=target_skus or len(doc.skus)!=2:
+        issues.append("PRODUCT_SKU_SET")
+    for sku in target_skus:
+        if f"https://fwith.co.kr/shop/item.php?it_id={sku}" not in doc.all_anchors:
+            issues.append("PRODUCT_ORDER_URL_"+sku)
+    if "현재 판매가격·배송비·재고·배송 가능 지역은 미확인" not in source:
+        issues.append("CURRENTNESS_DISCLOSURE")
+    if "지역명별 주문 준비를 찾기 위한 공통 안내" not in source:
+        issues.append("REGION_EVIDENCE_DISCLOSURE")
     if site=="clinicpresent" and "꽃 구성" in doc.fact_topics and "꽃 색상 취향" in doc.fact_topics:
         issues.append("SEMANTIC_FLOWER_OVERLAP")
     repeated={phrase:source.count(phrase) for phrase in REGRESSION_PHRASES if source.count(phrase)>1}
@@ -125,7 +141,7 @@ def check(site, path, public):
     score = max(0, 100 - 15 * len(issues))
     return {"site":site, "path":path.relative_to(sitebase).as_posix(), "score":score,
             "automatedPass":not issues and score >= 90, "issues":issues,
-            "factIds":doc.fact_ids, "repeatEvidence":repeated,
+            "factIds":doc.fact_ids, "retailSkus":doc.skus, "repeatEvidence":repeated,
             "paragraphs":len(doc.paragraphs), "images":len(doc.images),
             "phoneLinks":doc.phone, "customerUsefulnessHumanReviewed":False,
             "retailProductPriceAndLinkHumanReviewed":False}
