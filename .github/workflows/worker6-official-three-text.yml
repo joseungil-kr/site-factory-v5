@@ -1,0 +1,73 @@
+name: Worker6 official three locality text buyer QA
+on:
+  push:
+    branches: [site/v51-promotion-gift-plants-20261109]
+    paths:
+      - scripts/worker6_official_three_text_preview.py
+      - tests/test_worker6_official_three_text_preview.py
+      - sites/promotion-gift-plants/THREE_OFFICIAL_LOCALITY_BUYER_EVIDENCE_20261111.json
+      - .github/workflows/worker6-official-three-text.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build and source regressions
+        run: python -m unittest tests.test_worker6_official_three_text_preview -v
+      - name: Install Korean font and Chromium
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y fonts-noto-cjk
+          npm install --no-save --no-package-lock playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: HTTP routes, CTA, screenshot 390 and 1440
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory reports/promotion-gift-plants/official-three-text >/tmp/w6official.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID" || true' EXIT
+          python - <<'PY'
+          from urllib.request import urlopen
+          from urllib.parse import urlsplit
+          from html.parser import HTMLParser
+          import time,json
+          base='http://127.0.0.1:8765'
+          for i in range(30):
+              try:
+                  with urlopen(base+'/') as r:break
+              except OSError:time.sleep(.2)
+          class Scan(HTMLParser):
+              def __init__(self):super().__init__();self.links=[]
+              def handle_starttag(self,t,a):
+                  if t=='a':
+                      h=dict(a).get('href','')
+                      if h.startswith('/'):self.links.append(urlsplit(h).path)
+          count=0
+          for path in ['/','/guide.html','/1.html','/2.html','/3.html']:
+              with urlopen(base+path) as r:
+                  assert r.status==200
+                  body=r.read().decode()
+                  assert 'noindex' in body
+                  if path not in ('/','/guide.html'):
+                      assert 'it_id=D144' in body and 'tel:18440644' in body
+              s=Scan();s.feed(body)
+              for link in s.links:
+                  with urlopen(base+link) as r:assert r.status==200
+                  count+=1
+          print('HTTP_PAGES_OK 5 INTERNAL_LINKS_OK',count)
+          PY
+          WORKER6_PAGES=index,1,2,3 node scripts/worker6-browser-qa.mjs
+          cp reports/promotion-gift-plants/browser-qa.json reports/promotion-gift-plants/official-three-text/browser-qa.json
+          cp -R reports/promotion-gift-plants/screenshots reports/promotion-gift-plants/official-three-text/screenshots
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: worker6-official-three-locality-text-qa
+          path: reports/promotion-gift-plants/official-three-text/
+          if-no-files-found: warn
