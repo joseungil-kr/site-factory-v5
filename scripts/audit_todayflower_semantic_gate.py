@@ -38,6 +38,37 @@ def main():
     assert len(by_number) == 5070 and 404 not in by_number
     event = [p for p in pages[33:] if p["topic"] == "행사장 꽃 반입"]
     assert len(event) == 333, len(event)
+    # Buyer-decision ownership is checked independently of the numerical
+    # document similarity gate. /2852.html previously restated venue/hall,
+    # resizing, and rescheduling instructions within one article.
+    from v5.todayflower_copy_pool import SCENE_DETAILS
+    pool = SCENE_DETAILS["행사장 꽃 반입"]
+    semantic_roles = (
+        ("selection", (2, 5, 7, 11), 0),
+        ("selection", (1, 8), 0),
+        ("receiver", (0, 4, 8), 1),
+        ("receiver", (1, 5, 7, 9), 1),
+        ("receiver", (3, 6, 10), 1),
+        ("selection", (4, 9), 2),
+        ("delivery", (0, 3, 5, 8, 10), 3),
+        ("delivery", (2, 9), 3),
+    )
+    owner_failures = []
+    for p in event:
+        paragraphs = [s["paragraph"] for s in p["sections"]]
+        for group, choices, owner in semantic_roles:
+            matches = [pool[group][i] for i in choices if pool[group][i] in paragraphs[owner]]
+            if len(matches) != 1:
+                owner_failures.append({"number":p["number"],"owner":owner,
+                                       "group":group,"matchingSentences":matches})
+        # Explicit regression evidence for observed /2852.html repetition.
+        if p["number"] == 2852:
+            assert not ("동일한 건물에서 여러 행사가 열린다면" in paragraphs[1]
+                        and "행사장 주소와 건물명" in paragraphs[1])
+            assert not ("행사 일정 변경 시 새 시간" in paragraphs[3]
+                        and "행사 일정이 바뀌면 새 시작 시각" in paragraphs[3])
+            assert "반입" in " ".join(paragraphs)
+    assert not owner_failures, owner_failures[:5]
     population = [(p, grams(article(p))) for p in event]
     violations = []
     maximum = (0.0, None, None)
