@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>개원·선물·축하화환 구매 안내 | 꽃이랑 격리 프로토타입</title>
+<meta name="description" content="기록된 지역 코드를 검색하고 개원식·개원화분·축하화환의 상품과 주문 준비 정보를 비교하는 격리 시험 화면">
+<link rel="stylesheet" href="./app.css">
+<script src="./app.js" defer></script>
+</head>
+<body>
+<header class="top"><div class="wrap nav"><strong>꽃이랑 <small>CLINIC GUIDE</small></strong><span class="test-mark">비공개 정보구조 시험</span></div></header>
+<main class="wrap">
+<section class="hero"><div class="eyebrow">REGION × PURPOSE × ORDER</div><h1>지역을 찾고,<br><em>선물의 목적</em>을 선택하세요.</h1><p>지역별 배송을 보장하는 목록이 아닙니다. 확인된 지역코드 자료와 공통 구매 정보를 연결한 비공개 시험 화면입니다.</p><div class="scope">기존 운영 URL·색인·상품정보는 변경하지 않습니다.</div></section>
+<div class="steps"><span class="active">1 지역 탐색</span><span>2 선물 목적</span><span>3 상품 확인</span></div>
+<section class="panel" aria-labelledby="region-heading"><div class="section-title"><div><span class="eyebrow">01 / REGION</span><h2 id="region-heading">지역을 선택하세요</h2></div><span id="regionCount" class="stat">지역코드 로딩</span></div>
+<p class="muted">2026-10-22 법정동코드 기반 상위지역 284개(시·도 16, 시·군·구 229, 일반구 39) — <b>현재 유효성 별도 미확인</b>. 출처: 행정표준코드관리시스템 자료의 보존 원장.</p>
+<label for="regionSearch">지역명 또는 상위지역 이름 검색</label><div class="search-wrap"><input id="regionSearch" type="search" placeholder="예: 종로구, 경기, 서울" autocomplete="off" aria-controls="regionResults" aria-describedby="searchStatus"><button id="clearSearch" type="button" class="clear">지우기</button></div>
+<p id="searchStatus" role="status" class="muted small">지역 데이터를 읽는 중입니다.</p>
+<div id="regionResults" class="results" role="listbox" aria-label="지역 검색 결과"></div>
+<div id="selectedRegion" class="chosen" aria-live="polite">선택된 지역 없음</div>
+</section>
+<section class="panel" aria-labelledby="purpose-heading"><div class="section-title"><div><span class="eyebrow">02 / PURPOSE</span><h2 id="purpose-heading">선물 목적 선택</h2></div></div>
+<div class="tabs" role="tablist" aria-label="목적별 안내"><button type="button" class="tab" role="tab" aria-selected="true" id="tab-flower" data-purpose="flower">개원·개업화분</button><button type="button" class="tab" role="tab" aria-selected="false" id="tab-open" data-purpose="open">개원식 화분</button><button type="button" class="tab" role="tab" aria-selected="false" id="tab-wreath" data-purpose="wreath">개원 축하화환</button></div>
+<div id="purposeDetail" role="tabpanel" aria-labelledby="tab-flower"></div>
+</section>
+<section class="panel" aria-labelledby="products-heading"><div class="section-title"><div><span class="eyebrow">03 / PRODUCTS</span><h2 id="products-heading">판매처 상품 확인</h2></div><span class="stamp">2026-11-05 과거 근거</span></div>
+<p class="muted">표시된 가격은 과거 판매처 확인 기록입니다. <b>현재 가격·재고·배송비·배송 가능지역·주문 링크의 현재 HTTP 상태는 확인되지 않았습니다.</b></p>
+<div id="products" class="products"></div>
+<div class="contact"><div><strong>지역과 상품을 정하셨나요?</strong><p>주소·희망일·정확한 수령 장소를 상담할 때 알려주세요. 배송 가능 여부는 이 화면에서 판단하지 않습니다.</p></div><a id="phoneCTA" class="call" href="tel:1844-0644">전화 상담 1844-0644</a></div>
+</section>
+<section class="transparency"><strong>지역별 독립 정보는 없습니다.</strong><p>지역 선택값은 주문 상담을 준비하기 위한 탐색 맥락으로만 사용합니다. 이 프로토타입에는 해당 지역의 병원, 꽃집, 판매 실적, 재고, 특정 시간 배송 여부에 관한 검증 자료가 없습니다. 지역마다 동일한 안내 글을 새 HTML로 만들지 않습니다.</p></section>
+</main>
+<footer><div class="wrap">꽃이랑 · 구매 안내 UI 실험 · 공개·배포·색인 대상 아님</div></footer>
+</body></html>
