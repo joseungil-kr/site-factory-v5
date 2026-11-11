@@ -31,6 +31,7 @@ jobs:
               t=(p/(row['id']+'.txt')).read_text()
               assert row['allRecipientQuestions']
               assert len(t)>250 and 'noindex' in h
+              assert h.count('<img ')>=2 and '연출 이미지 · 실제 판매 상품 사진 아님' in h
               for sku in row['productSkus']:
                   assert 'it_id='+sku in h
               assert '1844-0644' in h
@@ -57,6 +58,8 @@ jobs:
           cp templates/themes/minimal.css reports/promotion-gift-plants/three-buyer-designs/assets/theme-minimal.css
           cp templates/calculator.js reports/promotion-gift-plants/three-buyer-designs/assets/calculator.js
           cp assets/library/promotion-plant/plant-a.svg reports/promotion-gift-plants/three-buyer-designs/assets/images/plant-a.svg
+          cp assets/library/promotion-plant/a_bright_softly_lit_modern_office_desk_still_lif.webp reports/promotion-gift-plants/three-buyer-designs/assets/images/
+          cp assets/library/promotion-plant/a_bright_softly_lit_indoor_desk_office_scene_in_a.webp reports/promotion-gift-plants/three-buyer-designs/assets/images/
       - name: Install Korean font and browser
         run: |
           sudo apt-get update -qq
@@ -95,7 +98,12 @@ jobs:
                   with urlopen(urljoin(base,href)) as response:
                       assert response.status==200,(path,href,response.status)
                   visited.add((path,target))
-          print('HTTP_INTERNAL_LINKS_OK',len(visited),'all three purposes')
+          for filename in ('a_bright_softly_lit_modern_office_desk_still_lif.webp','a_bright_softly_lit_indoor_desk_office_scene_in_a.webp'):
+              with urlopen(base+'/assets/images/'+filename) as response:
+                  assert response.status==200
+                  assert response.headers.get_content_type()=='image/webp'
+                  assert len(response.read())>40000
+          print('HTTP_INTERNAL_LINKS_AND_IMAGES_OK',len(visited),'all three purposes')
           PY
 
           cp reports/promotion-gift-plants/browser-qa.json reports/promotion-gift-plants/three-buyer-designs/browser-qa.json
