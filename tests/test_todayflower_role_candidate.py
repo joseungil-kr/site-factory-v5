@@ -61,7 +61,7 @@ class TodayflowerCandidateTest(unittest.TestCase):
             p=(OUT/r["htmlPath"]).read_text(encoding="utf-8")
             self.assertIn('data-evidence="B205-only"',p)
             self.assertIn("현재 주문 적용 및 배송 가능 여부 미확인",p)
-            self.assertNotIn("C030·다른 SKU 요율에 대한 주장 아님.",p.replace("C030·다른 SKU 요율에 대한 주장 아님.",""))
+            self.assertIn("C030·다른 SKU 요율에 대한 주장 아님.",p)
         for n in REGRESSIONS:
             p=(self.root/"regional"/f"{n}.html").read_text(encoding="utf-8")
             self.assertNotIn("30,000원",p)
