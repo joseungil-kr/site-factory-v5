@@ -1,5 +1,5 @@
 """Three evidence-based buyer decision previews; never production or locality uniqueness proof."""
-import json,sys
+import json,sys,re
 from pathlib import Path
 from copy import deepcopy
 ROOT=Path(__file__).resolve().parents[1]
@@ -67,6 +67,11 @@ for c,p in zip(cases,pages):
  a=assemble(p,pool,products)
  body=a['intro']+'\n'+'\n'.join(x['heading']+' '+x['paragraph'] for x in a['sections'])
  html=render(site,p,pages,products,[],pool)
+ # Keep the renderer's numbered URL contract and suppress links to non-existent
+ # pages 4/5 in this three-page isolated preview (never change global renderer).
+ html=re.sub(r'<a\\b[^>]*href="/(?:4|5)\\.html"[^>]*>.*?</a>', '', html, flags=re.S)
+ html=re.sub(r'<a\\b[^>]*href="/(?:4|5)\\.html"[^>]*>', '', html)
+ assert 'href="/4.html"' not in html and 'href="/5.html"' not in html
  for q in ('회사명과 새 부서, 건물 층·호실을 확인했나요?',
            '도로명주소와 건물번호, 동·호수를 확인했나요?',
            '행사 시작시각과 물품 반입 가능 시간을 확인했나요?',c['question']):
@@ -75,9 +80,9 @@ for c,p in zip(cases,pages):
  assert 'noindex' in html
  assert all('it_id='+sku in html for sku in c['productSkus'])
  assert '참고 원문 보기' in html
- (OUT/(c['id']+'.html')).write_text(html,encoding='utf-8')
+ (OUT/('index.html' if p['number']==1 else str(p['number'])+'.html')).write_text(html,encoding='utf-8')
  (OUT/(c['id']+'.txt')).write_text(body,encoding='utf-8')
  rows.append({'id':c['id'],'region':c['region'],'purpose':c['purpose'],'productSkus':c['productSkus'],'sourceUrl':c['url'],
-              'htmlBytes':len(html.encode()),'bodyChars':len(body),'allRecipientQuestions':True,'publicationApproved':False})
+              'filename':'index.html' if p['number']==1 else str(p['number'])+'.html','htmlBytes':len(html.encode()),'bodyChars':len(body),'allRecipientQuestions':True,'publicationApproved':False})
  (OUT/'manifest.json').write_text(json.dumps(rows,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print('THREE_BUYER_DESIGNS',json.dumps(rows,ensure_ascii=False))
