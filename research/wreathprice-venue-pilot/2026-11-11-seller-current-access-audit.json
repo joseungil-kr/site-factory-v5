@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "auditType": "seller-current-source-access-readonly",
+  "checkedOn": "2026-11-11",
+  "branch": "audit/wreathprice-mobile50-20261111",
+  "baselineHead": "0c7d7309abdfa973e9f90819685e85f429f783ed",
+  "purpose": "Check access to official seller current SKU/fee terms without retrying blocked seller URLs",
+  "observations": [
+    {
+      "url": "https://fwith.co.kr/shop/item.php?it_id=B205",
+      "directAccessThisTurn": "not attempted",
+      "reason": "Earlier direct retrieval failed/cache miss; do not retry",
+      "cachedEvidence": "Prior seller indexed extract only; neither current checkout nor presently effective rate confirmed",
+      "newVerifiedSKUConditions": 0
+    },
+    {
+      "url": "https://fwith.co.kr/shop/item.php?it_id=C030",
+      "directAccessThisTurn": "not attempted",
+      "reason": "Earlier direct retrieval failed/cache miss; do not retry",
+      "cachedEvidence": "Indexed historical C030 200,000 KRW and shipping charge paid on order, not a live transaction",
+      "newVerifiedSKUConditions": 0
+    },
+    {
+      "url": "https://fwith.co.kr/page/notice.php",
+      "directAccessThisTurn": "not attempted",
+      "reason": "Previously inaccessible and separate web search robots block; do not retry",
+      "cachedEvidence": "Seller notices remain historical; no current operator confirmation",
+      "newVerifiedVenueRules": 0
+    },
+    {
+      "url": "https://fwith.co.kr/shop/list.php?ca_id=20",
+      "directAccessThisTurn": "attempted once",
+      "result": "cache miss",
+      "checkedOn": "2026-11-11",
+      "interpretation": "This client's direct fetch failed; does not prove seller website globally unavailable",
+      "retryPerformed": false,
+      "usablePresentDayData": false
+    }
+  ],
+  "otherIndexedReferences": [
+    {
+      "url": "https://fwith.co.kr/shop/item.php?it_id=A026",
+      "finding": "Indexed seller delivery table contains broad city/county rows and exact locality exception rows",
+      "currentSourceFetched": false,
+      "skuTransferToB205C030": false
+    },
+    {
+      "url": "https://fwith.co.kr/shop/item.php?it_id=D030",
+      "finding": "Similar delivery table in other product category does not verify any B205/C030 or facility-specific current fee",
+      "currentSourceFetched": false,
+      "skuTransferToB205C030": false
+    }
+  ],
+  "sourceApplication": {
+    "existingPostedFeeLedger": "sites/wreathprice/posted-shipping-evidence-50.json",
+    "strictScopeBaseline": "2026-11-11 exact locality 4 / broader or ambiguous 16 / no row 30",
+    "newCurrentFeeRows": 0,
+    "newVerifiedDeliveryAreas": 0,
+    "productSkuScopeNoTransfer": true,
+    "exactLocalityFeeCurrentValidity": "unverified",
+    "sellerPagePublicationAndUpdateDates": "unverified",
+    "realTimeCheckout": "not performed",
+    "fixed50Changed": false,
+    "venuePilotChanged": false
+  },
+  "neededOfficialSellerMaterials": [
+    {
+      "forSkus": [
+        "B205",
+        "C030"
+      ],
+      "locations": "4 exact-locality seller rows and 16 broader/ambiguous fee rows",
+      "required": "Seller-authored dated delivery/extra-fee table explicitly indicating SKU applicability, exact 읍면동 or full address, priority of locality exceptions over upper regional default, effective date and currently valid revision"
+    },
+    {
+      "forSkus": [
+        "B201",
+        "B203",
+        "C205"
+      ],
+      "locations": "fixed 50 locality codes",
+      "required": "Each SKU's official currently valid separate shipping fee/availability rules; do not infer from B205/C030"
+    },
+    {
+      "forSkus": [
+        "B205",
+        "C030"
+      ],
+      "locations": "all 50 fixed localities",
+      "required": "Current seller stock/acceptance by delivery destination, fulfillment time windows, remote surcharge, ribbons and other checkout charges"
+    },
+    {
+      "forSkus": [
+        "B205",
+        "C030",
+        "C205"
+      ],
+      "locations": "세종 은하수공원 / 원주 빌라드아모르",
+      "required": "Current SKU/venue acceptability and operator notice dates; C030 is a celebration product and not a condolence substitution"
+    }
+  ],
+  "constraints": {
+    "readOnly": true,
+    "noExternalContact": true,
+    "noCheckout": true,
+    "noPublishing": true,
+    "noDeployment": true,
+    "noIndexing": true,
+    "noDNSAuthSecretChanges": true,
+    "noRepeatBlockedUrl": true
+  },
+  "decision": "No new presently verifiable seller conditions; do not regenerate HTML, change original ledger or promote old cached data."
+}
