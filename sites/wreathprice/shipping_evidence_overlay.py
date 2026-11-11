@@ -176,9 +176,15 @@ def apply(root:Path, selected:list, evidence_dir:Path):
     reg_before.mkdir(exist_ok=True);reg_after.mkdir(exist_ok=True)
     for code in REGRESSION:
         p=root/"locality"/(code+".html")
-        text=p.read_text(encoding="utf-8")
-        (reg_before/p.name).write_text(text,encoding="utf-8")
-        out=transform(text,entries.get(code),ledger["venueNotices"])
+        baseline=original/p.name
+        transformed=changed/p.name
+        if baseline.is_file():
+            before=baseline.read_text(encoding="utf-8")
+            out=transformed.read_text(encoding="utf-8")
+        else:
+            before=p.read_text(encoding="utf-8")
+            out=transform(before,entries.get(code),ledger["venueNotices"])
+        (reg_before/p.name).write_text(before,encoding="utf-8")
         (reg_after/p.name).write_text(out,encoding="utf-8")
         assert 'noindex,nofollow' in out
     assert sum(row["changed"] for row in compare)==50
