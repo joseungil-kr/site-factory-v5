@@ -1,0 +1,122 @@
+{
+  "schemaVersion": 1,
+  "scope": "two isolated venue-intent research candidates; NOT 50-region release",
+  "researchDate": "2026-11-11",
+  "sellerNoticeUrl": "https://fwith.co.kr/page/notice.php",
+  "sellerNoticeObservedAt": "2026-11-11",
+  "sellerNoticePublishedAt": null,
+  "sellerNoticeCurrentValidity": "unverified",
+  "skuReference": {
+    "B205": {
+      "purpose": "funeral three-tier wreath",
+      "historicalPriceKRW": 109000,
+      "priceCheckedOn": "2026-10-22",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=B205",
+      "evidence": "V4 CATALOGUE.json",
+      "venueEligible": null
+    },
+    "C205": {
+      "purpose": "celebration three-tier wreath",
+      "historicalPriceKRW": 149000,
+      "priceCheckedOn": "2026-10-30",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=C205",
+      "evidence": "V5 wreathprice site-spec.json",
+      "venueEligible": null
+    },
+    "C030": {
+      "purpose": "celebration two-tier objet",
+      "historicalPriceKRW": 200000,
+      "priceCheckedOn": "2026-10-30",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=C030",
+      "evidence": "V5 wreathprice site-spec.json",
+      "venueEligible": null
+    }
+  },
+  "facilities": [
+    {
+      "id": "sejong-eunhasu",
+      "displayName": "세종 은하수공원",
+      "facilityName": "은하수공원 장례식장",
+      "eventType": "funeral",
+      "address": "세종특별자치시 정안세종로 1527 (산울동 680)",
+      "locality": "산울동",
+      "localityCode": "3611011500",
+      "identitySource": {
+        "url": "https://sjfmc.or.kr/kor/sub04_01_01.do",
+        "issuer": "세종시설관리공단",
+        "observedOn": "2026-11-11",
+        "originalPublishedAt": null,
+        "fields": [
+          "name",
+          "address",
+          "funeral facility"
+        ]
+      },
+      "localityChangeSource": {
+        "url": "https://www.sjfmc.or.kr/jcw/sub05_01/cop/bbs/BBSMSTR_000000000013/selectBoardArticle.do?mno=sub05_01&nttId=4806&pageIndex=8",
+        "issuer": "세종시설관리공단",
+        "originalPublishedAt": "2020-07-17",
+        "effectiveDate": "2020-07-15",
+        "fields": [
+          "산울리 to 산울동"
+        ]
+      },
+      "sellerNotice": {
+        "text": "세종 은하수공원 - 오브제",
+        "sku": null,
+        "restriction": "seller-notice objet format",
+        "facilityOperatorCurrentPolicyVerified": false
+      },
+      "sellerExactDeliveryAvailable": null,
+      "postedFeeForFacilityKRW": null,
+      "skuToVenueSuitability": {
+        "B205": "not confirmed; conventional 3-tier",
+        "C030": "celebration item not a funeral substitute"
+      },
+      "isOriginalFixed50": false,
+      "theme": "funeral venue: confirm appropriate condolence objet SKU before comparing prices"
+    },
+    {
+      "id": "wonju-villa",
+      "displayName": "원주 빌라드아모르",
+      "facilityName": "빌라드아모르",
+      "eventType": "wedding",
+      "address": "강원특별자치도 원주시 북원로 2888 (태장동)",
+      "locality": "태장동",
+      "localityCode": null,
+      "identitySource": {
+        "url": "https://www.wonju.go.kr/www/selectBbsNttView.do?aditfield2=%ED%96%89%EC%A0%95%ED%8F%AC%ED%84%B8%EC%83%88%EC%86%8C%EC%8B%9D&bbsNo=1&key=311&nttNo=431172&pageIndex=22&pageUnit=50&searchCnd=SJ",
+        "issuer": "원주시청",
+        "originalPublishedAt": "2024-01-16",
+        "observedOn": "2026-11-11",
+        "fields": [
+          "name",
+          "address"
+        ]
+      },
+      "localityChangeSource": null,
+      "sellerNotice": {
+        "text": "원주 빌라드아모르 - 예식 화환 전날 배송, 당일은 예식장 주차문제로 화환 불가",
+        "sku": null,
+        "restriction": "seller notice: prior-day delivery, same-day unavailable",
+        "facilityOperatorCurrentPolicyVerified": false
+      },
+      "sellerExactDeliveryAvailable": null,
+      "postedFeeForFacilityKRW": null,
+      "skuToVenueSuitability": {
+        "C205": "not verified",
+        "C030": "not verified"
+      },
+      "isOriginalFixed50": false,
+      "theme": "wedding: confirm receiving day/time before selecting celebration wreath/objet"
+    }
+  ],
+  "criticalLimits": [
+    "No facility-run current acceptance policy verified",
+    "No seller live checkout/order performed",
+    "No venue-specific shipping fee established",
+    "C030 is celebration objet, cannot be treated as funeral objet",
+    "Separate scope from original fixed 50 locality pages",
+    "No index/public deployment"
+  ]
+}
