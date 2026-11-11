@@ -28,7 +28,7 @@ def main(root, evidence):
     observations=[]
     with sync_playwright() as p:
         browser=p.chromium.launch(headless=True)
-        for code in ("1111010100","1111010200","1123010100"):
+        for code in ("1111010100","1111010200","1123010100","5172034000","5013025300"):
             html=root/"locality"/(code+".html")
             assert html.is_file(),html
             for width in (390,1440):
@@ -87,7 +87,7 @@ def main(root, evidence):
                 observations.append(dict(code=code,width=width,**metrics,visibleImagePixels=visual))
                 page.close()
         browser.close()
-    assert len(observations)==6
+    assert len(observations)==10
     result=dict(assets=evidence_images,rendered=observations)
     (evidence/"screen-observations.json").write_text(
         json.dumps(result,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
