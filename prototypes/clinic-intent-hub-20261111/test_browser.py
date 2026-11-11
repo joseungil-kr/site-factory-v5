@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 import json
 import subprocess
+import shutil
 import sys
 import time
 import urllib.request
@@ -48,7 +49,9 @@ def main():
                 time.sleep(.25)
         else:raise RuntimeError("offline static server not responding")
         with sync_playwright() as pw:
-            browser=pw.chromium.launch(headless=True,args=["--no-sandbox"])
+            chrome=next((shutil.which(exe) for exe in ("google-chrome","google-chrome-stable","chromium","chromium-browser") if shutil.which(exe)),None)
+            if chrome is None: raise RuntimeError("Installed Chrome/Chromium not found")
+            browser=pw.chromium.launch(executable_path=chrome,headless=True,args=["--no-sandbox"])
             for width,height in ((390,844),(1440,900)):
                 context=browser.new_context(viewport={"width":width,"height":height},device_scale_factor=1)
                 page=context.new_page()
