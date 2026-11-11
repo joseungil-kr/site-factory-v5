@@ -32,6 +32,13 @@ jobs:
           assert s['todayflowerNational']['previewOnly'] is True
           print('ISOLATED_NO_DEPLOY_POLICY_PASS')
           PY
+      - name: Pinned WreathPrice B205 exact-scope 5070 extension
+        id: b205
+        continue-on-error: true
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_wreathprice_b205.py -v
+          python -m scripts.extend_todayflower_5070_b205_evidence
+          python -m scripts.build_todayflower_b205_samples
       - name: Full 5070 evidence map and CSV JSON regression
         id: coverage
         continue-on-error: true
@@ -62,6 +69,13 @@ jobs:
               "file://$PWD/reports/todayflower-nalmada/evidence-role-preview/$name.html" \
               "reports/todayflower-nalmada/evidence-role-preview/$name-1440.png"
           done
+          if test -d reports/todayflower-nalmada/evidence-coverage/b205-pinned-extension; then
+            for file in reports/todayflower-nalmada/evidence-coverage/b205-pinned-extension/*.html; do
+              stem="${file%.html}"
+              npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "390,844" --full-page "file://$PWD/$file" "${stem}-390.png"
+              npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "1440,900" --full-page "file://$PWD/$file" "${stem}-1440.png"
+            done
+          fi
       - name: Existing national generator and similarity tests
         id: original
         continue-on-error: true
@@ -123,6 +137,7 @@ jobs:
       - name: Explicitly fail any original or semantic gate
         if: always()
         env:
+          B205: ${{ steps.b205.outcome }}
           COVERAGE: ${{ steps.coverage.outcome }}
           EVIDENCE: ${{ steps.evidence.outcome }}
           ORIGINAL: ${{ steps.original.outcome }}
@@ -132,6 +147,7 @@ jobs:
           SEMANTIC: ${{ steps.semantic.outcome }}
         run: |
           printf 'original=%s build=%s official=%s sample=%s semantic=%s\\n' "$ORIGINAL" "$BUILD" "$OFFICIAL" "$SAMPLE" "$SEMANTIC"
+          test "$B205" = success
           test "$COVERAGE" = success
           test "$EVIDENCE" = success
           test "$ORIGINAL" = success
