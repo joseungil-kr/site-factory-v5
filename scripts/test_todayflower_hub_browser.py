@@ -54,7 +54,7 @@ def run():
             region=page.locator("#region-name").inner_text()
             assert region in fee and "B205" in fee and "원" in fee
             assert page.locator("#fee-source").get_attribute("href")=="https://fwith.co.kr/shop/item.php?it_id=B205"
-            assert "현행 적용 미확인" in page.locator("#proof-list").inner_text() or "현행 적용" in page.locator("#fee").inner_text()
+            assert "현재 주문 적용" in page.locator("#fee").inner_text()
             report["feeScope"].append({"width":width,"selectedRegion":region,
                                        "sellerSku":"B205","sourceURL":page.locator("#fee-source").get_attribute("href"),
                                        "currentEffective":False})
