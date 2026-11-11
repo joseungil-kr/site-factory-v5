@@ -73,5 +73,45 @@ class EvidenceScopeTest(unittest.TestCase):
         self.assertFalse(missing["facts"])
 
 
+    def test_sku_fee_visible_scope_and_date_fail_closed(self):
+        from scripts.build_todayflower_evidence_fixtures import render
+        p=evidence_detail_payload(region_code="4127311200",sku="B101",ledger=self.ledger)
+        self.assertEqual(p["facts"][0]["regionName"],"경기도 안산시 단원구 대부남동")
+        self.assertEqual(p["facts"][0]["sourceObservedAt"],"2026-11-11")
+        self.assertIsNone(p["facts"][0]["sourcePublicationDate"])
+        html=render("sku-b101-daebunam",p)
+        for visible in ("상품 B101", "30,000원", "경기도 안산시 단원구 대부남동",
+                        "판매처 자료 확인일: 2026-11-11", "게시일 미상",
+                        "해당 상품·해당 지역 한정"):
+            self.assertIn(visible,html)
+        corrupted={"role":p["role"],"facts":[{**p["facts"][0],"regionName":""}]}
+        with self.assertRaises(AssertionError):
+            render("no-region-fee",corrupted)
+        for sku in ("B205","C200","C206"):
+            empty=evidence_detail_payload(region_code="4127311200",sku=sku,ledger=self.ledger)
+            self.assertNotIn("30,000원",render("no-fee",empty))
+
+    def test_verified_legal_parent_and_only_existing_fixture_links(self):
+        from scripts.build_todayflower_evidence_fixtures import main, OUT
+        import json
+        from pathlib import Path
+        main()
+        report=json.loads((OUT/"mapping-report.json").read_text(encoding="utf-8"))
+        self.assertEqual(len(report["fixtureResults"]),5)
+        self.assertTrue(report["internalLinkTargetsAllExist"])
+        self.assertGreaterEqual(len(report["internalLinks"]),4)
+        for link in report["internalLinks"]:
+            self.assertTrue((OUT/link["to"]).is_file(),link)
+        leaf=(OUT/"region-daebunam-navigation.html").read_text(encoding="utf-8")
+        parent=(OUT/"region-danwon-parent.html").read_text(encoding="utf-8")
+        self.assertIn("경기도 안산시 단원구 대부남동",leaf)
+        self.assertIn("경기도 안산시 단원구",parent)
+        self.assertIn('href="region-danwon-parent.html"',leaf)
+        self.assertIn('href="sku-b101-daebunam.html"',leaf)
+        self.assertIn('href="region-daebunam-navigation.html"',parent)
+        self.assertNotIn("30,000원",leaf)
+        self.assertNotIn("배송 가능합니다",leaf)
+
+
 if __name__=="__main__":
     unittest.main()
