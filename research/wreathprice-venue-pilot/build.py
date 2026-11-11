@@ -86,6 +86,25 @@ def document(record, css, media):
         )
         art="celebration-wreath.webp"
         alt="축하화환 형태의 공용 참고 이미지이며 빌라드아모르의 실제 설치 사례가 아닙니다"
+    operator_section=''
+    if is_funeral:
+        operator_notice=record["operatorPolicyFollowup"]["operatorAnnouncement"]
+        operator_guide=record["operatorPolicyFollowup"]["operatorUsageGuide"]
+        assert operator_notice["publishedOn"]=="2018-10-01"
+        operator_section=(
+          '<section data-role="operator-dated-policy"><h2>은하수공원 운영기관의 2018년 공지</h2>'
+          '<p>세종시설관리공단이 2018-10-01 게시한 공지에는 인조부품이 많은 '
+          '기존 3단화환 반입 금지, 신근조화환대에 생화를 제작하여 빈소에 납품하는 '
+          '방식이 명시돼 있습니다. 발인 후 지정 장소에서 폐기한다는 내용도 있습니다.</p>'
+          '<p>이는 <strong>2018년 시행 공지의 내용</strong>이지, 2026-11-11 현재 '
+          '개별 상품·크기·당일 반입을 확인한 결과는 아닙니다. '
+          'B205가 신화환 규격을 충족한다고 단정하지 않고, 축하용 C030을 '
+          '근조용 대체상품으로 권장하지 않습니다.</p>'
+          '<p>'+source_link(operator_notice["url"],"운영기관 신근조화환 공식 공지(2018-10-01)")+'</p>'
+          '<p>운영기관의 현재 공개 이용안내는 장례식장 이용절차와 24시간 상담을 '
+          '소개하지만, 이는 24시간 화환 배송·반입 허용을 뜻하지 않습니다. '
+          +source_link(operator_guide["url"],"운영기관 장례식장 이용안내")+'</p></section>'
+        )
     figure=('<figure><img src="./assets/'+art+'" alt="'+esc(alt)+'" loading="eager" decoding="async" '
             'width="1024"><figcaption>공용 형태 참고 이미지 · 실제 판매 상품·시설 납품 사례 아님</figcaption></figure>')
     return ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
@@ -99,7 +118,7 @@ def document(record, css, media):
       '<section data-role="venue-identity"><h2>공식 확인된 수령 시설</h2>'
       '<p><strong>'+esc(record["facilityName"])+'</strong> · '+esc(address)+'</p>'
       '<p>'+source_link(official,"공식 시설·주소 출처")+'</p></section>'
-      +decision+
+      +decision+operator_section+
       '<section data-role="product-compare"><h2>3. 판매처 상품을 목적에 맞게 비교</h2>'
       '<div class="products">'+comparison+'</div></section>'
       '<section data-role="seller-notice"><h2>판매처 공지의 원문 범위와 한계</h2>'
