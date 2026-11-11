@@ -139,10 +139,16 @@ def main():
                '<p><a href="'+h(official_source["url"])+'">한국장례문화진흥원 시설현황 PDF</a></p></div>')
         else:
             assert r["number"]==4360 and not r.get("officialFacilityLocationEvidence")
+        hold_explanation=(
+            '공식 시설 위치·전화번호는 확인했지만 현재 해당 시설의 외부화환 반입 조건과 '
+            'B205 주문·배송 가능 여부를 검증하지 못했습니다.'
+            if r["number"]==1039 else
+            '해당 지역의 특정 장례시설 공식 위치·반입 조건을 검증하지 못했습니다.'
+        )
         cards+=('<section data-hold-region="'+str(r["number"])+'"><h2>'+h(r["name"])+' — 상세 보류</h2>'
                 '<p>기존 URL: <code>/'+str(r["number"])+'.html</code>. '
                 'B205의 과거 지역별 게시 추가배송비 '+f'{price:,}'+'원은 연구 원장에 있으나 '
-                '<strong>해당 지역의 특정 장례시설 공식 위치·반입 조건을 검증하지 못했습니다.</strong></p>'
+                '<strong>'+h(hold_explanation)+'</strong></p>'
                 '<p class="footnote">판매처 자료 조회일 2026-11-11, 게시일 미상, 현재 배송 가능 여부 미확인.</p>'
                 +official_card+'<p>추가 확보 필요: '+h("; ".join(r["unverified"]))+'</p></section>')
     index=doc("B205 근거 기반 3개 지역 편집 후보 검토",
