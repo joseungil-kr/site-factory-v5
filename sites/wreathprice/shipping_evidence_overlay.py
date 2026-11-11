@@ -26,6 +26,14 @@ def transform(text, entry, notices):
     if entry is None:
         return text
     assert 'noindex,nofollow' in text
+    # Only evidence-backed samples may distinguish an existing published fee
+    # from its unverified applicability to the recipient and current order.
+    old_caution="해당 수령지의 실제 주문 가능 여부와 추가 비용은 현재 검증된 자료가 없습니다."
+    nuanced_caution=("해당 수령지의 실제 주문 가능 여부와 최종 적용 추가비용은 아직 "
+                     "확인되지 않았습니다. B205·C030 상품 상세에는 게시 추가배송비 요율이 "
+                     "있으나, 현재 주문에 적용되는 요금인지 확인되지 않았습니다.")
+    assert text.count(old_caution)==1, "Unexpected source caution drift"
+    text_with_evidence=text.replace(old_caution,nuanced_caution,1)
     sources=entry["sourceUrls"]
     assert entry["sourceSkuIds"]==["B205","C030"]
     price=f'{entry["postedAdditionalFeeKRW"]:,}원'
@@ -58,7 +66,9 @@ def transform(text, entry, notices):
     info+='</section>'
     if text.count("</main>") != 1:
         raise ValueError("Unexpected main closing tag")
-    updated=text.replace("</main>",info+"</main>",1)
+    updated=text_with_evidence.replace("</main>",info+"</main>",1)
+    assert old_caution not in updated
+    assert nuanced_caution in updated
     assert sku_links(text)==sku_links(updated)
     assert len(sku_links(updated))==5
     for sku in SKU_IDS:
