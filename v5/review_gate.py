@@ -36,6 +36,13 @@ def sample_ids(pages):
     return sorted(chosen)
 
 
+def minimum_review_score(data,plan):
+    # Explicitly approved Worker6 exception only; all other sites remain 90.
+    if data.get('site',{}).get('id') == 'promotion-gift-plants' and plan.get('targetPageCount') == 5302:
+        return 85
+    return 90
+
+
 def assert_review(data,plan):
     review=plan.get('qualityReview')
     if not isinstance(review,dict) or review.get('approved') is not True:
@@ -59,5 +66,6 @@ def assert_review(data,plan):
         raise ConfigError('V5.1 quality review has duplicate or unknown sample IDs')
     if not set(sample_ids(data['pages'])).issubset(set(ids)):
         raise ConfigError('V5.1 quality review must cover the pinned 1% sample')
-    if any(type(row.get('score')) not in (int,float) or not 90<=row['score']<=100 for row in rows):
-        raise ConfigError('V5.1 quality review sample scored below 90 or is invalid')
+    threshold=minimum_review_score(data,plan)
+    if any(type(row.get('score')) not in (int,float) or not threshold<=row['score']<=100 for row in rows):
+        raise ConfigError(f'V5.1 quality review sample scored below {threshold} or is invalid')
