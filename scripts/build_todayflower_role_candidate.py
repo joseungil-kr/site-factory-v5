@@ -283,7 +283,17 @@ def build():
     for row in candidate_files:
         page=(OUT/row["htmlPath"]).read_text(encoding="utf-8")
         assert not any(g in page for g in guidance)
+    # Explicitly separate mechanical overlap from editorial utility:
+    # reducing words/duplicated advice does not establish a useful locality.
+    region_lengths=[]
+    for item in candidate_files:
+        source=(OUT/item["htmlPath"]).read_text(encoding="utf-8")
+        region_lengths.append(len(visible_text(source)))
+    thin_count=sum(length<350 for length in region_lengths)
     report={
+        "candidateThinRegionPagesUnder350VisibleChars":thin_count,
+        "candidateRegionVisibleCharsMin":min(region_lengths),
+        "candidateRegionVisibleCharsMax":max(region_lengths),
         "candidateOnly": True,"publicReleaseApproved":False,
         "searchIndexable":False,"noExistingUrlChanged":True,
         "originalQualityGateUnchanged":True,
