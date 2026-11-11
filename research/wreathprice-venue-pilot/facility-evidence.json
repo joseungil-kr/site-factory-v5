@@ -118,5 +118,62 @@
     "C030 is celebration objet, cannot be treated as funeral objet",
     "Separate scope from original fixed 50 locality pages",
     "No index/public deployment"
-  ]
+  ],
+  "operatorPolicyFollowup": {
+    "searchedOn": "2026-11-11",
+    "sejong": {
+      "operatorAnnouncement": {
+        "publisher": "세종특별자치시시설관리공단 은하수공원",
+        "url": "https://www.sjfmc.or.kr/eunhasu/sub03_01/cop/bbs/BBSMSTR_000000000013/selectBoardArticle.do?mno=sub03_01&nttId=3232&pageIndex=1&searchCnd=&searchWrd=",
+        "title": "은하수공원 신(新)근조화환 사용(2018. 10. 01 부터)",
+        "publishedOn": "2018-10-01",
+        "policyStart": "2018-10-01",
+        "inspectedOn": "2026-11-11",
+        "statements": [
+          "인조부품이 많은 기존 3단화환 반입 금지라는 운영기관 게시 공지",
+          "장례식장 내 신근조화환대 비치, 화환대에 생화 제작 후 빈소 납품 안내",
+          "발인 후 화환의 지정 장소 폐기 안내"
+        ],
+        "historicalPublicNotice": true,
+        "currentRuleIndependentlyReconfirmed": false,
+        "currentDimensionsVerified": false,
+        "sellerSkuB205Compatible": false,
+        "sellerSkuC030FuneralCompatible": false
+      },
+      "operatorUsageGuide": {
+        "url": "https://www.sjfmc.or.kr/eunhasu/sub02_01_02.do",
+        "inspectedOn": "2026-11-11",
+        "facts": [
+          "장례식장 24시간 상담 안내",
+          "빈소 결정 및 이용계약·일정 결정 절차 안내"
+        ],
+        "prohibitedInferences": [
+          "24시간 꽃 배송이나 24시간 화환 반입을 의미하지 않음",
+          "원문에 개별 B205/C030 반입 가능 여부 없음"
+        ]
+      },
+      "unknown": [
+        "2026-11-11 현재도 2018 신근조화환 공지가 유효한지 별도 최신 확인 없음",
+        "현재 허용 화환대 규격·현장 설치가능 치수 및 SKU 일치 여부",
+        "희망일 실제 배송 접수·최종 가격"
+      ]
+    },
+    "wonju": {
+      "operatorOfficialVenuePolicyFound": false,
+      "inspectedOn": "2026-11-11",
+      "inspectedScope": [
+        "원주시청 공식 2024-01-16 소재지 공지",
+        "원주 빌라드아모르 공식 사이트·화환·반입·전날·보관 관련 검색",
+        "시설 자체 이용안내나 당일/전날 배송 최신 공식 원문 식별 실패"
+      ],
+      "sellerNoticeReused": false,
+      "unknown": [
+        "시설 운영자의 최신 예식화환 반입 지침",
+        "예식 전날 화환 수령 가능 시간",
+        "전날 보관 가능 여부와 인수 담당",
+        "예식 당일 배송 허용 또는 금지 여부",
+        "허용 형태·SKU별 추가 배송료"
+      ]
+    }
+  }
 }
