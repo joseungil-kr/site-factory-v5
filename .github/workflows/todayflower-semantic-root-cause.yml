@@ -56,6 +56,11 @@ jobs:
           assert r["seoSeok"]["candidateClaimCount"]==4
           assert r["candidateRule"]["independentBuyerPagePublishable"]==0
           assert len(list(p.glob("*.html")))==6
+          gate=json.loads((p/"candidate-333-eligibility.json").read_text())
+          assert gate["recordCount"]==333
+          assert len(gate["records"])==333
+          assert not gate["qualityGatePassed"]
+          assert not any(x["allowIndependentBuyerHtml"] for x in gate["records"])
           print("EXACT_INPUT_333_SAME_4503_FAILURES_QA",hashlib.sha256((p/"analysis.json").read_bytes()).hexdigest())
           PY
       - name: Save audit evidence only, no deployment
