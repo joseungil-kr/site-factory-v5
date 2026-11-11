@@ -7,6 +7,9 @@ on:
       - 'scripts/build_todayflower_role_candidate.py'
       - 'tests/test_todayflower_role_candidate.py'
       - '.github/workflows/todayflower-role-candidate.yml'
+  pull_request:
+    branches:
+      - site/todayflower-nalmada-pilot-20261030
   workflow_dispatch:
 permissions:
   contents: read
