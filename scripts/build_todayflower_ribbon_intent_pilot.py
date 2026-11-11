@@ -116,15 +116,15 @@ def html_doc(p,ledger):
           '<p>현재 가격·재고·리본 길이·배송 가능 여부·입력 UI는 검증되지 않았습니다.</p>'
           '<p><a data-cta-sku="'+h(p["productSkus"][0])+'" href="'+h(p["orderUrl"])+'">'
           '해당 상품의 판매처 원문 확인</a></p></section>')
+    status_labels={"search_index_excerpt; direct open cache miss":"검색에 표시된 요약 확인 · 원문 직접 열기 실패",
+                   "seller indexed product page snippet, direct open cache miss":"판매처 검색 요약 확인 · 직접 열기 실패",
+                   "direct page read failed; use pinned Todayflower catalog only":"원문 접근 실패 · 기존 상품원장만 사용"}
     refs='<section><h2>확인된 원문과 편집 구분</h2><p>실제 검색결과의 노출 순위는 확인되지 않았습니다. '
     refs+='리본 선택 흐름은 경쟁자료의 관찰 주제를 참고했지만 문장과 예시는 새로 작성한 편집 제안입니다.</p><ul>'
     for src in ledger["sources"]:
         if src["id"] in ("COMP_ORDER","COMP_EXAMPLES","COMP_RIBBON","SELLER_C206"):
             refs+='<li><a href="'+h(src["url"])+'">'+h(src["title"])+'</a> — '+h(status_labels.get(src["access"],"확인범위가 제한된 자료"))+'</li>'
     refs+='</ul></section>'
-    status_labels={"search_index_excerpt; direct open cache miss":"검색에 표시된 요약 확인 · 원문 직접 열기 실패",
-                   "seller indexed product page snippet, direct open cache miss":"판매처 검색 요약 확인 · 직접 열기 실패",
-                   "direct page read failed; use pinned Todayflower catalog only":"원문 접근 실패 · 기존 상품원장만 사용"}
     return ('<!doctype html><html lang="ko"><head><meta charset="utf-8">'
             '<meta name="viewport" content="width=device-width,initial-scale=1">'
             '<meta name="robots" content="noindex,nofollow"><title>'+h(p["region"])+' 축하 리본 문구 · '+h(p["roleLabel"])+'</title>'
