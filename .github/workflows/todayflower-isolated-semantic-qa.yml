@@ -32,6 +32,27 @@ jobs:
           assert s['todayflowerNational']['previewOnly'] is True
           print('ISOLATED_NO_DEPLOY_POLICY_PASS')
           PY
+      - name: Evidence scope tests and bounded nonpublic HTML fixtures
+        id: evidence
+        continue-on-error: true
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_evidence.py -v
+          python -m scripts.build_todayflower_evidence_fixtures
+      - name: Render isolated evidence fixtures at 390px and 1440px
+        id: visual
+        if: steps.evidence.outcome == 'success'
+        continue-on-error: true
+        run: |
+          node --version
+          npx --yes playwright@1.56.1 install chromium
+          for name in facility-ansan-gd sku-b101-daebunam no-source-2852; do
+            npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "390,844" --full-page \
+              "file://$PWD/reports/todayflower-nalmada/evidence-role-preview/$name.html" \
+              "reports/todayflower-nalmada/evidence-role-preview/$name-390.png"
+            npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "1440,900" --full-page \
+              "file://$PWD/reports/todayflower-nalmada/evidence-role-preview/$name.html" \
+              "reports/todayflower-nalmada/evidence-role-preview/$name-1440.png"
+          done
       - name: Existing national generator and similarity tests
         id: original
         continue-on-error: true
@@ -93,6 +114,7 @@ jobs:
       - name: Explicitly fail any original or semantic gate
         if: always()
         env:
+          EVIDENCE: ${{ steps.evidence.outcome }}
           ORIGINAL: ${{ steps.original.outcome }}
           BUILD: ${{ steps.build.outcome }}
           OFFICIAL: ${{ steps.official.outcome }}
@@ -100,6 +122,7 @@ jobs:
           SEMANTIC: ${{ steps.semantic.outcome }}
         run: |
           printf 'original=%s build=%s official=%s sample=%s semantic=%s\\n' "$ORIGINAL" "$BUILD" "$OFFICIAL" "$SAMPLE" "$SEMANTIC"
+          test "$EVIDENCE" = success
           test "$ORIGINAL" = success
           test "$BUILD" = success
           test "$OFFICIAL" = success
