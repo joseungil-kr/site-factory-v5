@@ -1,0 +1,61 @@
+name: Worker6 isolated role text and D144 evidence preview
+on:
+  push:
+    branches: [site/v51-promotion-gift-plants-20261109]
+    paths:
+      - scripts/worker6_role_text_preview.py
+      - tests/test_worker6_role_text_preview.py
+      - .github/workflows/worker6-role-text-preview.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  text-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build isolated text and run role/link/seller-source tests
+        run: |
+          python -m unittest tests.test_worker6_role_text_preview -v
+      - name: Verify local HTTP and links
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 --directory reports/promotion-gift-plants/role-preview >/tmp/w6-role-http.log 2>&1 &
+          PID=$!
+          trap 'kill "$PID" || true' EXIT
+          python - <<'PY'
+          from urllib.request import urlopen
+          from html.parser import HTMLParser
+          from urllib.parse import urlsplit
+          import time
+          base='http://127.0.0.1:8765'
+          for _ in range(20):
+              try:
+                  with urlopen(base+'/') as r:break
+              except OSError:time.sleep(.2)
+          class Scan(HTMLParser):
+              def __init__(self):super().__init__();self.links=[]
+              def handle_starttag(self,t,a):
+                  if t=='a':
+                      h=dict(a).get('href','')
+                      if h.startswith('/'):self.links.append(urlsplit(h).path)
+          count=0
+          for path in ['/','/guide.html','/1.html','/2.html','/3.html','/4.html']:
+              with urlopen(base+path) as r:
+                  assert r.status==200
+                  data=r.read().decode()
+                  assert 'noindex' in data
+              s=Scan();s.feed(data)
+              for target in s.links:
+                  with urlopen(base+target) as r:assert r.status==200
+                  count+=1
+          print('ROLE_HTTP_OK',6,'INTERNAL_LINKS_OK',count)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: worker6-role-text-source-evidence-preview
+          path: reports/promotion-gift-plants/role-preview/
+          if-no-files-found: warn
