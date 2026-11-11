@@ -46,6 +46,7 @@ PRODUCT_SETS=(
     ("G073","D144","D149","C200","C206","B201"),
 )
 from .todayflower_copy_pool import SCENARIOS, SCENE_DETAILS
+from .todayflower_evidence import decide_role, load_ledger, check_ledger_region_codes
 
 def _pick(items, seed):
     value=int.from_bytes(hashlib.sha256(seed.encode("utf-8")).digest()[:8],"big")
@@ -197,6 +198,8 @@ def _make_page(code,name,number):
         ]
 
     return {
+        "pageRole":decide_role(region_code=code, selected_skus=skus),
+        "legalCode":code,
         "id":"today-national-"+code,
         "number":number,
         "region":name,
@@ -232,6 +235,10 @@ def expand(site,pages,regions,root:Path):
     for code,name in prior.items():
         if official_map.get(code)!=name:
             raise ConfigError("Existing Ansan official code/name disagrees with nationwide snapshot: "+code)
+    # Evidence matching is exact-code-only; pinned ZIP and saved pilot codes
+    # determine identity, seller notices do not create administrative codes.
+    check_ledger_region_codes(load_ledger(), {c for c,_ in official} | set(prior)
+                              | {r["code"] for r in regions["regions"]})
     new=[(code,name) for code,name in official if code not in prior]
     if len(new)!=EXPECTED_NEW:
         raise ConfigError("Unexpected nationwide legal-dong delta count")
