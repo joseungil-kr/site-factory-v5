@@ -1,0 +1,93 @@
+name: Todayflower 333 data-row hub prototype (NO DEPLOY)
+on:
+  push:
+    branches:
+      - qa/todayflower-semantic-20261111
+    paths:
+      - 'scripts/build_todayflower_hub_prototype.py'
+      - 'scripts/test_todayflower_hub_browser.py'
+      - 'tests/test_todayflower_hub_prototype.py'
+      - '.github/workflows/todayflower-333-hub-prototype.yml'
+  pull_request:
+    branches:
+      - site/todayflower-nalmada-pilot-20261030
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  hub-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert preview-only policy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('sites/todayflower-nalmada/site.json').read_text(encoding='utf-8'))
+          assert s['publishEnabled'] is False
+          assert s['indexNow']['enabled'] is False
+          assert s['todayflowerNational']['previewOnly'] is True
+          print('NO_PUBLIC_DEPLOY_NO_INDEXNOW')
+          PY
+      - name: Generate one hub, one shared guide, 333 original data rows
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_hub_prototype.py -v
+          python -m scripts.build_todayflower_hub_prototype
+      - name: Inspect actual generated HTML and JSON (not job step outcome only)
+        run: |
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          d=Path('reports/todayflower-nalmada/hub-prototype')
+          report=json.loads((d/'prototype-report.json').read_text(encoding='utf-8'))
+          rows=json.loads((d/'regions-333.json').read_text(encoding='utf-8'))
+          assert len(rows)==333 and len({r['code'] for r in rows})==333
+          assert report['candidateHtmlDocuments']==2 and len(list(d.glob('*.html')))==2
+          assert report['sourcePopulation']==333
+          assert report['existingOriginalQualityStillFailed']
+          assert report['similarity49PercentNotApplicableToOneHub']
+          assert report['commonBuyerAdviceOwners']==1
+          for filename,digest in report['files'].items():
+              p=d/filename
+              assert p.exists()
+              assert hashlib.sha256(p.read_bytes()).hexdigest()==digest
+          print('HUB_ACTUAL_FILES_HASH_AND_333_DATA_VERIFIED')
+          PY
+      - name: Install chromium and Korean font for interactive browser tests
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          python -m pip install playwright==1.58.0
+          python -m playwright install --with-deps chromium
+          fc-match 'Noto Sans CJK KR' | grep -i NotoSansCJK
+      - name: Real search, select, source-scope, link and 390/1440 screenshots
+        run: |
+          python -m scripts.test_todayflower_hub_browser
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=Path('reports/todayflower-nalmada/hub-prototype')
+          audit=json.loads((d/'browser-audit.json').read_text(encoding='utf-8'))
+          assert audit['testedWidths']==[390,1440]
+          assert len(audit['searches'])==2
+          assert len(audit['screenshots'])==8
+          assert all((d/f).is_file() for f in audit['screenshots'])
+          assert all(x['feeVisible'] is False for x in audit['searches'])
+          assert all(x['currentEffective'] is False for x in audit['feeScope'])
+          print('REAL_BROWSER_AND_SCREENSHOT_PASS')
+          PY
+      - name: Upload isolated-only artifact, never deploy
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-333-hub-no-deploy-${{ github.sha }}
+          path: reports/todayflower-nalmada/hub-prototype/
+          retention-days: 7
+          if-no-files-found: warn
