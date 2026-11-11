@@ -157,6 +157,44 @@ def _make_page(code,name,number):
          "a":one("receiver",3)+" "+one("delivery",3)}
     ]
 
+    if intent == "행사장 꽃 반입":
+        # Editorial ownership: one decision per sentence family.  The
+        # previously shuffled receiver/delivery pools put two paraphrases
+        # of the same venue or rescheduling advice in a single paragraph.
+        # These groups were reviewed against actual /2852.html.  Each
+        # section answers a different buying question.  Do not invent
+        # venue rules, local cutoffs or delivery availability.
+        def decision(group, label, indices):
+            candidates = [(i, details[group][i]) for i in indices]
+            return _pick(candidates, seed+":owner:"+group+":"+label)[1]
+
+        purpose = decision("selection", "form", (2, 5, 7, 11))
+        ribbon = decision("selection", "ribbon", (1, 8))
+        venue = decision("receiver", "venue", (0, 4, 8))
+        recipient = decision("receiver", "recipient", (1, 5, 7, 9))
+        entry = decision("receiver", "entry", (3, 6, 10))
+        visual = decision("selection", "color", (4, 9))
+        schedule = decision("delivery", "schedule", (0, 3, 5, 8, 10))
+        cost = decision("delivery", "cost", (2, 9))
+        sections = [
+            {"heading": intent+" 상품과 선택 기준",
+             "paragraph": purpose+" "+ribbon},
+            {"heading": "수령 주소와 인계 담당자",
+             "paragraph": venue+" "+recipient+" "+entry},
+            {"heading": "상품 사진·규격·옵션 비교",
+             "paragraph": visual+" "+compare},
+            {"heading": "배송 일정과 최종 결제금액",
+             "paragraph": schedule+" "+cost},
+        ]
+        faqs = [
+            {"q": f"{name}에서 "+q1,
+             "a": "행사 주최 측에 외부 꽃 반입 가능 여부를 먼저 확인해 주세요. 반입이 어렵다면 꽃다발 직접 전달처럼 다른 방식도 주문 전에 상담할 수 있습니다."},
+            {"q": q2,
+             "a": "현장 동선을 가리지 않는 설치 장소인지 행사 담당자와 협의해 주세요. 행사 이후 화환을 누가 언제 이동할지도 미리 정하면 좋습니다."},
+            {"q": f"{name} 꽃배달을 주문할 때 어떤 정보를 준비하면 좋나요?",
+             "a": "행사 날짜와 주문할 상품번호를 결제 전 대조해 주세요. 리본 표기의 띄어쓰기와 수신·발신 명의도 주문 내용에 맞게 정리해 주세요."},
+        ]
+
     return {
         "id":"today-national-"+code,
         "number":number,
