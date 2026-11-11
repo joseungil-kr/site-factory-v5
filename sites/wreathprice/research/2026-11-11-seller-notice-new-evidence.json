@@ -1,0 +1,337 @@
+{
+  "schemaVersion": 1,
+  "site": "wreathprice",
+  "status": "read-only supplementary evidence; NEVER apply to generated locality pages automatically",
+  "baseline": {
+    "candidateBranch": "audit/wreathprice-mobile50-20261111",
+    "headBefore": "1edd78a229edce56cd4f8b18ce77fc2ea81bad66",
+    "originalLedger": "sites/wreathprice/posted-shipping-evidence-50.json",
+    "originalSellerFeeRows": 20,
+    "existingVenuePolicyGroups": 3,
+    "strictScopeExactLocalityFeeRows": 4,
+    "strictScopeBroadContextRows": 16,
+    "existingFixed50IndexEligible": 0
+  },
+  "collection": {
+    "observedOn": "2026-11-11",
+    "sourceDirectOpen": "failed: cache miss",
+    "method": "read-only indexed public search result",
+    "sellerNoticeLastUpdated": null,
+    "pageCrawlNote": "indexed extract says crawled approximately two weeks before query; not direct contemporaneous seller HTTP read",
+    "noContact": true,
+    "noOrder": true
+  },
+  "newFacts": [
+    {
+      "id": "v001",
+      "kind": "seller_venue_notice",
+      "regionLabel": "세종특별자치시",
+      "venueName": "은하수공원",
+      "eventType": "funeral",
+      "noticeRule": "오브제",
+      "applicableProductCategory": [
+        "obje"
+      ],
+      "skuIdsVerified": [],
+      "sellerSkuB205CurrentAccepted": null,
+      "sellerSkuC030CurrentAccepted": null,
+      "scope": "named venue only; no exact 읍면동 code/address verified",
+      "fixed50ExactLocalityMatch": false,
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "sourceQuoteForAudit": "세종 은하수공원 - 오브제",
+      "observedOn": "2026-11-11",
+      "publishedOn": null,
+      "validToday": null,
+      "checkoutVerified": false,
+      "deliveryAvailabilityVerified": false,
+      "feeKRW": null,
+      "exception": "Reconfirm exact facility and current venue policy; not all localities in parent city"
+    },
+    {
+      "id": "v002",
+      "kind": "seller_venue_notice",
+      "regionLabel": "경상북도 상주시",
+      "venueName": "상주 시민장례식장",
+      "eventType": "funeral",
+      "noticeRule": "바구니",
+      "applicableProductCategory": [
+        "basket"
+      ],
+      "skuIdsVerified": [],
+      "sellerSkuB205CurrentAccepted": null,
+      "sellerSkuC030CurrentAccepted": null,
+      "scope": "named venue only; no exact 읍면동 code/address verified",
+      "fixed50ExactLocalityMatch": false,
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "sourceQuoteForAudit": "상주 시민장례식장 - 바구니",
+      "observedOn": "2026-11-11",
+      "publishedOn": null,
+      "validToday": null,
+      "checkoutVerified": false,
+      "deliveryAvailabilityVerified": false,
+      "feeKRW": null,
+      "exception": "Reconfirm exact facility and current venue policy; not all localities in parent city"
+    },
+    {
+      "id": "v003",
+      "kind": "seller_venue_notice",
+      "regionLabel": "경상북도 성주군",
+      "venueName": "성주성당",
+      "eventType": "ceremony",
+      "noticeRule": "3단 화환 반입 불가",
+      "applicableProductCategory": [
+        "three_tier_prohibited"
+      ],
+      "skuIdsVerified": [],
+      "sellerSkuB205CurrentAccepted": null,
+      "sellerSkuC030CurrentAccepted": null,
+      "scope": "named venue only; no exact 읍면동 code/address verified",
+      "fixed50ExactLocalityMatch": false,
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "sourceQuoteForAudit": "성주군 성주성당 - 3단 반입불가",
+      "observedOn": "2026-11-11",
+      "publishedOn": null,
+      "validToday": null,
+      "checkoutVerified": false,
+      "deliveryAvailabilityVerified": false,
+      "feeKRW": null,
+      "exception": "Reconfirm exact facility and current venue policy; not all localities in parent city"
+    },
+    {
+      "id": "v004",
+      "kind": "seller_venue_notice",
+      "regionLabel": "경상남도 창원시",
+      "venueName": "상복공원",
+      "eventType": "funeral",
+      "noticeRule": "바구니",
+      "applicableProductCategory": [
+        "basket"
+      ],
+      "skuIdsVerified": [],
+      "sellerSkuB205CurrentAccepted": null,
+      "sellerSkuC030CurrentAccepted": null,
+      "scope": "named venue only; no exact 읍면동 code/address verified",
+      "fixed50ExactLocalityMatch": false,
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "sourceQuoteForAudit": "창원 상복공원, 마산의료원 - 바구니",
+      "observedOn": "2026-11-11",
+      "publishedOn": null,
+      "validToday": null,
+      "checkoutVerified": false,
+      "deliveryAvailabilityVerified": false,
+      "feeKRW": null,
+      "exception": "Reconfirm exact facility and current venue policy; not all localities in parent city"
+    },
+    {
+      "id": "v005",
+      "kind": "seller_venue_notice",
+      "regionLabel": "경상남도 창원시",
+      "venueName": "마산의료원",
+      "eventType": "funeral",
+      "noticeRule": "바구니",
+      "applicableProductCategory": [
+        "basket"
+      ],
+      "skuIdsVerified": [],
+      "sellerSkuB205CurrentAccepted": null,
+      "sellerSkuC030CurrentAccepted": null,
+      "scope": "named venue only; no exact 읍면동 code/address verified",
+      "fixed50ExactLocalityMatch": false,
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "sourceQuoteForAudit": "창원 상복공원, 마산의료원 - 바구니",
+      "observedOn": "2026-11-11",
+      "publishedOn": null,
+      "validToday": null,
+      "checkoutVerified": false,
+      "deliveryAvailabilityVerified": false,
+      "feeKRW": null,
+      "exception": "Reconfirm exact facility and current venue policy; not all localities in parent city"
+    },
+    {
+      "id": "v006",
+      "kind": "seller_venue_notice",
+      "regionLabel": "경상남도 거제시",
+      "venueName": "거제 백병원(거붕 백병원=대명아임레디)",
+      "eventType": "funeral",
+      "noticeRule": "바구니·스텐드·오브제",
+      "applicableProductCategory": [
+        "basket",
+        "stand",
+        "obje"
+      ],
+      "skuIdsVerified": [],
+      "sellerSkuB205CurrentAccepted": null,
+      "sellerSkuC030CurrentAccepted": null,
+      "scope": "named venue only; no exact 읍면동 code/address verified",
+      "fixed50ExactLocalityMatch": false,
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "sourceQuoteForAudit": "거제 백병원(거붕 백병원=대명아임레디) - 바구니, 스텐드, 오브제",
+      "observedOn": "2026-11-11",
+      "publishedOn": null,
+      "validToday": null,
+      "checkoutVerified": false,
+      "deliveryAvailabilityVerified": false,
+      "feeKRW": null,
+      "exception": "Reconfirm exact facility and current venue policy; not all localities in parent city"
+    },
+    {
+      "id": "v007",
+      "kind": "seller_venue_notice",
+      "regionLabel": "강원특별자치도 원주시",
+      "venueName": "빌라드아모르",
+      "eventType": "wedding",
+      "noticeRule": "예식화환 전날 배송, 당일 화환 불가(주차 문제 표기)",
+      "applicableProductCategory": [
+        "day_before_delivery_notice",
+        "same_day_not_accepted_notice"
+      ],
+      "skuIdsVerified": [],
+      "sellerSkuB205CurrentAccepted": null,
+      "sellerSkuC030CurrentAccepted": null,
+      "scope": "named venue only; no exact 읍면동 code/address verified",
+      "fixed50ExactLocalityMatch": false,
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "sourceQuoteForAudit": "원주 빌라드아모르 - 예식 화환 전날 배송, 당일은 예식장 주차문제로 화환 불가",
+      "observedOn": "2026-11-11",
+      "publishedOn": null,
+      "validToday": null,
+      "checkoutVerified": false,
+      "deliveryAvailabilityVerified": false,
+      "feeKRW": null,
+      "exception": "Reconfirm exact facility and current venue policy; not all localities in parent city"
+    },
+    {
+      "id": "v008",
+      "kind": "seller_venue_notice",
+      "regionLabel": "충청북도 청주시",
+      "venueName": "더빈컨벤션",
+      "eventType": "wedding",
+      "noticeRule": "쌀화환",
+      "applicableProductCategory": [
+        "rice_wreath"
+      ],
+      "skuIdsVerified": [],
+      "sellerSkuB205CurrentAccepted": null,
+      "sellerSkuC030CurrentAccepted": null,
+      "scope": "named venue only; no exact 읍면동 code/address verified",
+      "fixed50ExactLocalityMatch": false,
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "sourceQuoteForAudit": "청주 더빈컨벤션, 청주 아모르웨딩 - 쌀화환",
+      "observedOn": "2026-11-11",
+      "publishedOn": null,
+      "validToday": null,
+      "checkoutVerified": false,
+      "deliveryAvailabilityVerified": false,
+      "feeKRW": null,
+      "exception": "Reconfirm exact facility and current venue policy; not all localities in parent city"
+    },
+    {
+      "id": "v009",
+      "kind": "seller_venue_notice",
+      "regionLabel": "충청북도 청주시",
+      "venueName": "아모르웨딩",
+      "eventType": "wedding",
+      "noticeRule": "쌀화환",
+      "applicableProductCategory": [
+        "rice_wreath"
+      ],
+      "skuIdsVerified": [],
+      "sellerSkuB205CurrentAccepted": null,
+      "sellerSkuC030CurrentAccepted": null,
+      "scope": "named venue only; no exact 읍면동 code/address verified",
+      "fixed50ExactLocalityMatch": false,
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "sourceQuoteForAudit": "청주 더빈컨벤션, 청주 아모르웨딩 - 쌀화환",
+      "observedOn": "2026-11-11",
+      "publishedOn": null,
+      "validToday": null,
+      "checkoutVerified": false,
+      "deliveryAvailabilityVerified": false,
+      "feeKRW": null,
+      "exception": "Reconfirm exact facility and current venue policy; not all localities in parent city"
+    }
+  ],
+  "newProductDisplayFacts": [
+    {
+      "id": "p001",
+      "kind": "product_checkout_display",
+      "sku": "C030",
+      "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=C030",
+      "observedOn": "2026-11-11",
+      "publishedOn": null,
+      "field": "배송비결제",
+      "displayValue": "주문시 결제",
+      "feeKRW": null,
+      "exception": "Does not establish free shipping, actual fee, available delivery locality or settled order",
+      "actualCheckoutSubmitted": false
+    },
+    {
+      "id": "p002",
+      "kind": "product_option_count_display",
+      "sku": "C030",
+      "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=C030",
+      "observedOn": "2026-11-11",
+      "publishedOn": null,
+      "field": "visible product selector counts",
+      "displayValue": "상품 선택옵션 0개, 추가옵션 0개",
+      "exception": "Count on indexed product display; not evidence that ribbons or delivery charges are included",
+      "actualCheckoutSubmitted": false
+    }
+  ],
+  "notNewOrNotTransferred": [
+    {
+      "kind": "fee",
+      "reason": "Existing 20 seller fee rows already in pinned ledger; no new B205/C030 exact locality fee evidence confirmed",
+      "newRows": 0
+    },
+    {
+      "kind": "availability",
+      "reason": "No published official per-SKU real-time delivery or fulfillment confirmation",
+      "newVerifiedAreas": 0
+    },
+    {
+      "kind": "venue",
+      "reason": "Changnyeong two venues, Ulsan two venues, Namwon funeral venue category already present in original ledger",
+      "duplicateExcluded": true
+    },
+    {
+      "kind": "region",
+      "reason": "New venue notices have municipality label only; not assigned to 50 fixed 읍/면/동 samples without official address match",
+      "assignedFixed50": 0
+    }
+  ],
+  "missingToClose": {
+    "perSku": [
+      "B201",
+      "B203",
+      "B205",
+      "C205",
+      "C030"
+    ],
+    "fields": [
+      "current available delivery by exact road address + recipient venue",
+      "effective shipping/remote-area surcharge for exact SKU and delivery date",
+      "ribbon included or surcharge",
+      "cutoff/time feasibility",
+      "current facility receipt restrictions including replacement SKU"
+    ],
+    "fixed50Unresolved": {
+      "total": 50,
+      "exactLocalityFeeHistorical": 4,
+      "broaderSellerFeeNotLocality": 16,
+      "noSellerFeeRow": 30,
+      "verifiedDelivery": 0
+    },
+    "acceptableSource": "Current seller-published SKU-and-address-specific official table or signed/verified seller operational policy and currently dated recipient venue notice; do not infer from province/county prices"
+  },
+  "controls": {
+    "regionalInferenceForbidden": true,
+    "skuInferenceForbidden": true,
+    "noPriceExtrapolation": true,
+    "venueOnlyNotices": true,
+    "readOnlyResearch": true,
+    "deploy": false,
+    "index": false,
+    "noindexPreserved": true
+  }
+}
