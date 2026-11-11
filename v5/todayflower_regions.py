@@ -158,41 +158,42 @@ def _make_page(code,name,number):
     ]
 
     if intent == "행사장 꽃 반입":
-        # Editorial ownership: one decision per sentence family.  The
-        # previously shuffled receiver/delivery pools put two paraphrases
-        # of the same venue or rescheduling advice in a single paragraph.
-        # These groups were reviewed against actual /2852.html.  Each
-        # section answers a different buying question.  Do not invent
-        # venue rules, local cutoffs or delivery availability.
-        def decision(group, label, indices):
-            candidates = [(i, details[group][i]) for i in indices]
-            return _pick(candidates, seed+":owner:"+group+":"+label)[1]
+        # Article roles are separate buyer decisions, not shuffled synonyms.
+        # Deliberately do not assert venue delivery/cutoff/local restrictions.
+        # Keep code-seeded diversity *within* each useful decision family.
+        def choose(group, label, indices):
+            candidates = [details[group][i] for i in indices]
+            return _pick(candidates, seed+":decision:"+group+":"+label)
 
-        purpose = decision("selection", "form", (2, 5, 7, 11))
-        ribbon = decision("selection", "ribbon", (1, 8))
-        venue = decision("receiver", "venue", (0, 4, 8))
-        recipient = decision("receiver", "recipient", (1, 5, 7, 9))
-        entry = decision("receiver", "entry", (3, 6, 10))
-        visual = decision("selection", "color", (4, 9))
-        schedule = decision("delivery", "schedule", (0, 3, 5, 8, 10))
-        cost = decision("delivery", "cost", (2, 9))
-        sections = [
-            {"heading": intent+" 상품과 선택 기준",
-             "paragraph": purpose+" "+ribbon},
-            {"heading": "수령 주소와 인계 담당자",
-             "paragraph": venue+" "+recipient+" "+entry},
-            {"heading": "상품 사진·규격·옵션 비교",
-             "paragraph": visual+" "+compare},
-            {"heading": "배송 일정과 최종 결제금액",
-             "paragraph": schedule+" "+cost},
+        # Distinct article choices: format/purpose, ribbon, appearance,
+        # recipient handoff, venue/access, delivery timing and final cost.
+        form = choose("selection","form",(2,5,7,11))
+        ribbon = choose("selection","ribbon",(1,8))
+        appearance = choose("selection","appearance",(4,9))
+        venue = choose("receiver","venue",(0,4,8))
+        handoff = choose("receiver","handoff",(1,5,7,9))
+        entrance = choose("receiver","entrance",(2,3,6,10,11))
+        schedule = choose("delivery","schedule",(0,3,5,8,10))
+        cost = choose("delivery","cost",(2,9))
+        sections=[
+            {"heading":intent+" 상품과 선택 기준",
+             "paragraph":form+" "+ribbon},
+            {"heading":"수령 주소와 인계 담당자",
+             "paragraph":venue+" "+handoff+" "+entrance},
+            {"heading":"상품 사진·규격·옵션 비교",
+             "paragraph":appearance+" "+compare},
+            {"heading":"배송 일정과 최종 결제금액",
+             "paragraph":schedule+" "+cost}
         ]
-        faqs = [
-            {"q": f"{name}에서 "+q1,
-             "a": "행사 주최 측에 외부 꽃 반입 가능 여부를 먼저 확인해 주세요. 반입이 어렵다면 꽃다발 직접 전달처럼 다른 방식도 주문 전에 상담할 수 있습니다."},
-            {"q": q2,
-             "a": "현장 동선을 가리지 않는 설치 장소인지 행사 담당자와 협의해 주세요. 행사 이후 화환을 누가 언제 이동할지도 미리 정하면 좋습니다."},
-            {"q": f"{name} 꽃배달을 주문할 때 어떤 정보를 준비하면 좋나요?",
-             "a": "같은 행사에 화환 여러 개를 주문한다면 각 상품번호와 발신 명의를 주문별로 구분해 주세요. 한 번에 결제하더라도 주문마다 받을 담당자가 구별할 수 있도록 전달 정보를 나누면 좋습니다."},
+        # FAQs own decisions absent from the article itself:
+        # external-flower policy, removal responsibility, multiple orders.
+        faqs=[
+            {"q":f"{name}에서 "+q1,
+             "a":"행사 주최 측에 외부 꽃 반입 가능 여부를 먼저 확인해 주세요. 반입이 어렵다면 꽃다발 직접 전달처럼 다른 방식도 주문 전에 상담할 수 있습니다."},
+            {"q":q2,
+             "a":"현장 동선을 가리지 않는 설치 장소인지 행사 담당자와 협의해 주세요. 행사 이후 화환을 누가 언제 이동할지도 미리 정하면 좋습니다."},
+            {"q":f"{name} 꽃배달을 주문할 때 어떤 정보를 준비하면 좋나요?",
+             "a":"같은 행사에 화환 여러 개를 주문한다면 각 상품번호와 발신 명의를 주문별로 구분해 주세요. 한 번에 결제하더라도 주문마다 받을 담당자가 구별할 수 있도록 전달 정보를 나누면 좋습니다."}
         ]
 
     return {
