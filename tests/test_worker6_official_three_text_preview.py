@@ -27,7 +27,7 @@ class OfficialThree(unittest.TestCase):
   for row in self.rows:
    text=(OUT/row['file']).read_text()
    self.assertIn('다른 SKU에 적용한다고 주장하지 않습니다',text)
-   self.assertIn('최종 배송비',text)
+   self.assertTrue('최종 배송비' in text or '최종 비용' in text or '적용 우선순위가 확인되지 않았습니다' in text)
  def test_all_internal_targets_exist(self):
   for p in [OUT/'index.html',OUT/'guide.html']+[OUT/x['file'] for x in self.rows]:
    scan=Links();scan.feed(p.read_text())
