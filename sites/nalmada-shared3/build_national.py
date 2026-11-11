@@ -156,7 +156,7 @@ PERSPECTIVES=[
  ('개원식 담당자','개원식 날짜와 수령할 담당자를 함께 알려주시면 편리합니다.'),
  ('전화 주문','상품코드와 받는 주소를 알려주시면 주문을 도와드립니다.'),
  ('배송 인계','배송 연락을 받을 분과 시간대를 함께 정해 보세요.'),
- ('선물 취향','화분과 화환 중 받는 분에게 어울리는 선물을 선택해 보세요.'),
+ ('선물 취향','받는 분의 선물 취향과 행사 성격을 함께 고려해 보세요.'),
  ('상품 비교','상품 사진·가격·크기를 함께 비교하면 선택하기 좋습니다.'),
  ('일정 확인','희망 날짜와 받는 주소를 알려주시면 배송 가능한 일정을 안내받으실 수 있습니다.')
 ]
@@ -183,6 +183,13 @@ def _visitor_action(s):
              .replace('비교합니다','비교해 보세요')
              .replace('알립니다','알려주세요'))
 
+# Avoid mixing wreath-specific purchase advice with potted-plant guidance.
+SITE_PURCHASE_VIEWS = {
+    'clinicflower': '진료공간에 놓을 화분의 크기·채광·관리 여건을 비교해 보세요.',
+    'clinicopen': '행사일과 수령 담당자, 화분을 놓을 위치를 함께 알려주세요.',
+    'clinicpresent': '축하화환의 규격·꽃 구성과 행사장 반입 조건을 비교해 보세요.',
+}
+
 def generate_extra_pool() -> dict:
     output={'type':'visitor-first-composed-practical-guidance',
       'sourceType':'V5 authored concepts, site-specific purchase questions, no verified local delivery facts',
@@ -204,8 +211,9 @@ def generate_extra_pool() -> dict:
         for n,(topic,context,action,_legacyAvoid) in enumerate(meta['facts']):
             for p,(role,view) in enumerate(PERSPECTIVES):
                 for f,(kind,template) in enumerate(FRAMES):
+                    site_view = SITE_PURCHASE_VIEWS[site] if role in ('선물 취향', '상품 비교') else view
                     body=template.format(context=context,action=_visitor_action(action),
-                                         view=view,choice=choices[site])
+                                         view=site_view,choice=choices[site])
                     body=' '.join(body.split())
                     if any(x in body for x in defensive):
                         raise ValueError('Defensive text detected in new pool: '+site+' '+topic)
@@ -354,8 +362,7 @@ def insight_cards(site,seed):
     for i in order:
         topic,context,action,_legacyAvoid=facts[i]
         blocks.append('<article class="step"><span class="num">'+esc(topic)+'</span>'
-                      '<h3>'+esc(context)+'</h3><p>'+esc(action)+'</p>'
-                      '<p>받는 분이 편한 날짜와 수령할 위치를 함께 알려주세요.</p></article>')
+                      '<h3>'+esc(context)+'</h3><p>'+esc(_visitor_action(action))+'</p></article>')
         audit.extend((context,action))
     return ('<section class="section clinic-decision"><div class="wrap">'
             '<div class="heading"><h2>주문 전에 비교할 실제 조건</h2>'
@@ -398,9 +405,14 @@ def render_region(site,rec,pool,mode):
             if len(chosen)==19:break
     assert len(chosen)==(16 if site=='clinicpresent' else 19)
     sections=[]
+    seen_section_bodies=set()
     for row in chosen:
         body=editorial_body(row['body'])
         assert body and len(body)>30
+        normalized=' '.join(body.split())
+        if normalized in seen_section_bodies:
+            raise ValueError('Duplicate editorial paragraph: '+site+' '+str(i)+' '+row['heading'])
+        seen_section_bodies.add(normalized)
         sections.append('<article class="step"><h3>'+esc(row['heading'])+'</h3><p>'+esc(body)+'</p></article>')
     faqs=meta['faqs']
     faq_start=int(sha(seed+'faq')[:8],16)%len(faqs)
