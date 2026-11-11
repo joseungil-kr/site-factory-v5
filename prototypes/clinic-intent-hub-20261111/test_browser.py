@@ -83,7 +83,28 @@ def main():
                         anchor=page.locator(f'[data-sku-link="{sku}"]')
                         assert anchor.get_attribute("href")==f"https://fwith.co.kr/shop/item.php?it_id={sku}"
                         assert anchor.get_attribute("rel")=="noopener noreferrer"
+                        # Verify actual tap target without opening the retailer's external page.
+                        sku_hit=page.evaluate("""sku => {
+                          document.documentElement.style.scrollBehavior='auto';
+                          const a=document.querySelector('[data-sku-link="'+sku+'"]');
+                          a.scrollIntoView({behavior:'instant',block:'center'});
+                          const r=a.getBoundingClientRect();
+                          const x=(r.left+r.right)/2,y=(r.top+r.bottom)/2;
+                          const el=document.elementFromPoint(x,y);
+                          return {hit:!!(el&&(el===a||a.contains(el))),x,y};
+                        }""",sku)
+                        assert sku_hit["hit"],(width,purpose,sku,sku_hit)
                     assert page.locator("#phoneCTA").get_attribute("href")=="tel:1844-0644"
+                    cta_hit=page.evaluate("""() => {
+                      document.documentElement.style.scrollBehavior='auto';
+                      const a=document.querySelector('#phoneCTA');
+                      a.scrollIntoView({behavior:'instant',block:'center'});
+                      const r=a.getBoundingClientRect();
+                      const x=(r.left+r.right)/2,y=(r.top+r.bottom)/2;
+                      const el=document.elementFromPoint(x,y);
+                      return {hit:!!(el&&(el===a||a.contains(el))),x,y};
+                    }""")
+                    assert cta_hit["hit"],(width,purpose,"phone CTA inaccessible",cta_hit)
                     assert selected==page.locator("#selectedRegion").inner_text()
                     assert page.url==before_url
                     info=page.evaluate("""() => ({w:innerWidth,scrollW:document.documentElement.scrollWidth,
@@ -99,7 +120,7 @@ def main():
                         bitmap=[img.width,img.height]
                     evidence.append({"width":width,"purpose":purpose,"selectedRegion":selected,
                                      "skus":skus,"viewportHeight":height,"fullScreenshot":dest.name,
-                                     "bitmap":bitmap,"noRegionHTMLGenerated":True,"linkClickNotPerformed":True})
+                                     "bitmap":bitmap,"noRegionHTMLGenerated":True,"linkClickNotPerformed":True,"phoneCTAHitTest":True,"productLinkHitTests":2})
                     print("HUB_INTERACTION_PASS",width,purpose,",".join(skus),bitmap)
                 page.locator("#clearSearch").click()
                 assert page.locator("#regionSearch").input_value()==""
@@ -110,7 +131,7 @@ def main():
         proc.terminate()
         proc.wait(timeout=10)
     report={"results":evidence,"totalBrowserCases":len(evidence),
-        "regionSearchSelectPass":True,"skuURLCheckPass":True,"phoneCTAHrefPass":True,
+        "regionSearchSelectPass":True,"skuURLCheckPass":True,"phoneCTAHrefPass":True,"phoneCTAHitTestPass":True,"productTapTargetPass":True,
         "legacyPathsPreserved":324,"newRegionalHTML":0,"onePurposeGuideHTML":1,
         "mobileWidth":390,"desktopWidth":1440,"deploymentPerformed":False,
         "currentSellerPricesVerified":False,"humanEditorialApproved":False}
