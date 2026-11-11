@@ -20,7 +20,7 @@ SITE = "todayflower-nalmada"
 REPORT_DIR = ROOT / "reports" / SITE / "evidence-coverage"
 FIELDS = (
     "number", "urlPath", "pageId", "regionCode", "regionName",
-    "regionLevel", "regionSourceId", "regionSnapshotDate",
+    "regionLevel", "regionSourceId", "regionSourcePath", "regionSourceSha256", "regionSourceUrl", "regionSnapshotDate",
     "listedSkus", "facilityIdentity", "matchedFactIds",
     "contextFactIds", "evidenceScope", "sourceUrls", "sourceObservedAt",
     "sourcePublicationDate", "informationSufficiency", "proposedRole",
@@ -49,6 +49,7 @@ def build_rows():
     assert len(official) == 5067
     ledger = load_ledger()
     sources = {s["id"]: s for s in ledger["sources"]}
+    assert sources["legal_snapshot"]["sha256"] == "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd"
     facts = ledger["facts"]
     fact_by_id = {f["id"]: f for f in facts}
     products = {p["sku"] for p in data["products"]}
@@ -117,6 +118,9 @@ def build_rows():
             "regionName": location["name"],
             "regionLevel": location["level"],
             "regionSourceId": "legal_snapshot",
+            "regionSourcePath": "data/regions/todayflower_official_codes_20261022.zip",
+            "regionSourceSha256": sources["legal_snapshot"]["sha256"],
+            "regionSourceUrl": None,
             "regionSnapshotDate": "2026-10-22",
             "listedSkus": list(skus),
             "facilityIdentity": facility,
@@ -162,6 +166,8 @@ def verify(rows, pages, ledger, official, original_regions):
         assert code in official or code in {r["code"] for r in original_regions}
         assert row["regionSnapshotDate"] == "2026-10-22"
         assert row["regionSourceId"] == "legal_snapshot"
+        assert row["regionSourceUrl"] is None
+        assert row["regionSourceSha256"] == "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd"
         assert row["currentServiceVerified"] is False
         assert row["liveStockVerified"] is False
         assert row["facilityIdentity"] is None
