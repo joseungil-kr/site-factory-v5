@@ -55,6 +55,40 @@ SOURCES[2]["url"]="https://flowername.co.kr/blog/post.php?slug=hakhoe-seminar-hw
 def H(x):return escape(str(x),quote=True)
 def digest(s):return hashlib.sha256(s.encode("utf-8")).hexdigest()
 
+# Every customer question is anchored to a literal sentence span; its
+# evidence context is a *reviewed indexed excerpt*, not a live facility rule.
+QUESTION_TRACE={
+ 186:[
+  ("E_VENUE","EVENT_WEDDING_INDEX","section-0","예식장 측에 외부 업체가 보내는 화환을 받는지"),
+  ("E_CONTACT","EVENT_WEDDING_INDEX","section-1","실제 예식 홀과 시작 시각"),
+  ("E_CHECKOUT","EVENT_VENUE_INDEX","section-3","판매처 상품번호, 리본 축하문구·발신 명의"),
+ ],
+ 3012:[
+  ("E_VENUE","EVENT_PERFORMANCE_INDEX","section-0","공연장 또는 주최 측 담당자에게 반입 가능 여부"),
+  ("E_CONTACT","EVENT_PERFORMANCE_INDEX","section-1","공연명 또는 전시명, 행사 날짜"),
+  ("E_CHECKOUT","EVENT_PERFORMANCE_INDEX","section-3","설치 완료 확인 방법과 행사 종료 후 회수 책임"),
+ ],
+ 2852:[
+  ("E_VENUE","EVENT_CONFERENCE_INDEX","section-0","주최 사무국에 외부 화환 수령·전시가 가능한지"),
+  ("E_CONTACT","EVENT_CONFERENCE_INDEX","section-1","실제로 인수할 사무국 담당자"),
+  ("E_CHECKOUT","EVENT_CONFERENCE_INDEX","section-3","상품번호, 발신 단체명, 행사명"),
+ ]
+}
+def decision_trace(p):
+    refs={x["id"]:x for x in SOURCES}
+    got=[]
+    for i,(qid,sid,slot,excerpt) in enumerate(QUESTION_TRACE[p["number"]]):
+        paragraph=p["sections"][int(slot.split("-")[1])]["paragraph"]
+        assert excerpt in paragraph,(p["number"],qid,excerpt)
+        assert sid in p["sourceIds"] and sid in refs
+        got.append({"questionId":qid,"question":p["questions"][i],
+                    "sourceId":sid,"sourceURL":refs[sid]["url"],
+                    "verifiedDirectOpen":False,"sourceAccess":refs[sid]["access"],
+                    "section":slot,"exactQuoteFromOwnDraft":excerpt,
+                    "claimType":"independent editorial buyer-choice suggestion, not proved venue rule"})
+    assert len(got)==len(p["questions"])==3
+    return got
+
 def make(page,case,product):
     sku=sorted(x for x in page["productSkus"] if x.startswith("C"))[0]
     item=product[sku]
@@ -124,6 +158,7 @@ def run():
         records.append({"number":n,"originalIntent":bynumber[n]["topic"],"candidateIntent":p["topic"],
                         "scenarioInput":p["scenario"],"scenarioNotRegionalFact":True,
                         "sourceIds":p["sourceIds"],"customerQuestions":p["questions"],
+                        "sourceQuestionRuleHtmlTrace":decision_trace(p),
                         "articleSlots":[{"section":i,"heading":s["heading"],"text":s["paragraph"]}
                                         for i,s in enumerate(p["sections"])],
                         "sku":p["productSkus"][0],"cta":p["orderUrl"],"candidateSHA256":digest(raw),
