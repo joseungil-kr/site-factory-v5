@@ -62,6 +62,14 @@ class RootCauseTest(unittest.TestCase):
         self.assertEqual({r["number"] for r in rules["evaluated"]},{1039,4360,4582})
         self.assertEqual(set(p.name for p in OUT.glob("*.html")),
                          {f"original-{n}.html" for n in REGRESSIONS}|{"candidate-seoseok-4582.html"})
+        gate=json.loads((OUT/"candidate-333-eligibility.json").read_text(encoding="utf-8"))
+        self.assertEqual(gate["recordCount"],333)
+        self.assertFalse(gate["qualityGatePassed"])
+        self.assertEqual(len(gate["records"]),333)
+        self.assertEqual(len({x["number"] for x in gate["records"]}),333)
+        self.assertFalse(any(x["allowIndependentBuyerHtml"] for x in gate["records"]))
+        self.assertFalse(any(x["mappedFactIds"] for x in gate["records"]))
+        self.assertEqual(self.report["candidateRule"]["sameIntentStandaloneHtmlApproved"],0)
         saved={p.name:p.read_bytes() for p in OUT.iterdir() if p.is_file()}
         main()
         self.assertEqual(saved,{p.name:p.read_bytes() for p in OUT.iterdir() if p.is_file()})
