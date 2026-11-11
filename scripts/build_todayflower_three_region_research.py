@@ -110,16 +110,41 @@ def main():
     (BASE/"seoseok-4582.html").write_text(article_html,encoding="utf-8")
     holds=[r for r in evidence["regions"] if r["decision"].startswith("hold")]
     assert len(holds)==2
+    followup={x["id"]:x for x in evidence.get("followupClaimMap",[])}
+    assert set(followup)=={"M1","M2"}
+    official_source=next(x for x in evidence["sources"] if x["id"]=="KFCPI_FUNERAL_FACILITIES_PDF_2025")
+    assert official_source["publisher"]=="한국장례문화진흥원"
+    assert official_source["publicationDate"] is None
     cards=""
     for r in holds:
         price=by[r["number"]]["sellerPostedFeeKRW"]
         assert price and r["facility"] is None
+        official_card=""
+        if r["number"]==1039:
+            proof=r.get("officialFacilityLocationEvidence")
+            assert proof and proof["sourceId"]==official_source["id"]
+            assert proof["exactMatchedLocality"]=="해남군 문내면"
+            assert not proof["currentlyOpenVerified"] and not proof["inboundFlowersAllowedVerified"]
+            assert not proof["deliveryVerified"]
+            official_card=(
+               '<div data-facility-location-only="true"><h3>공식 시설 위치 자료 확보 · 상세 보류 유지</h3>'
+               '<p data-evidence-ids="M1">'+h(followup["M1"]["claim"])+'</p>'
+               '<p data-evidence-ids="M2">'+h(followup["M2"]["claim"])+'</p>'
+               '<p>원문 행정구역 표기 <strong>'+h(proof["sourceProvinceLabel"])+'</strong>와 '
+               '고정 법정동 원장 표기 <strong>'+h(proof["pinnedRegionName"])+'</strong>는 '
+               '서로 다른 자료의 원문 표기를 보존한 것입니다. 해남군 문내면 일치만 확인했습니다.</p>'
+               '<p class="footnote">한국장례문화진흥원 시설현황 PDF 확인일 2026-11-11. '
+               'URL 디렉터리 날짜는 2025-09-29이며 본문 발행·갱신일은 확인되지 않았습니다. '
+               '현재 영업·인수 위치·외부화환 반입·B205 배송 가능 여부는 확인되지 않았습니다.</p>'
+               '<p><a href="'+h(official_source["url"])+'">한국장례문화진흥원 시설현황 PDF</a></p></div>')
+        else:
+            assert r["number"]==4360 and not r.get("officialFacilityLocationEvidence")
         cards+=('<section data-hold-region="'+str(r["number"])+'"><h2>'+h(r["name"])+' — 상세 보류</h2>'
                 '<p>기존 URL: <code>/'+str(r["number"])+'.html</code>. '
                 'B205의 과거 지역별 게시 추가배송비 '+f'{price:,}'+'원은 연구 원장에 있으나 '
                 '<strong>해당 지역의 특정 장례시설 공식 위치·반입 조건을 검증하지 못했습니다.</strong></p>'
                 '<p class="footnote">판매처 자료 조회일 2026-11-11, 게시일 미상, 현재 배송 가능 여부 미확인.</p>'
-                '<p>추가 확보 필요: '+h("; ".join(r["unverified"]))+'</p></section>')
+                +official_card+'<p>추가 확보 필요: '+h("; ".join(r["unverified"]))+'</p></section>')
     index=doc("B205 근거 기반 3개 지역 편집 후보 검토",
         '<section><h2>검토 결과</h2><p>서석면은 공식 시설 주소와 본관·별관 정보를 확인해 '
         '시설 지정·상품 비교·현장 인계 확인의 세 단계로 구성했습니다. '
@@ -130,6 +155,8 @@ def main():
         "source":str(EVIDENCE.relative_to(ROOT)),
         "claims":evidence["claimMap"],
         "sources":evidence["sources"],
+        "followupClaimMap":evidence.get("followupClaimMap",[]),
+        "followupResearch":evidence.get("followupResearch"),
         "held":holds},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     # Preserve and compare evidence bound source article, never count thin
     # holding briefs as qualified independent locality pages.
@@ -153,6 +180,10 @@ def main():
         "isolatedOnly":True,"originalUrlCountPreserved":5070,
         "regionCandidates":3,"evidenceLedDetailCandidates":1,
         "heldForMissingFacilityEvidence":2,"published":0,
+        "additionalOfficialFacilityLocationFindings":1,
+        "additionalOfficialFacilityClaims":2,
+        "officialFacilityProofDoesNotGrantDelivery":True,
+        "namwonStillHeldForExactFacilityAddress":True,
         "buyerWorkflowDistinct":True,"factsMapped":4,
         "currentDeliveryVerified":0,"merchantRatesCurrentVerified":0,
         "sourceSellerLastModifiedKnown":False,
