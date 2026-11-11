@@ -23,7 +23,7 @@ SEPARATE_ROW_SUFFIX = "별도행"
 
 def load_pinned():
     raw = PINNED.read_bytes()
-    blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\\0" + raw).hexdigest()
+    blob = hashlib.sha1(b"blob " + str(len(raw)).encode("ascii") + b"\0" + raw).hexdigest()
     assert blob == SOURCE_GIT_BLOB_SHA, ("WreathPrice source blob drift", blob)
     data = json.loads(raw)
     assert data["ledgerId"] == "wreathprice-50-posted-shipping-only"
