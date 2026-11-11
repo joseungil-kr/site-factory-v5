@@ -1,0 +1,163 @@
+{
+  "schemaVersion": 1,
+  "researchedOn": "2026-11-11",
+  "searchTerms": [
+    "축하화환 리본 문구 보내는사람 단체명 주문 방법 리본 문구 예시",
+    "축하 리본 문구 개업 결혼식 축하화환 문구 입력 주의사항 주문",
+    "site:fwith.co.kr 축하화환 리본 문구 주문 보내는분",
+    "site:fwith.co.kr/shop/item.php?it_id=C206 축하 4단 화환"
+  ],
+  "rankingVerified": false,
+  "observedRank": null,
+  "searchContext": "웹 일반 검색 결과 원문/색인 스니펫 확인. 실제 네이버/구글 상위 순위·광고 제외 순위 계측 없음.",
+  "sourceStatus": "open tool attempts for several pages returned cache miss; searchable snippets are limited observational evidence, not confirmed full page text",
+  "sources": [
+    {
+      "id": "COMP_ORDER",
+      "type": "competition",
+      "url": "https://flori.ai.kr/blog/wreath-order-form/",
+      "title": "화환 주문서 양식, 리본 문구와 보내는 분 이름을 어떻게 확인할까요?",
+      "observed": "2026-11-11",
+      "access": "search_index_excerpt; direct open cache miss",
+      "facts": [
+        "축하 문구와 보내는 분 표기를 두 항목으로 대조",
+        "명칭 변경 시 두 줄 전체를 최종본으로 재확인"
+      ],
+      "rank": null
+    },
+    {
+      "id": "COMP_EXAMPLES",
+      "type": "competition",
+      "url": "https://www.ggotkkm.co.kr/guide/celebration-ribbon-phrases",
+      "title": "축하화환 리본 문구 예시",
+      "observed": "2026-11-11",
+      "access": "search_index_excerpt; direct open cache miss",
+      "facts": [
+        "예식의 신랑측·신부측 표기는 배송 참고 사항으로 구분",
+        "행사별 표기 후보가 다름"
+      ],
+      "rank": null
+    },
+    {
+      "id": "COMP_RIBBON",
+      "type": "competition",
+      "url": "https://pladaum.com/guide/ribbon/congratulatory-wreath-ribbon-message-examples",
+      "title": "축하화환 리본 문구 30가지",
+      "observed": "2026-11-11",
+      "access": "search_index_excerpt; direct open cache miss",
+      "facts": [
+        "문구와 발신자 별도 입력",
+        "리본 허용글자·좌우배치는 판매처마다 다르므로 확인"
+      ],
+      "rank": null
+    },
+    {
+      "id": "COMP_EVENT",
+      "type": "competition",
+      "url": "https://js-flower-suwon.kr/blog/celebratory-ribbon-text-guide",
+      "title": "개업·취임·결혼 축하화환 리본 문구 예시 모음",
+      "observed": "2026-11-11",
+      "access": "search_index_excerpt; direct open cache miss",
+      "facts": [
+        "결혼·개업·취임마다 문구 목적이 다름"
+      ],
+      "rank": null
+    },
+    {
+      "id": "SELLER_C206",
+      "type": "official seller",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=C206",
+      "title": "꽃이랑 축하 4단 화환 C206",
+      "observed": "2026-11-11",
+      "access": "seller indexed product page snippet, direct open cache miss",
+      "facts": [
+        "C206 주문 상세 페이지와 실제 이용후기 노출"
+      ],
+      "rank": null
+    },
+    {
+      "id": "SELLER_C200",
+      "type": "official seller",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=C200",
+      "title": "꽃이랑 축하 3단 화환 C200",
+      "observed": "2026-11-11",
+      "access": "direct page read failed; use pinned Todayflower catalog only",
+      "facts": [],
+      "rank": null
+    },
+    {
+      "id": "SELLER_NOTICE",
+      "type": "official seller",
+      "url": "https://fwith.co.kr/page/notice.php",
+      "title": "꽃이랑 주요공지사항",
+      "observed": "2026-11-11",
+      "access": "search index excerpt",
+      "facts": [
+        "시설별 반입·설치 조건이 달라서 지명만으로 단정 불가"
+      ],
+      "rank": null
+    }
+  ],
+  "questionToRules": [
+    {
+      "id": "Q_PURPOSE",
+      "question": "축하의 대상이 개인의 경사인가 기업의 행사인가?",
+      "input": "eventPurpose",
+      "basis": [
+        "COMP_EXAMPLES",
+        "COMP_EVENT"
+      ],
+      "rule": "document owns occasion-choice examples; do not claim any local venue"
+    },
+    {
+      "id": "Q_SENDER",
+      "question": "보내는 주체는 개인인가 회사/단체인가 공동발신인가?",
+      "input": "senderType",
+      "basis": [
+        "COMP_ORDER",
+        "COMP_RIBBON"
+      ],
+      "rule": "individual/company/joint scenarios have distinct form-review checklist"
+    },
+    {
+      "id": "Q_PHRASE",
+      "question": "공식 명칭·축하 표현을 어떻게 쓰고 누가 확인하는가?",
+      "input": "copyApproval",
+      "basis": [
+        "COMP_RIBBON"
+      ],
+      "rule": "one proposed phrase per context and independent sender line; wording is editorial sample"
+    },
+    {
+      "id": "Q_LENGTH",
+      "question": "긴 단체명이나 직함을 제품 리본에 그대로 담을 수 있는가?",
+      "input": "lengthVerified",
+      "basis": [
+        "COMP_RIBBON"
+      ],
+      "rule": "seller character limit unknown, never invent centimeter/character maximum; contact seller"
+    },
+    {
+      "id": "Q_CHECKOUT",
+      "question": "주문 제출 전에 무엇을 다시 확인하는가?",
+      "input": "sellerReview",
+      "basis": [
+        "COMP_ORDER",
+        "SELLER_C206"
+      ],
+      "rule": "product SKU link, sample ribbon lines, venue handoff and live rate never assumed"
+    }
+  ],
+  "sourceLimitations": [
+    "순위 미확인",
+    "검색결과 일부 직접 페이지 접근 실패",
+    "C200/C206 리본 글자수·가격·입력칸의 현행 상태 미확인",
+    "시설별 반입, 배송가능, 재고·제작마감 미확인"
+  ],
+  "editorialPolicies": [
+    "경쟁 문구 복제 금지; 아래 예시는 독립 작성",
+    "고정 상품원장 SKU·주문 링크만 사용",
+    "지역명 자체가 구매결정 차이를 만드는 근거로 간주하지 않음",
+    "49% 점수는 사람 편집 완료 인정이 아님"
+  ]
+}
