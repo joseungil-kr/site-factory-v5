@@ -48,6 +48,30 @@ class RibbonIntentPilotTest(unittest.TestCase):
             self.assertAlmostEqual(pair["candidateCandidate"],score(grams(article(candidate[a])),grams(article(candidate[b]))))
         self.assertEqual(self.report["threshold"],LIMIT)
 
+    def test_exact_question_to_sentence_and_html_not_zipped_slots(self):
+        expected_length={"personal_greeting":"section-3",
+                         "company_official_sender":"section-2",
+                         "joint_group_approval":"section-3"}
+        bysource={s["id"] for s in self.ledger["sources"]}
+        for row,record in zip(self.rows,self.report["sourceToQuestionToHTML"]):
+            m={x["questionId"]:x for x in record["sourceQuestionsToHtmlSections"]}
+            self.assertEqual(set(m),{"Q_PURPOSE","Q_SENDER","Q_PHRASE","Q_LENGTH","Q_CHECKOUT"})
+            self.assertEqual(m["Q_LENGTH"]["documentPart"],expected_length[row["role"]])
+            self.assertEqual(m["Q_CHECKOUT"]["documentPart"],"section-3")
+            html=(ROOTOUT/f'candidate-{row["number"]}.html').read_text(encoding="utf-8")
+            for qid,link in m.items():
+                part=link["documentPart"]
+                phrase=link["exactTextExcerpt"]
+                self.assertIn(phrase,html)
+                self.assertTrue(set(link["evidenceSourceIds"])<=bysource)
+                if part=="intro": paragraph=row["intro"]
+                else: paragraph=row["sections"][int(part.split("-")[1])]["paragraph"]
+                self.assertIn(phrase,paragraph,(row["number"],qid,part))
+                self.assertEqual(link["question"],next(q["question"] for q in self.ledger["questionToRules"] if q["id"]==qid))
+        self.assertIn("공개 장소와 표현의 온도",self.rows[0]["sections"][2]["heading"])
+        self.assertIn("변경 이력과 중복 주문 방지",self.rows[2]["sections"][2]["heading"])
+        self.assertNotEqual(m["Q_LENGTH"]["documentPart"],"section-2")
+
     def test_each_seller_cta_is_product_specific_and_honest(self):
         products={p["sku"]:p for p in self.source["products"]}
         for row in self.rows:
