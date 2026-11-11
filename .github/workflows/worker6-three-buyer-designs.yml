@@ -36,6 +36,15 @@ jobs:
               assert '1844-0644' in h
           print('THREE_PRIVATE_HTML_PASS',len(rows))
           PY
+      - name: Supply existing static assets for local HTTP preview
+        run: |
+          mkdir -p reports/promotion-gift-plants/three-buyer-designs/assets/images
+          cp templates/themes/base.css reports/promotion-gift-plants/three-buyer-designs/assets/site.css
+          cp templates/themes/classic.css reports/promotion-gift-plants/three-buyer-designs/assets/theme-classic.css
+          cp templates/themes/modern.css reports/promotion-gift-plants/three-buyer-designs/assets/theme-modern.css
+          cp templates/themes/minimal.css reports/promotion-gift-plants/three-buyer-designs/assets/theme-minimal.css
+          cp templates/calculator.js reports/promotion-gift-plants/three-buyer-designs/assets/calculator.js
+          cp assets/library/promotion-plant/plant-a.svg reports/promotion-gift-plants/three-buyer-designs/assets/images/plant-a.svg
       - name: Install Korean font and browser
         run: |
           sudo apt-get update -qq
