@@ -1,0 +1,52 @@
+name: Clinic evidence regions offline buyer QA
+on:
+  push:
+    branches:
+      - prototype/clinic-evidence-regions-20261111
+    paths:
+      - '.github/workflows/clinic-evidence-regions-offline-20261111.yml'
+      - 'prototypes/clinic-evidence-regions-20261111/**'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: clinic-evidence-regions-offline-20261111
+  cancel-in-progress: false
+jobs:
+  isolated:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Compile and validate pinned ledger
+        run: |
+          python -m py_compile prototypes/clinic-evidence-regions-20261111/build.py prototypes/clinic-evidence-regions-20261111/test_browser.py
+          git rev-parse HEAD
+      - name: Build only three regional buyer references
+        run: |
+          python prototypes/clinic-evidence-regions-20261111/build.py --output /tmp/clinic-evidence-regions
+          find /tmp/clinic-evidence-regions -name '*.html' -printf '%f\n' | sort
+      - name: Korean typography and Playwright
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -qq -y fonts-noto-cjk
+          python -m pip install --disable-pip-version-check playwright Pillow
+          fc-match 'Noto Sans CJK KR'
+      - name: Browser and link regression
+        run: |
+          python prototypes/clinic-evidence-regions-20261111/test_browser.py /tmp/clinic-evidence-regions --out /tmp/clinic-evidence-browser
+      - name: Upload read-only prototype and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: clinic-evidence-regions-3case-20261111
+          retention-days: 14
+          if-no-files-found: warn
+          path: |
+            /tmp/clinic-evidence-regions/
+            /tmp/clinic-evidence-browser/
