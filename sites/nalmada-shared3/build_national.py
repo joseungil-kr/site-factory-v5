@@ -450,45 +450,81 @@ def insight_cards(site, side_ids):
             '<div class="steps">'+''.join(blocks)+'</div></div></section>'," ".join(audit))
 
 
+# The historic regional candidate inventory is NOT evidence of a local seller,
+# clinic, available stock or shipping coverage. These are navigation pages.
+# Product names and URLs are a dated seller snapshot; prices require new proof.
+CANDIDATE_FACT_TOPICS = {
+    'clinicflower':('식물 크기','빛과 관리','기념 선물 목적'),
+    'clinicopen':('행사 날짜','수령 담당자','행사 장소'),
+    'clinicpresent':('화환 규격','꽃 구성','현장 반입'),
+}
+CANDIDATE_SKUS = {
+    'clinicflower':('D144','D149'),
+    'clinicopen':('D149','D144'),
+    'clinicpresent':('C200','C206'),
+}
+
+def retail_cards(site):
+    products=RETAIL_LEDGER
+    cards=[]
+    for sku in CANDIDATE_SKUS[site]:
+        item=products[sku]
+        assert item['sku']==sku
+        assert item['orderUrl']=='https://fwith.co.kr/shop/item.php?it_id='+sku
+        assert item['priceCurrentKRW'] is None and item['deliveryAreaCurrent'] is None
+        cards.append('<article class="step" data-sku="'+esc(sku)+'">'
+                     '<h3>'+esc(item['name'])+' ('+esc(sku)+')</h3>'
+                     '<p>2026년 11월 5일 판매처 기록 가격: '+format(item['priceKRWHistorical'],',')+
+                     '원. 현재 판매가격·배송비·재고·배송 가능 지역은 미확인입니다.</p>'
+                     '<p><a href="'+esc(item['orderUrl'])+'" rel="noopener noreferrer">'
+                     '판매처 상품 상세 보기 (현재 링크 상태 미확인)</a></p></article>')
+    return ('<section class="section"><div class="wrap"><div class="heading">'
+            '<h2>판매처 상품 비교 자료</h2>'
+            '<p>과거 확인한 판매처 정보입니다. 주문 전 실제 가격과 주소별 배송 가능 여부를 확인하세요.</p>'
+            '</div><div class="grid3">'+''.join(cards)+'</div></div></section>')
+
 def render_region(site,rec,pool,mode):
     i,p,d,n,flag=rec
     meta=SITE_META[site]
     place=' '.join((p,d,n))
     path=region_path(i)
     title=place+' '+meta['title']
-    description=place+' '+meta['short']+' 주문 시 확인할 품목·일정·수령장소와 리본 문구 안내. 꽃이랑 전화 1844-0644.'
-    seed=f'{site}|{i}|{place}'
-    body_ids,side_ids=decision_units(site,seed)
-    advice_sentences(site,body_ids+side_ids)
-    facts=meta['facts']
-    sections=[]
-    narrative=[]
-    for idx in body_ids:
-        topic,context,action,_legacyAvoid=facts[idx]
-        # The concept is used once. Heading, context and action offer two
-        # distinct practical facts; no generic seller pitch is appended.
-        message=_visitor_action(action)
+    description=place+' '+meta['short']+' 상품 구분과 주문 준비 공통 안내, 지역명 탐색. 지역별 판매·배송 현황은 확인되지 않았습니다.'
+    names=CANDIDATE_FACT_TOPICS[site]
+    by_topic={row[0]:idx for idx,row in enumerate(meta['facts'])}
+    assert len(set(names))==len(names)
+    sections=[];facts_text=[]
+    for topic in names:
+        idx=by_topic[topic]
+        _,context,action,_legacyAvoid=meta['facts'][idx]
         sections.append('<article class="step" data-fact-id="'+esc(site+'-'+str(idx))+'">'
-                        '<h3>'+esc(topic)+'</h3><p>'+esc(context)+'</p><p>'+esc(message)+'</p></article>')
-        narrative.extend((topic,context,message))
-    faqs=meta['faqs']
-    faq_start=int(sha(seed+'faq')[:8],16)%len(faqs)
-    picked=faqs[faq_start:]+faqs[:faq_start]
-    faq=''.join('<details><summary>'+esc(q)+'</summary><p>'+esc(a)+'</p></details>' for q,a in picked[:2])
-    insights,insights_text=insight_cards(site,side_ids)
+                        '<h3>'+esc(topic)+'</h3><p>'+esc(context)+'</p>'
+                        '<p>'+esc(_visitor_action(action))+'</p></article>')
+        facts_text.extend((topic,context,_visitor_action(action)))
+    faq=meta['faqs'][0]
     breadcrumbs='<p class="crumb"><a href="/">전국</a> · <a href="'+province_path(p)+'">'+esc(p)+'</a> · <a href="'+district_path(p,d)+'">'+esc(d)+'</a> · '+esc(n)+'</p>'
-    main=(' <main><section class="hero" style="min-height:390px;background-image:none;background-color:#f2f5ef"><div class="wrap heroContent">'
-        '<span class="eyebrow">FLOWER WITH CARE · REGIONAL ORDER GUIDE</span>'+breadcrumbs+
-        '<h1>'+esc(place)+'<br><strong>'+esc(meta['title'])+'</strong></h1>'
-        '<p>'+esc(meta['intro'])+' '+esc(place)+'에 보내는 경우 정확한 수령 주소와 희망 날짜를 전화로 확인해주세요.</p>'
-        '<a class="call heroCall" href="tel:1844-0644">☎ 전화주문 1844-0644</a></div></section>'
-        +media_html(site,path)+'<section class="section alt"><div class="wrap"><div class="heading"><h2>'+esc(place)+' 주문 전 검토할 내용</h2>'
-        '<p>받는 분의 상황에 맞는 상품 선택과 수령 조건을 정리했습니다.</p></div><div class="grid3">'+''.join(sections)+'</div></div></section>'
-        '<section class="section"><div class="wrap"><div class="heading"><h2>자주 묻는 질문</h2></div><div class="faq">'+faq+'</div>'
-        '<p>다른 지역명도 찾아보려면 <a href="'+district_path(p,d)+'">'+esc(p+' '+d)+' 지역 목록</a>을 이용하세요.</p>'
-        '</div></section>'+insights)
+    main=('<main><section class="hero" style="min-height:390px;background-image:none;background-color:#f2f5ef">'
+          '<div class="wrap heroContent"><span class="eyebrow">지역명 탐색 · 공통 주문 안내</span>'+breadcrumbs+
+          '<h1>'+esc(place)+'<br><strong>'+esc(meta['title'])+'</strong></h1>'
+          '<p>이 페이지는 지역명별 주문 준비를 찾기 위한 공통 안내입니다. '
+          '해당 지역의 병원·꽃집 실재 여부, 배송 가능 여부 또는 당일 도착을 확인한 정보가 아닙니다.</p>'
+          '<a class="call heroCall" href="tel:1844-0644">☎ 전화 상담 1844-0644</a></div></section>'
+          +media_html(site,path)
+          +'<section class="section alt"><div class="wrap"><div class="heading">'
+          '<h2>'+esc(meta['short'])+' 선택 시 공통 확인사항</h2>'
+          '<p>지역별로 확인되지 않은 사실을 만들어 넣지 않고, 목적에 맞는 내용만 안내합니다.</p>'
+          '</div><div class="grid3">'+''.join(sections)+'</div></div></section>'
+          +retail_cards(site)
+          +'<section class="section"><div class="wrap"><div class="heading"><h2>주문 전 질문</h2></div>'
+          '<div class="faq"><details><summary>'+esc(faq[0])+'</summary><p>'+esc(faq[1])+'</p></details></div>'
+          '<p>확인된 지역 시설 목록이 아니라 지역명 탐색입니다. '
+          '<a href="'+district_path(p,d)+'">'+esc(p+' '+d)+' 목록 보기</a></p>'
+          '</div></section>')
     return (header(site,title,description,path,mode)+main+foot(site),
-        title+' '+description+' '+meta['intro']+' '+' '.join(narrative)+' '+insights_text+' '+' '.join(q+' '+a for q,a in picked[:2]))
+            title+' '+description+' '+meta['intro']+' '+' '.join(facts_text)
+            +' '+faq[0]+' '+faq[1]+' '+ ' '.join(RETAIL_LEDGER[x]['name'] for x in CANDIDATE_SKUS[site]))
+
+
 
 def render_dir(site,kind,place,rows,mode):
     meta=SITE_META[site]
@@ -511,11 +547,17 @@ def render_dir(site,kind,place,rows,mode):
     htmlbody+='<section class="section"><div class="wrap"><div class="heading"><h2>지역 선택</h2></div><div class="grid3">'+cards+'</div></div></section>'
     return header(site,title,desc,path,mode)+htmlbody+foot(site)
 
+RETAIL_LEDGER={}
+
 def generate(root:Path,output:Path,mode='preview',expected_total=15906):
     if output.exists():raise RuntimeError('Refusing to overwrite existing release '+str(output))
     assert mode in ('preview','public')
     source=json.loads((root/'data/regions/nationwide_locality_candidates_5034.json').read_text(encoding='utf-8'))
     regions=parse_regions(source)
+    global RETAIL_LEDGER
+    ledger=json.loads((root/'sites/nalmada-shared3/clinic-retail-candidate-ledger-20261111.json').read_text(encoding='utf-8'))
+    RETAIL_LEDGER={row['sku']:row for row in ledger['items']}
+    assert len(RETAIL_LEDGER)==4
     original=json.loads((root/'sites/clinicflower-preview/clinicflower-copy-pool-720.json').read_text(encoding='utf-8'))
     assert len(original['blocks'])==720
     global ORIGINAL_BLOCKS
