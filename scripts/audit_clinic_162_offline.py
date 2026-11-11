@@ -57,12 +57,11 @@ class Document(HTMLParser):
             self.skus.append(a["data-sku"])
         elif tag == "a":
             self.all_anchors.append(a.get("href",""))
+            if a.get("href")=="tel:1844-0644":self.phone+=1
         elif tag == "h3":
             self._heading = []
         elif tag == "h1":
             self.h1 += 1
-        elif tag == "a" and a.get("href") == "tel:1844-0644":
-            self.phone += 1
         elif tag == "p":
             self._paragraph = []
     def handle_data(self, data):
