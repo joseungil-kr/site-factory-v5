@@ -27,13 +27,25 @@ jobs:
           rows=json.loads((p/'manifest.json').read_text())
           assert len(rows)==3
           for row in rows:
-              h=(p/(row['id']+'.html')).read_text()
+              h=(p/row['filename']).read_text()
               t=(p/(row['id']+'.txt')).read_text()
               assert row['allRecipientQuestions']
               assert len(t)>250 and 'noindex' in h
               for sku in row['productSkus']:
                   assert 'it_id='+sku in h
               assert '1844-0644' in h
+          from html.parser import HTMLParser
+          from urllib.parse import urlsplit,unquote
+          class Links(HTMLParser):
+              def __init__(self):super().__init__();self.hrefs=[]
+              def handle_starttag(self,tag,attrs):
+                  if tag=='a':self.hrefs += [dict(attrs).get('href','')]
+          for row in rows:
+              parser=Links();parser.feed((p/row['filename']).read_text())
+              for href in parser.hrefs:
+                  if href.startswith('/'):
+                      path=unquote(urlsplit(href).path).lstrip('/') or 'index.html'
+                      assert (p/path).is_file(),(row['id'],href)
           print('THREE_PRIVATE_HTML_PASS',len(rows))
           PY
       - name: Supply existing static assets for local HTTP preview
@@ -56,8 +68,8 @@ jobs:
           python -m http.server 8765 --bind 127.0.0.1 --directory reports/promotion-gift-plants/three-buyer-designs >/tmp/worker6-three-http.log 2>&1 &
           PID=$!
           trap 'kill "$PID" || true' EXIT
-          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/jeokseong-office.html >/dev/null && break || sleep 1; done
-          WORKER6_PAGES=jeokseong-office,seorak-venue,idong-home node scripts/worker6-browser-qa.mjs
+          for i in $(seq 1 20); do curl -fsS http://127.0.0.1:8765/ >/dev/null && break || sleep 1; done
+          WORKER6_PAGES=index,2,3 node scripts/worker6-browser-qa.mjs
           cp reports/promotion-gift-plants/browser-qa.json reports/promotion-gift-plants/three-buyer-designs/browser-qa.json
           cp -R reports/promotion-gift-plants/screenshots reports/promotion-gift-plants/three-buyer-designs/screenshots
       - uses: actions/upload-artifact@v4
