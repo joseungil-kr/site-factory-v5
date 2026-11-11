@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "checkedOn": "2026-11-11",
+  "purpose": "Evidence-bounded common buyer guide for same-event same-sku same-buyer-context controlled experiment",
+  "searchTerms": [
+    "축하화환 3단 상품 리본 입력 주문정보 행사장 반입 확인",
+    "축하화환 판매처 상품 상세 리본 문구 보내는분 주문 옵션"
+  ],
+  "rankingObserved": null,
+  "rankingVerified": false,
+  "sources": [
+    {
+      "id": "ONEFLOWER_3TIER",
+      "url": "https://oneflower.co.kr/products/3tier-celebration-wreath-standard",
+      "kind": "other merchant",
+      "observedAs": "search_result_product_body",
+      "retrieval": "direct_open_HTTP_page_but_only_one_unrelated_readable_line",
+      "lastCheckedOn": "2026-11-11",
+      "publisherUpdate": null,
+      "quoteSnippet": "리본 문구는 상단 옵션에서 선택 및 작성해주세요.",
+      "scope": "other merchant listing as indexed excerpt only; no Todayflower or C200 rule"
+    },
+    {
+      "id": "GGOTKKM_3TIER",
+      "url": "https://www.ggotkkm.co.kr/products/cwh-3tier-premium",
+      "kind": "other merchant",
+      "observedAs": "search_result_indexed_excerpt",
+      "retrieval": "direct_open_cache_miss",
+      "lastCheckedOn": "2026-11-11",
+      "publisherUpdate": null,
+      "quoteSnippet": "리본 문구는 주문서에 적어 주신 그대로 인쇄합니다.",
+      "scope": "other merchant option claim; not verified Todayflower printing"
+    },
+    {
+      "id": "FLOWERLAB_3TIER",
+      "url": "https://flower-lab.kr/product/%EC%B6%95%ED%95%98%ED%99%94%ED%99%98-3%EB%8B%A8-%EC%9D%BC%EB%B0%98%ED%98%95/4717/",
+      "kind": "other merchant",
+      "observedAs": "search_result_indexed_excerpt",
+      "retrieval": "direct_open_cache_miss",
+      "lastCheckedOn": "2026-11-11",
+      "publisherUpdate": null,
+      "quoteSnippet": "주문서 [추가정보] 란에 좌·우 리본 문구를 구분하여 입력해 주세요.",
+      "scope": "merchant-specific example; not C200 seller UI/word limit"
+    },
+    {
+      "id": "PINNED_TODAYFLOWER_C200",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=C200",
+      "kind": "pinned seller SKU catalog",
+      "observedAs": "existing repository product order URL",
+      "retrieval": "catalog_stored_not_reopened",
+      "lastCheckedOn": "2026-11-11",
+      "publisherUpdate": null,
+      "quoteSnippet": null,
+      "scope": "SKU, name, order URL only; no verified current ribbon UI, stock, price or delivery"
+    }
+  ],
+  "checks": [
+    {
+      "id": "EV1",
+      "customerQuestion": "행사장에 외부 축하화환을 설치할 수 있는가?",
+      "sourceIds": [],
+      "type": "editorial caution due to unknown venue rules",
+      "contentSlot": "venue_check",
+      "answerScope": "must confirm with venue; no assumed rule"
+    },
+    {
+      "id": "EV2",
+      "customerQuestion": "받는 행사·수령 위치·시각과 현장 담당자는 확정됐는가?",
+      "sourceIds": [],
+      "type": "editorial purchase preparation",
+      "contentSlot": "recipient_details",
+      "answerScope": "user-provided, unknown prior to order"
+    },
+    {
+      "id": "EV3",
+      "customerQuestion": "C200을 선택할 때 상품 옵션·실제 규격을 확인했는가?",
+      "sourceIds": [
+        "PINNED_TODAYFLOWER_C200"
+      ],
+      "type": "catalog-backed SKU identity plus editorial questions",
+      "contentSlot": "product_choice",
+      "answerScope": "C200 exact SKU only, dimensions unknown"
+    },
+    {
+      "id": "EV4",
+      "customerQuestion": "리본의 축하 문구·발신자를 어떤 입력란에 쓰고 제작 전 확인했는가?",
+      "sourceIds": [
+        "ONEFLOWER_3TIER",
+        "GGOTKKM_3TIER",
+        "FLOWERLAB_3TIER"
+      ],
+      "type": "comparison only; other merchant practice NOT seller fact",
+      "contentSlot": "ribbon_confirmation",
+      "answerScope": "ask actual merchant; no left/right, character max or submission UI claim"
+    },
+    {
+      "id": "EV5",
+      "customerQuestion": "결제 시 실제 요금·배송 가능 여부·사진 제공·수정 마감 확인했는가?",
+      "sourceIds": [],
+      "type": "unverified operational facts",
+      "contentSlot": "checkout_hold",
+      "answerScope": "requires current merchant confirmation"
+    }
+  ],
+  "verifiedRegionLocalFactsFor1863012": 0,
+  "currentC200OrderConditionsVerified": false,
+  "directCompetitorFullBodyOpened": 0,
+  "oneflowerOpenedReadableBodyLines": 1,
+  "noNewRegionalScenarioAssumption": true,
+  "stoppedResearch": "new URLs searched and opened; full relevant competitor body not obtained; no bypass or repeat cache misses",
+  "editorialSourceReuse": "Observed buying questions only. Do not reproduce competitor text, policies, marketing guarantees, or merchandise rates."
+}
