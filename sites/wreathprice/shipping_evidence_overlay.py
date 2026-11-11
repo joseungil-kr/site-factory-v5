@@ -191,6 +191,36 @@ def apply(root:Path, selected:list, evidence_dir:Path):
     assert sum(row["scopeKind"]=="explicit_locality_row" for row in compare)==4
     assert sum(row["contextual"] for row in compare)==16
     assert sum(row["scopeKind"]=="no_seller_row" for row in compare)==30
+    strict_rows=[]
+    for item in ledger["postedFees"]:
+        kind=scope_class(item)
+        strict_rows.append(dict(
+            regionCode=item["regionCode"],
+            regionName=item["regionName"],
+            sourceRowScope=item["sourceRowScope"],
+            scopeKind=kind,
+            # Broad rows remain source context only and have no locality amount.
+            localityPostedFeeKRW=(item["postedAdditionalFeeKRW"] if kind=="explicit_locality_row" else None),
+            sourceTableFeeKRW=item["postedAdditionalFeeKRW"],
+            skuIds=item["sourceSkuIds"],
+            sourceUrls=item["sourceUrls"],
+            observedOn=item["retrievedOn"],
+            sellerPublishedOn=item["sellerUpdatedOn"],
+            currentCheckoutVerified=False,
+            currentDeliveryAvailableVerified=False,
+            feeApplicableToLocality=(kind=="explicit_locality_row"),
+            feeApplicableToCurrentOrder=False))
+    assert sum(r["feeApplicableToLocality"] for r in strict_rows)==4
+    assert all(r["localityPostedFeeKRW"] is None for r in strict_rows
+               if r["scopeKind"]=="broader_or_ambiguous_seller_row")
+    strict_ledger=dict(
+        evidenceSource=str(LEDGER.relative_to(ROOT)),sourceObservedOn="2026-11-11",
+        sourceLastModified=None, classificationSource="Todayflower strict scope at 3dd7cf4a",
+        exactLocalityRows=4, broaderContextRows=16, noEvidenceSampleRows=30,
+        eligibleForIndex=0, checkoutVerified=0,
+        sellerFeeScopeRows=strict_rows)
+    (evidence_dir/"shipping-strict-scope.json").write_text(
+        json.dumps(strict_ledger,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     (evidence_dir/"shipping-overlay-audit.json").write_text(
         json.dumps(dict(ledgerSHA256=hashlib.sha256(LEDGER.read_bytes()).hexdigest(),
             sourceType="2026-11-11 indexed seller page, current checkout unverified",
