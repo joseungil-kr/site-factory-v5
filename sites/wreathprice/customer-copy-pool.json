@@ -1,6 +1,6 @@
 {
   "version": "2026-11-06",
-  "scope": "customer-facing WreathPrice, noindex while content evidence is incomplete",
+  "scope": "customer-facing WreathPrice; common factual catalogue and buyer-questions only; no regional delivery evidence; noindex",
   "imageDescriptions": {
     "funeral-wreath.webp": "근조화환 형태 참고 이미지 · 실제 판매 상품과 다를 수 있습니다",
     "celebration-wreath.webp": "축하화환 형태 참고 이미지 · 실제 판매 상품과 다를 수 있습니다",
@@ -11,18 +11,18 @@
   "buyerQuestions": [
     {
       "title": "근조 3단 예산 비교",
-      "question": "근조 기본형·고급형·특대형 중 어떤 상품을 찾으시나요?",
-      "detail": "59,000원·79,000원·109,000원의 표시가를 비교할 수 있습니다. 실제 주문 총액은 수령 주소와 선택 옵션을 확인한 후 안내됩니다."
+      "question": "표시가와 배송·리본 비용을 합친 예산 상한을 정하셨나요?",
+      "detail": "상품별 가격은 위의 표에서 비교하고, 배송지·옵션을 입력한 주문서 총액이 예산 안에 드는지 확인하세요."
     },
     {
       "title": "수령 시설 확인",
-      "question": "받는 시설명과 상세 주소, 희망 날짜를 알고 계신가요?",
-      "detail": "빈소·행사장명과 연락받을 방법을 판매처에 전달하면 해당 주소의 접수 가능 여부와 추가비용을 확인할 수 있습니다."
+      "question": "수령 시설의 정확한 이름과 상세 도로명 주소가 준비되어 있나요?",
+      "detail": "빈소 번호 또는 행사장 위치와 반입 가능한 시간은 해당 시설에 먼저 확인하고 판매처에 전달하세요."
     },
     {
       "title": "축하화환과 오브제 선택",
-      "question": "행사장에 3단 화환과 2단 오브제 중 어느 형태가 적합한가요?",
-      "detail": "축하 3단(C205)과 2단 오브제(C030)는 다른 형태의 상품입니다. 설치 공간과 실제 상품 규격은 판매처 상세에서 확인하실 수 있습니다."
+      "question": "받는 곳의 설치 공간에 적합한 상품 형태를 알고 계신가요?",
+      "detail": "설치 가능 크기와 반입 규정을 시설에 확인한 뒤, 실제 상품 규격을 판매처 상세 페이지와 대조하세요."
     }
   ],
   "replacements": [
