@@ -1,0 +1,88 @@
+name: WreathPrice fixed 50 HTML offline audit
+on:
+  push:
+    branches:
+      - audit/wreathprice-mobile50-20261111
+    paths:
+      - 'sites/wreathprice/**'
+      - '.github/workflows/wreathprice-fifty-offline-audit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: wreathprice-fifty-20261111
+  cancel-in-progress: false
+jobs:
+  audit-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout candidate branch
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout pinned V5 official ZIP only
+        uses: actions/checkout@v4
+        with:
+          repository: joseungil-kr/site-factory-v5
+          ref: f85b9c0bebc67c16acf8ed5cfcd933a424390183
+          path: pinned-source
+          persist-credentials: false
+      - name: Verify official ZIP byte size and SHA-256
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP="pinned-source/data/regions/v4_official_legal_codes_20261022.zip"
+          test -f "$ZIP"
+          test "$(wc -c < "$ZIP" | tr -d ' ')" = "413481"
+          echo "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd  $ZIP" | sha256sum -c -
+          echo "OFFICIAL_ZIP_413481_SHA256_VERIFIED" | tee official-zip-check.log
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run source regression tests
+        working-directory: sites/wreathprice
+        run: python -m unittest -v test_editorial_review test_mobile_cta |& tee ../../wreathprice-source-tests.log
+      - name: Regenerate 4935 noindex HTML and inspect fixed 50 actual pages
+        shell: bash
+        run: |
+          set -euo pipefail
+          python sites/wreathprice/audit_fifty.py \
+            --archive pinned-source/data/regions/v4_official_legal_codes_20261022.zip \
+            --evidence qa/wreathprice-20261111 |& tee wreathprice-build-audit.log
+          test "$(find qa/wreathprice-20261111/html -name '*.html' | wc -l | tr -d ' ')" = "50"
+          python - <<'PY'
+          import json,csv,pathlib
+          root=pathlib.Path("qa/wreathprice-20261111")
+          report=json.loads((root/"summary.json").read_text())
+          rows=list(csv.DictReader((root/"scores.csv").open(encoding="utf-8-sig")))
+          assert report["total_generated_html"]==4935
+          assert report["sampled_actual_html_read"]==50
+          assert len(rows)==50
+          assert all((root/r["html_path"]).is_file() for r in rows)
+          assert all("noindex,nofollow" in (root/r["html_path"]).read_text() for r in rows)
+          print("FIFTY_HTML_SOURCE_READ_VERIFIED",len(rows))
+          PY
+      - name: Install Chromium Playwright for screenshots
+        run: |
+          python -m pip install playwright==1.58.0
+          python -m playwright install --with-deps chromium
+      - name: Capture original generated HTML at mobile and desktop sizes
+        run: |
+          python sites/wreathprice/screenshot_fifty.py \
+            --root sites/wreathprice/dist-all-localities \
+            --evidence qa/wreathprice-20261111/screens |& tee wreathprice-browser.log
+      - name: Upload 50 actual HTML, scores, logs, and 390px/1440px screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wreathprice-offline-50-real-html-20261111
+          path: |
+            qa/wreathprice-20261111/
+            official-zip-check.log
+            wreathprice-source-tests.log
+            wreathprice-build-audit.log
+            wreathprice-browser.log
+          if-no-files-found: warn
+          retention-days: 30
