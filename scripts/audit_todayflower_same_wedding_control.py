@@ -42,7 +42,7 @@ def build():
     oldp=make(pages[3012],CASES[3012],catalog)
     different=score(grams(article(oldw)),grams(article(oldp)))
     assert abs(different-0.08100558659217877)<1e-12
-    assert both_wedding>different+0.30, (both_wedding,different)
+    assert both_wedding==1.0 and article(same[0])==article(same[1]), (both_wedding,different)
     OUT.mkdir(parents=True,exist_ok=True)
     files=[]
     for p in same:
@@ -67,7 +67,7 @@ def build():
                               "interpretation":"The low 8.10% cross-candidate score largely comes from different hypothetical buyer situations; identical wedding input yields high repetition despite different region names."},
             "sameArticleScoreAndGating":"scripts.audit_todayflower_semantic_gate.article/score; v5.audit.grams n=5",
             "threshold":LIMIT,"sameSituationViolates49Percent":both_wedding>=LIMIT,
-            "sameSituationArticleIdenticalBeyondRegion":False,
+            "sameSituationArticleIdenticalBeyondRegion":True,
             "verifiedLocalEventFacts":0,
             "editorialApproved":False,"publishApproved":False,"urlsChanged":0,
             "files":files}
