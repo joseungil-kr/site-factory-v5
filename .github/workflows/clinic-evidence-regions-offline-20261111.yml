@@ -25,12 +25,15 @@ jobs:
           python-version: '3.11'
       - name: Compile and validate pinned ledger
         run: |
-          python -m py_compile prototypes/clinic-evidence-regions-20261111/build.py prototypes/clinic-evidence-regions-20261111/test_browser.py
+          python -m py_compile prototypes/clinic-evidence-regions-20261111/build.py prototypes/clinic-evidence-regions-20261111/test_browser.py prototypes/clinic-evidence-regions-20261111/compare.py
           git rev-parse HEAD
       - name: Build only three regional buyer references
         run: |
           python prototypes/clinic-evidence-regions-20261111/build.py --output /tmp/clinic-evidence-regions
           find /tmp/clinic-evidence-regions -name '*.html' -printf '%f\n' | sort
+      - name: Reproduce exact three old-neighborhood pages and compare
+        run: |
+          python prototypes/clinic-evidence-regions-20261111/compare.py --new /tmp/clinic-evidence-regions --output /tmp/clinic-evidence-comparison
       - name: Korean typography and Playwright
         run: |
           sudo apt-get update -qq
@@ -50,3 +53,4 @@ jobs:
           path: |
             /tmp/clinic-evidence-regions/
             /tmp/clinic-evidence-browser/
+            /tmp/clinic-evidence-comparison/
