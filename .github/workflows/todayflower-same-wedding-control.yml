@@ -51,11 +51,30 @@ jobs:
               assert hashlib.sha256((out/x['html']).read_bytes()).hexdigest()==x['sha256']
           print('SAME_BUYER_CONTEXT_AND_HTML_HASH_PASS')
           PY
+      - name: C200 same-product equivalent buyer pool regression
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_event_c200_equal.py -v
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          d=Path('reports/todayflower-nalmada/event-c200-equivalent-control')
+          r=json.loads((d/'control-report.json').read_text())
+          assert r['originalPopulationFixed']==333
+          assert r['originalExistingViolationsNotChanged']==4503
+          assert r['identicalBuyerC200CandidateSimilarity']==1.0
+          assert r['identicalBuyerContextStillFails49Percent']
+          assert r['independentLocalityHtmlApproved']==0
+          for item in r['candidateControlFiles']:
+              assert hashlib.sha256((d/item['candidateHtml']).read_bytes()).hexdigest()==item['sha256']
+          print('C200_EQUIVALENT_CONTEXT_EQUAL_SOURCE_SCOPE_PASS')
+          PY
       - name: Upload isolated study, no new packages or screenshots
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: todayflower-same-wedding-control-${{ github.sha }}
-          path: reports/todayflower-nalmada/event-intent-same-wedding-control/
+          path: |
+            reports/todayflower-nalmada/event-intent-same-wedding-control/
+            reports/todayflower-nalmada/event-c200-equivalent-control/
           retention-days: 7
           if-no-files-found: error
