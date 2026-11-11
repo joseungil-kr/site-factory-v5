@@ -107,7 +107,7 @@ jobs:
               dest=out/row['site']/row['path']
               dest.parent.mkdir(parents=True,exist_ok=True)
               shutil.copyfile(src,dest)
-          assert len(list(out.rglob('*.html')))==327
+          assert len(list(out.rglob('*.html')))==324  # fixed 00139 is already among previous 54
           print('SAMPLE_HTML_ARCHIVED',len(list(out.rglob('*.html'))))
           PY
       - name: Capture three-site mobile and desktop regression screenshots
