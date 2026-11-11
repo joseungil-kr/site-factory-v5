@@ -1,0 +1,69 @@
+name: Todayflower semantic root-cause exact-baseline QA (NO DEPLOY)
+on:
+  push:
+    branches:
+      - qa/todayflower-semantic-20261111
+    paths:
+      - "scripts/audit_todayflower_semantic_root_cause.py"
+      - "tests/test_todayflower_semantic_root_cause.py"
+      - ".github/workflows/todayflower-semantic-root-cause.yml"
+  pull_request:
+    branches:
+      - site/todayflower-nalmada-pilot-20261030
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  analysis-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Verify original policy remains nonpublic
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path("sites/todayflower-nalmada/site.json").read_text())
+          assert s["publishEnabled"] is False
+          assert s["indexNow"]["enabled"] is False
+          assert s["todayflowerNational"]["previewOnly"] is True
+          print("NO_PUBLIC_RELEASE_OR_INDEXING")
+          PY
+      - name: Rebuild original 5070 files only to isolated runner dist
+        run: |
+          python -m v5 build --site todayflower-nalmada --mode preview
+          test "$(find dist/todayflower-nalmada -maxdepth 1 -name '*.html' | wc -l | tr -d ' ')" = 5071
+      - name: Recreate existing SeoSeok evidence candidate only
+        run: |
+          python -m scripts.build_todayflower_three_region_research
+      - name: Strict same-input same-scoring root cause and bounded real HTML
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_semantic_root_cause.py -v
+          python - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          p=Path("reports/todayflower-nalmada/semantic-cause-v1")
+          r=json.loads((p/"analysis.json").read_text())
+          assert r["method"]["populationPages"]==333
+          assert r["method"]["pairs"]==55278
+          assert r["method"]["unmodifiedOriginalViolations"]==4503
+          assert r["seoSeok"]["candidateClaimCount"]==4
+          assert r["candidateRule"]["independentBuyerPagePublishable"]==0
+          assert len(list(p.glob("*.html")))==6
+          print("EXACT_INPUT_333_SAME_4503_FAILURES_QA",hashlib.sha256((p/"analysis.json").read_bytes()).hexdigest())
+          PY
+      - name: Save audit evidence only, no deployment
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-semantic-cause-${{ github.sha }}
+          path: |
+            reports/todayflower-nalmada/semantic-cause-v1/
+          retention-days: 7
+          if-no-files-found: error
