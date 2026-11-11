@@ -20,6 +20,8 @@ class SameWeddingControlTest(unittest.TestCase):
         self.assertGreater(r["sameSituationCandidateScore"],r["differentSituationCandidateScore"]+0.30)
         self.assertEqual(r["threshold"],0.49)
         self.assertTrue(r["sameSituationViolates49Percent"])
+        self.assertTrue(r["sameSituationArticleIdenticalBeyondRegion"])
+        self.assertEqual(r["sameSituationCandidateScore"],1.0)
         self.assertIsNone(r["relativeEffect"]["verifiedRegionalSpecificityEffect"])
         self.assertEqual(r["verifiedLocalEventFacts"],0)
         self.assertFalse(r["editorialApproved"])
