@@ -106,6 +106,45 @@ def build_candidate(source,role,products):
             "sampleOnly":True,"buyerQuestions":["Q_PURPOSE","Q_SENDER","Q_PHRASE","Q_LENGTH","Q_CHECKOUT"],
             "editorialApproval":False,"currentRibbonLimitsKnown":False}
 
+# Explicit quote-anchored QA ledger. Multiple questions may share a section.
+# Never zip question IDs to section positions.
+QUESTION_ANCHORS = {
+ "personal_greeting": {
+  "Q_PURPOSE": ("section-0","받는 분의 행사가 결혼·개업·공연 중 어디에 해당하는지"),
+  "Q_SENDER": ("section-1","보내는 사람 표기는 개인의 실제 이름"),
+  "Q_PHRASE": ("section-1","축하 문구 초안은"),
+  "Q_LENGTH": ("section-3","리본 최대 글자 수와 실제 좌우 배치는 확인되지 않았으니"),
+  "Q_CHECKOUT": ("section-3","주문 화면에 선택한 상품번호와 동일한지 확인"),
+ },
+ "company_official_sender": {
+  "Q_PURPOSE": ("section-0","회사 차원에서 보내는 화환인지 부서 단위 축하인지"),
+  "Q_SENDER": ("section-0","실제 발신 주체의 승인을 받은 표기"),
+  "Q_PHRASE": ("section-1","축하 표현의 편집 예시는"),
+  "Q_LENGTH": ("section-2","줄바꿈·줄 수·한자·기호 허용 여부는 판매처마다 달라"),
+  "Q_CHECKOUT": ("section-3","행사 목적·발신 표기·상품번호가 같은지 결제 전에"),
+ },
+ "joint_group_approval": {
+  "Q_PURPOSE": ("section-0","동문회·협회·여러 명의 공동 축하라면"),
+  "Q_SENDER": ("section-0","모임 이름 하나로 쓸지 합의"),
+  "Q_PHRASE": ("section-1","축하 문구의 독립 편집 예시는"),
+  "Q_LENGTH": ("section-3","리본 길이·인쇄 방식·수정 마감"),
+  "Q_CHECKOUT": ("section-3","상품번호, 행사 명칭, 받을 사람이나 현장 담당자"),
+ },
+}
+def question_to_actual_text(row,ledger):
+    ids={q["id"]:q for q in ledger["questionToRules"]}
+    assert set(ids)==set(QUESTION_ANCHORS[row["role"]])
+    parts={"intro":row["intro"],**{f"section-{i}":sec["paragraph"] for i,sec in enumerate(row["sections"])}}
+    mapped=[]
+    for qid,(part,excerpt) in QUESTION_ANCHORS[row["role"]].items():
+        assert part in parts and excerpt in parts[part],(row["role"],qid,part,excerpt)
+        q=ids[qid]
+        mapped.append({"questionId":qid,"question":q["question"],"documentPart":part,
+                       "exactTextExcerpt":excerpt,"evidenceSourceIds":q["basis"],
+                       "sourceScope":"search-index extract or pinned catalog, not merchant live rule",
+                       "editorialProposal":True})
+    return mapped
+
 def html_doc(p,ledger):
     assert p["originalIntent"]==p["topic"]==INTENT
     sections="".join('<section data-section="'+str(i)+'"><h2>'+h(x["heading"])+'</h2>'
@@ -185,8 +224,7 @@ def audit():
              "orderURL":row["orderUrl"],"originalArticleSHA256":sha(baseline),
              "candidateArticleSHA256":sha(actual),"originalHtmlSHA256":hashlib.sha256(original_doc.read_bytes()).hexdigest(),
              "candidateHtmlSHA256":sha(page_html),"sourceToQuestionIds":row["buyerQuestions"],
-             "sourceQuestionsToHtmlSections":[{"questionId":q,"documentPart":part} for q,part in zip(
-             row["buyerQuestions"],["intro","section-0","section-1","section-2","section-3"])],
+             "sourceQuestionsToHtmlSections":question_to_actual_text(row,ledger),
              "originalToCandidateSimilarity":score(grams(baseline),grams(actual))}
         pages.append(row);records.append(rec)
     for a,b in combinations(pages,2):
