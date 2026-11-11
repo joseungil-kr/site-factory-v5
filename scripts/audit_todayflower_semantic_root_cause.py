@@ -162,7 +162,32 @@ def main():
             "noNationwideGeneratorModification":True},
         "conclusion":"Text-level Jaccard reduction does not prove buyer utility. Source-specific details improve relevance but current receipt/fee/stock facts are absent; stop geographic expansion."
     }
+    # Candidate-only minimum generation rule: preserve the 333 historic
+    # region identities as DATA but emit NO standalone buyer HTML when this
+    # pinned source snapshot has no applicable facility/merchant evidence.
+    # This is not an alteration of the deployed 5070-page generator.
+    mapped_event=[]
+    for page in corpus:
+        evidence_row=mapped[page["number"]]
+        matched=evidence_row["matchedFactIds"]
+        assert not matched, ("unexpected regional fact requires re-review",page["number"])
+        mapped_event.append({
+            "number":page["number"],"urlPath":evidence_row["urlPath"],
+            "regionCode":evidence_row["regionCode"],"intent":page["topic"],
+            "mappedFactIds":matched,"candidateRole":"shared_intent_reference",
+            "allowIndependentBuyerHtml":False,
+            "reason":"no_exclusive_local_purchase_evidence_in_pinned_snapshot",
+        })
+    assert len(mapped_event)==333
+    summary["candidateRule"]["sameIntentRowsDataOnly"]=333
+    summary["candidateRule"]["sameIntentStandaloneHtmlApproved"]=0
+    summary["candidateRule"]["sharedIntentCopyOwner"]="intent guide, not 333 locality bodies"
     OUT.mkdir(parents=True,exist_ok=True)
+    (OUT/"candidate-333-eligibility.json").write_text(
+        json.dumps({"recordCount":333,"records":mapped_event,
+                    "qualityGatePassed":False,
+                    "scope":"isolated editorial candidate rule, not existing URL changes"},
+                   ensure_ascii=False,indent=2)+"\\n",encoding="utf-8")
     (OUT/"analysis.json").write_text(json.dumps(summary,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
     # Only a small number of real original HTML samples, no new bulk pages.
     dist=ROOT/"dist"/SITE
