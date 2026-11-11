@@ -48,7 +48,7 @@ def main():
         ("selection", (1, 8), 0),
         ("receiver", (0, 4, 8), 1),
         ("receiver", (1, 5, 7, 9), 1),
-        ("receiver", (3, 6, 10), 1),
+        ("receiver", (2, 3, 6, 10, 11), 1),
         ("selection", (4, 9), 2),
         ("delivery", (0, 3, 5, 8, 10), 3),
         ("delivery", (2, 9), 3),
