@@ -61,7 +61,7 @@ class ThreeRegionTest(unittest.TestCase):
             before=BASE/"original-html"/f"{n}.html"
             self.assertTrue(before.is_file())
             self.assertEqual(hashlib.sha256(before.read_bytes()).hexdigest(),
-                             self.report["originalHtml"][str(n)]["sha256"])
+                             self.report["originalHtml"][n]["sha256"])
 
     def test_distinct_workflow_and_rerun_reproducibility(self):
         for x in ("1. 수령 시설부터 정확히 지정",
