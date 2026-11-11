@@ -1,0 +1,85 @@
+name: WreathPrice 2 venue isolated evidence and screenshot QA
+on:
+  push:
+    branches:
+      - audit/wreathprice-mobile50-20261111
+    paths:
+      - 'research/wreathprice-venue-pilot/**'
+      - '.github/workflows/wreathprice-two-venue-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: wreathprice-two-venue-20261111
+  cancel-in-progress: false
+jobs:
+  isolated-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - name: Checkout candidate only
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Checkout fixed official regional ZIP
+        uses: actions/checkout@v4
+        with:
+          repository: joseungil-kr/site-factory-v5
+          ref: f85b9c0bebc67c16acf8ed5cfcd933a424390183
+          path: pinned-source
+          persist-credentials: false
+      - name: Verify pinned source unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          ZIP=pinned-source/data/regions/v4_official_legal_codes_20261022.zip
+          test "$(wc -c < "$ZIP" | tr -d ' ')" = "413481"
+          echo "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd  $ZIP" | sha256sum -c -
+      - name: Python and pinned region two-page before/after build
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Generate only isolated drafts and preserve historical baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/wreathprice-venue-pilot/build.py \
+            --archive pinned-source/data/regions/v4_official_legal_codes_20261022.zip \
+            --out qa/wreathprice-venue-2 |& tee venue-build.log
+          test "$(find qa/wreathprice-venue-2 -name index.html | wc -l | tr -d ' ')" = "2"
+          test "$(find qa/wreathprice-venue-2 -name before.html | wc -l | tr -d ' ')" = "2"
+          python - <<'PY'
+          import sys,json
+          from pathlib import Path
+          sys.path.insert(0,'sites/wreathprice')
+          import audit_fifty
+          r=json.loads(Path('sites/wreathprice/dist-all-localities/localities-audit.json').read_text())
+          fixed={x['code'] for x in audit_fifty.fixed_sample(r['localities'])}
+          a=json.loads(Path('qa/wreathprice-venue-2/comparison.json').read_text())
+          assert all(item['localityCode'] not in fixed for item in a['items'])
+          assert a['indexEligible']==0
+          print('VENUES_BOTH_OUTSIDE_FIXED50', [x['localityCode'] for x in a['items']])
+          PY
+      - name: Install render dependencies
+        run: |
+          python -m pip install playwright==1.58.0 Pillow==11.3.0
+          python -m playwright install --with-deps chromium
+      - name: Check links, SKU purpose, noindex and 390/1440 screenshot pixels
+        shell: bash
+        run: |
+          set -euo pipefail
+          python research/wreathprice-venue-pilot/verify_screens.py \
+            --out qa/wreathprice-venue-2 |& tee venue-screen-qa.log
+      - name: Upload source evidence + two before/after HTML + four screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: wreathprice-two-venue-noindex-evidence-20261111
+          path: |
+            research/wreathprice-venue-pilot/facility-evidence.json
+            research/wreathprice-venue-pilot/sentence-source-map.json
+            qa/wreathprice-venue-2/
+            venue-build.log
+            venue-screen-qa.log
+          if-no-files-found: warn
+          retention-days: 30
