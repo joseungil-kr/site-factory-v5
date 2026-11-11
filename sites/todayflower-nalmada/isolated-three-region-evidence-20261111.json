@@ -56,6 +56,26 @@
       "liveFetchSuccessful": false,
       "quotedSnippets": [],
       "caution": "Exact regional fee recorded in pinned WreathPrice research, seller webpage current application not independently verified"
+    },
+    {
+      "id": "KFCPI_FUNERAL_FACILITIES_PDF_2025",
+      "url": "https://www.kfcpi.or.kr/link/2025/09/29/831da0f4-5acd-43d4-b0ae-60e6111f33f7.pdf",
+      "publisher": "한국장례문화진흥원",
+      "sourceClass": "official domain funeral facilities PDF list",
+      "checkedOn": "2026-11-11",
+      "publicationDate": null,
+      "urlDirectoryDate": "2025-09-29",
+      "currentOperationChecked": false,
+      "currentInboundFlowerPolicyChecked": false,
+      "quotedSnippets": [
+        "우수영장례식장",
+        "전라남도 해남군 문내면 관광레저로 534-5 (난대리)",
+        "061-533-4440"
+      ],
+      "scope": "해남군 문내면 우수영장례식장 시설명, 원문 주소, 게시 전화번호만; 운영·반입·배송 사실 아님",
+      "rawProvinceLabel": "전라남도",
+      "pinnedArchiveProvinceLabel": "전남광주통합특별시",
+      "retrievalEvidence": "2026-11-11 web retrieved PDF table; dataset itself may be historical"
     }
   ],
   "regions": [
@@ -109,16 +129,32 @@
       "decision": "hold_insufficient_facility_evidence",
       "facility": null,
       "sourceIds": [
-        "SELLER_B205_ARCHIVED"
+        "SELLER_B205_ARCHIVED",
+        "KFCPI_FUNERAL_FACILITIES_PDF_2025"
       ],
       "unverified": [
-        "문내면 내 특정 장례시설 공식 위치",
+        "우수영장례식장의 현재 운영과 실제 빈소·인계 위치",
         "시설별 반입 규정",
         "현재 수령 가능 시설·담당자",
         "현재 B205 배송 가능성",
-        "현행 추가배송비"
+        "현행 추가배송비",
+        "우수영장례식장의 현재 외부화환 반입 가능 여부"
       ],
-      "approvedForPublication": false
+      "approvedForPublication": false,
+      "officialFacilityLocationEvidence": {
+        "facilityName": "우수영장례식장",
+        "sourceId": "KFCPI_FUNERAL_FACILITIES_PDF_2025",
+        "sourceAddress": "전라남도 해남군 문내면 관광레저로 534-5 (난대리)",
+        "sourcePhone": "061-533-4440",
+        "checkedOn": "2026-11-11",
+        "publicationDate": null,
+        "currentlyOpenVerified": false,
+        "inboundFlowersAllowedVerified": false,
+        "deliveryVerified": false,
+        "sourceProvinceLabel": "전라남도",
+        "pinnedRegionName": "전남광주통합특별시 해남군 문내면",
+        "exactMatchedLocality": "해남군 문내면"
+      }
     }
   ],
   "claimMap": [
@@ -158,6 +194,105 @@
         "SELLER_B205_ARCHIVED"
       ],
       "validity": "historical posted fee only; current checkout and availability unverified"
+    }
+  ],
+  "followupResearch": {
+    "checkedOn": "2026-11-11",
+    "scope": "only 1039 Munae and 4360 Namwon; research-only; no production releases",
+    "attempts": [
+      {
+        "id": "KFCPI_OFFICIAL_FACILITY_PDF",
+        "url": "https://www.kfcpi.or.kr/link/2025/09/29/831da0f4-5acd-43d4-b0ae-60e6111f33f7.pdf",
+        "kind": "official provider PDF",
+        "result": "found_exact_munae_facility",
+        "facility": "우수영장례식장",
+        "regionNumber": 1039,
+        "limits": "historical listed address and number; not live operation",
+        "publicationDateKnown": false
+      },
+      {
+        "id": "MOHW_NATIONAL_FUNERAL_API_METADATA",
+        "url": "https://www.data.go.kr/data/15122367/openapi.do",
+        "kind": "official MOHW public data catalog",
+        "result": "metadata_accessible_individual_rows_not_verified",
+        "datasetAsOf": "2026-04-01",
+        "regionNumber": null,
+        "limits": "metadata describes facility/location columns; authenticated API rows not accessed; no inference of facility absence"
+      },
+      {
+        "id": "JEJU_NAMWON_OFFICIAL_CHECK",
+        "url": "https://www.kfcpi.or.kr/link/2025/09/29/831da0f4-5acd-43d4-b0ae-60e6111f33f7.pdf",
+        "kind": "official provider PDF full-text search",
+        "result": "no_Namwon_eup_match_in_this_document",
+        "regionNumber": 4360,
+        "limits": "negative in a single PDF only; not evidence that no facility exists"
+      },
+      {
+        "id": "SEOGWIPO_OFFICIAL_WEB_SEARCH",
+        "url": "https://www.seogwipo.go.kr/",
+        "kind": "local government domain targeted search",
+        "result": "no_direct_funeral_facility_address_verified_for_Namwon_eup",
+        "regionNumber": 4360,
+        "limits": "search results not exhaustive; other facilities may exist"
+      },
+      {
+        "id": "HAENAM_LOCAL_GOV_OFFICIAL_WEB_SEARCH",
+        "url": "https://www.haenam.go.kr/",
+        "kind": "local government domain targeted search",
+        "result": "no_direct_munae_funeral_facility_table_verified",
+        "regionNumber": 1039,
+        "limits": "superseded only for facility location by separate KFCPI PDF"
+      }
+    ],
+    "findings": [
+      {
+        "regionNumber": 1039,
+        "facility": "우수영장례식장",
+        "sourceId": "KFCPI_FUNERAL_FACILITIES_PDF_2025",
+        "sourceProvinceLabel": "전라남도",
+        "pinnedArchiveProvinceLabel": "전남광주통합특별시",
+        "officialListedAddress": "전라남도 해남군 문내면 관광레저로 534-5 (난대리)",
+        "officialListedPhone": "061-533-4440",
+        "exactLocalityMatch": "해남군 문내면",
+        "facilityCurrentOperation": "unverified",
+        "inboundWreathAllowed": "unverified",
+        "sellerB205Delivery": "unverified",
+        "currentSellerFee": "unverified",
+        "editorialDecision": "location_only_supplement_hold_for_delivery_scope"
+      },
+      {
+        "regionNumber": 4360,
+        "facility": null,
+        "sourceId": null,
+        "editorialDecision": "hold_no_exact_official_facility_row",
+        "reason": "reviewed official public PDF contains no Namwon-eup match; MOHW API individual facility records unavailable in this check; municipal search no exact facility address"
+      }
+    ],
+    "publicationCandidateCount": 0,
+    "stopReason": "bounded new official-source search completed; further direct facility and current inbound policy evidence not available; do not infer delivery service"
+  },
+  "followupClaimMap": [
+    {
+      "id": "M1",
+      "regionNumber": 1039,
+      "claim": "한국장례문화진흥원 공개 장례식장 현황표에 우수영장례식장 주소가 전라남도 해남군 문내면 관광레저로 534-5 (난대리)로 기재되어 있다.",
+      "sources": [
+        "KFCPI_FUNERAL_FACILITIES_PDF_2025"
+      ],
+      "checkedOn": "2026-11-11",
+      "publicationDate": null,
+      "validity": "historical facility-location listing only; no current operations or flower acceptance"
+    },
+    {
+      "id": "M2",
+      "regionNumber": 1039,
+      "claim": "같은 현황표에 우수영장례식장 전화번호가 061-533-4440으로 기재돼 있다.",
+      "sources": [
+        "KFCPI_FUNERAL_FACILITIES_PDF_2025"
+      ],
+      "checkedOn": "2026-11-11",
+      "publicationDate": null,
+      "validity": "published contact not confirmed active"
     }
   ]
 }
