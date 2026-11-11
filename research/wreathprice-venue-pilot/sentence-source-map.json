@@ -51,6 +51,22 @@
       "sentence": "C205 축하 3단, C030 축하 2단 오브제는 판매처에 있던 형태 비교",
       "source": "https://github.com/joseungil-kr/site-factory-v5/blob/791c0cd5/sites/wreathprice/site-spec.json",
       "support": "historical SKU names and prices; not current venue acceptance"
+    },
+    {
+      "facility": "sejong-eunhasu",
+      "paragraphRole": "operator-dated-policy",
+      "sentence": "2018년 공단 공지: 기존 인조부품 많은 3단화환 반입 금지 및 신근조화환대 생화 제작 납품",
+      "source": "https://www.sjfmc.or.kr/eunhasu/sub03_01/cop/bbs/BBSMSTR_000000000013/selectBoardArticle.do?mno=sub03_01&nttId=3232&pageIndex=1&searchCnd=&searchWrd=",
+      "support": "operating authority notice published 2018-10-01; present-day policy validity not reconfirmed",
+      "observedOn": "2026-11-11"
+    },
+    {
+      "facility": "sejong-eunhasu",
+      "paragraphRole": "operator-dated-policy",
+      "sentence": "운영기관 장례식장 이용안내는 장례 상담과 절차를 설명하며 개별 SKU 반입이나 꽃 배송시간은 확인되지 않음",
+      "source": "https://www.sjfmc.or.kr/eunhasu/sub02_01_02.do",
+      "support": "read-only current public guide; 24h consultation not 24h flower delivery",
+      "observedOn": "2026-11-11"
     }
   ],
   "unmappedUnverifiable": [
@@ -59,7 +75,8 @@
     "SKU-specific recipient address fee",
     "ribbon fee",
     "actual delivery time",
-    "facility SKU compatibility"
+    "facility SKU compatibility",
+    "2026-11-11 현재 운영자의 2018 신화환 공지 시행 유지 여부"
   ],
   "notForFixed50": true
 }
