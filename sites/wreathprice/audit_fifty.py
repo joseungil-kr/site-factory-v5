@@ -65,7 +65,8 @@ def audit(archive, evidence):
     snapshots.mkdir(exist_ok=True)
     applied=shipping_evidence_overlay.apply(root,selected,evidence)
     matched={x['code']:x for x in applied if x['matched']}
-    assert len(matched)==20
+    contextual={x['code']:x for x in applied if x['contextual']}
+    assert len(matched)==4 and len(contextual)==16
     rows, signatures = [], []
     for r in selected:
         path = root / "locality" / (r["code"] + ".html")
@@ -101,8 +102,9 @@ def audit(archive, evidence):
                          posted_fee_currently_effective="unverified",
                          delivery_available="unverified",
                          disposition="FAIL: no verified regional service evidence",
-                         reason=("Seller posted fee available for B205/C030 only; checkout/availability unverified; shared regional template" if r["code"] in matched
-                                 else "No region-specific posted fee; checkout/availability unverified; shared regional template")))
+                         reason=("Exact locality posted B205/C030 fee row only; checkout/availability unverified" if r["code"] in matched
+                                 else ("Only broader seller fee context, NOT a locality fee; checkout/availability unverified" if r["code"] in contextual
+                                 else "No posted fee row for this locality; checkout/availability unverified"))))
     # Keep historical failing pages even when they are not selected by the fixed seed.
     regression_codes=("1111010100","1111010200","1123010100")
     regressions=evidence/"regressions"
@@ -126,8 +128,11 @@ def audit(archive, evidence):
                    suffix_counts=dict(Counter(r["suffix"] for r in rows)),
                    sampled_actual_html_read=50, normalized_repeated_count=normalized_repeats,
                    pass_count=0, index_eligible=0, noindex=True,
-                   shipping_posted_20=20,shipping_unmatched_30=30,delivery_confirmed=0,
+                   seller_source_rows_20=20,explicit_locality_4=4,
+                   broad_context_only_16=16,no_seller_evidence_30=30,
+                   delivery_confirmed=0,
                    evidence_overlay_file='shipping-overlay-audit.json',
+                   strict_scope_source='Todayflower pinned strict-scope classification at 3dd7cf4a',
                    known_regression_html=regression_sha,
                    sources="Pinned official region ZIP + local generator output",
                    note="Prices are historical reference values, not live checkout validation")
