@@ -1,0 +1,61 @@
+name: Todayflower same wedding 186-3012 control (NO DEPLOY)
+on:
+  push:
+    branches:
+      - qa/todayflower-semantic-20261111
+    paths:
+      - 'scripts/audit_todayflower_same_wedding_control.py'
+      - 'tests/test_todayflower_same_wedding_control.py'
+      - '.github/workflows/todayflower-same-wedding-control.yml'
+  pull_request:
+    branches:
+      - site/todayflower-nalmada-pilot-20261030
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compare-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: No deployment/index or permissions side effects
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('sites/todayflower-nalmada/site.json').read_text())
+          assert s['publishEnabled'] is False
+          assert s['indexNow']['enabled'] is False
+          assert s['todayflowerNational']['previewOnly'] is True
+          print('NO_DEPLOY_NO_INDEX')
+          PY
+      - name: Verify same wedding attribution, actual candidate HTML and SKU link
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_same_wedding_control.py -v
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          out=Path('reports/todayflower-nalmada/event-intent-same-wedding-control')
+          r=json.loads((out/'same-wedding-control.json').read_text(encoding='utf-8'))
+          assert r['sameSituationViolates49Percent'] is True
+          assert r['sameSituationCandidateScore'] > r['differentSituationCandidateScore']
+          assert len(r['files']) == 2
+          assert not r['publishApproved']
+          for x in r['files']:
+              assert hashlib.sha256((out/x['html']).read_bytes()).hexdigest()==x['sha256']
+          print('SAME_BUYER_CONTEXT_AND_HTML_HASH_PASS')
+          PY
+      - name: Upload isolated study, no new packages or screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-same-wedding-control-${{ github.sha }}
+          path: reports/todayflower-nalmada/event-intent-same-wedding-control/
+          retention-days: 7
+          if-no-files-found: error
