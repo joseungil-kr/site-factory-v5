@@ -3,6 +3,9 @@ on:
   push:
     branches:
       - qa/todayflower-semantic-20261111
+  pull_request:
+    branches:
+      - site/todayflower-nalmada-pilot-20261030
   workflow_dispatch:
 permissions:
   contents: read
