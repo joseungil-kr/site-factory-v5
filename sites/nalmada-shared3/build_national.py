@@ -353,20 +353,53 @@ def editorial_body(body):
     return " ".join(body.split())
 
 
-def insight_cards(site,seed):
-    """Use the site's own verified-general decision cases, not fake local facts."""
+# A topic is a single factual/advice unit. Never render the same unit twice on
+# one page, regardless of frame, perspective or generated paraphrase.
+# Compositional POOL remains historical input but is not page-padding material.
+REQUIRED_TOPICS = {
+    'clinicflower': ('식물 크기', '빛과 관리', '기념 선물 목적', '리본 문구'),
+    'clinicopen': ('행사 날짜', '수령 담당자', '행사 장소', '리본 제작'),
+    'clinicpresent': ('화환 규격', '꽃 구성', '현장 반입', '리본 문구', '배송비 문의'),
+}
+
+def decision_units(site, seed):
+    facts = SITE_META[site]['facts']
+    required = REQUIRED_TOPICS[site]
+    topic_ids = {topic:i for i,(topic,_,_,_) in enumerate(facts)}
+    assert len(topic_ids)==len(facts), (site, 'ambiguous factual IDs')
+    must = [topic_ids[t] for t in required]
+    # Each general fact owns its context and one action; no second role/perspective
+    # may repeat the same advice to inflate body length.
+    remaining = sorted((i for i in range(len(facts)) if i not in must),
+                       key=lambda i:key_sort(seed+'|fact-id',i))
+    content_limit = 9 if site!='clinicpresent' else 12
+    body_ids = must + remaining[:content_limit-len(must)]
+    side_ids = remaining[content_limit-len(must):content_limit-len(must)+2]
+    assert len(set(body_ids+side_ids))==len(body_ids)+len(side_ids)
+    return body_ids, side_ids
+
+def advice_sentences(site, ids):
+    seen=set()
+    for i in ids:
+        topic,context,action,_ = SITE_META[site]['facts'][i]
+        for sentence in (context, _visitor_action(action)):
+            normalized=' '.join(sentence.split()).rstrip('.')
+            if normalized in seen:
+                raise ValueError('Repeated advice sentence: '+site+' '+topic+' '+normalized)
+            seen.add(normalized)
+
+def insight_cards(site, side_ids):
     facts=SITE_META[site]['facts']
-    order=sorted(range(len(facts)),key=lambda i:key_sort(seed+'|decision',i))[:2]
     blocks=[]
     audit=[]
-    for i in order:
+    for i in side_ids:
         topic,context,action,_legacyAvoid=facts[i]
         blocks.append('<article class="step"><span class="num">'+esc(topic)+'</span>'
                       '<h3>'+esc(context)+'</h3><p>'+esc(_visitor_action(action))+'</p></article>')
         audit.extend((context,action))
     return ('<section class="section clinic-decision"><div class="wrap">'
-            '<div class="heading"><h2>주문 전에 비교할 실제 조건</h2>'
-            '<p>확인할 항목을 정리한 뒤 전화로 상품·배송 조건을 상담하세요.</p></div>'
+            '<div class="heading"><h2>주문 전에 비교할 추가 조건</h2>'
+            '<p>해당되는 조건이 있다면 주문 상담에 함께 전달하세요.</p></div>'
             '<div class="steps">'+''.join(blocks)+'</div></div></section>'," ".join(audit))
 
 
@@ -378,48 +411,24 @@ def render_region(site,rec,pool,mode):
     title=place+' '+meta['title']
     description=place+' '+meta['short']+' 주문 시 확인할 품목·일정·수령장소와 리본 문구 안내. 꽃이랑 전화 1844-0644.'
     seed=f'{site}|{i}|{place}'
-    groups=GENERATED_BY_TOPIC[site]
-    group_topics=sorted(groups, key=lambda topic:key_sort(seed+'|concept',topic))
-    chosen=[];used_topics=set()
-    for topic in group_topics:
-        if topic in used_topics:continue
-        variants=groups[topic]
-        row=variants[int(sha(seed+'|role|'+topic)[:12],16)%len(variants)]
-        chosen.append(row);used_topics.add(topic)
-        if len(chosen)==(4 if site=='clinicpresent' else 3):break
-    if site=='clinicpresent':
-        wreath_topics=sorted(ORIGINAL_WREATH_BY_SUBTOPIC,key=lambda topic:key_sort(seed+'|wreath-original',topic))
-        for topic in wreath_topics:
-            variants=ORIGINAL_WREATH_BY_SUBTOPIC[topic]
-            row=variants[int(sha(seed+'|wreath-variant|'+topic)[:12],16)%len(variants)]
-            chosen.append({'heading':row['title'],'body':row['body'],'topic':topic})
-            if len(chosen)==16:break
-    if site!='clinicpresent':
-        original_topics=sorted(ORIGINAL_BY_TOPIC,key=lambda topic:key_sort(seed+'|base',topic))
-        for topic in original_topics:
-            if topic in used_topics:continue
-            variants=ORIGINAL_BY_TOPIC[topic]
-            row=variants[int(sha(seed+'|original|'+topic)[:12],16)%len(variants)]
-            chosen.append({'heading':row['title'],'body':row['body'],'topic':row['topic']})
-            used_topics.add(topic)
-            if len(chosen)==19:break
-    assert len(chosen)==(16 if site=='clinicpresent' else 19)
+    body_ids,side_ids=decision_units(site,seed)
+    advice_sentences(site,body_ids+side_ids)
+    facts=meta['facts']
     sections=[]
-    seen_section_bodies=set()
-    for row in chosen:
-        body=editorial_body(row['body'])
-        assert body and len(body)>30
-        normalized=' '.join(body.split())
-        if normalized in seen_section_bodies:
-            raise ValueError('Duplicate editorial paragraph: '+site+' '+str(i)+' '+row['heading'])
-        seen_section_bodies.add(normalized)
-        sections.append('<article class="step"><h3>'+esc(row['heading'])+'</h3><p>'+esc(body)+'</p></article>')
+    narrative=[]
+    for idx in body_ids:
+        topic,context,action,_legacyAvoid=facts[idx]
+        # The concept is used once. Heading, context and action offer two
+        # distinct practical facts; no generic seller pitch is appended.
+        message=_visitor_action(action)
+        sections.append('<article class="step" data-fact-id="'+esc(site+'-'+str(idx))+'">'
+                        '<h3>'+esc(topic)+'</h3><p>'+esc(context)+'</p><p>'+esc(message)+'</p></article>')
+        narrative.extend((topic,context,message))
     faqs=meta['faqs']
     faq_start=int(sha(seed+'faq')[:8],16)%len(faqs)
     picked=faqs[faq_start:]+faqs[:faq_start]
     faq=''.join('<details><summary>'+esc(q)+'</summary><p>'+esc(a)+'</p></details>' for q,a in picked[:2])
-    sectors=''.join('<article class="service"><div class="content"><h3>'+esc(h)+'</h3><p>'+esc(t)+'</p></div></article>' for h,t in meta['sectors'])
-    insights,insights_text=insight_cards(site,seed)
+    insights,insights_text=insight_cards(site,side_ids)
     breadcrumbs='<p class="crumb"><a href="/">전국</a> · <a href="'+province_path(p)+'">'+esc(p)+'</a> · <a href="'+district_path(p,d)+'">'+esc(d)+'</a> · '+esc(n)+'</p>'
     main=(' <main><section class="hero" style="min-height:390px;background-image:none;background-color:#f2f5ef"><div class="wrap heroContent">'
         '<span class="eyebrow">FLOWER WITH CARE · REGIONAL ORDER GUIDE</span>'+breadcrumbs+
@@ -427,12 +436,12 @@ def render_region(site,rec,pool,mode):
         '<p>'+esc(meta['intro'])+' '+esc(place)+'에 보내는 경우 정확한 수령 주소와 희망 날짜를 전화로 확인해주세요.</p>'
         '<a class="call heroCall" href="tel:1844-0644">☎ 전화주문 1844-0644</a></div></section>'
         +media_html(site,path)+'<section class="section alt"><div class="wrap"><div class="heading"><h2>'+esc(place)+' 주문 전 검토할 내용</h2>'
-        '<p>받는 분이 편한 날짜와 꽃을 놓을 장소를 알려주시면 제품 선택을 도와드립니다.</p></div><div class="grid3">'+''.join(sections)+'</div></div></section>'
+        '<p>화분을 주문할 때는 관리와 수령 조건을, 축하화환은 행사 장소와 설치 조건을 구분해 확인하세요.</p></div><div class="grid3">'+''.join(sections)+'</div></div></section>'
         '<section class="section"><div class="wrap"><div class="heading"><h2>자주 묻는 질문</h2></div><div class="faq">'+faq+'</div>'
         '<p>다른 지역명도 찾아보려면 <a href="'+district_path(p,d)+'">'+esc(p+' '+d)+' 지역 목록</a>을 이용하세요.</p>'
         '</div></section>'+insights)
     return (header(site,title,description,path,mode)+main+foot(site),
-        title+' '+description+' '+meta['intro']+' '+' '.join(editorial_body(x['body']) for x in chosen)+' '+insights_text+' '+' '.join(q+' '+a for q,a in picked[:2]))
+        title+' '+description+' '+meta['intro']+' '+' '.join(narrative)+' '+insights_text+' '+' '.join(q+' '+a for q,a in picked[:2]))
 
 def render_dir(site,kind,place,rows,mode):
     meta=SITE_META[site]
