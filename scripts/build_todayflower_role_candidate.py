@@ -145,6 +145,23 @@ def build():
     candidate_files=[]
     original_texts=[]
     candidate_texts=[]
+    baseline_visible=[]
+    candidate_visible=[]
+    original_files=OUT/"original-actual-html"
+    original_files.mkdir(parents=True,exist_ok=True)
+    class Visible(HTMLParser):
+        def __init__(self):
+            super().__init__(convert_charrefs=True)
+            self.parts=[];self.skip=0
+        def handle_starttag(self,tag,attrs):
+            if tag in ("script","style","noscript"):self.skip+=1
+        def handle_endtag(self,tag):
+            if tag in ("script","style","noscript") and self.skip:self.skip-=1
+        def handle_data(self,value):
+            if not self.skip and value.strip():self.parts.append(value.strip())
+    def visible_text(raw):
+        p=Visible();p.feed(raw)
+        return " ".join(p.parts)
     for n in sorted(selected):
         row=by_num[n]
         page=by_page[n]
@@ -189,7 +206,14 @@ def build():
         p=target/"regional"/f"{n}.html"
         digest=write_page(p,title=row["regionName"]+" · 지역 탐색 및 출처 현황",
                           role=role,content=narrative)
-        candidate_files.append({"number":n,"urlPath":row["urlPath"],
+        original=(ROOT/"dist"/SITE/("index.html" if n==1 else f"{n}.html"))
+        assert original.is_file(),("original generated HTML missing",n)
+        original_html=original.read_text(encoding="utf-8")
+        assert 'noindex,nofollow' in original_html
+        (original_files/f"{n}.html").write_text(original_html,encoding="utf-8")
+        candidate_html=p.read_text(encoding="utf-8")
+        candidate_files.append({"baselineSHA256":hashlib.sha256(original_html.encode()).hexdigest(),
+            "number":n,"urlPath":row["urlPath"],
             "regionCode":row["regionCode"],"intent":intent,
             "role":role,"htmlPath":str(p.relative_to(OUT)),
             "sha256":digest,"matchedFacts":row["wreathpriceMatchedIds"],
@@ -201,6 +225,8 @@ def build():
             candidate_texts.append((n, grams(official_region+" "+(
                 str(row["sellerPostedFeeKRW"]) if row["wreathpriceMatchedIds"] else
                 "개별 시설 및 지역 배송 자료 없음"))))
+            baseline_visible.append((n,grams(visible_text(original_html))))
+            candidate_visible.append((n,grams(visible_text(candidate_html))))
     # The textual Jaccard comparison uses separately recorded content slices;
     # don't call thin navigational pages a quality pass.
     def collisions(items):
@@ -214,7 +240,9 @@ def build():
                 "overStrict49Percent":violations,"max":maximum}
     prev=collisions(original_texts)
     cand=collisions(candidate_texts)
-    assert prev["pairs"]==cand["pairs"]==55278
+    real_before=collisions(baseline_visible)
+    real_after=collisions(candidate_visible)
+    assert prev["pairs"]==cand["pairs"]==real_before["pairs"]==real_after["pairs"]==55278
     assert prev["overStrict49Percent"]==4503
     # Write portal AFTER link targets already exist.
     indexlinks=[(f"./{province_paths[p]}",p) for p in sorted(provinces)]
@@ -268,6 +296,10 @@ def build():
         "sourceToCandidate":candidate_files,
         "original333ArticleSimilarity":prev,
         "candidate333FactualMetadataSimilarity":cand,
+        "original333ActualVisibleHtmlSimilarity":real_before,
+        "candidate333ActualVisibleHtmlSimilarity":real_after,
+        "comparisonPopulationIdentical": True,
+        "candidateBelow49NeverImpliesEditorialApproval": True,
         "unresolvedEditorialIssue":"Navigation-only pages lack independent commercial utility; not publishable solely due to low overlap",
         "noInventedLocalService":True,
         "legacy5070QualityPassed":False,
@@ -279,6 +311,7 @@ def build():
         {"candidatePages":len(selected),"htmlFiles":len(all_html),
          "hubs":len(hub_sha),"guides":len(guide_sha),"links":link_total,
          "before":prev,"afterFactualMetadataOnly":cand,
+         "beforeActualHtml":real_before,"afterActualHtml":real_after,
          "publishable":False},ensure_ascii=False),flush=True)
     return report
 
