@@ -37,9 +37,9 @@ def transform(text, entry, notices):
       '<p>2026-11-11 검색 자료에서 <strong>'+html.escape(scope)+'</strong> 범위에 '
       '<strong>'+html.escape(price)+'</strong>의 추가배송비 안내 행이 확인됐습니다. '
       '판매처의 안내는 실제 배송 가능 여부, 최종 결제 요금, 현재 유효성을 확정하지 않습니다.</p>'
-      '<p>이 게시 요율의 근거는 <a href="'+html.escape(sources[0],quote=True)+
-      '">근조 특대 3단 B205</a>와 <a href="'+html.escape(sources[1],quote=True)+
-      '">축하 2단 오브제 C030</a>의 판매처 상품 안내입니다. '
+      '<p>이 게시 요율의 출처는 판매처 근조 특대 3단 <strong>B205</strong>와 '
+      '축하 2단 오브제 <strong>C030</strong> 상품 상세 안내입니다. '
+      '두 상품의 원문 링크는 위 상품 가격표에서 확인할 수 있습니다. '
       'B201·B203·C205의 동일 요율 적용은 확인하지 못했습니다.</p>'
       '<p>게시 정보 조회일 2026-11-11 · 원문 수정일 미상 · 실제 수령 주소와 주문일 적용 여부 미확인.</p>'
     )
