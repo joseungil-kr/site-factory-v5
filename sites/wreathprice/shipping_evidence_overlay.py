@@ -89,7 +89,10 @@ def apply(root:Path, selected:list, evidence_dir:Path):
         (original/path.name).write_text(before,encoding="utf-8")
         after=transform(before, entries.get(code), ledger["venueNotices"])
         (changed/path.name).write_text(after,encoding="utf-8")
-        assert after==before if code not in entries else after!=before
+        # QA-only dist tree: expose candidate HTML to real Chromium screenshotter.
+        if code in entries:
+            path.write_text(after,encoding="utf-8")
+        assert (after==before) if code not in entries else (after!=before)
         compare.append(dict(code=code,regionName=row["name"],matched=code in entries,
                     postedAdditionalFeeKRW=entries[code]["postedAdditionalFeeKRW"] if code in entries else None,
                     sourceSkuIds=entries[code]["sourceSkuIds"] if code in entries else [],
