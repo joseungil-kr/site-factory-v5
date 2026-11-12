@@ -63,6 +63,70 @@
       "publisherUpdate": null,
       "quoteSnippet": "메시지 카드/리본 무료",
       "scope": "Flower119 product is not Todayflower C200; never transfer price/size/delivery/ribbon policy"
+    },
+    {
+      "id": "NONGWONFARM_UI_CACHED",
+      "url": "https://nongwonfarm.com/product/고급-축하화환-개업-결혼식-개업식-당일-꽃배달/1016",
+      "kind": "third-party seller historical cached product page",
+      "observedAs": "217-line retrieved source confirmed independently by verification chat and coordinating manager",
+      "retrieval": "handoff_independently_verified_cached_source_not_refetched_in_this_chat",
+      "provenance": {
+        "verifiedBy": "검수 채팅 및 계실장 독립 확인",
+        "handoffDate": "2026-11-12",
+        "reportedSourceLines": 217,
+        "reference": "https://chatgpt.com/c/6af5397c-1914-83e8-a300-80f67a5ac454",
+        "verificationTimeLabel": "05:19"
+      },
+      "lastCheckedOn": "2026-11-12",
+      "crawlDisplay": "Crawled 6 months ago",
+      "actualCrawlDate": null,
+      "publisherUpdate": null,
+      "liveProductVerified": false,
+      "observedLineScope": [
+        {
+          "line": 70,
+          "field": "배송날짜/시간",
+          "factType": "other_seller_order_ui_example"
+        },
+        {
+          "line": 71,
+          "field": "경조사어(우측리본)",
+          "factType": "other_seller_order_ui_example"
+        },
+        {
+          "line": 72,
+          "field": "보내는분(좌측리본)",
+          "factType": "other_seller_order_ui_example"
+        },
+        {
+          "line": 79,
+          "field": "수량선택",
+          "factType": "other_seller_order_ui_example"
+        },
+        {
+          "line": 87,
+          "field": "최종결제금액은 주문시 확인",
+          "factType": "other_seller_checkout_ui_example"
+        },
+        {
+          "line": 89,
+          "field": "구매/예약/품절 UI 텍스트",
+          "factType": "other_seller_status_ui_example_not_current_availability"
+        }
+      ],
+      "conflictingShippingCopy": "Product title mentions same-day delivery whereas common guidance mentions 3–5 days; do not infer present delivery promise",
+      "notApplicableToTodayflower": [
+        "C200 ribbon left/right allocation",
+        "100-character maximum",
+        "present price",
+        "shipping availability or deadline",
+        "present sale/stock status",
+        "order/checkout fields and behavior",
+        "region-specific facility and delivery claims"
+      ],
+      "scope": "Only a third-party historical order-form field separation example. Not a current merchant policy or Todayflower C200 fact.",
+      "searchRankVerified": false,
+      "observedRank": null
     }
   ],
   "checks": [
@@ -77,10 +141,20 @@
     {
       "id": "EV2",
       "customerQuestion": "받는 행사·수령 위치·시각과 현장 담당자는 확정됐는가?",
-      "sourceIds": [],
+      "sourceIds": [
+        "NONGWONFARM_UI_CACHED"
+      ],
       "type": "editorial purchase preparation",
       "contentSlot": "recipient_details",
-      "answerScope": "user-provided, unknown prior to order"
+      "answerScope": "user-provided, unknown prior to order",
+      "observationConstraints": {
+        "sourceId": "NONGWONFARM_UI_CACHED",
+        "sourceLineNumbers": [
+          70
+        ],
+        "interpretation": "other merchant old UI example only",
+        "todayflowerPolicyVerified": false
+      }
     },
     {
       "id": "EV3",
@@ -99,19 +173,41 @@
       "sourceIds": [
         "ONEFLOWER_3TIER",
         "GGOTKKM_3TIER",
-        "FLOWERLAB_3TIER"
+        "FLOWERLAB_3TIER",
+        "NONGWONFARM_UI_CACHED"
       ],
       "type": "comparison only; other merchant practice NOT seller fact",
       "contentSlot": "ribbon_confirmation",
-      "answerScope": "ask actual merchant; no left/right, character max or submission UI claim"
+      "answerScope": "ask actual merchant; no left/right, character max or submission UI claim",
+      "observationConstraints": {
+        "sourceId": "NONGWONFARM_UI_CACHED",
+        "sourceLineNumbers": [
+          71,
+          72
+        ],
+        "interpretation": "other merchant old UI example only",
+        "todayflowerPolicyVerified": false
+      }
     },
     {
       "id": "EV5",
       "customerQuestion": "결제 시 실제 요금·배송 가능 여부·사진 제공·수정 마감 확인했는가?",
-      "sourceIds": [],
+      "sourceIds": [
+        "NONGWONFARM_UI_CACHED"
+      ],
       "type": "unverified operational facts",
       "contentSlot": "checkout_hold",
-      "answerScope": "requires current merchant confirmation"
+      "answerScope": "requires current merchant confirmation",
+      "observationConstraints": {
+        "sourceId": "NONGWONFARM_UI_CACHED",
+        "sourceLineNumbers": [
+          79,
+          87,
+          89
+        ],
+        "interpretation": "other merchant old UI example only",
+        "todayflowerPolicyVerified": false
+      }
     }
   ],
   "verifiedRegionLocalFactsFor1863012": 0,
@@ -120,5 +216,23 @@
   "oneflowerOpenedReadableBodyLines": 1,
   "noNewRegionalScenarioAssumption": true,
   "stoppedResearch": "New flower119 indexed product content reviewed; direct URL also failed cache miss; full direct original still not verified. No repeat attempts or bypass.",
-  "editorialSourceReuse": "Observed buying questions only. Do not reproduce competitor text, policies, marketing guarantees, or merchandise rates."
+  "editorialSourceReuse": "Observed buying questions only. Do not reproduce competitor text, policies, marketing guarantees, or merchandise rates.",
+  "newHandoffEvidence20261112": {
+    "scope": "Common order information field separation, not local differentiation or C200 policy",
+    "duplicateCheckedAgainstOriginalLedger": true,
+    "sourceNewInLedger": true,
+    "sourceTextIndependentlyVerifiedExternally": true,
+    "sourceDirectlyReadInThisChat": false,
+    "cachedAgeReported": "Crawled 6 months ago",
+    "currentUIVerified": false,
+    "policyAdoptionAllowed": false,
+    "questionPoolSlots": [
+      "recipient_details",
+      "ribbon_confirmation",
+      "checkout_hold"
+    ],
+    "originalSourceCorpusReplaced": false,
+    "manualEditorialApproved": false,
+    "regressionExpected": "same C200 wedding article/score remains 100% and original 4503 failures unchanged"
+  }
 }
