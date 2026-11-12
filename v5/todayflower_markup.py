@@ -180,7 +180,12 @@ def _body(site,page,pages,products,links):
     snippet+='<p class="tf-section-desc">'+_h(page["sectionLead"])+'</p></header>'+_choices(site)+'</section>'
     snippet+='<section class="tf-section"><header class="tf-section-head"><h2>꽃 선물 스타일 살펴보기</h2><p class="tf-section-desc">꽃다발·화분·축하화환·근조화환의 색감과 분위기를 살펴보세요.</p></header>'+_story(site)+'</section>'
     snippet+='<section class="tf-section"><header class="tf-section-head"><h2>지역과 상황에 맞는 주문 정보</h2></header>'
-    snippet+='<div class="tf-articles">'+base.article_body(page)+'</div></section>'
+    # Machine-readable role only, never a false local-delivery or venue claim.
+    # Original 33 pages retain byte-identical output from this layer.
+    role=page.get("pageRole") if page["number"]>33 else None
+    assert role in (None,"general_buying_guide","regional_navigation","evidence_detail")
+    attr=(' data-page-role="'+_h(role)+'"') if role else ""
+    snippet+='<div class="tf-articles"'+attr+'>'+base.article_body(page)+'</div></section>'
     snippet+='<section class="tf-section" id="products"><header class="tf-section-head"><h2>상품별 사진·가격·주문 링크</h2>'
     snippet+='<p class="tf-section-desc">상품별 사진과 크기, 가격을 비교하고 상세 페이지에서 현재 판매가와 옵션을 살펴보세요.</p></header>'
     snippet+=_product_cards(products,page["productSkus"])

@@ -1,0 +1,64 @@
+name: Todayflower equal C200 event buyer control (NO DEPLOY)
+on:
+  push:
+    branches:
+      - qa/todayflower-semantic-20261111
+    paths:
+      - 'sites/todayflower-nalmada/event-c200-equivalent-evidence-20261111.json'
+      - 'scripts/audit_todayflower_event_c200_equal.py'
+      - 'tests/test_todayflower_event_c200_equal.py'
+      - '.github/workflows/todayflower-event-c200-equal.yml'
+  pull_request:
+    branches:
+      - site/todayflower-nalmada-pilot-20261030
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  evidence-only:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: No deployment, indexing, production or permission changes
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          x=json.loads(Path("sites/todayflower-nalmada/site.json").read_text())
+          assert x["publishEnabled"] is False
+          assert x["indexNow"]["enabled"] is False
+          assert x["todayflowerNational"]["previewOnly"] is True
+          print("ISOLATED_NO_RELEASE_PASS")
+          PY
+      - name: Actual article/5gram/CTA/source trace without browser or font
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_event_c200_equal.py -v
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          d=Path("reports/todayflower-nalmada/event-c200-equivalent-control")
+          x=json.loads((d/"control-report.json").read_text())
+          trace=json.loads((d/"buyer-question-trace.json").read_text())
+          assert x["identicalBuyerC200CandidateSimilarity"]==1.0
+          assert x["identicalBuyerContextStillFails49Percent"]
+          assert x["originalExistingViolationsNotChanged"]==4503
+          assert x["originalPopulationFixed"]==333
+          assert len(trace)==5 and len(x["candidateControlFiles"])==2
+          for f in x["candidateControlFiles"]:
+              assert hashlib.sha256((d/f["candidateHtml"]).read_bytes()).hexdigest()==f["sha256"]
+          print("C200_EQUIVALENT_REAL_HTML_AND_TRACE_PASS")
+          PY
+      - name: Upload noindex research files only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-c200-equal-${{ github.sha }}
+          path: reports/todayflower-nalmada/event-c200-equivalent-control/
+          if-no-files-found: error
+          retention-days: 7

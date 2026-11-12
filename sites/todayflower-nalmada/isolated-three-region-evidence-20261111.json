@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 1,
+  "purpose": "isolated site-candidate evidence, not production availability",
+  "researchedOn": "2026-11-11",
+  "sourceBranch": "qa/todayflower-semantic-20261111",
+  "sourceOfRegionCodes": "data/regions/todayflower_official_codes_20261022.zip",
+  "regionArchiveSHA256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
+  "pinnedWreathprice": {
+    "sourceRepo": "joseungil-kr/site-factory-v5",
+    "commit": "791c0cd5f4313e48efbde8f712d3c91f40931fce",
+    "path": "sites/wreathprice/posted-shipping-evidence-50.json",
+    "blobSHA": "04ec10b3715dd1bfcc44c06b1445de68808a3a05",
+    "retrievedOn": "2026-11-11",
+    "sellerPublicationDate": null,
+    "liveEffectiveVerified": false
+  },
+  "sources": [
+    {
+      "id": "HONGCHEON_SEOSEOK_OFFICIAL",
+      "url": "https://www.hongcheon.go.kr/www/contents.do?key=348",
+      "publisher": "홍천군청",
+      "sourceClass": "municipal facility profile",
+      "checkedOn": "2026-11-11",
+      "lastPageUpdated": "2023-01-02",
+      "liveOperationChecked": false,
+      "quotedSnippets": [
+        "소재지 : 홍천군 서석면 풍암길2길 30",
+        "연락처(접수처) : ☎ 033-430-4558",
+        "지상1층",
+        "본관",
+        "별관"
+      ]
+    },
+    {
+      "id": "HONGCHEON_FUNERAL_OFFICIAL",
+      "url": "https://www.hongcheon.go.kr/www/contents.do?key=452",
+      "publisher": "홍천군청",
+      "sourceClass": "municipal facilities overview",
+      "checkedOn": "2026-11-11",
+      "lastPageUpdated": "2023-01-02",
+      "liveOperationChecked": false,
+      "quotedSnippets": [
+        "서석장례식장",
+        "서석면 풍암길2길 30",
+        "빈소갯수",
+        "2개"
+      ]
+    },
+    {
+      "id": "SELLER_B205_ARCHIVED",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=B205",
+      "publisher": "꽃이랑",
+      "sourceClass": "seller product detail shipping table, pinned historic research",
+      "checkedOn": "2026-11-11",
+      "lastPageUpdated": null,
+      "liveFetchSuccessful": false,
+      "quotedSnippets": [],
+      "caution": "Exact regional fee recorded in pinned WreathPrice research, seller webpage current application not independently verified"
+    },
+    {
+      "id": "KFCPI_FUNERAL_FACILITIES_PDF_2025",
+      "url": "https://www.kfcpi.or.kr/link/2025/09/29/831da0f4-5acd-43d4-b0ae-60e6111f33f7.pdf",
+      "publisher": "한국장례문화진흥원",
+      "sourceClass": "official domain funeral facilities PDF list",
+      "checkedOn": "2026-11-11",
+      "publicationDate": null,
+      "urlDirectoryDate": "2025-09-29",
+      "currentOperationChecked": false,
+      "currentInboundFlowerPolicyChecked": false,
+      "quotedSnippets": [
+        "우수영장례식장",
+        "전라남도 해남군 문내면 관광레저로 534-5 (난대리)",
+        "061-533-4440"
+      ],
+      "scope": "해남군 문내면 우수영장례식장 시설명, 원문 주소, 게시 전화번호만; 운영·반입·배송 사실 아님",
+      "rawProvinceLabel": "전라남도",
+      "pinnedArchiveProvinceLabel": "전남광주통합특별시",
+      "retrievalEvidence": "2026-11-11 web retrieved PDF table; dataset itself may be historical"
+    }
+  ],
+  "regions": [
+    {
+      "number": 4582,
+      "code": "5172034000",
+      "name": "강원특별자치도 홍천군 서석면",
+      "decision": "detail_candidate_for_editorial_review",
+      "facility": "서석장례식장",
+      "facilityAddress": "강원특별자치도 홍천군 서석면 풍암길2길 30",
+      "facilityContact": "033-430-4558",
+      "facilityContactType": "장례식장 공식 소개의 접수처",
+      "facilityLayout": "본관·별관 각 1동, 지상 1층 빈소·접객실",
+      "purchaseFlow": "시설 선택·본관/별관 확인 → B205 상품 구성과 과거 게시요율 대조 → 시설 반입 규정과 현재 배송가능 여부 별도 확인",
+      "sourceIds": [
+        "HONGCHEON_SEOSEOK_OFFICIAL",
+        "HONGCHEON_FUNERAL_OFFICIAL",
+        "SELLER_B205_ARCHIVED"
+      ],
+      "unverified": [
+        "현재 시설의 외부화환 반입 여부",
+        "현재 B205 배송 가능성",
+        "실제 수령 담당자와 빈소",
+        "판매처 게시 추가배송비의 현행 적용 여부",
+        "최종 결제금액"
+      ],
+      "approvedForPublication": false
+    },
+    {
+      "number": 4360,
+      "code": "5013025300",
+      "name": "제주특별자치도 서귀포시 남원읍",
+      "decision": "hold_insufficient_facility_evidence",
+      "facility": null,
+      "sourceIds": [
+        "SELLER_B205_ARCHIVED"
+      ],
+      "unverified": [
+        "남원읍 내 특정 장례시설의 공식 주소",
+        "시설별 외부화환 반입 정책",
+        "정확한 수령 위치와 담당자",
+        "현재 B205 배송 가능성",
+        "현행 추가배송비"
+      ],
+      "approvedForPublication": false
+    },
+    {
+      "number": 1039,
+      "code": "1279042000",
+      "name": "전남광주통합특별시 해남군 문내면",
+      "decision": "hold_insufficient_facility_evidence",
+      "facility": null,
+      "sourceIds": [
+        "SELLER_B205_ARCHIVED",
+        "KFCPI_FUNERAL_FACILITIES_PDF_2025"
+      ],
+      "unverified": [
+        "우수영장례식장의 현재 운영과 실제 빈소·인계 위치",
+        "시설별 반입 규정",
+        "현재 수령 가능 시설·담당자",
+        "현재 B205 배송 가능성",
+        "현행 추가배송비",
+        "우수영장례식장의 현재 외부화환 반입 가능 여부"
+      ],
+      "approvedForPublication": false,
+      "officialFacilityLocationEvidence": {
+        "facilityName": "우수영장례식장",
+        "sourceId": "KFCPI_FUNERAL_FACILITIES_PDF_2025",
+        "sourceAddress": "전라남도 해남군 문내면 관광레저로 534-5 (난대리)",
+        "sourcePhone": "061-533-4440",
+        "checkedOn": "2026-11-11",
+        "publicationDate": null,
+        "currentlyOpenVerified": false,
+        "inboundFlowersAllowedVerified": false,
+        "deliveryVerified": false,
+        "sourceProvinceLabel": "전라남도",
+        "pinnedRegionName": "전남광주통합특별시 해남군 문내면",
+        "exactMatchedLocality": "해남군 문내면"
+      }
+    }
+  ],
+  "claimMap": [
+    {
+      "id": "S1",
+      "regionNumber": 4582,
+      "claim": "서석장례식장은 홍천군 서석면 풍암길2길 30에 있다.",
+      "sources": [
+        "HONGCHEON_SEOSEOK_OFFICIAL",
+        "HONGCHEON_FUNERAL_OFFICIAL"
+      ],
+      "validity": "municipal published data last-updated-2023, current not reconfirmed"
+    },
+    {
+      "id": "S2",
+      "regionNumber": 4582,
+      "claim": "서석장례식장은 본관과 별관을 구분해 소개하고 있다.",
+      "sources": [
+        "HONGCHEON_SEOSEOK_OFFICIAL"
+      ],
+      "validity": "municipal facility description, not an accepted flower-delivery location guarantee"
+    },
+    {
+      "id": "S3",
+      "regionNumber": 4582,
+      "claim": "군청 안내에는 서석장례식장 접수처 033-430-4558이 게시돼 있다.",
+      "sources": [
+        "HONGCHEON_SEOSEOK_OFFICIAL"
+      ],
+      "validity": "municipal published contact; live phone status not verified"
+    },
+    {
+      "id": "S4",
+      "regionNumber": 4582,
+      "claim": "B205의 서석면 추가배송비 20,000원은 2026-11-11에 저장된 판매처 게시표 연구값이다.",
+      "sources": [
+        "SELLER_B205_ARCHIVED"
+      ],
+      "validity": "historical posted fee only; current checkout and availability unverified"
+    }
+  ],
+  "followupResearch": {
+    "checkedOn": "2026-11-11",
+    "scope": "only 1039 Munae and 4360 Namwon; research-only; no production releases",
+    "attempts": [
+      {
+        "id": "KFCPI_OFFICIAL_FACILITY_PDF",
+        "url": "https://www.kfcpi.or.kr/link/2025/09/29/831da0f4-5acd-43d4-b0ae-60e6111f33f7.pdf",
+        "kind": "official provider PDF",
+        "result": "found_exact_munae_facility",
+        "facility": "우수영장례식장",
+        "regionNumber": 1039,
+        "limits": "historical listed address and number; not live operation",
+        "publicationDateKnown": false
+      },
+      {
+        "id": "MOHW_NATIONAL_FUNERAL_API_METADATA",
+        "url": "https://www.data.go.kr/data/15122367/openapi.do",
+        "kind": "official MOHW public data catalog",
+        "result": "metadata_accessible_individual_rows_not_verified",
+        "datasetAsOf": "2026-04-01",
+        "regionNumber": null,
+        "limits": "metadata describes facility/location columns; authenticated API rows not accessed; no inference of facility absence"
+      },
+      {
+        "id": "JEJU_NAMWON_OFFICIAL_CHECK",
+        "url": "https://www.kfcpi.or.kr/link/2025/09/29/831da0f4-5acd-43d4-b0ae-60e6111f33f7.pdf",
+        "kind": "official provider PDF full-text search",
+        "result": "no_Namwon_eup_match_in_this_document",
+        "regionNumber": 4360,
+        "limits": "negative in a single PDF only; not evidence that no facility exists"
+      },
+      {
+        "id": "SEOGWIPO_OFFICIAL_WEB_SEARCH",
+        "url": "https://www.seogwipo.go.kr/",
+        "kind": "local government domain targeted search",
+        "result": "no_direct_funeral_facility_address_verified_for_Namwon_eup",
+        "regionNumber": 4360,
+        "limits": "search results not exhaustive; other facilities may exist"
+      },
+      {
+        "id": "HAENAM_LOCAL_GOV_OFFICIAL_WEB_SEARCH",
+        "url": "https://www.haenam.go.kr/",
+        "kind": "local government domain targeted search",
+        "result": "no_direct_munae_funeral_facility_table_verified",
+        "regionNumber": 1039,
+        "limits": "superseded only for facility location by separate KFCPI PDF"
+      }
+    ],
+    "findings": [
+      {
+        "regionNumber": 1039,
+        "facility": "우수영장례식장",
+        "sourceId": "KFCPI_FUNERAL_FACILITIES_PDF_2025",
+        "sourceProvinceLabel": "전라남도",
+        "pinnedArchiveProvinceLabel": "전남광주통합특별시",
+        "officialListedAddress": "전라남도 해남군 문내면 관광레저로 534-5 (난대리)",
+        "officialListedPhone": "061-533-4440",
+        "exactLocalityMatch": "해남군 문내면",
+        "facilityCurrentOperation": "unverified",
+        "inboundWreathAllowed": "unverified",
+        "sellerB205Delivery": "unverified",
+        "currentSellerFee": "unverified",
+        "editorialDecision": "location_only_supplement_hold_for_delivery_scope"
+      },
+      {
+        "regionNumber": 4360,
+        "facility": null,
+        "sourceId": null,
+        "editorialDecision": "hold_no_exact_official_facility_row",
+        "reason": "reviewed official public PDF contains no Namwon-eup match; MOHW API individual facility records unavailable in this check; municipal search no exact facility address"
+      }
+    ],
+    "publicationCandidateCount": 0,
+    "stopReason": "bounded new official-source search completed; further direct facility and current inbound policy evidence not available; do not infer delivery service"
+  },
+  "followupClaimMap": [
+    {
+      "id": "M1",
+      "regionNumber": 1039,
+      "claim": "한국장례문화진흥원 공개 장례식장 현황표에 우수영장례식장 주소가 전라남도 해남군 문내면 관광레저로 534-5 (난대리)로 기재되어 있다.",
+      "sources": [
+        "KFCPI_FUNERAL_FACILITIES_PDF_2025"
+      ],
+      "checkedOn": "2026-11-11",
+      "publicationDate": null,
+      "validity": "historical facility-location listing only; no current operations or flower acceptance"
+    },
+    {
+      "id": "M2",
+      "regionNumber": 1039,
+      "claim": "같은 현황표에 우수영장례식장 전화번호가 061-533-4440으로 기재돼 있다.",
+      "sources": [
+        "KFCPI_FUNERAL_FACILITIES_PDF_2025"
+      ],
+      "checkedOn": "2026-11-11",
+      "publicationDate": null,
+      "validity": "published contact not confirmed active"
+    }
+  ]
+}

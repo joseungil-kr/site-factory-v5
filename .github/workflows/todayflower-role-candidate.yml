@@ -1,0 +1,100 @@
+name: Todayflower role-separated candidate QA (NO DEPLOY)
+on:
+  push:
+    branches:
+      - qa/todayflower-semantic-20261111
+    paths:
+      - 'scripts/build_todayflower_role_candidate.py'
+      - 'tests/test_todayflower_role_candidate.py'
+      - '.github/workflows/todayflower-role-candidate.yml'
+  pull_request:
+    branches:
+      - site/todayflower-nalmada-pilot-20261030
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Check policy, source data, and no deployment
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('sites/todayflower-nalmada/site.json').read_text())
+          assert s["publishEnabled"] is False
+          assert s["indexNow"]["enabled"] is False
+          assert s["todayflowerNational"]["previewOnly"] is True
+          print("CANDIDATE_NO_DEPLOY_NO_INDEXNOW_PASS")
+          PY
+      - name: Build original 5070 preview HTML (immutable comparator)
+        run: |
+          python -m v5 build --site todayflower-nalmada --mode preview
+          python - <<'PY'
+          from pathlib import Path
+          root=Path('dist/todayflower-nalmada')
+          assert len(list(root.glob('*.html')))==5071
+          print('ORIGINAL_BASELINE_HTML',5071)
+          PY
+      - name: Actual HTML baseline and role-separated 333 plus 4 regressions
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_role_candidate.py -v
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('reports/todayflower-nalmada/candidate-role-separated')
+          report=json.loads((root/'candidate-role-qa.json').read_text())
+          assert report['eventSameIntentPageCount']==333
+          assert report['original333ArticleSimilarity']['overStrict49Percent']==4503
+          assert report['comparisonPopulationIdentical']
+          assert report['original333ActualVisibleHtmlSimilarity']['pairs']==55278
+          assert report['candidate333ActualVisibleHtmlSimilarity']['pairs']==55278
+          assert not report['candidateEditorialApproved']
+          assert report['allHtmlFiles']==len(list((root/'candidate').rglob('*.html')))
+          print('ROLE_CANDIDATE_COMPARISON',json.dumps({
+              'originalArticle':report['original333ArticleSimilarity'],
+              'originalActualHtml':report['original333ActualVisibleHtmlSimilarity'],
+              'candidateActualHtml':report['candidate333ActualVisibleHtmlSimilarity'],
+              'thinRegionPages':report['candidateThinRegionPagesUnder350VisibleChars'],
+              'links':report['linksChecked'],
+              'candidatePages':report['regionalCandidateCount']},ensure_ascii=False))
+          PY
+      - name: Capture 390px and 1440px actual source vs candidate
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-match 'Noto Sans CJK KR' | grep -i NotoSansCJK
+          npx --yes playwright@1.56.1 install chromium
+          root=reports/todayflower-nalmada/candidate-role-separated
+          mkdir -p "$root/screens"
+          for n in 186 3012 2412 2852; do
+            for width in 390 1440; do
+              if test "$width" = 390; then height=844; else height=900; fi
+              npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "$width,$height" --full-page "file://$PWD/$root/candidate/regional/$n.html" "$root/screens/candidate-$n-$width.png"
+              npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "$width,$height" --full-page "file://$PWD/$root/original-actual-html/$n.html" "$root/screens/original-$n-$width.png"
+            done
+          done
+          for file in "$root"/candidate/guides/*.html; do
+            n=$(basename "$file" .html)
+            for width in 390 1440; do
+              if test "$width" = 390; then height=844; else height=900; fi
+              npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "$width,$height" --full-page "file://$PWD/$file" "$root/screens/guide-$n-$width.png"
+            done
+            break
+          done
+      - name: Upload isolated candidate, original comparator, JSON and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-role-candidate-${{ github.sha }}
+          path: reports/todayflower-nalmada/candidate-role-separated/
+          if-no-files-found: error
+          retention-days: 7

@@ -1,0 +1,173 @@
+{
+  "schemaVersion": 1,
+  "observedAt": "2026-11-11",
+  "publicationDate": null,
+  "liveAvailabilityVerified": false,
+  "scopePolicy": "exact region code + specific facility or SKU only; never infer coverage from postal region",
+  "sources": [
+    {
+      "id": "seller_notice",
+      "url": "https://fwith.co.kr/page/notice.php",
+      "observedAt": "2026-11-11",
+      "publisher": "꽃이랑",
+      "sourceType": "seller-published-notice",
+      "publicationDate": null,
+      "liveVerified": false
+    },
+    {
+      "id": "seller_b101",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=B101",
+      "observedAt": "2026-11-11",
+      "publisher": "꽃이랑",
+      "sourceType": "seller-published-sku-delivery-table",
+      "publicationDate": null,
+      "liveVerified": false
+    },
+    {
+      "id": "seller_c030",
+      "url": "https://fwith.co.kr/shop/item.php?it_id=C030",
+      "observedAt": "2026-11-11",
+      "publisher": "꽃이랑",
+      "sourceType": "seller-product-page",
+      "publicationDate": null,
+      "liveVerified": false
+    },
+    {
+      "id": "legal_snapshot",
+      "url": null,
+      "observedAt": "2026-10-22",
+      "publisher": "V5 pinned legal region snapshot",
+      "sourceType": "fixed-zip",
+      "publicationDate": "2026-10-22",
+      "liveVerified": false,
+      "sha256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd"
+    }
+  ],
+  "facts": [
+    {
+      "id": "ansan-daebu-b101-fee",
+      "kind": "sku_shipping_fee",
+      "sourceId": "seller_b101",
+      "regionNames": [
+        "경기도 안산시 단원구 대부남동",
+        "경기도 안산시 단원구 대부동동",
+        "경기도 안산시 단원구 대부북동"
+      ],
+      "regionCodes": [
+        "4127311200",
+        "4127311000",
+        "4127311100"
+      ],
+      "facilityName": null,
+      "sku": "B101",
+      "amountKRW": 30000,
+      "publicationStatus": "seller-listed-undated",
+      "liveStatus": "unverified",
+      "exceptions": [],
+      "displayPolicy": "not-for-existing-todayflower-skus",
+      "confirmedFact": "B101 게시표의 이 세 법정동 추가배송비 표기",
+      "unknown": [
+        "다른 SKU 요율",
+        "현재 실제 배송가능 여부",
+        "최종 결제금액",
+        "게시표 적용일"
+      ]
+    },
+    {
+      "id": "ansan-gd-venue",
+      "kind": "venue_rule",
+      "sourceId": "seller_notice",
+      "regionNames": [
+        "경기도 안산시"
+      ],
+      "regionCodes": [
+        "4127000000"
+      ],
+      "facilityName": "안산 빌라드지디 GD컨벤션 7층 그레이스켈리홀",
+      "sku": null,
+      "amountKRW": null,
+      "condition": "화환 야외 설치 후 리본 컷팅해 혼주에게 전달",
+      "publicationStatus": "seller-listed-undated",
+      "liveStatus": "unverified",
+      "exceptions": [
+        "정확한 행사·시설 수령조건 현장 확인 필요"
+      ],
+      "displayPolicy": "exact-facility-only",
+      "confirmedFact": "판매처의 해당 시설 안내",
+      "unknown": [
+        "최신 시설 반입 규정",
+        "당일 배송 가능 여부",
+        "정확한 시설 법정동 코드"
+      ]
+    },
+    {
+      "id": "suwon-ritz-venue",
+      "kind": "venue_rule",
+      "sourceId": "seller_notice",
+      "regionNames": [
+        "경기도 수원시"
+      ],
+      "regionCodes": [],
+      "facilityName": "수원 호텔리츠컨벤션",
+      "sku": null,
+      "amountKRW": null,
+      "condition": "예식장 1층 배치",
+      "publicationStatus": "seller-listed-undated",
+      "liveStatus": "unverified",
+      "exceptions": [],
+      "displayPolicy": "exact-facility-only-unmapped",
+      "confirmedFact": "판매처의 해당 시설 안내",
+      "unknown": [
+        "정확한 법정동 코드",
+        "현재 시설규정",
+        "배송가능 여부"
+      ]
+    },
+    {
+      "id": "yongin-peace-venue",
+      "kind": "venue_rule",
+      "sourceId": "seller_notice",
+      "regionNames": [
+        "경기도 용인시 처인구 이동읍 어비리"
+      ],
+      "regionCodes": [],
+      "facilityName": "용인 평온의 숲",
+      "sku": null,
+      "amountKRW": null,
+      "condition": "영정바구니 반입 안내 및 화환 리본 컷팅",
+      "publicationStatus": "seller-listed-undated",
+      "liveStatus": "unverified",
+      "exceptions": [
+        "시설 자체의 최신 확인 아님"
+      ],
+      "displayPolicy": "exact-facility-only-unmapped",
+      "confirmedFact": "판매처의 해당 시설 안내",
+      "unknown": [
+        "공식 법정동 코드 연결",
+        "현행 반입규정",
+        "수령 가능 여부"
+      ]
+    },
+    {
+      "id": "c030-listing",
+      "kind": "sku_listing",
+      "sourceId": "seller_c030",
+      "regionNames": [],
+      "regionCodes": [],
+      "facilityName": null,
+      "sku": "C030",
+      "amountKRW": 200000,
+      "condition": "축하 2단 오브제 상품 상세의 판매가격 표시",
+      "publicationStatus": "seller-listed-undated",
+      "liveStatus": "unverified",
+      "exceptions": [],
+      "displayPolicy": "not-a-todayflower-catalog-sku",
+      "confirmedFact": "판매처 상세화면 가격 표시",
+      "unknown": [
+        "실시간 재고",
+        "지역별 배송비",
+        "Todayflower 기존 C200/C206 적용가격"
+      ]
+    }
+  ]
+}

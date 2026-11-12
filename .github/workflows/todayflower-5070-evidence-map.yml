@@ -1,0 +1,56 @@
+name: Todayflower 5070 evidence coverage (no deploy)
+on:
+  push:
+    branches:
+      - qa/todayflower-semantic-20261111
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert immutable nonpublic policy
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('sites/todayflower-nalmada/site.json').read_text(encoding='utf-8'))
+          assert s['publishEnabled'] is False
+          assert s['indexNow']['enabled'] is False
+          assert s['todayflowerNational']['previewOnly'] is True
+          print('NO_DEPLOY_NO_INDEXNOW_PASS')
+          PY
+      - name: Complete 5070 evidence map tests and deterministic outputs
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_5070_evidence_map.py -v
+          python -m scripts.audit_todayflower_5070_evidence_map
+      - name: Validate CSV, JSON and source-code scope
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import csv,json,hashlib
+          root=Path('reports/todayflower-nalmada/evidence-coverage')
+          data=json.loads((root/'todayflower-5070-evidence-map.json').read_text())
+          with (root/'todayflower-5070-evidence-map.csv').open(newline='',encoding='utf-8') as f:
+              rows=list(csv.DictReader(f))
+          assert len(rows)==len(data['rows'])==5070
+          assert len({r['urlPath'] for r in rows})==5070
+          assert len({r['regionCode'] for r in rows})==5070
+          assert all(r['verifiedFeeKRW']=='' and r['verifiedRateSku']=='' for r in rows)
+          assert not data['summary']['qualityApproved']
+          print('TODAYFLOWER_MAPPING_VERIFIED',data['summary']['roles'])
+          PY
+      - name: Upload evidence coverage only; no HTML or deployment
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-5070-evidence-map-${{ github.sha }}
+          path: reports/todayflower-nalmada/evidence-coverage/
+          if-no-files-found: warn
+          retention-days: 3

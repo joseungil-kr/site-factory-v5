@@ -1,0 +1,517 @@
+{
+  "schemaVersion": 1,
+  "ledgerId": "wreathprice-50-posted-shipping-only",
+  "basis": "User-supplied research CSV wreathprice_shipping_50_evidence_20261111.csv, indexed retrieval at 2026-11-11; independently checked sample official seller notice; current checkout not observed",
+  "retrievedOn": "2026-11-11",
+  "sellerPageLastUpdated": null,
+  "skuEvidence": {
+    "B205": {
+      "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=B205",
+      "claim": "posted additional shipping fee table, NOT committed checkout fee",
+      "verifiedCheckout": false
+    },
+    "C030": {
+      "sourceUrl": "https://fwith.co.kr/shop/item.php?it_id=C030",
+      "claim": "posted additional shipping fee table, NOT committed checkout fee",
+      "verifiedCheckout": false
+    }
+  },
+  "skuWithoutFeeEvidence": [
+    "B201",
+    "B203",
+    "C205"
+  ],
+  "policy": {
+    "postedFeesAreNotAvailability": true,
+    "noZeroFeeInference": true,
+    "noNationwideClaim": true,
+    "serviceAvailable": "unverified",
+    "effectiveToday": "unverified",
+    "shippingTime": "unverified",
+    "ribbonFee": "unverified",
+    "priceAdditiveAcrossRows": "unverified",
+    "useOnlyExactRegionCodes": true
+  },
+  "postedFees": [
+    {
+      "regionCode": "5123012500",
+      "regionName": "강원특별자치도 삼척시 정상동",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "강원 삼척시 전체 시 단위 행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "5172034000",
+      "regionName": "강원특별자치도 홍천군 서석면",
+      "postedAdditionalFeeKRW": 20000,
+      "sourceRowScope": "강원 홍천군 서석면 별도행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "5178025600",
+      "regionName": "강원특별자치도 철원군 갈말읍",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "강원 철원군 전체 군 단위 행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "4874025000",
+      "regionName": "경상남도 창녕군 창녕읍",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "경남 창녕군 군 단위 행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "4725012700",
+      "regionName": "경상북도 상주시 중덕동",
+      "postedAdditionalFeeKRW": 20000,
+      "sourceRowScope": "경북 상주시 시 단위 행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "4723025000",
+      "regionName": "경상북도 영천시 금호읍",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "경북 영천시 시 단위 행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "2772032000",
+      "regionName": "대구광역시 군위군 효령면",
+      "postedAdditionalFeeKRW": 20000,
+      "sourceRowScope": "대구 군위군 군 단위 행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "2771025000",
+      "regionName": "대구광역시 달성군 화원읍",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "대구 달성군 군 단위 행(구지면·유가읍·하빈면은 별도행)",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "3171037000",
+      "regionName": "울산광역시 울주군 두서면",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "울산 울주군 군 단위 행(서생면 별도행)",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "3171026200",
+      "regionName": "울산광역시 울주군 청량읍",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "울산 울주군 군 단위 행(서생면 별도행)",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "2871038000",
+      "regionName": "인천광역시 강화군 양사면",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "인천 강화군 군 단위 행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "2871025000",
+      "regionName": "인천광역시 강화군 강화읍",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "인천 강화군 군 단위 행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "1279042000",
+      "regionName": "전남광주통합특별시 해남군 문내면",
+      "postedAdditionalFeeKRW": 15000,
+      "sourceRowScope": "해남군 문내면 별도행(2026-10-22 원장 명칭)",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "5219045000",
+      "regionName": "전북특별자치도 남원시 아영면",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "전북 남원시 시 단위 행(인월면 별도행)",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "5219025000",
+      "regionName": "전북특별자치도 남원시 운봉읍",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "전북 남원시 시 단위 행(인월면 별도행)",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "5011013300",
+      "regionName": "제주특별자치도 제주시 회천동",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "제주 전체 기본행(상세 읍면동 예외행 존재)",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "5011031000",
+      "regionName": "제주특별자치도 제주시 한경면",
+      "postedAdditionalFeeKRW": 20000,
+      "sourceRowScope": "제주 한경면 별도행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "5013025300",
+      "regionName": "제주특별자치도 서귀포시 남원읍",
+      "postedAdditionalFeeKRW": 25000,
+      "sourceRowScope": "제주 서귀포시 남원읍 별도행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "4374040000",
+      "regionName": "충청북도 영동군 심천면",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "충북 영동군 군 단위 행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    },
+    {
+      "regionCode": "4374025000",
+      "regionName": "충청북도 영동군 영동읍",
+      "postedAdditionalFeeKRW": 10000,
+      "sourceRowScope": "충북 영동군 군 단위 행",
+      "sourceSkuIds": [
+        "B205",
+        "C030"
+      ],
+      "sourceUrls": [
+        "https://fwith.co.kr/shop/item.php?it_id=B205",
+        "https://fwith.co.kr/shop/item.php?it_id=C030"
+      ],
+      "retrievedOn": "2026-11-11",
+      "sellerUpdatedOn": null,
+      "appliesToLiveOrder": "unverified",
+      "actualDeliveryAvailable": "unverified",
+      "specificAddressEligibility": "unverified",
+      "regionalOverrides": "seller checkout confirmation required",
+      "evidenceType": "seller-published fee table, historical indexed retrieval"
+    }
+  ],
+  "venueNotices": [
+    {
+      "regionCodes": [
+        "4874025000"
+      ],
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "retrievedOn": "2026-11-11",
+      "lastUpdated": null,
+      "venueNames": [
+        "창녕 공설장례식장",
+        "창녕서울병원 장례식장"
+      ],
+      "receiveType": "funeral",
+      "description": "해당 이름의 장례식장에는 바구니·쌀화환 안내가 게시됨",
+      "notAppliesToAllRegion": true,
+      "appliesOnlyWhenExactVenueConfirmed": true,
+      "currentPolicy": "unverified"
+    },
+    {
+      "regionCodes": [
+        "3171037000",
+        "3171026200"
+      ],
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "retrievedOn": "2026-11-11",
+      "lastUpdated": null,
+      "venueNames": [
+        "울산하늘공원",
+        "남울산전문장례식장"
+      ],
+      "receiveType": "funeral",
+      "description": "해당 두 장례식장은 오브제만 반입 가능하다는 판매처 안내",
+      "notAppliesToAllRegion": true,
+      "appliesOnlyWhenExactVenueConfirmed": true,
+      "currentPolicy": "unverified"
+    },
+    {
+      "regionCodes": [
+        "5219045000",
+        "5219025000"
+      ],
+      "sourceUrl": "https://fwith.co.kr/page/notice.php",
+      "retrievedOn": "2026-11-11",
+      "lastUpdated": null,
+      "venueNames": null,
+      "venueFilter": "남원시 내 장례식장 수령 조건에 한함",
+      "receiveType": "funeral",
+      "description": "판매처의 '남원 모든 장례식장 — 오브제' 게시 안내; 개별 시설의 현재 유효성은 미확인",
+      "notAppliesToAllRegion": true,
+      "appliesOnlyWhenExactVenueConfirmed": true,
+      "currentPolicy": "unverified"
+    }
+  ],
+  "unmatchedRegionFeePolicy": {
+    "listedAmount": null,
+    "reportedState": "no matching seller posted fee in reviewed source; not free shipping",
+    "shippingAvailable": "unverified"
+  },
+  "regionalFactsProven": 0,
+  "indexEligibleRegions": 0
+}

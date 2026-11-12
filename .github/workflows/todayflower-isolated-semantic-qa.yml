@@ -1,0 +1,157 @@
+name: Todayflower isolated semantic QA (no deploy)
+on:
+  push:
+    branches:
+      - qa/todayflower-semantic-20261111
+  pull_request:
+    branches:
+      - site/todayflower-nalmada-pilot-20261030
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: todayflower-isolated-qa
+  cancel-in-progress: false
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Assert isolated input and no public deployment
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('sites/todayflower-nalmada/site.json').read_text())
+          assert s['id']=='todayflower-nalmada'
+          assert s['publishEnabled'] is False and s['indexNow']['enabled'] is False
+          assert s['todayflowerNational']['previewOnly'] is True
+          print('ISOLATED_NO_DEPLOY_POLICY_PASS')
+          PY
+      - name: Pinned WreathPrice B205 exact-scope 5070 extension
+        id: b205
+        continue-on-error: true
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_wreathprice_b205.py -v
+          python -m scripts.extend_todayflower_5070_b205_evidence
+          python -m scripts.build_todayflower_b205_samples
+      - name: Full 5070 evidence map and CSV JSON regression
+        id: coverage
+        continue-on-error: true
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_5070_evidence_map.py -v
+          python -m scripts.audit_todayflower_5070_evidence_map
+      - name: Evidence scope tests and bounded nonpublic HTML fixtures
+        id: evidence
+        continue-on-error: true
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_evidence.py -v
+          python -m scripts.build_todayflower_evidence_fixtures
+      - name: Render isolated evidence fixtures at 390px and 1440px
+        id: visual
+        if: steps.evidence.outcome == 'success'
+        continue-on-error: true
+        run: |
+          node --version
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          fc-match 'Noto Sans CJK KR' | grep -i 'NotoSansCJK'
+          npx --yes playwright@1.56.1 install chromium
+          for name in facility-ansan-gd sku-b101-daebunam no-source-2852 region-daebunam-navigation region-danwon-parent; do
+            npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "390,844" --full-page \
+              "file://$PWD/reports/todayflower-nalmada/evidence-role-preview/$name.html" \
+              "reports/todayflower-nalmada/evidence-role-preview/$name-390.png"
+            npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "1440,900" --full-page \
+              "file://$PWD/reports/todayflower-nalmada/evidence-role-preview/$name.html" \
+              "reports/todayflower-nalmada/evidence-role-preview/$name-1440.png"
+          done
+          if test -d reports/todayflower-nalmada/evidence-coverage/b205-pinned-extension; then
+            for file in reports/todayflower-nalmada/evidence-coverage/b205-pinned-extension/*.html; do
+              stem="${file%.html}"
+              npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "390,844" --full-page "file://$PWD/$file" "${stem}-390.png"
+              npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "1440,900" --full-page "file://$PWD/$file" "${stem}-1440.png"
+            done
+          fi
+      - name: Existing national generator and similarity tests
+        id: original
+        continue-on-error: true
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_pilot.py -v
+          python -m unittest discover -s tests -p test_todayflower_copy_quality.py -v
+          python -m unittest discover -s tests -p test_todayflower_national.py -v
+          python -m v5 plan-check --site todayflower-nalmada
+      - name: Generate all 5070 files only to isolated runner dist
+        id: build
+        continue-on-error: true
+        run: |
+          python -m v5 build --site todayflower-nalmada --mode preview
+          python - <<'PY'
+          from pathlib import Path
+          p=Path('dist/todayflower-nalmada')
+          assert len(list(p.glob('*.html'))) == 5071
+          print('GENERATED_HTML_COUNT',len(list(p.glob('*.html'))))
+          PY
+      - name: Existing official static audit
+        id: official
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: python -m v5 audit --site todayflower-nalmada
+      - name: Fixed 51 customer-copy score ledger
+        id: sample
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: python -m scripts.audit_todayflower_customer
+      - name: 333 complete pairs and fixed 51 plus 51 new actual HTML
+        id: semantic
+        if: steps.build.outcome == 'success'
+        continue-on-error: true
+        run: python -m scripts.audit_todayflower_semantic_gate
+      - name: Save actual rendered HTML from both 51-page sample cohorts
+        if: always()
+        run: |
+          python - <<'PY'
+          import json,shutil
+          from pathlib import Path
+          p=Path('reports/todayflower-nalmada/semantic-isolated-qa.json')
+          if not p.exists():raise SystemExit(0)
+          rows=json.loads(p.read_text())['samples']
+          out=Path('reports/todayflower-nalmada/rendered-102-html')
+          out.mkdir(parents=True,exist_ok=True)
+          root=Path('dist/todayflower-nalmada')
+          for row in rows:shutil.copy2(root/row['htmlFile'],out/row['htmlFile'])
+          print('SAVED_REAL_HTML',len(list(out.glob('*.html'))))
+          PY
+      - name: Upload bounded QA evidence only (no deployment)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-isolated-semantic-${{ github.sha }}
+          path: |
+            reports/todayflower-nalmada/
+          if-no-files-found: warn
+          retention-days: 3
+      - name: Explicitly fail any original or semantic gate
+        if: always()
+        env:
+          B205: ${{ steps.b205.outcome }}
+          COVERAGE: ${{ steps.coverage.outcome }}
+          EVIDENCE: ${{ steps.evidence.outcome }}
+          ORIGINAL: ${{ steps.original.outcome }}
+          BUILD: ${{ steps.build.outcome }}
+          OFFICIAL: ${{ steps.official.outcome }}
+          SAMPLE: ${{ steps.sample.outcome }}
+          SEMANTIC: ${{ steps.semantic.outcome }}
+        run: |
+          printf 'original=%s build=%s official=%s sample=%s semantic=%s\\n' "$ORIGINAL" "$BUILD" "$OFFICIAL" "$SAMPLE" "$SEMANTIC"
+          test "$B205" = success
+          test "$COVERAGE" = success
+          test "$EVIDENCE" = success
+          test "$ORIGINAL" = success
+          test "$BUILD" = success
+          test "$OFFICIAL" = success
+          test "$SAMPLE" = success
+          test "$SEMANTIC" = success

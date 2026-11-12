@@ -1,0 +1,94 @@
+name: Todayflower ribbon mapping and original-failure event pilot QA
+on:
+  push:
+    branches:
+      - qa/todayflower-semantic-20261111
+    paths:
+      - 'scripts/build_todayflower_ribbon_intent_pilot.py'
+      - 'tests/test_todayflower_ribbon_intent_pilot.py'
+      - 'scripts/build_todayflower_event_49pilot.py'
+      - 'tests/test_todayflower_event_49pilot.py'
+      - 'sites/todayflower-nalmada/celebration-ribbon-search-evidence-20261111.json'
+      - '.github/workflows/todayflower-mapping-event-pilot.yml'
+  pull_request:
+    branches:
+      - site/todayflower-nalmada-pilot-20261030
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Enforce no deploy and no index status
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('sites/todayflower-nalmada/site.json').read_text(encoding='utf-8'))
+          assert s['publishEnabled'] is False and s['indexNow']['enabled'] is False
+          assert s['todayflowerNational']['previewOnly'] is True
+          print('NO_DEPLOY_NO_INDEX')
+          PY
+      - name: Build unchanged 5070 baseline files in runner only
+        run: |
+          python -m v5 build --site todayflower-nalmada --mode preview
+          test "$(find dist/todayflower-nalmada -maxdepth 1 -name '*.html' | wc -l | tr -d ' ')" = 5071
+      - name: Actual ribbon question excerpt and 3 HTML checks
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_ribbon_intent_pilot.py -v
+      - name: Real original 186/3012 failing pair and equal-intent event QA
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_event_49pilot.py -v
+          python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          root=Path('reports/todayflower-nalmada/event-intent-49pilot')
+          r=json.loads((root/'report.json').read_text(encoding='utf-8'))
+          assert r['originalFullCorpusFailCountUnchanged']==4503
+          assert r['originalWorst186_3012']>0.93
+          assert r['populationPreserved']==333 and r['crossCorpusPairs']==999
+          assert len(r['candidateMapping'])==3
+          assert r['sourceRankingVerified'] is False
+          assert r['sourceDirectOpened'] is False
+          assert r['humanEditorialApproved'] is False
+          for x in r['candidateMapping']:
+              n=x['number']
+              assert hashlib.sha256((root/f'candidate-{n}.html').read_bytes()).hexdigest()==x['candidateSHA256']
+              assert hashlib.sha256((root/f'original-{n}.html').read_bytes()).hexdigest()==x['originalHtmlSHA256']
+          print('EVENT_186_3012_ORIGINAL_AND_CANDIDATE_HTML_HASH_PASS')
+          PY
+      - name: Screenshot 390 and 1440 width, originals and candidates
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          npx --yes playwright@1.56.1 install chromium
+          root=reports/todayflower-nalmada/event-intent-49pilot
+          mkdir -p "$root/screens"
+          for n in 186 3012 2852; do
+            for width in 390 1440; do
+              if test "$width" = 390; then height=844; else height=900; fi
+              for variant in original candidate; do
+                npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "$width,$height" --full-page "file://$PWD/$root/$variant-$n.html" "$root/screens/$variant-$n-$width.png"
+              done
+            done
+          done
+          test "$(find "$root/screens" -name '*.png' | wc -l | tr -d ' ')" = 12
+      - name: Upload read-only analysis artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-mapping-event-pilot-${{ github.sha }}
+          path: |
+            reports/todayflower-nalmada/event-intent-49pilot/
+            reports/todayflower-nalmada/celebration-ribbon-intent-pilot/pilot-report.json
+            reports/todayflower-nalmada/celebration-ribbon-intent-pilot/research-evidence-copy.json
+          if-no-files-found: warn
+          retention-days: 7

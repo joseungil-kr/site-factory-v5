@@ -46,6 +46,7 @@ PRODUCT_SETS=(
     ("G073","D144","D149","C200","C206","B201"),
 )
 from .todayflower_copy_pool import SCENARIOS, SCENE_DETAILS
+from .todayflower_evidence import decide_role, load_ledger, check_ledger_region_codes
 
 def _pick(items, seed):
     value=int.from_bytes(hashlib.sha256(seed.encode("utf-8")).digest()[:8],"big")
@@ -127,26 +128,78 @@ def _make_page(code,name,number):
     # The permutation is derived from the legal code, not invented local facts.
     # Use different scenario slots in each section and FAQ; avoid copying the
     # same fixed blocks into every page under the same intent.
+    # Each advice sentence owns one customer decision slot.  The previous
+    # layout consumed 6/12 selection, 3/12 recipient and 3/12 delivery
+    # sentences in the *main article* alone, then reused almost the entire
+    # remaining pool in FAQs.  Across hundreds of same-intent pages that
+    # made the bodies near-identical even when the sentence order changed.
+    #
+    # Keep distinct buyer decisions: suitability, receipt/contact,
+    # seller-specific SKU comparison, and scheduling/total cost.
+    # FAQ advice draws other slots, never reusing an article sentence.
+    # Fewer but relevant decisions are preferable to padding with
+    # invented region-specific availability or repeated instructions.
     sections=[
         {"heading":intent+" 상품과 선택 기준",
-         "paragraph":one("selection",6)+" "+one("selection",0)},
+         "paragraph":one("selection",0)+" "+one("selection",1)},
         {"heading":"수령 주소와 인계 담당자",
-         "paragraph":one("receiver",1)+" "+one("receiver",8)+" "+one("receiver",10)},
+         "paragraph":one("receiver",0)+" "+one("receiver",1)},
         {"heading":"상품 사진·규격·옵션 비교",
-         "paragraph":one("selection",5)+" "+compare+" "+one("selection",9)},
+         "paragraph":one("selection",2)+" "+compare+" "+one("selection",3)},
         {"heading":"배송 일정과 최종 결제금액",
-         "paragraph":one("delivery",0)+" "+one("delivery",3)+" "+one("delivery",10)}
+         "paragraph":one("delivery",0)+" "+one("delivery",1)}
     ]
     faqs=[
         {"q":f"{name}에서 "+q1,
-         "a":one("delivery",5)+" "+one("receiver",6)},
+         "a":one("delivery",2)+" "+one("receiver",2)},
         {"q":q2,
-         "a":one("selection",2)+" "+one("selection",11)},
+         "a":one("selection",4)+" "+one("selection",5)},
         {"q":f"{name} 꽃배달을 주문할 때 어떤 정보를 준비하면 좋나요?",
-         "a":one("receiver",4)+" "+one("delivery",7)}
+         "a":one("receiver",3)+" "+one("delivery",3)}
     ]
 
+    if intent == "행사장 꽃 반입":
+        # Article roles are separate buyer decisions, not shuffled synonyms.
+        # Deliberately do not assert venue delivery/cutoff/local restrictions.
+        # Keep code-seeded diversity *within* each useful decision family.
+        def choose(group, label, indices):
+            candidates = [details[group][i] for i in indices]
+            return _pick(candidates, seed+":decision:"+group+":"+label)
+
+        # Distinct article choices: format/purpose, ribbon, appearance,
+        # recipient handoff, venue/access, delivery timing and final cost.
+        form = choose("selection","form",(2,5,7,11))
+        ribbon = choose("selection","ribbon",(1,8))
+        appearance = choose("selection","appearance",(4,9))
+        venue = choose("receiver","venue",(0,4,8))
+        handoff = choose("receiver","handoff",(1,5,7,9))
+        entrance = choose("receiver","entrance",(2,3,6,10,11))
+        schedule = choose("delivery","schedule",(0,3,5,8,10))
+        cost = choose("delivery","cost",(2,9))
+        sections=[
+            {"heading":intent+" 상품과 선택 기준",
+             "paragraph":form+" "+ribbon},
+            {"heading":"수령 주소와 인계 담당자",
+             "paragraph":venue+" "+handoff+" "+entrance},
+            {"heading":"상품 사진·규격·옵션 비교",
+             "paragraph":appearance+" "+compare},
+            {"heading":"배송 일정과 최종 결제금액",
+             "paragraph":schedule+" "+cost}
+        ]
+        # FAQs own decisions absent from the article itself:
+        # external-flower policy, removal responsibility, multiple orders.
+        faqs=[
+            {"q":f"{name}에서 "+q1,
+             "a":"행사 주최 측에 외부 꽃 반입 가능 여부를 먼저 확인해 주세요. 반입이 어렵다면 꽃다발 직접 전달처럼 다른 방식도 주문 전에 상담할 수 있습니다."},
+            {"q":q2,
+             "a":"현장 동선을 가리지 않는 설치 장소인지 행사 담당자와 협의해 주세요. 행사 이후 화환을 누가 언제 이동할지도 미리 정하면 좋습니다."},
+            {"q":f"{name} 꽃배달을 주문할 때 어떤 정보를 준비하면 좋나요?",
+             "a":"같은 행사에 화환 여러 개를 주문한다면 각 상품번호와 발신 명의를 주문별로 구분해 주세요. 한 번에 결제하더라도 주문마다 받을 담당자가 구별할 수 있도록 전달 정보를 나누면 좋습니다."}
+        ]
+
     return {
+        "pageRole":decide_role(region_code=code, selected_skus=skus),
+        "legalCode":code,
         "id":"today-national-"+code,
         "number":number,
         "region":name,
@@ -182,6 +235,10 @@ def expand(site,pages,regions,root:Path):
     for code,name in prior.items():
         if official_map.get(code)!=name:
             raise ConfigError("Existing Ansan official code/name disagrees with nationwide snapshot: "+code)
+    # Evidence matching is exact-code-only; pinned ZIP and saved pilot codes
+    # determine identity, seller notices do not create administrative codes.
+    check_ledger_region_codes(load_ledger(), {c for c,_ in official} | set(prior)
+                              | {r["code"] for r in regions["regions"]})
     new=[(code,name) for code,name in official if code not in prior]
     if len(new)!=EXPECTED_NEW:
         raise ConfigError("Unexpected nationwide legal-dong delta count")

@@ -1,0 +1,98 @@
+name: Todayflower ribbon intent evidence editor pilot (NO DEPLOY)
+on:
+  push:
+    branches:
+      - qa/todayflower-semantic-20261111
+    paths:
+      - 'sites/todayflower-nalmada/celebration-ribbon-search-evidence-20261111.json'
+      - 'scripts/build_todayflower_ribbon_intent_pilot.py'
+      - 'tests/test_todayflower_ribbon_intent_pilot.py'
+      - '.github/workflows/todayflower-ribbon-intent-pilot.yml'
+  pull_request:
+    branches:
+      - site/todayflower-nalmada-pilot-20261030
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Original preview safety
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          s=json.loads(Path('sites/todayflower-nalmada/site.json').read_text())
+          assert s['publishEnabled'] is False and s['indexNow']['enabled'] is False
+          assert s['todayflowerNational']['previewOnly'] is True
+          print('NO_DEPLOY_INDEX_RIGHTS_CHANGE')
+          PY
+      - name: Original 5070 HTML only in runner dist, no uploads or deploy
+        run: |
+          python -m v5 build --site todayflower-nalmada --mode preview
+          test "$(find dist/todayflower-nalmada -maxdepth 1 -name '*.html' | wc -l | tr -d ' ')" = 5071
+      - name: Evidence/intent/CTA/same-n-gram and actual three HTML QA
+        run: |
+          python -m unittest discover -s tests -p test_todayflower_ribbon_intent_pilot.py -v
+          python - <<'PY'
+          from pathlib import Path
+          import json,hashlib
+          root=Path('reports/todayflower-nalmada/celebration-ribbon-intent-pilot')
+          report=json.loads((root/'pilot-report.json').read_text())
+          assert report['candidateCount']==3
+          assert report['chosenNumbers'][0]==4582
+          assert report['crossPopulationPairs']==3*report['sameIntentOriginalPopulation']
+          assert report['competitionRankingVerified'] is False
+          assert report['utilityGates']['manualEditorialApproved']==0
+          assert report['utilityGates']['independentRegionalBuyerPagesApproved']==0
+          for row in report['sourceToQuestionToHTML']:
+            n=row['number']
+            assert hashlib.sha256((root/f'candidate-{n}.html').read_bytes()).hexdigest()==row['candidateHtmlSHA256']
+            assert hashlib.sha256((root/f'original-{n}.html').read_bytes()).hexdigest()==row['originalHtmlSHA256']
+          assert len(list(root.glob('candidate-*.html')))==3
+          assert len(list(root.glob('original-*.html')))==3
+          print('ACTUAL_THREE_CANDIDATES_AND_ORIGINALS_HASH_PASS')
+          PY
+      - name: Install chromium and Korean fonts
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq fonts-noto-cjk
+          npx --yes playwright@1.56.1 install chromium
+          fc-match 'Noto Sans CJK KR' | grep -i NotoSansCJK
+      - name: Screenshot each original/candidate 390 and 1440
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('reports/todayflower-nalmada/celebration-ribbon-intent-pilot')
+          data=json.loads((p/'pilot-report.json').read_text())
+          assert len(data['chosenNumbers'])==3
+          (p/'selected-ids.txt').write_text(' '.join(map(str,data['chosenNumbers'])))
+          PY
+          root=reports/todayflower-nalmada/celebration-ribbon-intent-pilot
+          mkdir -p "$root/screens"
+          for n in $(cat "$root/selected-ids.txt"); do
+            for width in 390 1440; do
+              if test "$width" = 390; then height=844; else height=900; fi
+              for version in candidate original; do
+                npx --yes playwright@1.56.1 screenshot --browser chromium --viewport-size "$width,$height" --full-page "file://$PWD/$root/$version-$n.html" "$root/screens/$version-$n-$width.png"
+              done
+            done
+          done
+          test "$(find "$root/screens" -name '*.png' | wc -l | tr -d ' ')" = 12
+      - name: Save QA evidence only
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: todayflower-ribbon-intent-pilot-${{ github.sha }}
+          path: reports/todayflower-nalmada/celebration-ribbon-intent-pilot/
+          retention-days: 7
+          if-no-files-found: error
