@@ -52,6 +52,38 @@ class C200EquivalentTest(unittest.TestCase):
   before={p.name:p.read_bytes() for p in OUT.iterdir() if p.is_file()}
   generate()
   self.assertEqual(before,{p.name:p.read_bytes() for p in OUT.iterdir() if p.is_file()})
+ def test_handoff_cached_other_seller_source_is_bounded(self):
+  from scripts.audit_todayflower_event_c200_equal import LEDGER
+  ledger=json.loads(LEDGER.read_text(encoding="utf-8"))
+  sources=[x for x in ledger["sources"] if x["id"]=="NONGWONFARM_UI_CACHED"]
+  self.assertEqual(len(sources),1)
+  src=sources[0]
+  self.assertEqual(src["crawlDisplay"],"Crawled 6 months ago")
+  self.assertEqual(src["provenance"]["reportedSourceLines"],217)
+  self.assertEqual([x["line"] for x in src["observedLineScope"]],[70,71,72,79,87,89])
+  self.assertFalse(src["liveProductVerified"])
+  self.assertFalse(src["searchRankVerified"])
+  self.assertIn("100-character maximum",src["notApplicableToTodayflower"])
+  self.assertIn("C200 ribbon left/right allocation",src["notApplicableToTodayflower"])
+  self.assertIn("present sale/stock status",src["notApplicableToTodayflower"])
+  self.assertIn("title mentions same-day delivery",src["conflictingShippingCopy"])
+  checks={x["id"]:x for x in ledger["checks"]}
+  self.assertEqual(set(x for x in checks if "NONGWONFARM_UI_CACHED" in checks[x]["sourceIds"]),{"EV2","EV4","EV5"})
+  self.assertEqual(checks["EV2"]["observationConstraints"]["sourceLineNumbers"],[70])
+  self.assertEqual(checks["EV4"]["observationConstraints"]["sourceLineNumbers"],[71,72])
+  self.assertEqual(checks["EV5"]["observationConstraints"]["sourceLineNumbers"],[79,87,89])
+  handoff=ledger["newHandoffEvidence20261112"]
+  self.assertFalse(handoff["sourceDirectlyReadInThisChat"])
+  self.assertFalse(handoff["currentUIVerified"])
+  self.assertFalse(handoff["policyAdoptionAllowed"])
+  self.assertEqual(self.r["identicalBuyerC200CandidateSimilarity"],1.0)
+  self.assertEqual(self.r["independentLocalityHtmlApproved"],0)
+  for p in self.models:
+   html=(OUT/f'candidate-{p["number"]}.html').read_text(encoding="utf-8")
+   self.assertNotIn("nongwonfarm.com",html)
+   self.assertNotIn("100자",html)
+   self.assertNotIn("당일배송 가능",html)
+
  def test_source_limitations(self):
   self.assertEqual(self.r["competitionSourcesDirectlyFullyRead"],0)
   self.assertFalse(self.r["competitionRankVerified"])
