@@ -1,0 +1,33 @@
+{
+  "urlCount": 139,
+  "structuralAudit": "all 139 URLs",
+  "metric": "char-5gram-jaccard; whitespace removed, lowercase; intro+article paragraphs",
+  "thresholdExclusive": 0.49,
+  "seed": 20261028,
+  "population": 138,
+  "sampleCount": 2,
+  "sampleComparisons": 274,
+  "sample": [
+    {
+      "sample": "/48846a1858-advertising.html",
+      "nearest": "/6a396977e7-advertising.html",
+      "score": 0.2154377880184332
+    },
+    {
+      "sample": "/b190876363-signage.html",
+      "nearest": "/c89b2316b8-signage.html",
+      "score": 0.18957871396895787
+    }
+  ],
+  "allPairsComparisons": 9453,
+  "allPairsMax": 0.3143939393939394,
+  "allPairsNearest": [
+    "/67cf9c889f-advertising.html",
+    "/f80882fcb7-advertising.html"
+  ],
+  "passed": true,
+  "fullVisibleBodyAllPairsMax": 0.4503424657534247,
+  "fullVisibleBodyIncludes": "headers, footer, checklists, district/dong list, all article text",
+  "crossDayskySampleComparisons": 3472,
+  "crossDayskySampleMax": 0.20087019579405366
+}
