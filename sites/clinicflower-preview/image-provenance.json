@@ -1,0 +1,155 @@
+{
+  "project": "clinicflower",
+  "assets": [
+    {
+      "assetPath": "assets/images/hero.webp",
+      "role": "hero",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "tool": "image_gen.text2im",
+      "toolResultRef": "cc45db70-f0a4-4b34-b93d-8dbe7ecdb9fe",
+      "toolPromptVerbatim": "Create a photorealistic website hero image for a Korean flower-delivery service focused on hospital, dental clinic, and Korean medicine clinic opening congratulation plants. Show an elegant modern clinic lobby with several high-quality congratulatory potted plants and tasteful ribbons, in a bright clean premium atmosphere. Leave generous negative space on the left side for webpage headline text and a phone-order call-to-action overlay. Style: realistic commercial photography, warm natural light, clean composition, trustworthy local business feel, refined and premium, no visible logos, no watermarks, no embedded website UI.",
+      "userRequestText": "네가 새로 이미지 제작해서 페이지 제작하는데 사용해",
+      "generatedAt": null,
+      "generationTimeEvidence": "Not supplied by image tool; no invented timestamp",
+      "originalFilename": "a_photorealistic_high_end_modern_clinic_lobby_in_1_batch_1.png",
+      "originalSha256": "211697336d6387fbb16a1bc4126a8c4a0a2e7ab112493c18c18da13b0d4a6975",
+      "originalArchiveLocation": "/mnt/data/ghostwriter_images/generated/a_photorealistic_high_end_modern_clinic_lobby_in_1_batch_1.png",
+      "transformations": [
+        {
+          "type": "PNG to WebP",
+          "library": "Pillow",
+          "quality": 81,
+          "method": 6,
+          "upscaled": false
+        }
+      ],
+      "finalSha256": "4de98df894bacbf0ba096732352e6078f4b3f39f2b10596dd16a871ba13170ab",
+      "finalBytes": 142312,
+      "width": 1672,
+      "height": 941,
+      "depictedFactRole": "illustration",
+      "alt": "여러 개원 축하 식물로 장식된 밝은 클리닉 로비",
+      "releaseStatus": "preview only; production asset provenance gate not yet cleared"
+    },
+    {
+      "assetPath": "assets/images/hospital.webp",
+      "role": "hospital",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "tool": "image_gen.text2im",
+      "toolResultRef": "9a354c7d-eb3b-4831-8882-c45604b34063",
+      "toolPromptVerbatim": "Create a photorealistic commercial image for a hospital opening congratulation plant delivery webpage. Show a modern hospital reception area with one prominent elegant congratulatory potted plant near the desk, clean medical interior, professional and welcoming mood, natural lighting, visually clear subject, realistic Korean business setting. Keep the composition suitable for a website section image. No logos, no watermarks, no embedded UI.",
+      "userRequestText": "네가 새로 이미지 제작해서 페이지 제작하는데 사용해",
+      "generatedAt": null,
+      "generationTimeEvidence": "Not supplied by image tool; no invented timestamp",
+      "originalFilename": "a_bright_clean_modern_hospital_reception_lobby_i_2_batch_2.png",
+      "originalSha256": "ff1e12b53d752b50ae99d189630994b4774fb2ded02722206632051af7c65e9b",
+      "originalArchiveLocation": "/mnt/data/ghostwriter_images/generated/a_bright_clean_modern_hospital_reception_lobby_i_2_batch_2.png",
+      "transformations": [
+        {
+          "type": "PNG to WebP",
+          "library": "Pillow",
+          "quality": 81,
+          "method": 6,
+          "upscaled": false
+        }
+      ],
+      "finalSha256": "62be101cbc0358d16947450ee1c0fc592b33dbb344c7bf81719747417a81d0ef",
+      "finalBytes": 126444,
+      "width": 1448,
+      "height": 1086,
+      "depictedFactRole": "illustration",
+      "alt": "개원 축하 화분을 배치한 병원 로비 연출",
+      "releaseStatus": "preview only; production asset provenance gate not yet cleared"
+    },
+    {
+      "assetPath": "assets/images/dental.webp",
+      "role": "dental",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "tool": "image_gen.text2im",
+      "toolResultRef": "19c68071-6ad9-46e6-bb1a-4ea3bcecd6d0",
+      "toolPromptVerbatim": "Create a photorealistic commercial image for a dental clinic opening congratulation plant delivery webpage. Show a bright, modern dental clinic reception or waiting area with a stylish congratulatory potted plant placed appropriately, white and light-wood interior, clean and friendly atmosphere, polished realistic photography, suitable for a website section image. No logos, no watermarks, no embedded UI.",
+      "userRequestText": "네가 새로 이미지 제작해서 페이지 제작하는데 사용해",
+      "generatedAt": null,
+      "generationTimeEvidence": "Not supplied by image tool; no invented timestamp",
+      "originalFilename": "a_bright_modern_dental_clinic_reception_waiting_a_3_batch_3.png",
+      "originalSha256": "b8e4244573b387d889d64be258da80383023b1d07e4ea4ae161cab6ce7915643",
+      "originalArchiveLocation": "/mnt/data/ghostwriter_images/generated/a_bright_modern_dental_clinic_reception_waiting_a_3_batch_3.png",
+      "transformations": [
+        {
+          "type": "PNG to WebP",
+          "library": "Pillow",
+          "quality": 81,
+          "method": 6,
+          "upscaled": false
+        }
+      ],
+      "finalSha256": "4bba70d3e270f1e3b1abc28f25a6e8aa57d0fe3fe22c0f1be4bdf15572c916c2",
+      "finalBytes": 111234,
+      "width": 1448,
+      "height": 1086,
+      "depictedFactRole": "illustration",
+      "alt": "개원 화분과 치과 대기실 연출",
+      "releaseStatus": "preview only; production asset provenance gate not yet cleared"
+    },
+    {
+      "assetPath": "assets/images/oriental.webp",
+      "role": "oriental",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "tool": "image_gen.text2im",
+      "toolResultRef": "da72a39a-4ae9-4f26-b4ad-29769cad247c",
+      "toolPromptVerbatim": "Create a photorealistic commercial image for a Korean medicine clinic (한의원) opening congratulation plant delivery webpage. Show a refined Korean medicine clinic interior or entrance lounge with an elegant congratulatory potted plant, calm natural palette, wood accents, clean and welcoming atmosphere, realistic commercial photography, suitable for a website section image. No logos, no watermarks, no embedded UI.",
+      "userRequestText": "네가 새로 이미지 제작해서 페이지 제작하는데 사용해",
+      "generatedAt": null,
+      "generationTimeEvidence": "Not supplied by image tool; no invented timestamp",
+      "originalFilename": "a_crisp_photorealistic_interior_scene_of_a_modern_4_batch_4.png",
+      "originalSha256": "43e516e023e9b4888a775ca7c7c482c2a6a585d4a5d8585d67dcf7cf84e53447",
+      "originalArchiveLocation": "/mnt/data/ghostwriter_images/generated/a_crisp_photorealistic_interior_scene_of_a_modern_4_batch_4.png",
+      "transformations": [
+        {
+          "type": "PNG to WebP",
+          "library": "Pillow",
+          "quality": 81,
+          "method": 6,
+          "upscaled": false
+        }
+      ],
+      "finalSha256": "733ed7e7c4633d3217fa24fba5f297b28ab75376ded0817ffebd23e3bdbf595a",
+      "finalBytes": 179072,
+      "width": 1448,
+      "height": 1086,
+      "depictedFactRole": "illustration",
+      "alt": "원목 인테리어의 한의원 개원 축하 화분 연출",
+      "releaseStatus": "preview only; production asset provenance gate not yet cleared"
+    },
+    {
+      "assetPath": "assets/images/phone.webp",
+      "role": "phone",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "tool": "image_gen.text2im",
+      "toolResultRef": "6ece85fa-5a78-45fc-b089-a107ffb00ce1",
+      "toolPromptVerbatim": "Create a photorealistic website support image emphasizing phone-order flower service. Show a florist in a neat flower shop or workshop preparing an opening congratulation potted plant with a ribbon while taking or confirming a phone order. Include beautiful plants and packaging materials in the scene, with some open space for possible webpage text overlay. Style: realistic commercial photography, friendly and trustworthy, bright and clean, Korean local business feel, no visible logos, no watermarks, no embedded UI.",
+      "userRequestText": "네가 새로 이미지 제작해서 페이지 제작하는데 사용해",
+      "generatedAt": null,
+      "generationTimeEvidence": "Not supplied by image tool; no invented timestamp",
+      "originalFilename": "a_bright_clean_modern_florist_shop_interior_phot_5_batch_5.png",
+      "originalSha256": "8c900c76f991d190eeb44f32364512fb0e51b98df30555d11780afc5ff30b2cd",
+      "originalArchiveLocation": "/mnt/data/ghostwriter_images/generated/a_bright_clean_modern_florist_shop_interior_phot_5_batch_5.png",
+      "transformations": [
+        {
+          "type": "PNG to WebP",
+          "library": "Pillow",
+          "quality": 81,
+          "method": 6,
+          "upscaled": false
+        }
+      ],
+      "finalSha256": "4281c2849833d664d947d6ad37d8a3283e3b252ca5d6a6f3f0f017334ba50fde",
+      "finalBytes": 151492,
+      "width": 1672,
+      "height": 941,
+      "depictedFactRole": "illustration",
+      "alt": "축하 화분을 준비하며 전화 주문을 상담하는 연출",
+      "releaseStatus": "preview only; production asset provenance gate not yet cleared"
+    }
+  ]
+}
