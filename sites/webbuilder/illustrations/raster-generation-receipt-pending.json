@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "createdAtUTC": "2026-10-31T08:47:09Z",
+  "purpose": "Replace five authored SVGs with original generated raster photos in Webbuilder preview, no site deployment",
+  "status": "CANVA_ORIGINAL_UNRECOVERED_ALTERNATE_TOOL_SUCCEEDED",
+  "currentSiteStillUsesSVG": false,
+  "expectedImages": 5,
+  "completedGenerations": 1,
+  "notes": "Canva generation succeeded and reports original 1536x1024 jpg, but accessible Canva connector returns only 200x133 thumbnail, not full-resolution bytes. Do not substitute thumbnail, alter website image refs or claim replacement completed.",
+  "assets": [
+    {
+      "slot": "hero",
+      "replaces": "webbuilder-hero.svg",
+      "tool": "Canva generate_image",
+      "jobStatus": "SUCCESS",
+      "mediaId": "MAHZkNFvG9I",
+      "mediaVersion": "1",
+      "width": 1536,
+      "height": 1024,
+      "mimeInference": "image/jpeg",
+      "prompt": "Create a premium photorealistic landscape website hero image for a Korean B2B affordable website-creation service (NOT a dashboard, NOT an infographic, NO text, NO charts, NO written words). A modern slim laptop open on a bright minimal desk with a tasteful abstract, unbranded responsive small-business website interface on screen, alongside a smartphone showing a matching clean website. Calm natural window light, white and pale blue workspace, muted navy and mint accents, plant blurred in background, spacious uncluttered composition, realistic photography, high fidelity, subtle depth of field, quiet editorial advertising style. Landscape 3:2. No person, no legible text, no logos, no watermarks, not a screenshot of a real customer site.",
+      "generatedAtUnixSeconds": 1793436438,
+      "providerAssetName": "AaGRIpog_hD-7RADceI37w-AaGRIpogMYRhTBJkEPjsPg.jpg",
+      "sourceFullSizeSavedToGit": false,
+      "sha256": null
+    },
+    {
+      "slot": "sector",
+      "replaces": "industry-services.svg",
+      "status": "NOT_GENERATED"
+    },
+    {
+      "slot": "local-search",
+      "replaces": "local-search.svg",
+      "status": "NOT_GENERATED"
+    },
+    {
+      "slot": "managed-domain",
+      "replaces": "managed-domain.svg",
+      "status": "NOT_GENERATED"
+    },
+    {
+      "slot": "contact",
+      "replaces": "mobile-contact.svg",
+      "status": "NOT_GENERATED"
+    }
+  ],
+  "alternatePath": "OpenAI image_gen original 1536x1024 PNGs + derived WebP binaries are stored under sites/webbuilder/illustrations/generated/",
+  "citation": "Existing Canva MEDIA MAHZkNFvG9I remains only metadata/200x133 thumbnail; unused, not enlarged",
+  "generatedWebpAssets": 5,
+  "generatedPngOriginalsAvailable": 3,
+  "generateJobCount": 3
+}
