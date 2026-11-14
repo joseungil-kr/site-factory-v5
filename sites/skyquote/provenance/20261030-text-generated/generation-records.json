@@ -1,0 +1,80 @@
+{
+  "recorded_at_utc": "2026-10-30T07:28:34.062Z",
+  "selected_outputs": [
+    {
+      "asset_path": "sites/skyquote/assets/city-crane.webp",
+      "original_path": "sites/skyquote/provenance/20261030-text-generated/01-safe-parked-truck.png",
+      "original_sha256": "c119a821a55ea06b9b4969106c470da510e7955dd7fce0b998755fa88ba27ab7",
+      "original_bytes": 2507964,
+      "webp_sha256": "9934622e90fd98ff8228f2cbae4e570239fda0566a106a2d5f64dd9fab3a83c1",
+      "width": 1536,
+      "height": 1024,
+      "tool": "image_gen__imagegen",
+      "tool_output_id": "exec-722ae9b9-5147-4868-aec3-655fb05607c2",
+      "prompt": "Use case: photorealistic-natural. Create ONE newly generated photographic website asset, landscape 1536x1024. Korean urban side street with contemporary low-rise buildings; white unbranded truck-mounted aerial work platform (sky truck), parked safely in a closed level paved work area, boom stowed for a clean full vehicle profile. Realistic engineering proportions, three-quarter view, entire vehicle visible, bright soft natural daylight, neutral clean professional documentary photography. No company names, no legible letters or numbers, no phone number, no logos, no watermark, no branded license plates, no people closeups. No collage or multiple panels. No reference images; generate original scene from this text only.",
+      "started_utc": "2026-10-30T07:21:31.538Z",
+      "input_images": [],
+      "conversion": "Pillow WebP quality=88 method=6; native dimensions; no crop, compositing, or resize"
+    },
+    {
+      "asset_path": "sites/skyquote/assets/facade-safety.webp",
+      "original_path": "sites/skyquote/provenance/20261030-text-generated/02-facade-height-work.png",
+      "original_sha256": "750a18538da25fee268487658cb1634936f51edf069bf7519452c00eff87c33d",
+      "original_bytes": 2772918,
+      "webp_sha256": "8b8b02bace43517f046be7a97c72afc217afa3a9d48d408f254b932f380c6cc3",
+      "width": 1536,
+      "height": 1024,
+      "tool": "image_gen__imagegen",
+      "tool_output_id": "exec-018b1a6b-1a47-4752-9a26-3009566af868",
+      "prompt": "Use case: photorealistic-natural. ONE original newly generated photographic website asset, landscape 1536x1024. Korean contemporary urban setting, unbranded white truck-mounted aerial work platform, realistic engineering proportions. Bright soft natural daylight, clean neutral professional documentary photography. No company names, no letters or numbers, no phone number, no logos, no watermark, no branded license plates, no people closeups. No collage or multiple panels. Generate from text only without image references. Wide view of full white aerial work truck alongside a four-storey contemporary building, elevated guarded basket beside upper facade, clearly connected articulated boom and hydraulic mechanisms, deployed stabilizer outriggers supported on square ground pads. Orange safety cones form clear ground exclusion perimeter around vehicle and below basket. No pedestrians, empty platform, maintenance setup before operation.",
+      "started_utc": "2026-10-30T07:23:13.015Z",
+      "input_images": [],
+      "conversion": "Pillow WebP quality=88 method=6; native dimensions; no crop, compositing, or resize"
+    },
+    {
+      "asset_path": "sites/skyquote/assets/sign-work.webp",
+      "original_path": "sites/skyquote/provenance/20261030-text-generated/03-sign-maintenance-v2.png",
+      "original_sha256": "d7fbb92ac0d5ee5b9f917df490a5f04d4bd360c8381c24c4002bb36cfa5fe284",
+      "original_bytes": 2755508,
+      "webp_sha256": "f5f68bbc0c1a6bbd016fe28c8e110bfdf303b143ea62a8ee1af6dda428d51eb4",
+      "width": 1536,
+      "height": 1024,
+      "tool": "image_gen__imagegen",
+      "tool_output_id": "exec-58146574-cdf7-4049-b59b-9361edfa0b19",
+      "prompt": "Use case: photorealistic-natural. ONE original newly generated photographic website asset, landscape 1536x1024. Korean contemporary urban setting, unbranded white truck-mounted aerial work platform, realistic engineering proportions. Bright soft natural daylight, clean neutral professional documentary photography. No company names, no letters or numbers, no phone number, no logos, no watermark, no branded license plates, no people closeups. No collage or multiple panels. Generate from text only without image references. Wide street-level view of white aerial work truck set up for sign maintenance at a modern Korean neighborhood commercial building. Small elevated guarded work basket positioned next to a large completely blank charcoal rectangular sign panel above a storefront. Entire truck, connected boom and grounded stabilizers visible; cone-protected work area. No workers needed. All storefronts have blank signs and no letters. STRICT: truck front fascia and grille must be entirely smooth and plain without any badge, medallion, emblem, symbol or brand-like shape. All truck body panels, wheel hubs, mud flaps and equipment have absolutely no printing, writing, decals or markings except simple safety stripe rectangles. Blank surfaces only. No people anywhere.",
+      "started_utc": "2026-10-30T07:27:02.940Z",
+      "input_images": [],
+      "conversion": "Pillow WebP quality=88 method=6; native dimensions; no crop, compositing, or resize"
+    },
+    {
+      "asset_path": "sites/skyquote/assets/work-height.webp",
+      "original_path": "sites/skyquote/provenance/20261030-text-generated/04-high-reach-platform-v2.png",
+      "original_sha256": "465f22a9222ae70061247e72e9f4a2671f4aae8db9772f9db27d61c24ae101e3",
+      "original_bytes": 2638189,
+      "webp_sha256": "fb93d20fd05a9173ce19c37cb5686cf8469bf6c4e004554ee3e209a539ddbcbe",
+      "width": 1536,
+      "height": 1024,
+      "tool": "image_gen__imagegen",
+      "tool_output_id": "exec-d8a0c92e-7e79-456e-8929-3925c4fcdf56",
+      "prompt": "Use case: photorealistic-natural. ONE original newly generated photographic website asset, landscape 1536x1024. Korean contemporary urban setting, unbranded white truck-mounted aerial work platform, realistic engineering proportions. Bright soft natural daylight, clean neutral professional documentary photography. No company names, no letters or numbers, no phone number, no logos, no watermark, no branded license plates, no people closeups. No collage or multiple panels. Generate from text only without image references. Full side three-quarter wide view of a white truck-mounted telescopic articulated aerial work platform with boom extended upward toward a modern five-storey facade; complete truck, connected boom, and empty guarded work basket visible in one landscape composition. Clear unobstructed equipment silhouette against blue grey sky and building; deployed outriggers on large square support pads, a safely coned level paved work zone. STRICT: truck front fascia and grille must be entirely smooth and plain without any badge, medallion, emblem, symbol or brand-like shape. All truck body panels, wheel hubs, mud flaps and equipment have absolutely no printing, writing, decals or markings except simple safety stripe rectangles. Blank surfaces only. No people anywhere.",
+      "started_utc": "2026-10-30T07:27:44.237Z",
+      "input_images": [],
+      "conversion": "Pillow WebP quality=88 method=6; native dimensions; no crop, compositing, or resize"
+    },
+    {
+      "asset_path": "sites/skyquote/assets/outrigger-access.webp",
+      "original_path": "sites/skyquote/provenance/20261030-text-generated/05-outrigger-ground-check.png",
+      "original_sha256": "5572a2df4fc76b276205bad099b6be369f2c69393643af588c48629d698208b9",
+      "original_bytes": 2620602,
+      "webp_sha256": "75b4a089b2e3a5815922bd7390fde6c44dd5e1f5dfa172f1b2aa4bb3c899d049",
+      "width": 1536,
+      "height": 1024,
+      "tool": "image_gen__imagegen",
+      "tool_output_id": "exec-aeb74db7-d414-47e3-a27f-903a6e2a4ac7",
+      "prompt": "Use case: photorealistic-natural. ONE original newly generated photographic website asset, landscape 1536x1024. Korean contemporary urban setting, unbranded white truck-mounted aerial work platform, realistic engineering proportions. Bright soft natural daylight, clean neutral professional documentary photography. No company names, no letters or numbers, no phone number, no logos, no watermark, no branded license plates, no people closeups. No collage or multiple panels. Generate from text only without image references. Low three-quarter medium-wide documentary view of unbranded white aerial truck during pre-operation ground and access inspection setup, emphasizing two visible realistically connected extended stabilizer outriggers firmly resting on large square pads on level concrete, wheel chock, clear open access route beside truck and orderly orange safety cone boundary. Truck cab and base recognizable, boom stowed, no person needed. Modern Korean low-rise architecture softly in background.",
+      "started_utc": "2026-10-30T07:25:15.990Z",
+      "input_images": [],
+      "conversion": "Pillow WebP quality=88 method=6; native dimensions; no crop, compositing, or resize"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+name: Skyquote Ansan-only noindex expansion QA
+on:
+  push:
+    branches: [feature/v5-skyquote-three-samples]
+    paths:
+      - 'sites/skyquote/ansan-expansion-scope.json'
+      - 'scripts/build_skyquote_ansan.py'
+      - 'tests/skyquote_ansan_smoke.py'
+      - '.github/workflows/skyquote-ansan-expansion-qa.yml'
+  pull_request:
+    paths:
+      - 'sites/skyquote/ansan-expansion-scope.json'
+      - 'scripts/build_skyquote_ansan.py'
+      - 'tests/skyquote_ansan_smoke.py'
+      - '.github/workflows/skyquote-ansan-expansion-qa.yml'
+permissions:
+  contents: read
+jobs:
+  qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Original assets and Ansan-only 25-page build
+        run: |
+          python -m py_compile scripts/build_skyquote.py scripts/build_skyquote_ansan.py tests/skyquote_ansan_smoke.py
+          python scripts/build_skyquote_ansan.py
+          python tests/skyquote_ansan_smoke.py
+      - name: Narrow actual local HTTPS-independent HTTP document and images check
+        run: |
+          python - <<'PY'
+          from http.server import ThreadingHTTPServer,SimpleHTTPRequestHandler
+          from pathlib import Path
+          import threading,urllib.request,json
+          out=Path('dist/skyquote-ansan-preview').resolve()
+          class Handler(SimpleHTTPRequestHandler):
+              def __init__(self,*a,**kw):super().__init__(*a,directory=str(out),**kw)
+          server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
+          threading.Thread(target=server.serve_forever,daemon=True).start()
+          origin='http://127.0.0.1:'+str(server.server_port)
+          scope=json.loads(Path('sites/skyquote/ansan-expansion-scope.json').read_text())
+          pages=['/','/danwon.html','/sangnok.html','/gojan.html']+['/'+r['slug'] for r in scope['regions']]
+          for path in sorted(set(pages)):
+              with urllib.request.urlopen(origin+path,timeout=10) as r:
+                  body=r.read()
+                  assert r.status==200 and body.count(b'<img ')==5,(path,len(body))
+              print('ANSAN_HTTP_200_NOINDEX',path)
+          for name in ('city-crane','facade-safety','sign-work','work-height','outrigger-access'):
+              with urllib.request.urlopen(origin+'/assets/'+name+'.webp',timeout=10) as r:
+                  b=r.read()
+                  assert r.status==200 and b[:4]==b'RIFF' and b[8:12]==b'WEBP'
+          server.shutdown()
+          print('SKYQUOTE_ANSAN_LOCAL_HTTP_PASS',len(set(pages)),'html, five WebPs')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: skyquote-ansan-noindex-25pages-${{ github.sha }}
+          path: dist/skyquote-ansan-preview/
+          retention-days: 14
+          if-no-files-found: error
