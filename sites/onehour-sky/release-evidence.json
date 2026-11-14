@@ -1,0 +1,40 @@
+{
+  "site": "onehour-sky",
+  "host": "1hrsky.nalmada.net",
+  "scope": "onehour-5436-20261028",
+  "totalPages": 5436,
+  "userProvided": {
+    "nationwideConsultation": true,
+    "oneHourWorkHalfDayBase": true,
+    "oneHourArrivalNotGuaranteed": true,
+    "noUnverifiedEquipmentOrWorkClaims": true
+  },
+  "userApproved": {
+    "phone": "010-5322-1952",
+    "photos": [
+      "skycar-hero.webp",
+      "skycar-facade.webp",
+      "skycar-truck.webp"
+    ],
+    "source": "2026-10-28 user follow-up confirming user's 좋다 reply"
+  },
+  "naverHomepageToken": "24640409f1b53459210054eec4e83176009a0a84",
+  "confirmedRuns": {
+    "contentQA": 40503984653,
+    "workersDev": 40504734714,
+    "domainBinding": 40543796228
+  },
+  "quality": {
+    "sampleSize": 55,
+    "pairs": 298925,
+    "thresholdExclusive": 0.49,
+    "maxSimilarity": 0.385409,
+    "exactDuplicates": 0,
+    "semanticUniquenessNotProven": true
+  },
+  "public": {
+    "worker": "sfv5-onehour-sky-preview",
+    "previewMustRemainNoindex": true,
+    "officialSearchConsoleSubmitDelegated": true
+  }
+}
