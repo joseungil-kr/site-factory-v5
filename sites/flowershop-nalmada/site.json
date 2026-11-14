@@ -1,0 +1,65 @@
+{
+  "id": "flowershop-nalmada",
+  "brand": "꽃이랑",
+  "siteTitle": "지역 꽃집 개업화분·화환 전문",
+  "domain": "https://flowershop.nalmada.net",
+  "workerName": null,
+  "locale": "ko-KR",
+  "phone": "1844-0644",
+  "keyword": "꽃집 개업화분 화환",
+  "region": "전국",
+  "theme": "classic",
+  "imageLibrary": "promotion-plant",
+  "imagePool": [
+    "hero-florist.webp",
+    "atelier-florist.webp",
+    "moment-blooms.webp",
+    "moment-leaves.webp",
+    "moment-flowers.webp",
+    "d144.jpg",
+    "d149.jpg",
+    "c200.jpg",
+    "c206.jpg",
+    "b201.jpg",
+    "b205.jpg"
+  ],
+  "orderBaseUrl": "https://fwith.co.kr",
+  "publishEnabled": false,
+  "imageAssetsApproved": false,
+  "cookiePrivacyReviewed": false,
+  "analytics": {
+    "enabled": false
+  },
+  "siteSearch": {
+    "enabled": false
+  },
+  "staticAssetSoftLimit": 18000,
+  "source": "V4 verified region master and V5 reference product inventory; representative preproduction content pending independent live validation",
+  "indexNow": {
+    "enabled": false,
+    "key": null
+  },
+  "navigation": [
+    {
+      "label": "홈",
+      "href": "/"
+    },
+    {
+      "label": "배송 안내",
+      "href": "/배송안내.html"
+    }
+  ],
+  "flowershopNational": {
+    "enabled": true,
+    "startNumber": 4,
+    "topics": [
+      "꽃집 개업화분",
+      "화환전문 꽃집"
+    ],
+    "expectedDongCount": 5067,
+    "expectedTotalPages": 10137,
+    "sourceSha256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
+    "dataModel": "official legal-dong suffix 읍/면/동/가/로; not administrative-dong",
+    "release": "noindex-preview-only"
+  }
+}

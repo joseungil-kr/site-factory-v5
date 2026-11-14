@@ -1,0 +1,84 @@
+name: Flowershop independent preview QA
+on:
+  pull_request:
+    paths:
+      - 'sites/flowershop-nalmada/**'
+      - 'v5/**'
+      - 'data/regions/flowershop_official_codes_20261022.zip'
+      - 'scripts/flowershop_regions.py'
+      - 'tests/test_flowershop_products.py'
+      - '.github/workflows/flowershop-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Unit tests
+        run: python -m unittest discover -s tests -v
+      - name: Inspect nationwide V4 official code snapshot
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from zipfile import ZipFile
+          from hashlib import sha256
+          p=Path('data/regions/flowershop_official_codes_20261022.zip')
+          data=p.read_bytes()
+          assert sha256(data).hexdigest()=='44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd'
+          with ZipFile(p) as z:
+              print('ZIP entries:',[(x.filename,x.file_size) for x in z.infolist()])
+              for x in z.infolist():
+                  if not x.is_dir() and x.file_size and x.file_size < 3000000:
+                      sample=z.read(x)[:1800].decode('cp949',errors='replace')
+                      print('TEXT SAMPLE:',x.filename,repr(sample[:900]))
+              import csv
+              from collections import Counter
+              text=z.read(z.namelist()[0]).decode('cp949')
+              rows=list(csv.DictReader(text.splitlines(),delimiter='\t'))
+              active=[r for r in rows if r['폐지여부']=='존재']
+              lower=[r for r in active if r['법정동코드'].endswith('00')
+                  and len(r['법정동명'].split())>=2
+                  and r['법정동명'].split()[-1].endswith(('동','읍','면','가','로'))]
+              provinces=Counter(r['법정동명'].split()[0] for r in lower)
+              print('NATIONWIDE_REGION_COUNT',len(rows),len(active),len(lower),sorted(provinces.items()))
+          PY
+      - name: Build flowershop preview
+        run: python -m v5 build --site flowershop-nalmada --mode preview
+      - name: Verify exact nationwide generated document count
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          out=Path('dist/flowershop-nalmada')
+          pages=list(out.glob('*.html'))
+          assert len(pages)==10139,('HTML_COUNT_MISMATCH',len(pages))
+          report=json.loads(Path('reports/flowershop-nalmada/manifest.json').read_text())
+          assert report['pageCount']==10137,report['pageCount']
+          assert report['mode']=='preview',report['mode']
+          assert 'noindex,nofollow' in (out/'index.html').read_text()
+          assert not (out/'sitemap.xml').exists()
+          assert (out/'3.html').is_file()
+          assert (out/'10137.html').is_file()
+          for sku in ('d144','d149','c200','c206','b201','b205'):
+              photo=out/'assets'/'images'/(sku+'.jpg')
+              assert photo.is_file() and photo.stat().st_size>10000,sku
+          print('FLOWERSHOP_NATIONWIDE_PREVIEW_PASS',report['pageCount'])
+          PY
+      - name: Audit preview
+        run: python -m v5 audit --site flowershop-nalmada
+      - name: Preserve preview and audit artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: flowershop-preview-${{ github.sha }}
+          path: |
+            dist/flowershop-nalmada/
+            reports/flowershop-nalmada/audit.json
+            reports/flowershop-nalmada/manifest.json
+          if-no-files-found: error
+          retention-days: 7
