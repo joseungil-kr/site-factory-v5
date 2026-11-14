@@ -1,0 +1,70 @@
+{
+  "project": "nalmada-shared3-clinic-sample",
+  "worker": "sfv5-nalmada-domain",
+  "mode": "noindex-preview",
+  "hosts": {
+    "clinicflower.nalmada.net": {
+      "site": "clinicflower",
+      "path": "/sites/clinicflower/index.html",
+      "poolBlockIds": [
+        "CF-0001",
+        "CF-0101",
+        "CF-0201",
+        "CF-0036",
+        "CF-0136",
+        "CF-0236",
+        "CF-0661",
+        "CF-0681",
+        "CF-0701",
+        "CF-0664",
+        "CF-0684",
+        "CF-0704"
+      ]
+    },
+    "clinicopen.nalmada.net": {
+      "site": "clinicopen",
+      "path": "/sites/clinicopen/index.html",
+      "poolBlockIds": [
+        "CF-0006",
+        "CF-0011",
+        "CF-0106",
+        "CF-0111",
+        "CF-0206",
+        "CF-0211",
+        "CF-0662",
+        "CF-0663",
+        "CF-0682",
+        "CF-0683",
+        "CF-0702",
+        "CF-0703"
+      ]
+    },
+    "clinicpresent.nalmada.net": {
+      "site": "clinicpresent",
+      "path": "/sites/clinicpresent/index.html",
+      "poolBlockIds": [
+        "CF-0016",
+        "CF-0021",
+        "CF-0116",
+        "CF-0121",
+        "CF-0216",
+        "CF-0221",
+        "CF-0666",
+        "CF-0667",
+        "CF-0686",
+        "CF-0687",
+        "CF-0706",
+        "CF-0707"
+      ]
+    }
+  },
+  "originalSiteWorkersToPreserve": true,
+  "publishIndexNow": false,
+  "media": [
+    "hero.webp",
+    "hospital.webp",
+    "dental.webp",
+    "oriental.webp",
+    "phone.webp"
+  ]
+}

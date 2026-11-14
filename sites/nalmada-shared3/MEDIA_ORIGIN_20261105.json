@@ -1,0 +1,55 @@
+{
+  "title": "Clinic V5 shared3 existing AI editorial images source scope and evidence (2026-11-05)",
+  "use": "site-specific editorial illustrations in HTML img tags and og:image; not seller products or delivered photos",
+  "userRequest": "2026-11-05 user requested Clinicflower/Clinicopen original AI plant images, a separate appropriate wreath image for Clinicpresent, and public re-release. No JSON-LD.",
+  "knownMedia": [
+    {
+      "site": "clinicflower",
+      "files": [
+        "hero.webp",
+        "hospital.webp",
+        "dental.webp",
+        "oriental.webp"
+      ],
+      "source": "sites/clinicflower-preview/image-provenance.json",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "notes": "Previously published five AI plant images; exact toolPromptVerbatim and original WebP hashes recorded in source, generatedAt null"
+    },
+    {
+      "site": "clinicopen",
+      "files": [
+        "hospital.webp",
+        "dental.webp",
+        "oriental.webp"
+      ],
+      "source": "sites/clinicflower-preview/image-provenance.json",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "notes": "User explicitly requests existing AI plant images"
+    },
+    {
+      "site": "clinicpresent",
+      "files": [
+        "celebration-wreath.webp"
+      ],
+      "source": "site/todayflower-nalmada-pilot-20261030:assets/library/todayflower/celebration-wreath.webp",
+      "sourceGitBlobSHA": "d54ef1dc3cb09e5d974810f6607cd18521e12b91",
+      "sourceBytes": 272178,
+      "width": 1448,
+      "height": 1086,
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "generationTool": "ImageGen",
+      "generationId": "619454de-2836-4d4a-9e3d-ff63ba039b8e",
+      "originalPromptVerbatim": null,
+      "generatedAtUTC": null,
+      "evidenceLimit": "Original tool prompt, UTC timestamp, archived original PNG and transformation SHA are not independently recoverable from current record. Preserve as partial; do not assert GENERATED_VERIFIED",
+      "useRole": "photorealistic editorial wreath illustration, never a factual completed order/product listing"
+    }
+  ],
+  "exclude": [
+    "Unrelated image-gen site-completion infographic outputs created in this conversation",
+    "Any pictured plant asset presented as a wreath photo"
+  ],
+  "noStructuredData": true,
+  "approvalScope": "User directed display of editorial images on three clinic sites; no permission to claim real delivered bouquets, prices or business addresses.",
+  "verification": "Image-origin gate must be honestly reported as partial if it does not accept legacy sources; exact Git source blob and live WebP bytes independently verifiable"
+}
