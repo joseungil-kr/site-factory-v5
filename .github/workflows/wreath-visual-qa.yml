@@ -1,0 +1,81 @@
+name: Wreath V5-2 representative real browser desktop/mobile QA
+on:
+  push:
+    branches: [feature/v52-wreath-region]
+    paths: ['.github/workflows/wreath-visual-qa.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Build noindex representative HTML
+        run: |
+          python -m scripts.build_wreath_region --sample
+          python -m scripts.qa_wreath_region --sample
+      - name: Install browser only in temporary GH runner
+        run: |
+          npm install --no-save --ignore-scripts playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Inspect actual desktop and mobile layout, images and CTA and save screenshots
+        run: |
+          python -m http.server 8020 --directory dist/wreath-region >/tmp/wreath-preview-http.log 2>&1 &
+          sleep 2
+          node --input-type=module <<'JS'
+          import {chromium} from 'playwright';
+          import {readFileSync,writeFileSync,mkdirSync} from 'node:fs';
+          import assert from 'node:assert/strict';
+          const manifest=JSON.parse(readFileSync('reports/wreath-region/manifest.json','utf8'));
+          const local='http://127.0.0.1:8020';
+          const routes=['/',manifest.pages.find(x=>x.endsWith('-same-day.html')),
+                          manifest.pages.find(x=>x.endsWith('-flower-shop.html'))];
+          mkdirSync('reports/wreath-visual',{recursive:true});
+          const browser=await chromium.launch({headless:true});
+          const results=[];
+          try {
+            for(const [label,width,height] of [['desktop',1440,900],['mobile',390,844]]) {
+              const page=await browser.newPage({viewport:{width,height},deviceScaleFactor:1});
+              for(let i=0;i<routes.length;i++){
+                const url=local+routes[i];
+                const reply=await page.goto(url,{waitUntil:'networkidle',timeout:40000});
+                assert.equal(reply.status(),200,url);
+                await page.locator('h1').first().waitFor();
+                const check=await page.evaluate(()=>{
+                  const root=document.documentElement;
+                  const imgs=[...document.querySelectorAll('.product img')];
+                  return {scrollWidth:root.scrollWidth,viewport:innerWidth,
+                      title:document.title,h1:document.querySelector('h1')?.textContent.trim(),
+                      links:[...document.querySelectorAll('a[href^="tel:"]')].length,
+                      images:imgs.length,loaded:imgs.filter(x=>x.complete&&x.naturalWidth>0).length,
+                      robots:document.querySelector('meta[name="robots"]')?.content,
+                      canonical:document.querySelectorAll('link[rel="canonical"]').length};
+                });
+                assert.ok(check.scrollWidth<=check.viewport+2,JSON.stringify(check));
+                assert.ok(check.links>0);
+                assert.equal(check.robots,'noindex,nofollow');
+                assert.equal(check.canonical,0);
+                assert.equal(check.images,6);
+                if(check.loaded!==6)throw new Error('seller image not loaded in browser '+JSON.stringify(check));
+                const name=['home','same-day','flower-shop'][i];
+                await page.screenshot({path:'reports/wreath-visual/'+name+'-'+label+width+'.png',fullPage:true});
+                results.push({route:routes[i],label,width,height,...check});
+              }
+              await page.close();
+            }
+          } finally {await browser.close();}
+          writeFileSync('reports/wreath-visual/visual-qa.json',JSON.stringify({passed:true,results},null,2));
+          console.log('WREATH_VISUAL_BROWSER_PASS '+JSON.stringify(results));
+          JS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wreath-region-6-screenshots-desktop-mobile
+          path: reports/wreath-visual/
+          if-no-files-found: error
+          retention-days: 14

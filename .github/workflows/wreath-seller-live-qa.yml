@@ -1,0 +1,31 @@
+name: Wreath V5-2 seller live price and image SHA fail-closed QA
+on:
+  push:
+    branches: [feature/v52-wreath-region]
+    paths:
+      - '.github/workflows/wreath-seller-live-qa.yml'
+      - 'scripts/qa_wreath_seller_live.py'
+      - 'tests/test_wreath_seller_live.py'
+      - 'sites/wreath-region/products.json'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  seller-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - name: Unit-test response-derived prices, image integrity, and fail closed
+        run: python -m unittest discover -s tests -p 'test_wreath_seller_live.py' -v
+      - name: Verify live HTTP 200 item price and exact image SHA for all six SKUs
+        run: python -m scripts.qa_wreath_seller_live
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: wreath-seller-live-price-sha-evidence
+          path: reports/wreath-seller-live.json
+          if-no-files-found: warn
+          retention-days: 14

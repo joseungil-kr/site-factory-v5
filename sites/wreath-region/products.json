@@ -1,0 +1,87 @@
+{
+  "catalogSource": "joseungil-kr/site-factory-v4/data/funeral-products/CATALOGUE.json",
+  "catalogBlobSha": "864a2f097c40c645a44a2e44635fea6cdad4930c",
+  "referenceCheckedOn": "2026-10-22",
+  "meaning": "Reference prices checked 2026-10-22 only, not a real-time inventory/price guarantee; buyer must confirm live checkout total including delivery surcharge.",
+  "customerDataURLPolicy": "Only direct item.php?it_id= fixed SKU. No delivery address, names, messages, phone, or other personal information in URL.",
+  "list": [
+    {
+      "id": "B201",
+      "name": "근조 3단 화환",
+      "referencePriceKRW": 59000,
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B201",
+      "imageUrl": "https://fwith.co.kr/data/item/flower379/B201/thumb-1_500x500.jpg",
+      "imageSHA256": "7556b6d29ff31e23da6e8e9cfc42b246974e8f8d5e3d3ba5b789fcd8341667f3",
+      "sourceDetailSha256": "b7a121fbda1e8b95f23373dd3b2068a7bf789136863e64e7955701f115531242",
+      "checkedOn": "2026-10-22",
+      "sourceHTTP": 200,
+      "buyButtonPresent": true,
+      "soldOutLabelPresent": false
+    },
+    {
+      "id": "B203",
+      "name": "근조 고급 3단 화환",
+      "referencePriceKRW": 79000,
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B203",
+      "imageUrl": "https://fwith.co.kr/data/item/flower379/B203/thumb-1_500x500.jpg",
+      "imageSHA256": "0db53ecefe21b765d042fc4ba96a58fff5287be7b15fbf26ff8d4e92095a5114",
+      "sourceDetailSha256": "23c34a12f528f21e521b410077207ced18ed46420c7bccc0d8e6a569dd1abace",
+      "checkedOn": "2026-10-22",
+      "sourceHTTP": 200,
+      "buyButtonPresent": true,
+      "soldOutLabelPresent": false
+    },
+    {
+      "id": "B205",
+      "name": "근조 특대 3단 화환",
+      "referencePriceKRW": 109000,
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B205",
+      "imageUrl": "https://fwith.co.kr/data/item/flower379/B205/thumb-1_500x500.jpg",
+      "imageSHA256": "1873eb9037478de487a4141e0974b90c994cfd0432e07af818799947ce0db43e",
+      "sourceDetailSha256": "36ae6c183a8055ec4d66b3a6a613af76f2c60da39b7438c2c6a5794ed1468b32",
+      "checkedOn": "2026-10-22",
+      "sourceHTTP": 200,
+      "buyButtonPresent": true,
+      "soldOutLabelPresent": false
+    },
+    {
+      "id": "B206",
+      "name": "근조 특특대 3단 화환",
+      "referencePriceKRW": 149000,
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B206",
+      "imageUrl": "https://fwith.co.kr/data/item/flower379/B206/thumb-1_500x500.jpg",
+      "imageSHA256": "f458a660a8fa1989088abca54c77cc6fa983912dcf1b332e8e95efd1f9796abc",
+      "sourceDetailSha256": "db9cf9c9a7c16e78ccd66e06384e92270b75737be846b7e3a3caa977167e225b",
+      "checkedOn": "2026-10-22",
+      "sourceHTTP": 200,
+      "buyButtonPresent": true,
+      "soldOutLabelPresent": false
+    },
+    {
+      "id": "B212",
+      "name": "근조 1단 오브제",
+      "referencePriceKRW": 60000,
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B212",
+      "imageUrl": "https://fwith.co.kr/data/item/flower379/B212/thumb-1_500x500.jpg",
+      "imageSHA256": "d2ceaac30d315f6e9a90890cdc5eeed01b86f885d098fc0c1e2c971b00cce5a6",
+      "sourceDetailSha256": "5b5d2c9f85199399435571f0dc4bd3648ab943280498c1a2137f9272b3867819",
+      "checkedOn": "2026-10-22",
+      "sourceHTTP": 200,
+      "buyButtonPresent": true,
+      "soldOutLabelPresent": false
+    },
+    {
+      "id": "B213",
+      "name": "근조 2단 오브제",
+      "referencePriceKRW": 120000,
+      "orderUrl": "https://fwith.co.kr/shop/item.php?it_id=B213",
+      "imageUrl": "https://fwith.co.kr/data/item/flower379/B213/thumb-1_500x500.jpg",
+      "imageSHA256": "a8b0327e2322fd5c10718b78b51710046b11229f2114a26638e4899ac96ac544",
+      "sourceDetailSha256": "c55331455f530d0bbabe26eb78e55a6b632741065520dcb26ae66b7f183231fd",
+      "checkedOn": "2026-10-22",
+      "sourceHTTP": 200,
+      "buyButtonPresent": true,
+      "soldOutLabelPresent": false
+    }
+  ]
+}
