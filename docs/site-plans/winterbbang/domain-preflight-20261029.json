@@ -1,0 +1,68 @@
+{
+  "siteId": "winterbbang",
+  "checkedAt": "2026-10-29",
+  "mode": "GET_ONLY_NO_MUTATION",
+  "candidates": [
+    {
+      "hostname": "winterbbang.nalmada.net",
+      "publicDns": {
+        "provider": "Google Public DNS over HTTPS",
+        "A": {
+          "httpStatus": 200,
+          "rcode": 3,
+          "answers": []
+        },
+        "AAAA": {
+          "httpStatus": 200,
+          "rcode": 3,
+          "answers": []
+        },
+        "CNAME": {
+          "httpStatus": 200,
+          "rcode": 3,
+          "answers": []
+        }
+      },
+      "cloudflareAccountCheck": {
+        "status": "NOT_RUN_AUTH_MISSING",
+        "detail": "CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID were empty in V5 PR workflow; zone, DNS-record, Workers-route and custom-domain inventory could not be queried."
+      },
+      "conclusion": "Public DNS currently NXDOMAIN in this resolver, but ownership and account-side Worker/domain conflicts remain unknown."
+    },
+    {
+      "hostname": "winterbbang.nalmada.com",
+      "publicDns": {
+        "provider": "Google Public DNS over HTTPS",
+        "A": {
+          "httpStatus": 200,
+          "rcode": 0,
+          "answers": [
+            "13.248.169.48",
+            "76.223.54.146"
+          ]
+        },
+        "AAAA": {
+          "httpStatus": 200,
+          "rcode": 0,
+          "answers": []
+        },
+        "CNAME": {
+          "httpStatus": 200,
+          "rcode": 0,
+          "answers": []
+        }
+      },
+      "cloudflareAccountCheck": {
+        "status": "NOT_RUN_AUTH_MISSING",
+        "detail": "CLOUDFLARE_API_TOKEN and CLOUDFLARE_ACCOUNT_ID were empty in V5 PR workflow; zone, DNS-record, Workers-route and custom-domain inventory could not be queried."
+      },
+      "conclusion": "Public A records already exist; do not assume this hostname is available or attach it until the account owner verifies its current purpose and ownership."
+    }
+  ],
+  "ownershipConfirmed": false,
+  "cloudflareConflictCheckComplete": false,
+  "attachAllowed": false,
+  "noDnsChangesPerformed": true,
+  "noWorkerChangesPerformed": true,
+  "nextAction": "Use the existing authorized Cloudflare account context to repeat GET-only zone, DNS record, Workers route and custom-domain inventory for both candidates. Do not add new credentials or make changes as part of this check."
+}
