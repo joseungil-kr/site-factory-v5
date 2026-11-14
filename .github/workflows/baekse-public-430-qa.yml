@@ -1,0 +1,87 @@
+name: Baekse public 430 city/menu URLs and IndexNow readiness QA
+on:
+  pull_request:
+    paths:
+      - 'sites/baekse/**'
+      - 'scripts/build_baekse_cities.py'
+      - 'scripts/prepare_baekse_public.py'
+      - 'scripts/baekse_cf_release.py'
+      - 'tests/baekse-public-worker.test.mjs'
+      - '.github/workflows/baekse-public-430-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  check-430:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: '3.12'}
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - name: Check approved scope, five approved WebPs, original POOL and exact Worker hosts
+        run: |
+          python -m v5 plan-check --site baekse
+          python -m unittest discover -s tests -p 'test_baekse_cities.py' -v
+          python -m py_compile scripts/baekse_cf_release.py
+          node --test tests/baekse-public-worker.test.mjs
+      - name: Rebuild all 430 pages with exact image assets, unique titles and sampled similarity
+        run: |
+          python -m scripts.build_baekse_cities
+          python -m scripts.prepare_baekse_public
+      - name: Validate all indexable HTML, 430-URL sitemap, IndexNow key and preview isolation contract
+        run: |
+          python - <<'PY'
+          import json,re,hashlib
+          from pathlib import Path
+          from xml.etree import ElementTree as ET
+          root=Path('dist/baekse-public')
+          pre=Path('dist/baekse')
+          audit=json.loads(Path('reports/baekse/audit.json').read_text())
+          m=json.loads(Path('reports/baekse/manifest.json').read_text())
+          release=json.loads(Path('reports/baekse/public-release.json').read_text())
+          assert audit['status']=='PASS' and audit['sitePages']==430
+          assert audit['cityNames']==85 and audit['cityMenuPages']==340
+          assert audit['uniqueTitles']==audit['uniqueDescriptions']==430
+          assert audit['internalBrokenLinks']==0
+          assert audit['similarity']['passed'] and audit['similarity']['max']['value']<.49
+          assert release['pageCount']==release['urlCount']==release['selfCanonicalCount']==430
+          assert len(list(root.rglob('*.html')))==431
+          assert len(list((root/'assets/baekse').glob('*.webp')))==5
+          urls=[e.text for e in ET.parse(root/'sitemap.xml').iter() if e.tag.endswith('loc')]
+          assert len(urls)==430 and len(set(urls))==430 and urls==release['urls']
+          assert 'Allow: /' in (root/'robots.txt').read_text()
+          assert 'Disallow: /' not in (root/'robots.txt').read_text()
+          assert '<meta name="robots" content="noindex,nofollow">' in (root/'404.html').read_text()
+          assert (pre/'robots.txt').read_text()=='User-agent: *\nDisallow: /\n'
+          key=Path('sites/baekse/indexnow-key.txt').read_text().strip()
+          assert (root/(key+'.txt')).read_text()==key+'\n'
+          naver='<meta name="naver-site-verification" content="3203fa257fed369e603424067cbfab1f2611638b" />'
+          assert (root/'index.html').read_text().count(naver)==1
+          assert (pre/'index.html').read_text().count(naver)==1
+          for route in m['pages']:
+              path='index.html' if route=='/' else route.lstrip('/')
+              content=(root/path).read_text()
+              assert content.count('<meta name="robots" content="index,follow">')==1
+              assert content.count('<link rel="canonical" href="https://baekse.nalmada.net'+route+'">')==1
+              assert 'noindex,nofollow' not in content.split('</head>',1)[0]
+              assert 'tel:0314070103' in content
+              assert content.count('name="naver-site-verification"')==(1 if route=='/' else 0), route
+              assert (pre/path).read_text().count('<meta name="robots" content="noindex,nofollow">')==1
+          print('BAEKSE_PUBLIC_430_QUALITY_PASS',json.dumps({
+              'cityNames':85,'cityMenuPages':340,'sitemap':len(urls),'canonical':len(urls),
+              'indexNowKey':key+'.txt','fiveWebp':5,'similarity':audit['similarity']['max']['value'],
+              'previewNoindex':True,'indexNowSent':False}))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: baekse-public-430-candidate-${{ github.sha }}
+          path: |
+            dist/baekse-public/
+            reports/baekse/audit.json
+            reports/baekse/public-release.json
+            reports/baekse/manifest.json
+          if-no-files-found: error
+          retention-days: 30

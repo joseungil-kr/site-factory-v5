@@ -1,0 +1,249 @@
+{
+  "version": 1,
+  "siteId": "baekse",
+  "evidenceStatus": "REAL_GENERATOR_GEN_ID_AND_SOURCE_PIXEL_TO_FINAL_MAPPING_VERIFIED_BUT_VERBATIM_TOOL_PROMPT_AND_TOOL_GENERATION_TIME_NOT_RETURNED",
+  "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+  "generatorTool": "OpenAI image_gen",
+  "userRequestText": "실사느낌으로, 상차림이 너무 과함, 사진의 컨트라스트가 너무 강함, 부드러운 조명과 여유로운(복잡하지 않은) 상차림 으로 수정",
+  "userApprovalText": "마음에든다. 다음으로 진행",
+  "generatorPromptVerbatim": null,
+  "generatedAtUTC": null,
+  "recordingOrFileUploadTimeMustNotBeSubstitutedForGenerationTime": true,
+  "sourceArchive": {
+    "libraryPath": "/SiteFactory/image-origin/2026-10/baekse_generated_originals_5.zip",
+    "sha256": "6e709a003c4a62daf0efdccd18097fddec77d0174dd042ad6cd534e5d58599d7",
+    "includes": "Five raw generated PNG files and generator evidence JSON; original files are not re-generated."
+  },
+  "assets": [
+    {
+      "assetPath": "assets/library/baekse/hero.webp",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "origin": "image_gen output recorded as original raw PNG (not an online downloaded image)",
+      "generatorTool": "OpenAI image_gen",
+      "sourceFileId": "file_00000000074882069b97ded1d17a9ad5",
+      "generationId": "68c9c0f7-fbd8-4465-b141-c39a6a2963db",
+      "toolPromptVerbatim": null,
+      "generatedAtUTC": null,
+      "userRequestText": "실사느낌으로, 상차림이 너무 과함, 사진의 컨트라스트가 너무 강함, 부드러운 조명과 여유로운(복잡하지 않은) 상차림 으로 수정",
+      "originalFilename": "따뜻한_한국식_국밥_한상_차림.png",
+      "originalSHA256": "9eff39d97a7f3b35120865e8ec8e96b1b1e47ecb54afca8a14913d4e07307528",
+      "originalBytes": 2397407,
+      "originalPixels": [
+        1672,
+        941
+      ],
+      "finalFilename": "hero.webp",
+      "finalSHA256": "f04e25195d5784b0f8aac65ca81f0982aaca170d31ed97e8291e8eb39a8253b8",
+      "finalBytes": 100476,
+      "finalPixels": [
+        1280,
+        720
+      ],
+      "transformations": [
+        {
+          "operation": "downscale_and_webp_encode",
+          "known": "Original 1672×941 PNG -> 1280×720 WebP, output SHA256 verified",
+          "exactEncodingOptions": null
+        }
+      ],
+      "correspondence": {
+        "verification": "independent actual-image pixel matching of source PNG to final WebP after resize",
+        "comparisonSize": [
+          192,
+          108
+        ],
+        "meanAbsRGBDeviation": 1.04,
+        "classification": "MATCHED_SOURCE_TO_FINAL"
+      },
+      "depictedFactRole": "illustration_not_actual_menu_photo_or_verified_training_event",
+      "missingItems": [
+        "exact_image_gen_call_prompt",
+        "tool_generation_timestamp_utc"
+      ]
+    },
+    {
+      "assetPath": "assets/library/baekse/dakhanmari.webp",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "origin": "image_gen output recorded as original raw PNG (not an online downloaded image)",
+      "generatorTool": "OpenAI image_gen",
+      "sourceFileId": "file_0000000088b88206b85716f5d3356bf2",
+      "generationId": "ccfca9b9-ca06-45af-a294-a1454923558b",
+      "toolPromptVerbatim": null,
+      "generatedAtUTC": null,
+      "userRequestText": "실사느낌으로, 상차림이 너무 과함, 사진의 컨트라스트가 너무 강함, 부드러운 조명과 여유로운(복잡하지 않은) 상차림 으로 수정",
+      "originalFilename": "김치와_함께한_따끈한_삼계탕_한상.png",
+      "originalSHA256": "f58facd4f409c7ae8d3dcd7c217dc2ad0188a95f5249e89843ca6ba107912401",
+      "originalBytes": 2355952,
+      "originalPixels": [
+        1672,
+        941
+      ],
+      "finalFilename": "dakhanmari.webp",
+      "finalSHA256": "5dbcfd95abc0f4a3ea470ef651d5ed88069686fb17c4cd753a2d851fb8d851dc",
+      "finalBytes": 89748,
+      "finalPixels": [
+        1280,
+        720
+      ],
+      "transformations": [
+        {
+          "operation": "downscale_and_webp_encode",
+          "known": "Original 1672×941 PNG -> 1280×720 WebP, output SHA256 verified",
+          "exactEncodingOptions": null
+        }
+      ],
+      "correspondence": {
+        "verification": "independent actual-image pixel matching of source PNG to final WebP after resize",
+        "comparisonSize": [
+          192,
+          108
+        ],
+        "meanAbsRGBDeviation": 1.02,
+        "classification": "MATCHED_SOURCE_TO_FINAL"
+      },
+      "depictedFactRole": "illustration_not_actual_menu_photo_or_verified_training_event",
+      "missingItems": [
+        "exact_image_gen_call_prompt",
+        "tool_generation_timestamp_utc"
+      ]
+    },
+    {
+      "assetPath": "assets/library/baekse/dak-kalguksu.webp",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "origin": "image_gen output recorded as original raw PNG (not an online downloaded image)",
+      "generatorTool": "OpenAI image_gen",
+      "sourceFileId": "file_000000009f6c820692fc7b3e1860b7d6",
+      "generationId": "d72e77db-3407-439a-940b-3acfe2aa4a51",
+      "toolPromptVerbatim": null,
+      "generatedAtUTC": null,
+      "userRequestText": "실사느낌으로, 상차림이 너무 과함, 사진의 컨트라스트가 너무 강함, 부드러운 조명과 여유로운(복잡하지 않은) 상차림 으로 수정",
+      "originalFilename": "따뜻한_닭칼국수와_김치_상차림.png",
+      "originalSHA256": "1ac376eac9b7a06e092d29144da179ea192c6ee9e1e8f6ef68bd028db92ec87d",
+      "originalBytes": 2301847,
+      "originalPixels": [
+        1672,
+        941
+      ],
+      "finalFilename": "dak-kalguksu.webp",
+      "finalSHA256": "44fb492ac8e42a44471f924cad55feadf3e016919d8f3fc32513fed0580a6f34",
+      "finalBytes": 92110,
+      "finalPixels": [
+        1280,
+        720
+      ],
+      "transformations": [
+        {
+          "operation": "downscale_and_webp_encode",
+          "known": "Original 1672×941 PNG -> 1280×720 WebP, output SHA256 verified",
+          "exactEncodingOptions": null
+        }
+      ],
+      "correspondence": {
+        "verification": "independent actual-image pixel matching of source PNG to final WebP after resize",
+        "comparisonSize": [
+          192,
+          108
+        ],
+        "meanAbsRGBDeviation": 1.06,
+        "classification": "MATCHED_SOURCE_TO_FINAL"
+      },
+      "depictedFactRole": "illustration_not_actual_menu_photo_or_verified_training_event",
+      "missingItems": [
+        "exact_image_gen_call_prompt",
+        "tool_generation_timestamp_utc"
+      ]
+    },
+    {
+      "assetPath": "assets/library/baekse/sundaeguk.webp",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "origin": "image_gen output recorded as original raw PNG (not an online downloaded image)",
+      "generatorTool": "OpenAI image_gen",
+      "sourceFileId": "file_0000000088208206bd65f24a82191043",
+      "generationId": "8ead7620-e745-4b12-9d5f-dd4977412c5d",
+      "toolPromptVerbatim": null,
+      "generatedAtUTC": null,
+      "userRequestText": "실사느낌으로, 상차림이 너무 과함, 사진의 컨트라스트가 너무 강함, 부드러운 조명과 여유로운(복잡하지 않은) 상차림 으로 수정",
+      "originalFilename": "따뜻한_순대국밥_한상차림.png",
+      "originalSHA256": "b7cdad89ad8511e8babe2fa6c629e04e22acf0b2a2c2fa6437b1cca4d8d69b2d",
+      "originalBytes": 2327453,
+      "originalPixels": [
+        1672,
+        941
+      ],
+      "finalFilename": "sundaeguk.webp",
+      "finalSHA256": "2ac2890670a605588fdb1d7e78942cdbda1941ce4bdc48dddd8ff0e0f105cb47",
+      "finalBytes": 94778,
+      "finalPixels": [
+        1280,
+        720
+      ],
+      "transformations": [
+        {
+          "operation": "downscale_and_webp_encode",
+          "known": "Original 1672×941 PNG -> 1280×720 WebP, output SHA256 verified",
+          "exactEncodingOptions": null
+        }
+      ],
+      "correspondence": {
+        "verification": "independent actual-image pixel matching of source PNG to final WebP after resize",
+        "comparisonSize": [
+          192,
+          108
+        ],
+        "meanAbsRGBDeviation": 1.06,
+        "classification": "MATCHED_SOURCE_TO_FINAL"
+      },
+      "depictedFactRole": "illustration_not_actual_menu_photo_or_verified_training_event",
+      "missingItems": [
+        "exact_image_gen_call_prompt",
+        "tool_generation_timestamp_utc"
+      ]
+    },
+    {
+      "assetPath": "assets/library/baekse/kitchen-training.webp",
+      "sourceType": "GENERATION_EVIDENCE_PARTIAL",
+      "origin": "image_gen output recorded as original raw PNG (not an online downloaded image)",
+      "generatorTool": "OpenAI image_gen",
+      "sourceFileId": "file_00000000e7548206a48bcc065d1af7f5",
+      "generationId": "e11ea286-a0be-4e81-a227-463c2773bc61",
+      "toolPromptVerbatim": null,
+      "generatedAtUTC": null,
+      "userRequestText": "실사느낌으로, 상차림이 너무 과함, 사진의 컨트라스트가 너무 강함, 부드러운 조명과 여유로운(복잡하지 않은) 상차림 으로 수정",
+      "originalFilename": "김이_모락모락_갈비탕_주방_풍경.png",
+      "originalSHA256": "3dc35781c295015d0af97254ba2d0218f9b823de2f3d9c4f37201671d4baaea6",
+      "originalBytes": 2256598,
+      "originalPixels": [
+        1672,
+        941
+      ],
+      "finalFilename": "kitchen-training.webp",
+      "finalSHA256": "7975c9b4a17986e4bcd2170b125cfc06362327c051972ad522e4f7249f2938a7",
+      "finalBytes": 84520,
+      "finalPixels": [
+        1280,
+        720
+      ],
+      "transformations": [
+        {
+          "operation": "downscale_and_webp_encode",
+          "known": "Original 1672×941 PNG -> 1280×720 WebP, output SHA256 verified",
+          "exactEncodingOptions": null
+        }
+      ],
+      "correspondence": {
+        "verification": "independent actual-image pixel matching of source PNG to final WebP after resize",
+        "comparisonSize": [
+          192,
+          108
+        ],
+        "meanAbsRGBDeviation": 1.03,
+        "classification": "MATCHED_SOURCE_TO_FINAL"
+      },
+      "depictedFactRole": "illustration_not_actual_menu_photo_or_verified_training_event",
+      "missingItems": [
+        "exact_image_gen_call_prompt",
+        "tool_generation_timestamp_utc"
+      ]
+    }
+  ]
+}

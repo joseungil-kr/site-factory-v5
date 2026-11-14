@@ -1,0 +1,111 @@
+{
+  "version": 1,
+  "siteId": "baekse",
+  "approved": true,
+  "approvalBasis": "User explicitly requested baekse.nalmada.net, nationwide 시-only recipe transfer and startup, and approved five softer real-style generated images on 2026-10-30",
+  "approvalScope": "CONTENT_PLAN_AND_NOINDEX_PREVIEW_ONLY; custom domain binding and index release are separate",
+  "domain": "https://baekse.nalmada.net",
+  "brand": "백세푸드",
+  "businessModel": "닭한마리·닭칼국수·순대국·소머리국밥 레시피 기술전수/창업 상담 및 메뉴 도입",
+  "serviceScope": {
+    "region": "대한민국 전국의 시 명칭만 사용",
+    "granularity": "85 city names: 8 metropolitan/special + 77 basic/administrative; 2026-07 Jeonnam/Gwangju consolidation reflected",
+    "facilities": "existing restaurant, new independent shop, restaurant shop-in-shop; physical local training class not implied",
+    "evidence": "sites/baekse/cities.json"
+  },
+  "pageTypes": [
+    "home",
+    "menu-guide",
+    "city-hub",
+    "city-menu-landing"
+  ],
+  "targetPageCount": 430,
+  "countFormula": "home 1 + 4 menu guides + 85 city hubs + 85 × 4 city-menu landings = 430",
+  "titlePattern": "{시명} {메뉴} 레시피 전수·창업 상담 | 백세푸드",
+  "urlPattern": "/ (home), /menu/{menuKey}/, /city/{encodedCity}/, /city/{encodedCity}/{menuKey}/",
+  "keywordGroups": {
+    "primary": [
+      "{시명} 닭한마리 레시피 전수",
+      "{시명} 닭칼국수 창업",
+      "{시명} 순대국 창업",
+      "{시명} 소머리국밥 전수"
+    ],
+    "secondary": [
+      "기술전수",
+      "기존 식당 메뉴 추가",
+      "독립 창업",
+      "육수·다데기 소스",
+      "주방 운영 교육",
+      "식자재 공급 상담"
+    ]
+  },
+  "copyPoolPlan": {
+    "industry": "외식업 레시피 기술전수·메뉴추가",
+    "source": "baeksefood.com official site, /academy, /blog/dak-kalguksu-startup, original independently written pool, user's four-menu scope",
+    "sentenceTarget": 120,
+    "poolPath": "sites/baekse/copy-pool.json",
+    "regionalDifferentiation": "City name+menu+operator decision scenario combinations; never invent city-specific branch, sales, local faculty, demand or fee",
+    "contentSources": [
+      "https://baeksefood.com/",
+      "https://baeksefood.com/academy/",
+      "https://baeksefood.com/blog/dak-kalguksu-startup/"
+    ]
+  },
+  "similarityAudit": {
+    "metric": "char-5gram-jaccard",
+    "thresholdExclusive": 0.49,
+    "sampleFraction": 0.01,
+    "seed": 20261030,
+    "scope": "main generated narrative paragraphs excluding all shared layout/nav/CTA; compare seeded sample against all 340 city/menu pages"
+  },
+  "conversion": {
+    "phone": "031-407-0103",
+    "mode": "전화상담",
+    "orderUrl": null,
+    "officialReferenceUrl": "https://baeksefood.com/academy/"
+  },
+  "images": {
+    "source": "five user-approved soft-light AI-generated images; exact SHA/size manifest at sites/baekse/images-manifest.json",
+    "approved": true,
+    "requiredCount": 5,
+    "repoPath": "assets/library/baekse",
+    "imageStatus": "local zip available; remote binary commit not yet independently verified",
+    "usage": "common 5 image paths shared between all pages"
+  },
+  "publishPolicy": {
+    "mode": "FULL_430_PUBLIC_AFTER_EXACT_REMOTE_QA",
+    "indexNow": true,
+    "workersDevNoindex": true,
+    "customDomainNotAttached": "PENDING_REMOTE_ATTACH",
+    "noExistingSitesTouched": true,
+    "productionReleaseGate": "V5 430 all-URL QA, 5 exact WebPs, preflight verified original V4 account and new Worker, standalone new Worker deployment, custom domain exact-host HTTPS readback, preview noindex, one POST of exact sitemap URLs after key HTTP 200"
+  },
+  "offerings": {
+    "verifiedByOfficialWebsite": [
+      "닭한마리 기술전수 5일 집중",
+      "닭칼국수 메뉴 추가·샵인샵 상담",
+      "조리법·육수·다데기 상담 및 공급 가능"
+    ],
+    "operatorRequestedPendingMenuSpecificEvidence": [
+      "순대국",
+      "소머리국밥"
+    ],
+    "caveat": "Avoid promising the 5-day chicken curriculum also applies to the two soup menus without a business confirmation."
+  },
+  "contentGuard": {
+    "forbidden": [
+      "근거 없는 지역 매장 존재",
+      "실제 전수 수료 후기나 매출 보장",
+      "확인되지 않은 금액·비용·로열티",
+      "순대국·소머리국밥 5일 프로그램 확정",
+      "AI 이미지를 실매장 실적 사진으로 표현",
+      "군·구·동·읍·면을 별도 랜딩 URL로 생성"
+    ]
+  },
+  "releaseAuthorization": {
+    "source": "User 2026-10-30 explicit instruction: commit, deploy, IndexNow",
+    "requested": true,
+    "approvedPageCount": 430,
+    "scope": "only baekse.nalmada.net, brand Baeksefood, 85 city names and four recipe transfer menus"
+  }
+}
