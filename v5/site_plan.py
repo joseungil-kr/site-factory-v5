@@ -12,7 +12,7 @@ REQUIRED = ("domain","brand","businessModel","serviceScope","pageTypes",
 
 def initial_spec(site_id,brand,keyword,region,phone):
     return {
-        "version":1,"siteId":site_id,"approved":False,
+        "version":2,"siteId":site_id,"approved":False,
         "domain":None,"brand":brand,"businessModel":None,
         "serviceScope":{"region":region,"granularity":None,"facilities":None},
         "pageTypes":[],"targetPageCount":None,
@@ -22,7 +22,9 @@ def initial_spec(site_id,brand,keyword,region,phone):
         "similarityAudit":{"metric":"char-5gram-jaccard","thresholdExclusive":0.49,"sampleFraction":0.01,"seed":20261026},
         "conversion":{"phone":phone,"orderUrl":None,"mode":None},
         "images":{"source":None,"approved":False},
-        "publishPolicy":{"mode":None,"indexNow":None}
+        "publishPolicy":{"mode":None,"indexNow":None},
+        "research":{"topic":[],"price":[],"order":[]},
+        "purposePools":{}
     }
 
 def validate_plan(data, site_id=None):
@@ -36,6 +38,38 @@ def validate_plan(data, site_id=None):
     if site_id is not None and data.get("siteId")!=site_id:
         errors.append("siteId mismatch")
     if data.get("approved") is not True:errors.append("plan not approved")
+    if type(data.get('version',1)) is not int or data.get('version',1) not in (1,2):
+        errors.append('invalid plan version')
+    if data.get("version")==2:
+        research=data.get("research")
+        if not isinstance(research,dict):
+            errors.append("research missing topic/price/order sources")
+        else:
+            for key in ("topic","price","order"):
+                rows=research.get(key)
+                if not isinstance(rows,list) or not rows or not all(isinstance(x,dict) and isinstance(x.get('source'),str) and x['source'].strip() and isinstance(x.get('checkedOn'),str) and re.fullmatch(r'\d{4}-\d{2}-\d{2}',x['checkedOn']) for x in rows):
+                    errors.append("research missing verified "+key+" source and checkedOn")
+        pools=data.get('purposePools')
+        if not isinstance(pools,dict) or not pools:
+            errors.append('purposePools missing purpose-specific copy')
+        else:
+            for name,pool in pools.items():
+                if not isinstance(name,str) or not name.strip() or not isinstance(pool,dict):
+                    errors.append('invalid purpose pool');continue
+                for field in ('introductions','sections','faqs'):
+                    if not isinstance(pool.get(field),list) or not pool[field]:
+                        errors.append('purpose pool '+name+' missing '+field)
+                key='serviceIds' if data.get('businessModel')=='service-lead' else 'productSkus'
+                if not isinstance(pool.get(key),list) or not pool[key]:
+                    errors.append('purpose pool '+name+' missing '+key)
+                if isinstance(pool.get('introductions'),list) and not all(isinstance(x,str) and x.strip() for x in pool['introductions']):
+                    errors.append('purpose pool '+name+' invalid introductions')
+                if isinstance(pool.get('sections'),list) and not all(isinstance(x,dict) and all(isinstance(x.get(k),str) and x[k].strip() for k in ('heading','paragraph')) for x in pool['sections']):
+                    errors.append('purpose pool '+name+' invalid sections')
+                elif isinstance(pool.get('sections'),list) and not {'choice','order'}.issubset({x.get('slot') for x in pool['sections']}):
+                    errors.append('purpose pool '+name+' needs choice and order section slots')
+                if isinstance(pool.get('faqs'),list) and not all(isinstance(x,dict) and all(isinstance(x.get(k),str) and x[k].strip() for k in ('q','a')) for x in pool['faqs']):
+                    errors.append('purpose pool '+name+' invalid faqs')
     domain=data.get("domain")
     if isinstance(domain,str):
         p=urlsplit(domain)

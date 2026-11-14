@@ -1,12 +1,7 @@
 name: Daysky reviewed 1736-page production asset deploy
 on:
-  push:
-    branches: [main]
-    paths:
-      - 'sites/daysky/site.json'
-      - 'v5/service_model.py'
-      - 'v5/engine.py'
-      - '.github/workflows/daysky-1736-deploy.yml'
+  # Existing sites are not regenerated or deployed by generator changes.
+  # Run only after the user explicitly requests an existing-site release.
   workflow_dispatch:
 permissions:
   contents: read

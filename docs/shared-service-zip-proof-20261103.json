@@ -1,0 +1,18 @@
+{
+  "fixtureOnly": true,
+  "sourceReleaseHash": "6138016d0da0963f535b7408bbda5c8463a9509c5fcf865dc4e517dbe78f4f6c",
+  "snapshotSHA256": "3609ba240dd10c66f053d91352e29ec693cd1cbda532eaba6113f2bf7cbcddc7",
+  "snapshotContentsVerified": true,
+  "restoredZipSHA256": "3609ba240dd10c66f053d91352e29ec693cd1cbda532eaba6113f2bf7cbcddc7",
+  "nextPreviousSnapshotSHA256": "3609ba240dd10c66f053d91352e29ec693cd1cbda532eaba6113f2bf7cbcddc7",
+  "deploymentExecuted": false,
+  "visitorRequests": 0,
+  "sourceModes": {
+    "new-a": "preview",
+    "new-b": "publish"
+  },
+  "pythonSuitePassed": 100,
+  "releaseTestsPassed": 13,
+  "mixedWranglerDryRunPassed": true,
+  "artifactIntegrityAfterDryRunVerified": true
+}

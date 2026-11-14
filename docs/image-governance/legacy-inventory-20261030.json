@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "reviewDate": "2026-10-30",
+  "changeControl": "READ_ONLY_AUDIT_RESULTS; existing pages, live worker, product data or DNS must not be mutated automatically.",
+  "sourceSnapshots": [
+    {
+      "repo": "joseungil-kr/site-factory-v5",
+      "branch": "main",
+      "sha": "741f4c410c29c622504b9b40b0ef23b16b64b717",
+      "imageFilesFound": 14,
+      "fullTree": true
+    },
+    {
+      "repo": "joseungil-kr/site-factory-v5",
+      "branch": "feature/v54-baekse-city-recipe-transfer-20261030",
+      "sha": "9f1659cd8ca2946844018512a5f79cadef1303a8",
+      "imageFilesFound": 19,
+      "fullTree": true
+    },
+    {
+      "repo": "joseungil-kr/site-factory-v5",
+      "branch": "feature/v54-winterbbang-preflight-20261029",
+      "sha": "4b6a6b1dad4e623ab05c713e3aff1010d1be4a5c",
+      "imageFilesFound": 19,
+      "fullTree": true
+    },
+    {
+      "repo": "joseungil-kr/site-factory-v4",
+      "branch": "main",
+      "sha": "223b9348f32b700af98645d034943772d590aaba",
+      "imageFilesVisible": 333,
+      "treeTruncated": true,
+      "notExhaustive": true
+    }
+  ],
+  "groups": [
+    {
+      "id": "v5-daysky-approved-photographs",
+      "repo": "v5",
+      "pathPrefix": "assets/library/daysky/skycar-",
+      "extensions": [
+        "webp"
+      ],
+      "count": 3,
+      "status": "USER_APPROVED_EXTERNAL",
+      "nextAction": "preserve; exact source scope only",
+      "evidence": [
+        "docs/DAYSKY_PHOTO_PROVENANCE.json",
+        "user 2026-10-30 explicit skycar1day.com exception"
+      ]
+    },
+    {
+      "id": "v5-daysky-svg",
+      "repo": "v5",
+      "paths": [
+        "assets/library/daysky/skycar-building.svg",
+        "assets/library/daysky/skycar-crew.svg",
+        "assets/library/daysky/skycar-worksite.svg"
+      ],
+      "count": 3,
+      "status": "SOURCE_UNVERIFIED",
+      "nextAction": "future new publication usage HOLD until code/tool origin established; do not force regeneration of authorized photos"
+    },
+    {
+      "id": "v5-promotion-plant",
+      "repo": "v5",
+      "paths": [
+        "assets/library/promotion-plant/atelier-florist.webp",
+        "assets/library/promotion-plant/hero-florist.webp",
+        "assets/library/promotion-plant/moment-blooms.webp",
+        "assets/library/promotion-plant/moment-flowers.webp",
+        "assets/library/promotion-plant/moment-leaves.webp",
+        "assets/library/promotion-plant/plant-a.svg",
+        "assets/library/promotion-plant/plant-b.svg",
+        "assets/library/promotion-plant/plant-c.svg"
+      ],
+      "count": 8,
+      "status": "SOURCE_UNVERIFIED",
+      "nextAction": "source tool reference/prompt or exact scoped user permission needed before new publication; existing draft imageAssetsApproved:false"
+    },
+    {
+      "id": "v5-baekse-ai",
+      "repo": "v5 PR24",
+      "pathPrefix": "assets/library/baekse/",
+      "count": 5,
+      "status": "GENERATION_EVIDENCE_PARTIAL",
+      "nextAction": "keep published source while backfilling exact tool prompt/time if recoverable. Original PNG 5 and tool gen ids preserved, final WebP sha verified.",
+      "sourceArchiveLibrary": "/SiteFactory/image-origin/2026-10/baekse_generated_originals_5.zip",
+      "sourceArchiveSha256": "6e709a003c4a62daf0efdccd18097fddec77d0174dd042ad6cd534e5d58599d7"
+    },
+    {
+      "id": "v5-winterbbang-ai",
+      "repo": "v5 PR23",
+      "pathPrefix": "assets/library/winterbbang/",
+      "count": 5,
+      "status": "GENERATION_EVIDENCE_PARTIAL",
+      "nextAction": "preserve existing deployment; exact generated collage-to-final-crop correspondence, verbatim prompts and timestamps require backfill for future image changes",
+      "sourceArchiveLibrary": "/SiteFactory/image-origin/2026-10/winterbbang_generated_collage_originals.zip",
+      "sourceArchiveSha256": "c6c394c94bbb639de8a616436e4802acfc5e92539189d3a0b5a6f8a0d956db28"
+    },
+    {
+      "id": "v4-nationwide-banners",
+      "repo": "v4",
+      "pathPrefix": "assets/national-banners/",
+      "count": 4,
+      "status": "SOURCE_UNVERIFIED",
+      "nextAction": "new releases/other-site reuse on hold pending original generation result or right grant; no mass removal"
+    },
+    {
+      "id": "v4-catalog-product-images",
+      "repo": "v4",
+      "samplePathGroups": [
+        "data/national-products/images",
+        "data/funeral-products/images",
+        "site/national-flower-a/assets",
+        "site/national-flower-b/assets"
+      ],
+      "sampleCountAtLeast": 205,
+      "status": "PRODUCT_ORIGIN_RECORDED_PERMISSION_SCOPE_RECHECK",
+      "nextAction": "source product URL/SKU and user's exact intended use permission check per group; do not broaden to other external domains or present synthetic as product photo",
+      "evidence": [
+        "docs/implementation/national-hub-design/ASSETS.json",
+        "reference/legacy-data/product-sources.json"
+      ]
+    },
+    {
+      "id": "v4-competitor-evidence",
+      "repo": "v4",
+      "pathPrefix": "evidence/research/",
+      "visibleImageCount": 30,
+      "status": "RESEARCH_ONLY",
+      "nextAction": "retain forensic research files, prohibit copying them into public page assets",
+      "evidence": [
+        "docs/research/IMAGE_ROLE_REVIEW.md"
+      ]
+    }
+  ],
+  "noncomplianceInterpretation": "Missing provenance does NOT prove unlawful copying. It means permission/generation cannot yet be independently confirmed, thus new publication is held. Existing approved products, content and live service are not deleted/rolled back merely for absence of metadata."
+}
