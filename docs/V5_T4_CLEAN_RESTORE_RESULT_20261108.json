@@ -1,0 +1,496 @@
+{
+  "test": "T4 clean-directory remote-input restore and offline reproduction",
+  "dateUTC": "2026-11-08",
+  "controlSourceSHA": "f457b66f921d72e6abbefcfe03dfc3c4d6f43401",
+  "environment": {
+    "sameCloudHost": true,
+    "freshOS": false,
+    "newEmptyDirectory": true,
+    "previousInputOutputDirectoriesUsed": false,
+    "python": "3.12.14",
+    "subprocessEnvironmentKeys": [
+      "PATH",
+      "PYTHONIOENCODING",
+      "PYTHONDONTWRITEBYTECODE"
+    ]
+  },
+  "library": {
+    "libraryFileId": "libfile_036e72dc9e4481919d1742e1cd416804",
+    "fileId": "file_00000000c6b881f58a97f883b27d4a10",
+    "bytes": 84218864,
+    "sha256": "16b52597fe77b0b4311ea21ad5daf6c5193af94346f8dc8df9834e676003a180",
+    "freshSupportedMaterialization": true
+  },
+  "freshGitHubFiles": [
+    {
+      "localPath": "skyquote/scripts/skyquote_audit_official.py",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "e0d0fabc6aca320e21b29c81792b0132a5a6d478",
+      "path": "scripts/skyquote_audit_official.py",
+      "sha256": "8e8780f98a037b2069b6ab1ed6fe359915aa994f9654e16d0c4172d116098772",
+      "dest": "inputs/skyquote/scripts/skyquote_audit_official.py",
+      "bytes": 3701
+    },
+    {
+      "localPath": "skyquote/sites/skyquote/official-upper-regions-20261022.json",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "e0d0fabc6aca320e21b29c81792b0132a5a6d478",
+      "path": "sites/skyquote/official-upper-regions-20261022.json",
+      "sha256": "2dca45d5095ed9266c7373a019925c8e5e0145d4d7803c53a45848e1d498d95d",
+      "dest": "inputs/skyquote/sites/skyquote/official-upper-regions-20261022.json",
+      "bytes": 67571
+    },
+    {
+      "localPath": "clinic-base/sites/nalmada-shared3/build_national.py",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "sites/nalmada-shared3/build_national.py",
+      "sha256": "86b85511d942c6b80ca28668a618b9549b80cfcf7cd329a0decab9754091c0ac",
+      "dest": "inputs/clinic-base/sites/nalmada-shared3/build_national.py",
+      "bytes": 52375
+    },
+    {
+      "localPath": "clinic-patch/sites/nalmada-shared3/patch_active_rss_only.py",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "3ae081242743fb8d8bbdd498a44e3855782752ad",
+      "path": "sites/nalmada-shared3/patch_active_rss_only.py",
+      "sha256": "5fb0fa6717c2c097d93dd229a694158fe8a72605deb4f2ea3c59eb2cec91b12c",
+      "dest": "inputs/clinic-patch/sites/nalmada-shared3/patch_active_rss_only.py",
+      "bytes": 4321
+    },
+    {
+      "localPath": "clinic-patch/sites/nalmada-shared3/rss_feed.py",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "3ae081242743fb8d8bbdd498a44e3855782752ad",
+      "path": "sites/nalmada-shared3/rss_feed.py",
+      "sha256": "6711c9bcbf814bf8b062e674d7f605fe85cab9ce8814da52ad69dfbb211027db",
+      "dest": "inputs/clinic-patch/sites/nalmada-shared3/rss_feed.py",
+      "bytes": 7232
+    },
+    {
+      "localPath": "clinic-patch/tests/test_clinic_rss_feed.py",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "3ae081242743fb8d8bbdd498a44e3855782752ad",
+      "path": "tests/test_clinic_rss_feed.py",
+      "sha256": "cfb9c54e075ad480de2c52cd00744e4511b0e179fe216085a1536ebcb00119fa",
+      "dest": "inputs/clinic-patch/tests/test_clinic_rss_feed.py",
+      "bytes": 7050
+    },
+    {
+      "localPath": "clinic-base/data/regions/nationwide_locality_candidates_5034.json",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "data/regions/nationwide_locality_candidates_5034.json",
+      "sha256": "a33b9817e25d18ee8ee66d5cffffa46bb989c60bd91b355e0b99545c9bb40272",
+      "dest": "inputs/clinic-base/data/regions/nationwide_locality_candidates_5034.json",
+      "bytes": 226704
+    },
+    {
+      "localPath": "clinic-base/sites/clinicflower-preview/clinicflower-copy-pool-720.json",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "sites/clinicflower-preview/clinicflower-copy-pool-720.json",
+      "sha256": "b43d42a58440ffd8524ecf24c2f6c35c70cae3c74e0aacbe0d974e8784919e89",
+      "dest": "inputs/clinic-base/sites/clinicflower-preview/clinicflower-copy-pool-720.json",
+      "bytes": 393743
+    },
+    {
+      "localPath": "clinic-base/sites/nalmada-shared3/clinic-indexnow-key.txt",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "sites/nalmada-shared3/clinic-indexnow-key.txt",
+      "sha256": "c481672f476a9aaada294785f9158153099bfd41fd9f3a7084a2a5397ee48725",
+      "dest": "inputs/clinic-base/sites/nalmada-shared3/clinic-indexnow-key.txt",
+      "bytes": 32
+    },
+    {
+      "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/celebration-wreath.webp",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "sites/nalmada-shared3/public/assets/images/celebration-wreath.webp",
+      "sha256": "0c8e735b113c4f0eedc8906a78eb5c39e222f5613561a0be7ee7529b83f37ff8",
+      "dest": "inputs/clinic-base/sites/nalmada-shared3/public/assets/images/celebration-wreath.webp",
+      "bytes": 272178
+    },
+    {
+      "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/dental.webp",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "sites/nalmada-shared3/public/assets/images/dental.webp",
+      "sha256": "4bba70d3e270f1e3b1abc28f25a6e8aa57d0fe3fe22c0f1be4bdf15572c916c2",
+      "dest": "inputs/clinic-base/sites/nalmada-shared3/public/assets/images/dental.webp",
+      "bytes": 111234
+    },
+    {
+      "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/hero.webp",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "sites/nalmada-shared3/public/assets/images/hero.webp",
+      "sha256": "4de98df894bacbf0ba096732352e6078f4b3f39f2b10596dd16a871ba13170ab",
+      "dest": "inputs/clinic-base/sites/nalmada-shared3/public/assets/images/hero.webp",
+      "bytes": 142312
+    },
+    {
+      "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/hospital.webp",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "sites/nalmada-shared3/public/assets/images/hospital.webp",
+      "sha256": "62be101cbc0358d16947450ee1c0fc592b33dbb344c7bf81719747417a81d0ef",
+      "dest": "inputs/clinic-base/sites/nalmada-shared3/public/assets/images/hospital.webp",
+      "bytes": 126444
+    },
+    {
+      "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/oriental.webp",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "sites/nalmada-shared3/public/assets/images/oriental.webp",
+      "sha256": "733ed7e7c4633d3217fa24fba5f297b28ab75376ded0817ffebd23e3bdbf595a",
+      "dest": "inputs/clinic-base/sites/nalmada-shared3/public/assets/images/oriental.webp",
+      "bytes": 179072
+    },
+    {
+      "localPath": "clinic-base/sites/nalmada-shared3/public/assets/images/phone.webp",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "sites/nalmada-shared3/public/assets/images/phone.webp",
+      "sha256": "4281c2849833d664d947d6ad37d8a3283e3b252ca5d6a6f3f0f017334ba50fde",
+      "dest": "inputs/clinic-base/sites/nalmada-shared3/public/assets/images/phone.webp",
+      "bytes": 151492
+    },
+    {
+      "localPath": "clinic-base/sites/nalmada-shared3/public/assets/style.css",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "sites/nalmada-shared3/public/assets/style.css",
+      "sha256": "0074d0a130d985d5a73b1169042e20677d2ff13a2454b21c8e8e6f6914a6f4b9",
+      "dest": "inputs/clinic-base/sites/nalmada-shared3/public/assets/style.css",
+      "bytes": 8199
+    },
+    {
+      "localPath": "clinic-base/sites/nalmada-shared3/worker.national.mjs",
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "32484f02e3c12e6bfcf057702041b70f66fdafe5",
+      "path": "sites/nalmada-shared3/worker.national.mjs",
+      "sha256": "8f4f4e385be23afac5264448b2529f2d2ea42d7b25ed4d0d9a2d3b87bf6a1a14",
+      "dest": "inputs/clinic-base/sites/nalmada-shared3/worker.national.mjs",
+      "bytes": 2650
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v4",
+      "ref": "97436e8f020f68d22cca8570b00bf567f6fe704f",
+      "path": "data/regions/sources/official-codes.zip",
+      "dest": "official-codes.zip",
+      "bytes": 413481,
+      "sha256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "01563363af7c7b968f1a03c24729cc2f23c81664",
+      "path": "scripts/build_todayflower_rss.py",
+      "dest": "todayflower/scripts/build_todayflower_rss.py",
+      "bytes": 5839,
+      "sha256": "58aa644fa6298f97fc02286c6e348e3771ddd400626b2e51e0021993cb3b1e7b"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "path": "sites/todayflower-nalmada/links.json",
+      "dest": "todayflower/sites/todayflower-nalmada/links.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "path": "sites/todayflower-nalmada/pages.json",
+      "dest": "todayflower/sites/todayflower-nalmada/pages.json",
+      "bytes": 152778,
+      "sha256": "07bbd9b69a4bf2e898c07ad1447f8e01e70bc55c4fcb57a7b631901746242d65"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "path": "sites/todayflower-nalmada/products.json",
+      "dest": "todayflower/sites/todayflower-nalmada/products.json",
+      "bytes": 5638,
+      "sha256": "a94f6230d76529c275339d9503c6c34d415afef49209f0f6519b7f0455594111"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "path": "sites/todayflower-nalmada/regions.json",
+      "dest": "todayflower/sites/todayflower-nalmada/regions.json",
+      "bytes": 7450,
+      "sha256": "c37364d2a4456f1e4b0f47fdb709e4078c46096438b05b64256c724812e3ee74"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "path": "sites/todayflower-nalmada/site.json",
+      "dest": "todayflower/sites/todayflower-nalmada/site.json",
+      "bytes": 2970,
+      "sha256": "9c49d23e3f38afa1fd8fd2465c446e871106f83bc9d1a022da7f739902dce522"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "path": "sites/todayflower-nalmada/special-pages.json",
+      "dest": "todayflower/sites/todayflower-nalmada/special-pages.json",
+      "bytes": 3,
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "path": "v5/__init__.py",
+      "dest": "todayflower/v5/__init__.py",
+      "bytes": 94,
+      "sha256": "417bd23e55d8bf94aa826837bece0968a7d28109c1e118f114072ac9a46d5264"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "path": "v5/addons.py",
+      "dest": "todayflower/v5/addons.py",
+      "bytes": 6222,
+      "sha256": "c0fc735a831847c73f8919446617494be7636577299a6f5795aa46eddfa552ea"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "path": "v5/config.py",
+      "dest": "todayflower/v5/config.py",
+      "bytes": 9562,
+      "sha256": "47043bed6689ee3324ec13331f7c9a41eab537e73f03423be05579444e09ed08"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "path": "v5/markup.py",
+      "dest": "todayflower/v5/markup.py",
+      "bytes": 22115,
+      "sha256": "1e50023765c5c1ec4f8bb145b97cf3bb2c7bfb3873a6387a10a6f4c8bf4d4cf1"
+    },
+    {
+      "repository": "joseungil-kr/site-factory-v5",
+      "ref": "0ca5705aa12950da571f089b2d4ac7256111f77e",
+      "path": "v5/todayflower_regions.py",
+      "dest": "todayflower/v5/todayflower_regions.py",
+      "bytes": 30465,
+      "sha256": "0808daf2fbb5eaf412102fc5ed0db9ef08f1ec708b2f5379ce8690b4c65d43b0"
+    }
+  ],
+  "result": {
+    "scope": "read-only local test preparation, not live or deployment validation",
+    "pinnedSourceFilesVerified": 40,
+    "official": {
+      "sourceRows": 53403,
+      "activeRows": 20560,
+      "matchedLowerRows": 4632,
+      "upperRows": 284
+    },
+    "artifact": {
+      "contentPages": 5070,
+      "verifiedManifestFiles": 5087,
+      "archiveBytes": 84218864,
+      "archiveMembers": 5113
+    },
+    "clinicDelta": {
+      "beforeFiles": 15925,
+      "afterFiles": 15925,
+      "added": [],
+      "changed": [
+        "sites/clinicflower/rss.xml",
+        "sites/clinicopen/rss.xml",
+        "sites/clinicpresent/rss.xml"
+      ],
+      "unchangedFiles": 15922,
+      "unchangedHTML": 15906
+    },
+    "todayflowerDelta": {
+      "beforeFiles": 5087,
+      "afterFiles": 5088,
+      "added": [
+        "rss.xml"
+      ],
+      "changed": [],
+      "unchangedFiles": 5087,
+      "unchangedHTML": 5071
+    },
+    "rssFeeds": {
+      "sites/clinicflower/rss.xml": {
+        "items": 50,
+        "bytes": 899661,
+        "sha256": "9599575622d61b71fc6ba8e2c85092e60453ea2400e0c80094dee16f0baa8127"
+      },
+      "sites/clinicopen/rss.xml": {
+        "items": 50,
+        "bytes": 896883,
+        "sha256": "c2fa6ef27ecf01bf07be583fbf4280c3f26affc6a2cfc8d2e49e92d41f99caef"
+      },
+      "sites/clinicpresent/rss.xml": {
+        "items": 50,
+        "bytes": 853458,
+        "sha256": "c399d59f0c122d468c53360a9593d422be6b362f72917e7926374e3ba1cb3194"
+      },
+      "todayflower/rss.xml": {
+        "items": 50,
+        "bytes": 902005,
+        "sha256": "7e10b1fff72fcd105adcef830cfc0763ee0a9b8c1fa2505e09d066ed574482a9"
+      }
+    },
+    "htmlSmokeSamples": [
+      {
+        "file": "index.html",
+        "main": true,
+        "h1": true,
+        "canonical": false
+      },
+      {
+        "file": "5071.html",
+        "main": true,
+        "h1": true,
+        "canonical": false
+      },
+      {
+        "file": "index.html",
+        "main": true,
+        "h1": true,
+        "canonical": true
+      },
+      {
+        "file": "05034.html",
+        "main": true,
+        "h1": true,
+        "canonical": true
+      },
+      {
+        "file": "index.html",
+        "main": true,
+        "h1": true,
+        "canonical": true
+      },
+      {
+        "file": "05034.html",
+        "main": true,
+        "h1": true,
+        "canonical": true
+      },
+      {
+        "file": "index.html",
+        "main": true,
+        "h1": true,
+        "canonical": true
+      },
+      {
+        "file": "05034.html",
+        "main": true,
+        "h1": true,
+        "canonical": true
+      }
+    ],
+    "readyForOfflineTest": true,
+    "readyForDeployment": false,
+    "networkCalls": 0,
+    "siteFilesWritten": 0,
+    "remaining": [
+      "clean-environment restore from external sources",
+      "actual private HTTP endpoint and owner/unauthorized responses",
+      "deployment credentials and rollback exercise not in this scope"
+    ]
+  },
+  "commands": [
+    {
+      "args": [
+        "scripts/skyquote_audit_official.py",
+        "--archive",
+        "$TEST_ROOT/official-codes.zip"
+      ],
+      "cwd": "inputs/skyquote",
+      "returncode": 0
+    },
+    {
+      "args": [
+        "-m",
+        "scripts.build_todayflower_rss"
+      ],
+      "cwd": "todayflower",
+      "returncode": 0
+    },
+    {
+      "args": [
+        "sites/nalmada-shared3/build_national.py",
+        "--root",
+        ".",
+        "--output",
+        "$TEST_ROOT/clinic-before",
+        "--mode",
+        "public",
+        "--audit-json",
+        "$TEST_ROOT/clinic-build.json"
+      ],
+      "cwd": "inputs/clinic-base",
+      "returncode": 0
+    },
+    {
+      "args": [
+        "sites/nalmada-shared3/patch_active_rss_only.py",
+        "--help"
+      ],
+      "cwd": "inputs/clinic-patch",
+      "returncode": 0
+    },
+    {
+      "args": [
+        "sites/nalmada-shared3/patch_active_rss_only.py",
+        "--public",
+        "$TEST_ROOT/clinic-after/public",
+        "--receipt",
+        "$TEST_ROOT/clinic-patch.json"
+      ],
+      "cwd": "inputs/clinic-patch",
+      "returncode": 0
+    },
+    {
+      "args": [
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_clinic_rss_feed.py",
+        "-v"
+      ],
+      "cwd": "inputs/clinic-patch",
+      "returncode": 0
+    },
+    {
+      "args": [
+        "scripts/check_v5_test_readiness.py",
+        "--inputs",
+        "inputs",
+        "--official-archive",
+        "official-codes.zip",
+        "--todayflower-artifact",
+        "recovery/todayflower-13036248347.zip",
+        "--todayflower-root",
+        "todayflower",
+        "--clinic-before",
+        "clinic-before/public",
+        "--clinic-after",
+        "clinic-after/public"
+      ],
+      "cwd": ".",
+      "returncode": 0
+    }
+  ],
+  "passed": true,
+  "productionChanged": false,
+  "deploymentPerformed": false,
+  "remaining": [
+    "private HTTP owner/unauthorized response test",
+    "deployment/rollback approval and environment verification"
+  ],
+  "note": "readiness.remaining is the generic readiness tool checklist; clean-directory restore is completed by this T4 receipt, not a new-machine/OS test"
+}

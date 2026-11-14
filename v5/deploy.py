@@ -13,6 +13,8 @@ def preflight(site_id):
     data=read_site(site_id)
     site=data['site']
     blockers=[]
+    if site.get('deliveryMode') in ('shared-static', 'shared-static-preview'):
+        blockers.append('Shared sites require v5.shared_release; per-site deployment would overwrite the shared Worker')
     try:assert_publish_ready(site)
     except ConfigError as exc:blockers.append(str(exc))
     if not all(p.get('verifiedLive',False) for p in data['products']):

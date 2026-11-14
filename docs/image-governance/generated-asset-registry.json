@@ -1,0 +1,5 @@
+{
+  "schemaVersion": 1,
+  "records": [],
+  "guidance": "Each NEW generated image needs an exact generation tool result, verbatim prompt, UTC generation time, original file/hash/archive, transformation steps, final SHA and illustrated-not-real-event role. Missing evidence causes new release review hold."
+}

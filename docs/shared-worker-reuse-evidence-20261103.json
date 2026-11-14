@@ -1,0 +1,163 @@
+{
+  "existingSessionUsed": true,
+  "newAuthenticationAttempted": false,
+  "managementGetRequests": 66,
+  "visitorRequests": 0,
+  "workerCount": 105,
+  "workerInventoryComplete": true,
+  "domainInventoryComplete": true,
+  "routeInventoryComplete": true,
+  "mutationRequests": 0,
+  "checkedAtUTC": "2026-11-03T08:07:48.970103+00:00",
+  "candidates": [
+    {
+      "workerName": "ansan-flower-guide-test",
+      "customDomains": [
+        "ansan.fwith.kr"
+      ],
+      "routes": [],
+      "bindings": [],
+      "schedules": {
+        "schedules": []
+      },
+      "reusableConfirmed": false,
+      "assetBackupComplete": false,
+      "overwriteExecuted": false,
+      "activeVersions": [
+        {
+          "version_id": "12961ed3-1ec9-450c-a6bf-8f5721d8428c",
+          "percentage": 100
+        }
+      ],
+      "scriptBackupSHA256": null
+    },
+    {
+      "workerName": "funeralflower-home-preview",
+      "customDomains": [
+        "order.baeksefood.com"
+      ],
+      "routes": [],
+      "bindings": [
+        {
+          "name": "ASSETS",
+          "type": "assets"
+        },
+        {
+          "name": "ORDER_DB",
+          "type": "durable_object_namespace"
+        }
+      ],
+      "schedules": {
+        "schedules": []
+      },
+      "reusableConfirmed": false,
+      "assetBackupComplete": false,
+      "overwriteExecuted": false,
+      "activeVersions": [
+        {
+          "version_id": "96017a51-b665-44d4-9635-2f0ac48ea2e1",
+          "percentage": 100
+        }
+      ],
+      "scriptBackupSHA256": null
+    },
+    {
+      "workerName": "sfv5-ansan-promotion-plant-preview",
+      "customDomains": [],
+      "routes": [],
+      "bindings": [
+        {
+          "name": "ASSETS",
+          "type": "assets"
+        },
+        {
+          "name": "V5_STAGING",
+          "type": "plain_text"
+        }
+      ],
+      "schedules": {
+        "schedules": []
+      },
+      "reusableConfirmed": false,
+      "assetBackupComplete": false,
+      "overwriteExecuted": false,
+      "activeVersions": [
+        {
+          "version_id": "fe4f22ee-20d7-4790-b637-da35e9f4bea2",
+          "percentage": 100
+        }
+      ],
+      "scriptBackupSHA256": "054f9ef6aa6931a7e734ca0ba411221c1c96e846b00ad22be400ba6c836fa41f"
+    },
+    {
+      "workerName": "sfv5-daysky-preview",
+      "customDomains": [
+        "daysky.nalmada.net"
+      ],
+      "routes": [],
+      "bindings": [
+        {
+          "name": "ASSETS",
+          "type": "assets"
+        },
+        {
+          "name": "V5_PUBLIC_HOST",
+          "type": "plain_text"
+        },
+        {
+          "name": "V5_STAGING",
+          "type": "plain_text"
+        }
+      ],
+      "schedules": {
+        "schedules": []
+      },
+      "reusableConfirmed": false,
+      "assetBackupComplete": false,
+      "overwriteExecuted": false,
+      "activeVersions": [
+        {
+          "version_id": "02920959-6e3c-4a76-a01c-69f7f1da13c5",
+          "percentage": 100
+        }
+      ],
+      "scriptBackupSHA256": null
+    },
+    {
+      "workerName": "sfv5-seoul-gyeonggi-plants-preview",
+      "customDomains": [
+        "plants.nalmada.net"
+      ],
+      "routes": [],
+      "bindings": [
+        {
+          "name": "ASSETS",
+          "type": "assets"
+        },
+        {
+          "name": "V5_PUBLIC_HOST",
+          "type": "plain_text"
+        },
+        {
+          "name": "V5_STAGING",
+          "type": "plain_text"
+        }
+      ],
+      "schedules": {
+        "schedules": []
+      },
+      "reusableConfirmed": false,
+      "assetBackupComplete": false,
+      "overwriteExecuted": false,
+      "activeVersions": [
+        {
+          "version_id": "834fe1fc-6d6f-4204-8811-44c80fb7763b",
+          "percentage": 100
+        }
+      ],
+      "scriptBackupSHA256": null
+    }
+  ],
+  "reuseDecision": "Do not overwrite: ASSETS recovery and actual unused status are not proven",
+  "codeBackupsKeptPrivate": true
+}

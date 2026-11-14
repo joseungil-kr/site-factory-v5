@@ -1,0 +1,24 @@
+{
+  "deploymentPerformed": false,
+  "migrationComplete": false,
+  "skyquote-official-regions": {
+    "sourceFilesVerified": 2,
+    "siteRegenerated": false
+  },
+  "clinic-rss-composite": {
+    "sourceFilesVerified": 4,
+    "siteRegenerated": false
+  },
+  "officialArchive": {
+    "sourceRows": 53403,
+    "activeRows": 20560,
+    "matchedLowerRows": 4632,
+    "upperRows": 284
+  },
+  "todayflowerArtifact": {
+    "contentPages": 5070,
+    "verifiedManifestFiles": 5087,
+    "archiveBytes": 84218864,
+    "archiveMembers": 5113
+  }
+}

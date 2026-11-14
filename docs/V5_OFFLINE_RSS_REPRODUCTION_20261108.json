@@ -1,0 +1,49 @@
+{
+  "todayflower": {
+    "beforeFiles": 5087,
+    "afterFiles": 5088,
+    "added": [
+      "rss.xml"
+    ],
+    "changed": [],
+    "unchangedFiles": 5087,
+    "unchangedHTML": 5071,
+    "rss": {
+      "items": 50,
+      "bytes": 902005,
+      "sha256": "7e10b1fff72fcd105adcef830cfc0763ee0a9b8c1fa2505e09d066ed574482a9"
+    }
+  },
+  "clinic": {
+    "beforeFiles": 15925,
+    "afterFiles": 15925,
+    "added": [],
+    "changed": [
+      "sites/clinicflower/rss.xml",
+      "sites/clinicopen/rss.xml",
+      "sites/clinicpresent/rss.xml"
+    ],
+    "unchangedFiles": 15922,
+    "unchangedHTML": 15906,
+    "feeds": {
+      "sites/clinicflower/rss.xml": {
+        "items": 50,
+        "bytes": 899661,
+        "sha256": "9599575622d61b71fc6ba8e2c85092e60453ea2400e0c80094dee16f0baa8127"
+      },
+      "sites/clinicopen/rss.xml": {
+        "items": 50,
+        "bytes": 896883,
+        "sha256": "c2fa6ef27ecf01bf07be583fbf4280c3f26affc6a2cfc8d2e49e92d41f99caef"
+      },
+      "sites/clinicpresent/rss.xml": {
+        "items": 50,
+        "bytes": 853458,
+        "sha256": "c399d59f0c122d468c53360a9593d422be6b362f72917e7926374e3ba1cb3194"
+      }
+    }
+  },
+  "comparisonScope": "isolated pinned sources, not current live HTTP",
+  "networkCalls": 0,
+  "deploymentPerformed": false
+}

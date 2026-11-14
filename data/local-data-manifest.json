@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "dateUTC": "2026-11-08",
+  "datasets": {
+    "official-legal-codes": {
+      "status": "available",
+      "path": "data/regions/v4_official_legal_codes_20261022.zip",
+      "bytes": 413481,
+      "sha256": "44a3fe4cacf88ce98e35fb883807d2725b589f427ff4d73ee40b914d1286bacd",
+      "runtimeRepository": "joseungil-kr/site-factory-v5",
+      "historicalOrigin": "see data/regions/NATIONWIDE_SOURCES_20261104.md; not a runtime fetch"
+    },
+    "official-parent-regions": {
+      "status": "available",
+      "path": "data/regions/v4_official_parent_regions_20261022.json",
+      "bytes": 67432,
+      "sha256": "9185227a00ac1a95df6ed3e667e1ed27e32cc36cd1f36a95ab0b6126340685f1",
+      "runtimeRepository": "joseungil-kr/site-factory-v5",
+      "historicalOrigin": "see data/regions/NATIONWIDE_SOURCES_20261104.md; not a runtime fetch"
+    },
+    "locality-candidates": {
+      "status": "available",
+      "path": "data/regions/nationwide_locality_candidates_5034.json",
+      "bytes": 226704,
+      "sha256": "a33b9817e25d18ee8ee66d5cffffa46bb989c60bd91b355e0b99545c9bb40272",
+      "runtimeRepository": "joseungil-kr/site-factory-v5",
+      "historicalOrigin": "see data/regions/NATIONWIDE_SOURCES_20261104.md; not a runtime fetch"
+    },
+    "funeral-halls": {
+      "status": "available",
+      "originRepository": "joseungil-kr/site-factory-v4",
+      "originRef": "5448bd5f000f1049f9e28b7a56195eca3fa2b74e",
+      "originPath": "data/funeral-halls",
+      "localReproductionPassed": true,
+      "publicCopyApproved": true,
+      "reason": "Sanitized derivative: five unverified contact-like homepage cells removed; official source unrestricted-use receipts in data/source-rights/20261108.",
+      "path": "data/funeral-halls/sources/facilities.xlsx",
+      "bytes": 332696,
+      "sha256": "10b9ce07ea1af16938403b494ea39328394f19767fadc79516afdeeb8ff966be",
+      "sameAsOriginal": false,
+      "publicationAllowed": false,
+      "runtimeRepository": "joseungil-kr/site-factory-v5"
+    }
+  },
+  "globalV4DependencyZero": false,
+  "legacyDeploymentWorkflowsChanged": false
+}

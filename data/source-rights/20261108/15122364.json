@@ -1,0 +1,20 @@
+{
+  "url": "https://www.data.go.kr/data/15122364/openapi.do",
+  "checkedAt": "2026-11-08T05:45:44.622226+00:00",
+  "status": 200,
+  "htmlSha256": "5485cca8555fc695e4863a9711d8bd84648b9e6d23a40903ae1fe1a2b08f6576",
+  "name": "보건복지부_보건·복지현황_전국 묘지 현황",
+  "license": {
+    "name": "이용허락범위 제한 없음",
+    "url": "https://www.data.go.kr/ugs/selectPortalPolicyView.do",
+    "@type": "CreativeWork"
+  },
+  "distribution": [
+    {
+      "encodingFormat": "XML",
+      "contentUrl": "https://apis.data.go.kr/1352000/ODMS_DATA_01_1",
+      "@type": "DataDownload"
+    }
+  ],
+  "dateModified": "2025-05-27"
+}

@@ -19,6 +19,7 @@ def scaffold(site_id,brand,keyword,region,phone,*,apply=False,sites_dir=None):
         'site.json':{
             'id':site_id,'status':'draft','brand':brand,'siteTitle':keyword+' '+region,
             'domain':None,'workerName':None,'locale':'ko-KR','phone':phone,
+            'deliveryMode':'shared-static-preview',
             'keyword':keyword,'region':region,'theme':'classic','imageLibrary':site_id,
             'imagePool':[],'orderBaseUrl':'https://example.com','publishEnabled':False,
             'imageAssetsApproved':False,'cookiePrivacyReviewed':False,

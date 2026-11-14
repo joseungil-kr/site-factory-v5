@@ -1,4 +1,14 @@
+> **현행 안내 (2026-11-08):** [V5 통합 작업 창구](docs/V5_CONTROL_INDEX.md)를 먼저 읽는다. 아래 본문에는 과거 시점의 상태와 제한이 보존되어 있다. “원격 저장소 미생성”, “병합 보류”, 초기 SVG/독립 페이지 구성은 현행 운영 전체의 상태가 아니다. 현재 공통 생성기 기준은 V5 main의 V5.1이며 사이트별 상태·브랜치·검증 여부는 통합 원장이 기준이다. 과거 승인 거절 기록은 삭제하거나 무효로 해석하지 않는다. 기존 사이트 재생성·배포는 이번 통합 범위가 아니다.
+
 # Site Factory V5 — 독립 반자동 사이트 제작 엔진
+
+**2026-11-04 변경: 등록 도메인별 Worker 1개가 기본입니다.** `nalmada.net`과 모든 `*.nalmada.net` 호스트는 `nalmada.net` 담당 Worker를 공유하며, 서로 다른 원 도메인은 별도 Worker를 사용합니다. 예외는 기능·보안상 공유 불가능한 경우로 제한합니다. [도메인별 Worker 정책](docs/DOMAIN_WORKER_POLICY_20261104.md) 확인 필수.\n\n신규 사이트는 공유 Worker용 정적 전달 경로를 기본으로 준비합니다. `scaffold-site`는
+`deliveryMode: shared-static-preview`로 생성하며 기존 사이트 설정은 바꾸지 않습니다.
+운영 준비는 개별 사이트 배포 대신 `python -m v5.shared_release`를 사용합니다.
+[신규 공유 전달 사용법](docs/SHARED_RELEASE_PREPARATION_20261103.md)과
+[서비스형 지원·복구·실환경 제약](docs/SHARED_SERVICE_AND_RECOVERY_20261103.md)을 먼저 확인하세요.
+서비스형은 전화 문의 방식이며 siteSearch·analytics·IndexNow·특수 페이지는 기존 validator가 명시적으로 거부합니다.
+실제 배포와 edge 호출량 검증은 별도 단계입니다.
 
 **작업일:** 2026-10-24 KST
 
