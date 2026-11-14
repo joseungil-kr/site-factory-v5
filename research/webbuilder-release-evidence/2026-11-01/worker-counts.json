@@ -1,0 +1,11 @@
+{
+  "observation_window_utc": "2026-11-01 02:58\u201303:02 (approximate; exact capture timestamp not recorded)",
+  "account_scope": "existing Cloudflare account dashboard",
+  "workers_only_filter": 108,
+  "all_applications_including_pages": 121,
+  "requests_today": 1045,
+  "daily_allowance": 100000,
+  "regional_full_mapping": "incomplete",
+  "regional_traffic": "unknown; dash does not mean zero",
+  "regional_changes": false
+}

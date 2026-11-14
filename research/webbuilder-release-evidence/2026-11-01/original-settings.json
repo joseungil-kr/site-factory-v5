@@ -1,0 +1,13 @@
+{
+  "placement": {},
+  "compatibility_date": "2026-10-01",
+  "compatibility_flags": [],
+  "usage_model": "standard",
+  "tags": [],
+  "tail_consumers": [],
+  "logpush": false,
+  "annotations": {
+    "workers/triggered_by": "version_upload"
+  },
+  "bindings": []
+}
