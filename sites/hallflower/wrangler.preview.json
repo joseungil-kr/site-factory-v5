@@ -1,0 +1,13 @@
+{
+  "name": "sfv53-hallflower",
+  "main": "worker.js",
+  "compatibility_date": "2026-10-24",
+  "workers_dev": true,
+  "assets": {
+    "directory": "../../dist/hallflower-full-preview",
+    "binding": "ASSETS",
+    "run_worker_first": true,
+    "html_handling": "none",
+    "not_found_handling": "404-page"
+  }
+}
