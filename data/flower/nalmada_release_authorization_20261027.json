@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "authorizationDate": "2026-10-27",
+  "sourceSnapshotPreserved": true,
+  "scope": {
+    "hostname": "flower.nalmada.net",
+    "site": "날마다꽃",
+    "publicReleaseAuthorized": true,
+    "ownerRequest": "Publicly deploy the verified site and allow search registration after actual HTTP validation",
+    "indexNowSubmissionAuthorized": true,
+    "googleNaverSubmissionAssignedElsewhere": true
+  },
+  "images": {
+    "ownerPermissionDate": "2026-10-19",
+    "ownerPermissionStatement": "해당 상품 사진은 사용 허락을 받은 사진이며 새 홍보 페이지에 사용하도록 내가 허용한다.",
+    "source": "Owner confirmation quoted by independent parent reviewer",
+    "productIDs": [
+      "B201",
+      "B203",
+      "B205"
+    ],
+    "originalSHA256MustMatch": true
+  },
+  "products": {
+    "verifiedAtUTC": "2026-10-27T11:20:00Z to 2026-10-27T11:22:00Z",
+    "verificationType": "Independent parent reviewer direct product-page readback; user-provided report",
+    "records": [
+      {
+        "id": "B201",
+        "name": "근조 3단 화환",
+        "priceKRW": 59000,
+        "uri": "https://fwith.co.kr/shop/item.php?it_id=B201"
+      },
+      {
+        "id": "B203",
+        "name": "근조 고급 3단 화환",
+        "priceKRW": 79000,
+        "uri": "https://fwith.co.kr/shop/item.php?it_id=B203"
+      },
+      {
+        "id": "B205",
+        "name": "근조 특대 3단 화환",
+        "priceKRW": 109000,
+        "uri": "https://fwith.co.kr/shop/item.php?it_id=B205"
+      }
+    ],
+    "notVerified": [
+      "지역별 추가 배송비",
+      "전국 무료배송",
+      "당일 도착 보장",
+      "현재 재고"
+    ]
+  },
+  "facilities": {
+    "source": "Original V4 1080 registry",
+    "sourcePublicationAllowedRemainsFalse": true,
+    "currentExistenceAllVerified": false,
+    "addressHiddenUntilConfirmed": true,
+    "noCurrentOperationOrGuaranteedDeliveryClaims": true,
+    "unresolvedFacilityIDsMustRemainSeparatelyReviewable": true
+  },
+  "qualityGates": {
+    "renderedMainFullPairJaccardMaxExclusive": 0.49,
+    "pairwiseModes": [
+      "actual",
+      "normalized-facility-region"
+    ],
+    "minPages": 1080,
+    "allTopicGroupsWithinAssignedGroup": true,
+    "finalRenderedHtmlReadbackRequired": true
+  },
+  "releaseMode": "Separate, dated owner release authorization; does not change V4 dataset or professional pool provenance flags"
+}
